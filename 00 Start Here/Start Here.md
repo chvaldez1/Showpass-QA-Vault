@@ -11,7 +11,7 @@ This vault keeps Showpass QA automation notes organized without duplicating repo
 - [[03 Test Cases/Test Case Template|Test Cases]]
 - [[04 Automation/Automation Candidate Template|Automation]]
 - [[05 Tooling/qasectl|Tooling]]
-- [[06 Prompts/Generate Test Cases from Backend|Prompts]]
+- [[06 Prompts/Showpass QA Test Case Generator|Prompts]]
 
 ## Basic Workflow
 

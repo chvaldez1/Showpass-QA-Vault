@@ -13,7 +13,7 @@ Create manual Qase coverage for a venue that switches payment gateways after a c
 - Backend: `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/models/order_management/order_basket.py:5149`
 - Backend tests: `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/tests/test_api_user_based_basket_waitlist_resale.py:1547`
 - Backend tests: `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/venues/tests/test_models.py:3402`
-- Related prompt: `06 Prompts/Showpass QA Test Case Generator.md`
+- Related prompt: [[06 Prompts/Showpass QA Test Case Generator]]
 
 ## Existing Qase Coverage
 

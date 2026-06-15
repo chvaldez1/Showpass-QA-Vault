@@ -11,7 +11,7 @@
 
 ## Read-First Workflow
 
-Use this with `06 Prompts/Showpass QA Test Case Generator.md`:
+Use this with [[06 Prompts/Showpass QA Test Case Generator]]:
 
 1. Query Qase for existing coverage.
 2. Inspect backend source truth in `/Users/christianvaldez/Documents/Showpass/repos/web-app`.

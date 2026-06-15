@@ -2,6 +2,8 @@
 
 Use this when you want an agent to read existing Qase coverage, compare it with the codebase, and write a gap analysis into the vault.
 
+Related workflow: [[06 Prompts/Showpass QA Test Case Generator]]
+
 ```text
 Use 06 Prompts/Showpass QA Test Case Generator.md.
 
