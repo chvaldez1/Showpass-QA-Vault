@@ -1,0 +1,205 @@
+{
+  "main": {
+    "id": "323a7ad9f64666a1",
+    "type": "split",
+    "children": [
+      {
+        "id": "183ced490bd09909",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1f0b4d7e9f51352f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "06 Prompts/Example - Qase Gap Analysis.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Example - Qase Gap Analysis"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "54f0cc14be614a5f",
+    "type": "split",
+    "children": [
+      {
+        "id": "86819b436ba0f5ec",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9737f02726df814e",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "de7aa0f316fe8ee8",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "6b313037f10ec997",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "0ff65899a56386c8",
+    "type": "split",
+    "children": [
+      {
+        "id": "583590eabca456e7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "333e5c51c9952f46",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "06 Prompts/Example - Qase Gap Analysis.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Example - Qase Gap Analysis"
+            }
+          },
+          {
+            "id": "229606ca7e757dca",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "06 Prompts/Example - Qase Gap Analysis.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Example - Qase Gap Analysis"
+            }
+          },
+          {
+            "id": "b6b8c3a99be0fd01",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "84249a54826e0441",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "13ad78642438d559",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "06 Prompts/Example - Qase Gap Analysis.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Example - Qase Gap Analysis"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "1f0b4d7e9f51352f",
+  "lastOpenFiles": [
+    "03 Test Cases/waitlisted-ticket-gateway-switch-test-cases.md",
+    "03 Test Cases/Test Case Template.md",
+    "04 Automation/Automation Candidate Template.md",
+    "06 Prompts/Example - Qase Gap Analysis.md",
+    "06 Prompts/Showpass QA Test Case Generator.md",
+    "06 Prompts/Convert Test Cases to Playwright.md",
+    "05 Tooling/qasectl.md",
+    "05 Tooling/Playwright CLI.md",
+    "06 Prompts/Generate Test Cases from Backend.md",
+    "02 Feature QA/Feature Note Template.md",
+    "01 Repositories/QA Automation - showpass-playwright.md",
+    "01 Repositories/Frontend - showpass-frontend.md",
+    "01 Repositories/Backend - web-app.md",
+    "00 Start Here/Start Here.md",
+    "AGENTS.md",
+    "Showpass QA/Welcome.md"
+  ]
+}
