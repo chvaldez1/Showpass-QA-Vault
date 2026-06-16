@@ -19,7 +19,15 @@ Do not duplicate the workflow content here. Read the canonical QA workflow befor
 
 ## Vault Output Target
 
-If the user specifies an output file, write generated test cases there.
+Always write generated test cases under:
+`03 Test Cases/`
+
+If the user specifies only a filename, treat it as relative to `03 Test Cases/`.
+
+Example:
+`employees-qa-test-cases.md` means `03 Test Cases/employees-qa-test-cases.md`.
+
+If the user specifies a path outside `03 Test Cases/`, keep the test case output under `03 Test Cases/` unless they explicitly say the file must be outside that folder.
 
 If the user does not specify an output file, create a new note under:
 `03 Test Cases/`
@@ -37,7 +45,7 @@ Use this flow when the goal is to compare existing Qase knowledge against the co
 2. Inspect backend behavior as the source of truth.
 3. Inspect frontend code to see how users follow that backend behavior.
 4. Compare Qase coverage against source behavior.
-5. Write the output into the user-specified file, or create a new suitably named note under `03 Test Cases/` when no output file is specified.
+5. Write the output under `03 Test Cases/`. If the user gave only a filename, place that filename in `03 Test Cases/`; if no output file is specified, create a new suitably named note there.
 
 The output should separate:
 
@@ -68,4 +76,4 @@ When a user does approve Qase updates, follow [[05 Tooling/qasectl#Qase Update W
 
 ## Agent Reminder
 
-Read the canonical workflow first. For gap analysis, read Qase first, inspect source code second, then write findings into the user-specified output file or a new suitably named note under `03 Test Cases/`. Keep vault notes short and reference source paths instead of copying workflow content.
+Read the canonical workflow first. For gap analysis, read Qase first, inspect source code second, then write findings under `03 Test Cases/`. Bare filenames from the user should be resolved inside `03 Test Cases/`. Keep vault notes short and reference source paths instead of copying workflow content.
