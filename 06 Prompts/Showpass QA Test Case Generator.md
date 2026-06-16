@@ -50,6 +50,8 @@ The output should separate:
 
 Do not push changes to Qase during read/gap analysis. Treat Qase updates as a separate sign-off step.
 
+When a user does approve Qase updates, follow [[05 Tooling/qasectl#Qase Update Workflow]] before writing: use the existing `.env`, dry run the exact changes, apply only after the preview is clean, then re-read Qase to verify.
+
 ## When To Use
 
 - Generate QA test cases from backend and frontend code.
