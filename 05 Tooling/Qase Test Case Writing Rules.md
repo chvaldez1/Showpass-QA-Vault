@@ -1,8 +1,5 @@
 # Qase Test Case Writing Rules
 
-Source:
-`/Users/christianvaldez/Documents/Showpass/repos/tools/qa-tool-box/src/lib/gemini/generators/testCase.ts`
-
 Use these rules whenever writing, reviewing, or updating Qase-ready Showpass test cases through [[05 Tooling/qasectl]].
 
 ## Role And Scope
@@ -168,7 +165,7 @@ When creating cases from structured source material, preserve these input sectio
 - Suggested User Steps
 - Product or Feature Documentation
 
-Suggested User Steps is the only required input section in the QA Tool Box generator, but vault work should still verify behavior against source code before treating suggested steps as complete.
+Suggested User Steps can be enough to draft a case, but vault work should still verify behavior against source code before treating suggested steps as complete.
 
 ## Refinement Rule
 
