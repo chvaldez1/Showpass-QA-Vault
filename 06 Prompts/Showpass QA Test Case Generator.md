@@ -35,7 +35,9 @@ If the user does not specify an output file, create a new note under:
 Use the best suitable filename for the feature or scenario, such as:
 `03 Test Cases/<feature-or-scenario>-test-cases.md`
 
-Use the canonical workflow's preferred style: concise, grouped, Qase-ready cases with clear sources, assumptions, risk areas, test data, and GIVEN / WHEN / THEN steps.
+Use the canonical workflow's preferred style for source review, risk analysis, and coverage grouping. For Qase-ready cases, use [[05 Tooling/Qase Test Case Writing Rules]] instead of GIVEN / WHEN / THEN formatting.
+
+When producing Qase-ready cases or Qase update recommendations, also read and apply [[05 Tooling/Qase Test Case Writing Rules]] for the Showpass Qase standard on user perspective, observable behavior, approved tags, platform/view parameterization, descriptions, and Qase step structure.
 
 ## Read / Gap Analysis Flow
 

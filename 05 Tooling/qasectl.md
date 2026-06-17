@@ -9,6 +9,12 @@
 - Identify missing, stale, or weak test coverage.
 - Push approved Qase case updates after human sign-off.
 
+## Required Writing Rules
+
+Before generating, reviewing, or updating Qase-ready test cases through this workflow, read and apply [[05 Tooling/Qase Test Case Writing Rules]].
+
+These rules define the Showpass Qase standard for user perspective, observable behavior, Qase step structure, platform/view parameterization, approved tags, description content, duplicate-case handling, and complete-case refinement.
+
 ## Read-First Workflow
 
 Use this with [[06 Prompts/Showpass QA Test Case Generator]]:
@@ -16,26 +22,28 @@ Use this with [[06 Prompts/Showpass QA Test Case Generator]]:
 1. Query Qase for existing coverage.
 2. Inspect backend source truth in `/Users/christianvaldez/Documents/Showpass/repos/web-app`.
 3. Inspect frontend behavior in `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`.
-4. Write the gap analysis to the requested output file, or create a suitably named note under `03 Test Cases/`.
-5. Do not push to Qase until the output is reviewed and signed off.
+4. Apply [[05 Tooling/Qase Test Case Writing Rules]] to any suggested new or updated cases.
+5. Write the gap analysis to the requested output file, or create a suitably named note under `03 Test Cases/`.
+6. Do not push to Qase until the output is reviewed and signed off.
 
 ## Qase Update Workflow
 
 Use this when the user explicitly approves updating Qase cases.
 
 1. Confirm scope before writing: suite ID, case IDs, and exact field types to update.
-2. Load credentials from the existing vault `.env`; do not ask for or echo tokens when `.env` is present.
-3. Read the current case payloads from Qase and save the important before-state in command output or a short note.
-4. Build an idempotent updater script that supports dry-run mode first.
-5. Dry run before any write:
+2. Read and apply [[05 Tooling/Qase Test Case Writing Rules]] for any test case content changes.
+3. Load credentials from the existing vault `.env`; do not ask for or echo tokens when `.env` is present.
+4. Read the current case payloads from Qase and save the important before-state in command output or a short note.
+5. Build an idempotent updater script that supports dry-run mode first.
+6. Dry run before any write:
    - print each case ID
    - print each field that would change
    - print before -> after for short fields like `title`
    - print a count or compact diff for long fields like `steps`
-6. Review dry-run output against the request. If the change is broad or destructive, pause for confirmation.
-7. Run the apply mode only after the dry run is clean.
-8. Re-read Qase after applying and verify the requested text or field state is correct.
-9. Delete temporary scripts unless they are intentionally useful for reuse.
+7. Review dry-run output against the request. If the change is broad or destructive, pause for confirmation.
+8. Run the apply mode only after the dry run is clean.
+9. Re-read Qase after applying and verify the requested text or field state is correct.
+10. Delete temporary scripts unless they are intentionally useful for reuse.
 
 Prefer a small local script over fragile inline shell JSON for Qase writes. The script should parse `.env`, construct JSON payloads with structured objects, and avoid shell interpolation for request bodies.
 

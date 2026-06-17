@@ -30,7 +30,7 @@ Output:
 
 Constraints:
 - Keep the output concise and Qase-ready.
-- Use GIVEN / WHEN / THEN steps for suggested cases.
+- Use [[05 Tooling/Qase Test Case Writing Rules]] for suggested cases, including Qase step tables with Step Action, Data, and Expected Result.
 - Reference source paths instead of copying code.
 - Ask one targeted question only if the missing context materially changes the gap analysis.
 ```

@@ -1,6 +1,6 @@
 # Test Case Template
 
-Use this file for generated QA test cases. Prefer grouped, Qase-ready manual coverage with clear sources, assumptions, risks, and executable GIVEN / WHEN / THEN steps.
+Use this file for generated QA test cases. Prefer grouped, Qase-ready manual coverage with clear sources, assumptions, risks, and [[05 Tooling/Qase Test Case Writing Rules]].
 
 ## Summary of Change
 
@@ -45,11 +45,25 @@ Use this file for generated QA test cases. Prefer grouped, Qase-ready manual cov
 **Type:** Happy Path / Edge Case / Permission / Negative / Integration / Regression  
 **Area:** [Feature area or user flow]
 
-#### Step 1: [Short step title]
+**Title:** Verify [product area] [behavior]
 
-**GIVEN** [starting state, role, data, route, setup].  
-**WHEN** [tester action].  
-**THEN** [expected result and verification signal].
+**Description:** [Clear, factual Showpass behavior being validated, user flow or capability verified, and regression protected against.]
+
+| Platform | View |
+|----------|------|
+| [Platform] | [View] |
+
+**Preconditions:** [Setup, configuration, or required system state.]
+
+**Postconditions:** [Cleanup, downstream validation, or follow-up checks.]
+
+**Tags:** [Approved Qase tags only]
+
+**Parameters:** [Only if applicable, one per line using `ParameterName: Value1, Value2`]
+
+| Step Action | Data | Expected Result |
+|-------------|------|-----------------|
+| [User action] | [Only if required] | [Observable result] |
 
 **Notes:** [Important setup, risk, backend dependency, or observation.]
 
