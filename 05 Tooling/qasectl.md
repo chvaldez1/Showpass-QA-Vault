@@ -34,7 +34,7 @@ Use this when the user explicitly approves updating Qase cases.
 2. Read and apply [[05 Tooling/Qase Test Case Writing Rules]] for any test case content changes.
 3. Load credentials from the existing vault `.env`; do not ask for or echo tokens when `.env` is present.
 4. Read the current case payloads from Qase and save the important before-state in command output or a short note.
-5. Build an idempotent updater script that supports dry-run mode first.
+5. Prefer the reusable script at `05 Tooling/scripts/create-or-update-qase-case.mjs` for case creation, updates, and verification.
 6. Dry run before any write:
    - print each case ID
    - print each field that would change
@@ -45,7 +45,38 @@ Use this when the user explicitly approves updating Qase cases.
 9. Re-read Qase after applying and verify the requested text or field state is correct.
 10. Delete temporary scripts unless they are intentionally useful for reuse.
 
-Prefer a small local script over fragile inline shell JSON for Qase writes. The script should parse `.env`, construct JSON payloads with structured objects, and avoid shell interpolation for request bodies.
+Prefer `05 Tooling/scripts/create-or-update-qase-case.mjs` over fragile inline shell JSON for Qase writes. The script parses `.env`, constructs JSON payloads with structured objects, avoids shell interpolation for request bodies, dry-runs by default, and verifies cases by ID.
+
+For copyable examples, see [[05 Tooling/Create Or Update Qase Case Examples]].
+
+Reusable command pattern:
+
+```bash
+# Dry run a numbered case from a vault markdown file
+node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
+  --suite-id 144 \
+  --case-file "03 Test Cases/invoice-breakdown-qase-test-cases.md" \
+  --case-number 5 \
+  --dry-run
+
+# Create the case after the dry run is reviewed
+node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
+  --suite-id 144 \
+  --case-file "03 Test Cases/invoice-breakdown-qase-test-cases.md" \
+  --case-number 5 \
+  --apply
+
+# Verify a created case
+node "05 Tooling/scripts/create-or-update-qase-case.mjs" --verify 4817
+
+# Dry run an update to an existing case
+node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
+  --suite-id 144 \
+  --case-file "03 Test Cases/invoice-breakdown-qase-test-cases.md" \
+  --case-number 5 \
+  --update 4817 \
+  --dry-run
+```
 
 For wording updates, make replacements idempotent. Example: when changing `Guestlist` to `Guestlists`, use a boundary-aware replacement so existing `Guestlists` does not become `Guestlistss`, and verify both the old term and accidental double-plural forms are gone.
 

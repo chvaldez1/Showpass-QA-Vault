@@ -16,6 +16,10 @@ Do not infer intent, business value, or user psychology beyond what is directly 
   - Public customers browsing events, purchasing tickets, and managing orders
   - Organizers configuring events, ticket types, products, and memberships
   - Organizer employees operating Box Office and dashboard workflows
+- Use Showpass role language instead of generic QA language:
+  - Prefer `customer`, `attendee`, `organizer`, `venue employee`, `Box Office employee`, `dashboard user`, or `authenticated user`, depending on the workflow.
+  - Use `user` only when the exact Showpass role is unknown or the behavior is genuinely shared across roles.
+  - Do not write `the tester`, `QA user`, or similar testing-perspective phrasing in Titles, Descriptions, Preconditions, Steps, or Expected Results.
 - Validate observable system behavior only.
 - Avoid implementation, infrastructure, or service-level details.
 - Do not over-focus on third-party integrations unless they directly impact user-visible behavior.
@@ -32,6 +36,10 @@ Use Qase's step format only:
 Step guidelines:
 
 - Keep steps concise and user-driven.
+- Keep each Expected Result concise, ideally one sentence.
+- Do not write large paragraph-style Expected Results that enumerate every parameter value.
+- For parameterized cases, write expectations that tell the venue employee what to verify for the selected parameter value, and move exhaustive variant mapping into Preconditions, test data notes, or separate cases when needed.
+- Prefer focused, observable checks such as "Only rows supported by the selected invoice appear" over long lists of all possible rows.
 - Avoid internal or technical actions that a user would not perform.
 - If a test becomes too large or complex, split it into smaller, focused tests.
 - Use Preconditions for setup, configuration, or required system state.
@@ -102,6 +110,15 @@ Separate test cases are allowed only when:
 Only use tags from this list. Do not invent new tags. If the user suggests additional tags, include them only if they appear in this approved list.
 
 facebook, discovery, attraction, google, public, dashboard, analytics, cauldron, widget, check-in, group-sales, admin-actions, marketplace, fees-taxes, basket, discounts, packages, edge-case, transaction-payload, api-testing, holds, refunds, tracking-links, guest-user, cart, payment, notifications, mobile-view, authenticated-user, popular-cities, memberships, assigned-seating, tickets, post-purchase, orders, user-settings, events, appearance, registration, login, user, renewals, search-filters, home-page, organizer, checkout, season-passes, waitlists, quickbooks, donations, resale, products, exchanges, nfc, transfers, my-orders, purchases, payouts, transactions, printing, abandoned-carts, reports, employee-permissions, credits, ticket-package, bulk-update, fees-and-taxes, pwyc, profile, edit-event, create-event, stripe, event, box-office, internal-rate-card
+
+Tag discipline:
+
+- Use 1-3 tags per test case.
+- Choose the strongest tags for search and suite organization.
+- Prefer one surface tag, such as `dashboard`, `public`, `widget`, or `box-office`, plus one feature/domain tag, such as `transactions`, `checkout`, `tickets`, `memberships`, or `fees-and-taxes`.
+- Add a third tag only when it materially improves discovery, such as `refunds`, `check-in`, `edge-case`, or `employee-permissions`.
+- Do not tag every parameter value or every related entity in a broad parameterized case.
+- Do not use overlapping synonyms together unless both are already meaningful in Qase, such as choosing `fees-and-taxes` over also adding `fees-taxes`.
 
 ## Description Field Requirements
 
