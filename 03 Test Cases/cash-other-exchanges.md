@@ -25,6 +25,47 @@ Other full-credit exchange behavior is guarded by `enable_box_office_other_full_
 - Fee setup where Cash and card fees are visibly different.
 - Optional stable data for assigned seating, products, memberships, donations, refund protection, group sales, holds, custom questions, delivery settings, and regular account credit.
 
+## Settlement Values To Watch
+
+Use these numbers as a compact inspection guide. Replace the sample values with the actual invoice values from the test run.
+
+Same-value exchange sample:
+
+| Invoice row                 | Value to check                            | Expected sample                           |
+| --------------------------- | ----------------------------------------- | ----------------------------------------- |
+| Original Cash/Other sale    | `payment_type`                            | Cash or Other / `Cheque`                  |
+| Original Cash/Other sale    | `amount_paid` or `amount_paid_stat`       | `-5.13` fee debt remains owed to Showpass |
+| Replacement invoice         | `payment_type`                            | Exchange Credit                           |
+| Replacement invoice         | `amount_paid` or `amount_paid_stat`       | `60.00` replacement value                 |
+| Exchange adjustment invoice | `amount_paid` or `amount_paid_stat`       | `-60.00` offset for replacement value     |
+| Invoice chain               | Replacement plus adjustment               | `0.00`                                    |
+| Invoice chain               | Original plus replacement plus adjustment | `-5.13`, not `0.00`                       |
+
+Higher-value replacement sample:
+
+| Scenario | Value to check | Expected sample |
+|----------|----------------|-----------------|
+| Original external sale | Original fee debt | `-5.13` remains unchanged |
+| Replacement upgrade | Exchange Credit applied | `60.00` |
+| Replacement upgrade | Remaining top-up | `15.00` if upgrading from `60.00` to `75.00` |
+| Exchange adjustment | Offset for credit portion | `-60.00` |
+| Settlement | Exchange Credit portion | Nets to `0.00`; only top-up follows normal Cash/Other settlement |
+
+Lower-value or partial-itemized sample:
+
+| Scenario | Value to check | Expected sample |
+|----------|----------------|-----------------|
+| Lower-value replacement | Credit used | Only the replacement value, such as `40.00` |
+| Lower-value adjustment | Offset | Equal and opposite to credit used, such as `-40.00` |
+| Partial itemized exchange | Selected item value | Offset uses selected items only, not the full original invoice |
+
+Bug signals:
+
+- Replacement Exchange Credit value is paid out to the organizer again.
+- The invoice chain is forced to `0.00` when the original Cash/Other sale had fee debt.
+- The adjustment amount does not equal the applied Exchange Credit amount.
+- A final Exchange Credit invoice keeps `Cheque` or another stale Other custom type.
+
 ## Risk Areas
 
 - Organizer is paid twice for a Cash or Other original sale that is exchanged into a replacement covered by Exchange Credit.
@@ -67,8 +108,8 @@ OriginalPayment: Cash, Other
 | Complete a Box Office sale for one `QA Original 50`. | OriginalPayment | The original invoice is completed with the selected external payment type. |
 | Start an exchange from the original transaction and select a same-value replacement. | OriginalPayment | The replacement checkout is fully covered by Exchange Credit. |
 | Complete the replacement checkout. | OriginalPayment | New tickets are issued and the replacement invoice payment type is Exchange Credit. |
-| Review settlement or payout detail for the invoice chain. | OriginalPayment | The replacement ticket value is not paid to the organizer a second time. |
-| Review original external-payment fees. | OriginalPayment | Any original Showpass fee debt remains represented in settlement. |
+| Review replacement and exchange adjustment invoice values. | OriginalPayment | Replacement `amount_paid` and adjustment `amount_paid` are equal and opposite. |
+| Review settlement or payout detail for the invoice chain. | OriginalPayment | Chain total remains the original fee debt, such as `-5.13`, instead of becoming `0.00`. |
 
 ### Test Case 2: Box Office - Exchanges - Verify disabled Other full-credit exchange remains blocked
 
@@ -130,8 +171,8 @@ OriginalPayment: Cash, Other
 | Complete a Box Office sale for one `QA Original 50`. | OriginalPayment | The original invoice is completed with the selected external payment type. |
 | Start an exchange and select one `QA Upgrade 75`. | OriginalPayment | Checkout shows Exchange Credit applied and a remaining balance. |
 | Pay the remaining balance with the same external payment type. | OriginalPayment | The replacement purchase succeeds and collects only the additional amount. |
-| Review the replacement invoice. | OriginalPayment | The invoice preserves the final top-up payment type and applied credit amount. |
-| Review settlement or payout detail. | OriginalPayment | The Exchange Credit portion does not create duplicate organizer payout. |
+| Review the replacement invoice. | OriginalPayment | The invoice preserves the top-up payment type and applied credit amount, such as `60.00` credit plus `15.00` top-up. |
+| Review settlement or payout detail. | OriginalPayment | The Exchange Credit portion has a matching negative adjustment and only the top-up follows normal settlement. |
 
 ### Test Case 4: Box Office - Exchanges - Verify lower-value replacement credit handling
 
@@ -163,7 +204,7 @@ OriginalPayment: Cash, Other
 | Start an exchange from the higher-value original transaction. | OriginalPayment | The selected original item creates exchange credit. |
 | Select a lower-value replacement item. | OriginalPayment | Checkout applies only the amount needed for the replacement. |
 | Complete the replacement checkout. | OriginalPayment | The replacement succeeds according to the expected leftover-credit behavior. |
-| Review credit and settlement data. | OriginalPayment | Unused credit does not create duplicate payout or an incorrect negative payout. |
+| Review credit and settlement data. | OriginalPayment | The adjustment offsets only used credit, such as `-40.00` for a `40.00` replacement. |
 
 ### Test Case 5: Box Office - Exchanges - Verify repeated Cash or Other exchange ancestry
 
@@ -195,7 +236,7 @@ OriginalPayment: Cash, Other
 | Start an exchange from the first replacement transaction. | OriginalPayment | The replacement invoice is eligible for another exchange. |
 | Complete a second same-value replacement fully covered by Exchange Credit. | OriginalPayment | A second replacement invoice is created with Exchange Credit payment type. |
 | Review invoice ancestry for the exchange chain. | OriginalPayment | The second replacement traces back to the original external-payment sale. |
-| Review settlement or payout detail. | OriginalPayment | The original adjustment is not duplicated or mutated. |
+| Review settlement or payout detail. | OriginalPayment | Each replacement has its own equal-and-opposite adjustment and the original fee debt remains unchanged. |
 | Review final replacement invoice metadata. | OriginalPayment | Exchange Credit invoices do not retain stale external-payment metadata. |
 
 ### Test Case 6: Box Office - Exchanges - Verify non-external origin exchanges are unchanged
@@ -230,72 +271,41 @@ Origin: Card, GiftCard, OwnGateway, PublicExchange
 | Review settlement or transaction detail. | Origin | Cash/Other external-money correction is not applied to the selected origin. |
 | Record the result for unsupported origins. | Origin | Unsupported or out-of-scope origins are documented without creating false failures. |
 
-### Test Case 7: Box Office - Exchanges - Verify itemized external-payment exchange scoping
+### Test Case 7: Box Office - Exchanges - Verify itemized Cash or Other with Mixed Item Groups
 
 **Priority:** High  
 **Type:** Regression  
 **Area:** Box Office exchanges
 
-**Title:** Box Office - Exchanges - Verify itemized external-payment exchange scoping
+**Title:** Box Office - Exchanges - Verify itemized Cash or Other exchanges use selected items only
 
-**Description:** Validates that itemized exchanges from Cash or enabled Other sales offset only selected eligible items. This protects against full-invoice offsets, duplicated adjustment rows, and unrelated item revenue changes.
+**Description:** Validates that a Box Office employee can exchange selected items from a Cash or enabled Other sale without changing items that were not selected. This protects against using the full invoice amount, paying out unrelated items, duplicating adjustment rows, or ignoring discounts and credits from the original sale.
 
 | Platform     | View    |
 | ------------ | ------- |
 | WebBoxOffice | Desktop |
 
-**Preconditions:** Itemized exchanges are enabled. Test data exists for each item mix that is stable in the environment.
+**Preconditions:** Itemized exchanges are enabled. Test data exists for each scenario that is stable in the environment.
 
 **Postconditions:** Created exchange invoices remain available for settlement/report review.
 
 **Tags:** box-office, exchanges, tickets
 
 **Parameters:**
-ItemMix: MultipleTickets, AssignedSeating, TicketAndProduct, TicketAndMembership, TicketAndAddOn
+Scenario: MultipleTickets, AssignedSeating, TicketAndProduct, TicketAndMembership, TicketAndAddOn, Discount, AccountCredit, GroupSale, HoldPurchase, RequiredQuestions, FulfillmentOptions
 
 **Steps:**
 
 | Step Action | Data | Expected Result |
 |-------------|------|-----------------|
-| Complete a Cash or enabled Other Box Office sale for the selected item mix. | ItemMix | The original invoice records each item and payment value correctly. |
-| Start an itemized exchange and select only eligible target items. | ItemMix | Only the selected items are included in the exchange. |
-| Complete a replacement purchase using Exchange Credit. | ItemMix | Selected original items are replaced and unselected items remain valid. |
-| Review settlement or invoice item detail. | ItemMix | Settlement offsets only selected exchanged items. |
-| Review mixed-item adjustment rows where available. | ItemMix | Adjustment rows are not duplicated across item handlers. |
+| Complete a Cash or enabled Other Box Office sale for the selected scenario. | Scenario | The original invoice shows the selected items, discounts, credits, and payment values correctly. |
+| Start an itemized exchange and select only the items being exchanged. | Scenario | Only the selected items are included in the exchange. |
+| Complete a replacement purchase using Exchange Credit. | Scenario | The selected items are replaced and unselected items stay unchanged. |
+| Review the replacement invoice details. | Scenario | Customer, credit, delivery, and item details stay correct where the scenario uses them. |
+| Review settlement or invoice item detail. | Scenario | The adjustment amount matches the selected exchanged items, not the full original invoice. |
+| Review mixed-item adjustment rows where available. | Scenario | Adjustment rows appear once and are not duplicated. |
 
-### Test Case 8: Box Office - Exchanges - Verify original sale modifiers do not break exchange settlement
-
-**Priority:** Medium  
-**Type:** Regression  
-**Area:** Box Office exchanges
-
-**Title:** Box Office - Exchanges - Verify original sale modifiers do not break exchange settlement
-
-**Description:** Validates that supported original sale modifiers are preserved through Cash or enabled Other exchanges. This protects against incorrect credit amount, lost customer context, stale basket validation, and settlement offsets based on pre-discount or unrelated values.
-
-| Platform     | View    |
-| ------------ | ------- |
-| WebBoxOffice | Desktop |
-
-**Preconditions:** The selected modifier is enabled and stable in the environment.
-
-**Postconditions:** Created exchange invoices remain available for review.
-
-**Tags:** box-office, exchanges, edge-case
-
-**Parameters:**
-Modifier: Discount, AccountCredit, GroupSale, HoldPurchase, RequiredQuestions, FulfillmentOptions
-
-**Steps:**
-
-| Step Action | Data | Expected Result |
-|-------------|------|-----------------|
-| Complete a Cash or enabled Other Box Office sale using the selected modifier. | Modifier | The original invoice preserves the modifier data and payment context. |
-| Complete an exchange from the modified original sale. | Modifier | The exchange completes or follows existing eligibility rules. |
-| Review replacement invoice details. | Modifier | Customer, credit, fulfillment, or metadata fields remain consistent with the selected modifier. |
-| Review settlement or payout detail. | Modifier | Settlement offset uses the correct exchanged value for the modified original sale. |
-
-### Test Case 9: Box Office - Exchanges - Verify blocked post-purchase states do not create settlement artifacts
+### Test Case 8: Box Office - Exchanges - Verify blocked post-purchase states do not create settlement artifacts
 
 **Priority:** Medium  
 **Type:** Regression  
@@ -326,7 +336,7 @@ PostPurchaseState: CheckedIn, Transferred, PartiallyRefunded, FullyRefunded, Voi
 | Attempt to begin or complete an exchange. | PostPurchaseState | Existing eligibility rules are respected. |
 | Review transactions and settlement data after a blocked attempt. | PostPurchaseState | Blocked exchanges do not create replacement invoices, exchange credit, or settlement adjustments. |
 
-### Test Case 10: Box Office - Exchanges - Verify reporting agrees across Cash and Other exchange chains
+### Test Case 9: Box Office - Exchanges - Verify reporting agrees across Cash and Other exchange chains
 
 **Priority:** High  
 **Type:** Regression  
@@ -354,7 +364,7 @@ ReportSurface: TransactionsDetail, PayoutDetail, PaymentTypeBreakdown, CsvExport
 | Step Action | Data | Expected Result |
 |-------------|------|-----------------|
 | Open the selected report surface for the venue and date range. | ReportSurface | The report includes the original, replacement, and exchange adjustment invoices. |
-| Compare the invoice chain totals. | ReportSurface | Cash or Other externally collected amounts are not represented as a second organizer payout. |
+| Compare the invoice chain totals. | ReportSurface | Replacement plus adjustment nets to `0.00` and the original fee debt remains visible. |
 | Review signs for original sale, replacement, and adjustment rows. | ReportSurface | Signs and totals are consistent with the settlement expectation for the exchange chain. |
 | Compare the selected surface with another available reporting surface. | ReportSurface | The same invoice chain has matching business totals across surfaces. |
 
@@ -368,8 +378,8 @@ Run these first if time is limited:
 4. Test Case 3 with Other.
 5. Test Case 5 with Cash and Other.
 6. Test Case 7 with `MultipleTickets`.
-7. Test Case 8 with `Discount` and `AccountCredit`.
-8. Test Case 10 with `PayoutDetail` and `PaymentTypeBreakdown`.
+7. Test Case 7 with `Discount` and `AccountCredit`.
+8. Test Case 9 with `PayoutDetail` and `PaymentTypeBreakdown`.
 
 ## Open Questions
 

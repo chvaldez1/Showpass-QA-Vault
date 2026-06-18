@@ -45,6 +45,13 @@ Step guidelines:
 - Use Preconditions for setup, configuration, or required system state.
 - Use Postconditions for follow-up validation, cleanup, or downstream effects.
 
+## Plain-Language Wording
+
+- Use common Showpass product words that a venue employee, organizer, or customer would recognize.
+- Prefer direct phrases such as `selected items`, `full invoice amount`, `replacement invoice`, `delivery`, `payment type`, `payout`, and `settlement`.
+- Avoid dense QA or implementation wording in titles, descriptions, steps, and expected results, such as `scoping`, `artifacts`, `metadata`, `modifiers`, `handlers`, `ancestry`, `financial root`, or `external-payment` when a simpler phrase is accurate.
+- If a backend term is needed for accuracy, pair it with the user-visible concept and keep it short.
+
 ## Parameterization Rules
 
 Use Qase single parameters to eliminate duplicate test cases. If the input lists multiple variants of the same variable, such as email types, payment methods, or delivery methods, define one test case with a named parameter instead of writing separate cases for each value.
