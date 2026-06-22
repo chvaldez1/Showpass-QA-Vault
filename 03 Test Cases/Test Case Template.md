@@ -33,7 +33,7 @@ Use this file for generated QA test cases. Prefer grouped, Qase-ready manual cov
 
 - 
 
-## Recommended Test Data
+## Recommended Test Data / Pre-requisites
 
 - 
 
