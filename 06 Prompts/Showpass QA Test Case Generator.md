@@ -46,11 +46,18 @@ Write manual test cases so a QA user can execute them without translating implem
 - Order cases by execution workflow, not by backend class or implementation detail.
 - Prefer an execution order such as discount entry paths and purchase handoff, basket recalculation with fees and tender, item identity and split boundaries, post-transaction financial workflows, and rollback.
 - Do not use Markdown numbered lists for test case titles because they are hard to copy and paste. Label each test case as `TC-1: Title`, `TC-2: Title`, and so on.
+- Use Qase-style titles that include the product area and behavior, such as `TC-1: Core - Discounts - Verify partial discount totals in public and widget checkout`.
+- Avoid cramped or malformed title wording. Titles should read naturally after the prefix, with a space after `Verify`.
 - Use the same `TC-*` labels in the Minimum Execution Set.
 - Keep technical source behavior in source-backed behavior or risk sections; keep test steps focused on what the customer, Box Office employee, organizer, or dashboard user sees and does.
 - Use plain titles and step wording, but keep parameter names and values in PascalCase per [[05 Tooling/Qase Test Case Writing Rules]].
 - Prefer readable PascalCase parameter names such as `TicketQuantity`, `FeeSetup`, `PaymentType`, `BasketChange`, `SeatPath`, and `TicketSelection`.
 - Prefer readable PascalCase parameter values such as `TwoSelectedOneDiscounted`, `FlatFeePlusTax`, `OtherCustomType`, and `ExchangeAfterPartialRefund`.
+- Keep parameters easy to execute. Prefer one high-signal value for baseline coverage and only add variants when they materially change behavior or risk.
+- Do not combine too many broad axes in one test case. If a case needs more than 2-3 parameters, split it or move lower-risk variants to the minimum execution set, test data notes, or automation candidates.
+- For complex features, use one representative parameter value for the primary manual case, then create separate cases for materially different flows such as Box Office payment, basket changes, refunds, exchanges, or assigned seating.
+- Choose 1-3 accurate approved tags. Prefer one surface tag, such as `public`, `widget`, or `box-office`, plus one feature tag, such as `discounts`, `checkout`, `basket`, `fees-and-taxes`, `refunds`, `exchanges`, or `reports`.
+- Do not tag every related domain in a broad case. Tags should help someone find the case, not list every risk.
 - Avoid generated table headers like `Column 1`, `Column 2`, and `Column 3`; use `Platform / View` and `Step Action / Data / Expected Result` for tables.
 - Do not put Qase parameters in a `Name / Values` table. Use `ParameterName: Value1, Value2, Value3`.
 - Prefer customer-facing terms such as `discounted tickets`, `regular-price tickets`, `checkout total`, `order details`, `transaction details`, `invoice details`, and `credit details`.

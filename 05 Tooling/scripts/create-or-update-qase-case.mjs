@@ -21,6 +21,9 @@ function usage() {
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-info <suite-id>
 
 Notes:
+  --case-number maps to a local markdown label such as "TC-1:" or "### Test Case 1:".
+  Local labels are not Qase case IDs. Qase assigns a new ID on create.
+  --update must only be used with an existing Qase case ID.
   --dry-run is the default for create payloads.
   --apply is required before creating or updating a Qase case.
   .env must provide QASE_TESTOPS_API_TOKEN or QASE_API_TOKEN, plus QASE_PROJECT_CODE.`);
@@ -67,17 +70,31 @@ function requireQaseEnv() {
 }
 
 function extractCase(markdown, caseNumber) {
-  const heading = new RegExp(`^### Test Case ${caseNumber}: .*$`, "m");
+  const heading = new RegExp(
+    `^(?:### Test Case ${caseNumber}: .*|TC-${caseNumber}: .*)$`,
+    "m"
+  );
   const match = markdown.match(heading);
   if (!match || match.index === undefined) {
-    throw new Error(`Could not find Test Case ${caseNumber}`);
+    throw new Error(`Could not find local test case ${caseNumber}`);
   }
 
   const rest = markdown.slice(match.index);
-  const nextCase = rest.slice(match[0].length).search(/^### Test Case \d+:/m);
+  const nextCase = rest
+    .slice(match[0].length)
+    .search(/^(?:### Test Case \d+:|TC-\d+:)/m);
   return nextCase === -1
     ? rest.trim()
     : rest.slice(0, match[0].length + nextCase).trim();
+}
+
+function getTitle(section) {
+  const explicitTitle = getBoldField(section, "Title", false);
+  if (explicitTitle) return explicitTitle;
+
+  const headingMatch = section.match(/^(?:### Test Case \d+:|TC-\d+:)\s*(.*)$/m);
+  if (!headingMatch?.[1]) throw new Error("Missing field: Title");
+  return headingMatch[1].trim();
 }
 
 function getBoldField(section, label, required = true) {
@@ -166,7 +183,10 @@ function parseMarkdownTableRow(line) {
 }
 
 function parseSteps(section) {
-  const start = section.search(/^\*\*Steps:\*\*$/m);
+  let start = section.search(/^\*\*Steps:\*\*$/m);
+  if (start === -1) {
+    start = section.search(/^\| Step Action \| Data \| Expected Result \|$/m);
+  }
   if (start === -1) throw new Error("Missing Steps block");
 
   const rows = [];
@@ -190,15 +210,16 @@ function parseSteps(section) {
 function buildPayload({ caseFile, caseNumber, suiteId }) {
   const markdown = fs.readFileSync(caseFile, "utf8");
   const section = extractCase(markdown, caseNumber);
-  const priorityText = getBoldField(section, "Priority").toLowerCase();
+  const priorityText = (getBoldField(section, "Priority", false) || "medium")
+    .toLowerCase();
   const priority = PRIORITY[priorityText];
   if (!priority) throw new Error(`Unsupported priority: ${priorityText}`);
 
   return {
-    title: getBoldField(section, "Title"),
+    title: getTitle(section),
     description: getDescription(section),
-    preconditions: getBoldField(section, "Preconditions"),
-    postconditions: getBoldField(section, "Postconditions"),
+    preconditions: getBoldField(section, "Preconditions", false),
+    postconditions: getBoldField(section, "Postconditions", false),
     priority,
     type: DEFAULT_TYPE,
     behavior: DEFAULT_BEHAVIOR,

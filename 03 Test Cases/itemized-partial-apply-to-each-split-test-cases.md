@@ -9,7 +9,7 @@
 - Fully free discounted tickets receive free-payment fees, taxes, or service charges.
 - Regular-price tickets keep discount information or appear twice after a basket update. ?
 - Quantity, discount, payment type, credit, or seat changes leave old hidden ticket values behind. ?
-- Assigned seats or venue-assigned permissions are duplicated, dropped, or attached to the wrong ticket.
+- Assigned seats, seat swaps, or venue-assigned permissions are duplicated, dropped, or attached to the wrong ticket.
 - Guest-info tickets are combined and lose attendee data or required blank forms.
 - Products, memberships, protection, or non-itemized tickets are split by mistake.
 - Box Office Cash, Other, Free, or platform-specific fees diverge from public checkout totals.
@@ -32,24 +32,25 @@
 
 ## Manual Test Cases
 
-TC-1: Public and Widget - Partial Discount With Quantity and Fee Coverage
+TC-1: Core - Discounts - Verify Partial Discount With Quantity and Fee Coverage
+Impact: Strong
 
 **Description:** Confirms that a customer can buy multiple tickets with a partial discount and see the right discounted and regular-price ticket totals.
 
-| Platform | View |
-| --- | --- |
+| Platform        | View    |
+| --------------- | ------- |
 | Public Checkout | Desktop |
-| Public Checkout | Mobile |
+| Public Checkout | Mobile  |
 | Widget Checkout | Desktop |
-| Widget Checkout | Mobile |
+| Widget Checkout | Mobile  |
 
-**Tags:** public, widget, discounts
+**Tags:** discounts, checkout, basket
 
 **Parameters:**
 
-TicketQuantity: TwoSelectedOneDiscounted, FiveSelectedTwoDiscounted, TwentyThreeSelectedOneDiscounted
-FeeSetup: NoFees, FlatFeePlusTax, FullCustomInternalFeesWithTaxOnFees
-DiscountType: FullDiscountPartialQuantity, PercentageDiscountPartialQuantity, FixedAmountDiscountPartialQuantity
+TicketQuantity: FiveSelectedTwoDiscounted
+FeeSetup: FullCustomInternalFeesWithTaxOnFees
+DiscountType: FullDiscount, PercentageDiscount, FixedAmountDiscount
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
@@ -60,6 +61,7 @@ DiscountType: FullDiscountPartialQuantity, PercentageDiscountPartialQuantity, Fi
 | Review the order or transaction details. |  | Discounted tickets and regular-price tickets show separate values that add up to the charged amount. |
 
 TC-2: Box Office - Direct Sale Across Tender and Platform Fee Context
+Impact: Strong
 
 **Description:** Confirms that a Box Office employee can sell multiple tickets with a partial discount and the total stays correct for each payment type.
 
@@ -71,8 +73,8 @@ TC-2: Box Office - Direct Sale Across Tender and Platform Fee Context
 
 **Parameters:**
 
-PaymentType: Card, Cash, OtherCustomType, AutoFreeWhenFinalTotalIsZero
-FeeSetup: NoFees, PlatformSpecificFees, FreePaymentFeeRateCard
+PaymentType: Cash, OtherCustomType
+FeeSetup: FullCustomInternalFeesWithTaxOnFees
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
@@ -83,6 +85,7 @@ FeeSetup: NoFees, PlatformSpecificFees, FreePaymentFeeRateCard
 | Review the transaction and payout values. | FeeSetup | Discount, fee, tax, and payment totals match the purchased ticket values. |
 
 TC-3: Holds, Hold Links, and Group Sales - Discounted Values Stay Correct Through Handoff
+Impact: Medium (Strengthen on discount application)
 
 **Description:** Confirms that held and group-sale baskets keep the same discounted and regular-price values after handoff.
 
@@ -118,7 +121,7 @@ TC-4: Checkout - Basket Changes Recalculate Ticket Totals
 
 **Parameters:**
 
-BasketChange: IncreaseQuantity, DecreaseQuantity, RemoveDiscount, ReapplyDiscount, ChangePaymentType, AddGiftCard, RemoveCredit
+BasketChange: IncreaseQuantity, DecreaseQuantity, ChangePaymentType, AddGiftCard, RemoveCredit
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
@@ -127,30 +130,7 @@ BasketChange: IncreaseQuantity, DecreaseQuantity, RemoveDiscount, ReapplyDiscoun
 | Complete checkout when the basket is still valid. | BasketChange | The final order matches the final basket. |
 | Review the order or transaction details. |  | Discounted tickets show the discount; regular-price tickets do not. |
 
-TC-5: Fees and Taxes - Complex Fee Setup on Free and Regular-Price Tickets
-
-**Description:** Confirms that complex fee and tax setups calculate correctly when only some tickets receive the discount.
-
-| Platform | View |
-| --- | --- |
-| Public Checkout | Desktop |
-| Box Office | Desktop |
-
-**Tags:** fees-and-taxes, discounts, edge-case
-
-**Parameters:**
-
-DiscountType: FullDiscountPartialQuantity, PercentageDiscountPartialQuantity, FixedAmountDiscountPartialQuantity
-FeeSetup: FlatOrganizerFee, PercentageTax, AbsorbedFees, MatchedFees, TaxOnFees, FreePaymentFeeRateCard
-
-| Step Action | Data | Expected Result |
-| --- | --- | --- |
-| Create a basket using the selected discount and fee setup. | DiscountType, FeeSetup | The basket accepts the configuration. |
-| Review each visible fee and tax line after the discount is applied. | FeeSetup | Fees and taxes apply to the correct discounted and regular-price tickets. |
-| Complete the purchase. |  | Purchase succeeds without a total mismatch. |
-| Compare the checkout total, invoice total, transaction detail, and payout total. |  | All totals agree within expected rounding rules. |
-
-TC-6: Credits and Exchange Credit at Checkout - Credit Applies to Split Total
+TC-5: Credits and Exchange Credit at Checkout - Credit Applies to Split Total
 
 **Description:** Confirms that credits apply to the discounted checkout total and do not over-apply against the original ticket total.
 
@@ -172,50 +152,51 @@ CreditPath: PartialGiftCard, PartialUserCredit, ExchangeCreditAutoApply, Exchang
 | Complete checkout. | CreditPath | Payment, credit, and remaining balance are correct. |
 | Review the invoice and credit details. |  | Credit values do not exceed the final purchase total or create a negative balance. |
 
-TC-7: Assigned Seating - Seat Ownership Stays Correct After Discount Updates
+TC-6: Assigned Seating - Seat Ownership and Location Assignment Stay Correct After Discount Updates
 
-**Description:** Confirms that selected seats stay attached to the correct tickets after the discount is applied and the basket is changed.
+**Description:** Confirms that assigned seats and venue-assigned locations stay attached to the correct tickets after the discount is applied and the basket is changed.
 
 | Platform | View |
 | --- | --- |
 | Public Checkout | Desktop |
 | Box Office | Desktop |
 
-**Tags:** assigned-seating, basket, discounts
-
-**Parameters:**
-
-SeatPath: ApplyAfterSeatSelection, CreateWithDiscount, ChangeSeatsAfterDiscount, DecreaseQuantityAfterDiscount, TwentySeatSelection
-
-| Step Action | Data | Expected Result |
-| --- | --- | --- |
-| Select assigned seats and apply the partial discount. | SeatPath | Each selected seat appears once in the basket. |
-| Make the selected seat or quantity change. | SeatPath | Seats update without duplicates or missing selections. |
-| Complete checkout. |  | Each issued ticket is tied to one selected seat. |
-| Review invoice rows and ticket details. |  | Discounted and regular-price tickets keep the expected seats and values. |
-
-TC-8: Venue-Assigned Seating - Location Assignment Stays Correct
-
-**Description:** Confirms that venue-assigned seat purchases keep the correct location assignment when the discount is applied.
-
-| Platform | View |
-| --- | --- |
-| Box Office | Desktop |
-
 **Tags:** assigned-seating, box-office, discounts
 
 **Parameters:**
 
-SeatPath: CreateWithDiscount, ApplyDiscountAfterCreate, MixedTicketTypes
+SeatPath: ApplyAfterSeatSelection, ChangeSeatsAfterDiscount, DecreaseQuantityAfterDiscount, TwentySeatSelection, VenueAssignedCreateWithDiscount, VenueAssignedApplyDiscountAfterCreate, VenueAssignedMixedTicketTypes
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Create a venue-assigned seat basket for the selected scenario. | SeatPath | The location assignment is present before purchase. |
-| Apply or preserve the partial APPLY_TO_EACH discount. | SeatPath | Discounted and regular-price tickets keep the required location assignment. |
-| Complete the Box Office sale. |  | Tickets issue without duplicate or missing venue-assigned assignments. |
-| Review transaction item rows. |  | Discounted and regular-price values match the selected venue-assigned tickets. |
+| Select or create seats for the selected scenario and apply the partial discount. | SeatPath | Each selected seat or venue-assigned location appears once in the basket. |
+| Make the selected seat, location, or quantity change before purchase. | SeatPath | Seats and venue-assigned locations update without duplicates or missing selections. |
+| Complete checkout or the Box Office sale. |  | Each issued ticket is tied to the expected seat or venue-assigned location. |
+| Review invoice rows and ticket details. |  | Discounted and regular-price tickets keep the expected seats, location assignments, and values. |
 
-TC-9: Per-Ticket Identity - Guest Info and Child Ticket Details Stay Attached
+TC-7: Assigned Seating - Seat Swap Keeps Discounted and Regular Tickets Correct
+
+**Description:** Confirms that swapping seats after a partial discount keeps seat ownership and ticket values attached to the correct issued tickets.
+
+| Platform | View |
+| --- | --- |
+| Public Checkout | Desktop |
+| Box Office | Desktop |
+
+**Tags:** assigned-seating, seat-swap, discounts
+
+**Parameters:**
+
+SwapPath: SwapDiscountedTicketSeat, SwapRegularPriceTicketSeat, SwapMultipleSeats
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Create an assigned-seating basket with discounted and regular-price tickets. | SwapPath | The basket shows each selected seat once with the expected discounted or regular-price value. |
+| Swap the selected seat after the discount is applied. | SwapPath | The old seat is released and the new seat is attached to the same ticket value. |
+| Complete checkout or the Box Office sale. |  | Tickets issue for the final swapped seats only. |
+| Review ticket details and invoice rows. |  | Discounted and regular-price values stay with the correct swapped tickets and no duplicate seat assignment remains. |
+
+TC-8: Per-Ticket Identity - Guest Info and Child Ticket Details Stay Attached
 
 **Description:** Confirms that attendee details and child ticket details stay attached to the correct ticket after the discount is applied.
 
@@ -238,7 +219,7 @@ IdentityPath: GuestInfoPerTicket, ExistingGuestInfo, RequiredInfo, TicketTypeSub
 | Enter or review attendee details where required. | IdentityPath | Attendee data remains attached to the intended ticket. |
 | Complete checkout and review order details. |  | No guest info, required info, or child ticket detail is dropped or moved to the wrong ticket. |
 
-TC-10: Mixed Cart and Non-Target Items - Only Eligible Tickets Change
+TC-9: Mixed Cart and Non-Target Items - Only Eligible Tickets Change
 
 **Description:** Confirms that only eligible itemized ticket rows are affected and unrelated cart items keep their normal behavior.
 
@@ -260,7 +241,7 @@ Scenario: TwoTicketTypesOneEligible, ItemizedAndNonItemizedTickets, TicketPlusPr
 | Complete checkout or confirm the expected validation message. | Scenario | Supported scenarios complete; unsupported scenarios fail without changing unrelated cart items. |
 | Review the basket or invoice details. |  | Products, memberships, protection, non-itemized tickets, and non-target discounts remain unchanged. |
 
-TC-11: Refunds and Voids - Selected Tickets Use the Correct Value
+TC-10: Refunds and Voids - Selected Tickets Use the Correct Value
 
 **Description:** Confirms that refunds and voids use the value of the selected ticket, whether that ticket was discounted or regular price.
 
@@ -282,7 +263,7 @@ Action: Refund, PartialRefund, Void
 | Complete the action. | Action | Selected tickets update state and unselected tickets remain unchanged. |
 | Review original and reversal invoice rows. |  | Reversal rows match the selected ticket values and show the correct signs. |
 
-TC-12: Exchanges - Selected Tickets Create Correct Exchange Credit
+TC-11: Exchanges - Selected Tickets Create Correct Exchange Credit
 
 **Description:** Confirms that exchanges create credit based on the selected ticket values, not the full original order total.
 
@@ -304,9 +285,10 @@ ExchangeSelection: DiscountedTicket, RegularPriceTicket, MixedSelection, Exchang
 | Complete replacement checkout using Exchange Credit. |  | Replacement tickets issue and unselected original tickets remain unchanged. |
 | Review original, replacement, and adjustment invoices. |  | Credit, fees, taxes, and adjustment rows match the selected exchanged tickets. |
 
-TC-13: Financial Surfaces - Transaction, Payout, and Report Totals Agree
+TC-12: Financial Surfaces - Transaction, Payout, and Report Totals Agree
 
 **Description:** Confirms that transaction, payout, and report totals all tell the same financial story after split-discount purchases and follow-up actions.
+Impact: Strong
 
 | Platform | View |
 | --- | --- |
@@ -325,7 +307,7 @@ Surface: TransactionDetail, PayoutDetail, PaymentTypeBreakdown, ReportCsv, Recei
 | Compare discounted, regular-price, refund, and exchange values. |  | Values are not duplicated and signs are correct. |
 | Cross-check against another financial surface. |  | Business totals agree within expected rounding rules. |
 
-TC-14: Switch Off - Rollback Smoke
+TC-13: Switch Off - Rollback Smoke
 
 **Description:** Confirms that turning the switch off leaves the existing discount behavior stable enough for rollback.
 
@@ -345,20 +327,19 @@ TC-14: Switch Off - Rollback Smoke
 
 ## Minimum Execution Set
 
-TC-1: Public checkout, 5 selected/2 discounted, flat fee plus tax.
-TC-2: Widget checkout, 23 selected/1 discounted, no fees.
-TC-3: Box Office direct sale with Card, Cash, Other custom type, and auto Free from full-free total.
-TC-4: Box Office hold to hold-link customer purchase and group sale.
-TC-5: Basket change: increase quantity, decrease quantity, remove/reapply discount.
-TC-6: Full fee setup with absorbed fees, matched fees, tax on fees, and free-payment fee rate card.
-TC-7: Gift card, user credit, and exchange credit after split.
-TC-8: Assigned seating with seat change after discount and 20-seat selection.
-TC-9: Venue-assigned seating in Box Office.
-TC-10: Per-ticket guest info and ticket sub-product paths.
-TC-11: Mixed cart with itemized ticket, non-itemized ticket, product, membership, or protection item.
-TC-12: Refund, partial refund, void, and exchange selected discounted vs regular-price tickets.
-TC-13: Transaction detail, payout detail, payment type breakdown, CSV export, and receipt/confirmation check.
-TC-14: Switch-off rollback smoke on public and Box Office.
+TC-1: Public and widget checkout with complex fees, taxes, and partial discount quantities.
+TC-2: Box Office direct sale with Cash, Other custom type, fee changes, and auto Free from full-free total.
+TC-3: Box Office hold to hold-link customer purchase and group sale.
+TC-4: Basket quantity, payment type, gift card, and credit changes before purchase.
+TC-5: Gift card, user credit, and exchange credit after split.
+TC-6: Assigned seating, venue-assigned seating, and 20-seat selection.
+TC-7: Seat swap after discount on discounted and regular-price assigned seats.
+TC-8: Per-ticket guest info and ticket sub-product paths.
+TC-9: Mixed cart with itemized ticket, non-itemized ticket, product, membership, or protection item.
+TC-10: Refund, partial refund, and void selected discounted vs regular-price tickets.
+TC-11: Exchange selected discounted vs regular-price tickets.
+TC-12: Transaction detail, payout detail, payment type breakdown, CSV export, and receipt/confirmation check.
+TC-13: Switch-off rollback smoke on public and Box Office.
 
 ## Automation Candidates
 

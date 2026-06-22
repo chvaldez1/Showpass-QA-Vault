@@ -2,7 +2,9 @@
 
 Use this with [[05 Tooling/qasectl]] after a Qase-ready test case has been reviewed and approved.
 
-The script reads a numbered test case from a markdown file, builds a structured Qase payload, and uses the vault `.env` for credentials. It dry-runs by default and never prints token values.
+The script reads a local `TC-*` or `### Test Case N:` case from a markdown file, builds a structured Qase payload, and uses the vault `.env` for credentials. It dry-runs by default and never prints token values.
+
+Local labels such as `TC-1` are draft labels only. They are not Qase case IDs. For a new case, omit `--update`; Qase creates and returns the real case ID. Use `--update <case-id>` only for an existing Qase case.
 
 ## Create A New Case
 
@@ -16,7 +18,7 @@ node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
   --dry-run
 ```
 
-Create after the dry run is reviewed:
+Create after the dry run is reviewed. Do not pass `--update` for a new case:
 
 ```bash
 node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
@@ -64,7 +66,9 @@ node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-info 144
 
 ## Notes
 
-- `--case-number` maps to a heading like `### Test Case 5:` in the markdown file.
+- `--case-number` maps to a local heading like `TC-5:` or `### Test Case 5:` in the markdown file.
+- Local `TC-*` labels are not Qase IDs; Qase assigns the ID when a new case is created.
+- `--update` must only be used with an existing Qase case ID.
 - `--suite-id` is required for both create and update; changing it moves the case to that suite.
 - `--apply` is required for writes.
 - The recommended approval prefix is `node "05 Tooling/scripts/create-or-update-qase-case.mjs"`, so future runs through this script can avoid repeated approval prompts.
