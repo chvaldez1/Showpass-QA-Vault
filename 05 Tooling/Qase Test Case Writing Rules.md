@@ -52,6 +52,28 @@ Step guidelines:
 - Avoid dense QA or implementation wording in titles, descriptions, steps, and expected results, such as `scoping`, `artifacts`, `metadata`, `modifiers`, `handlers`, `ancestry`, `financial root`, or `external-payment` when a simpler phrase is accurate.
 - If a backend term is needed for accuracy, pair it with the user-visible concept and keep it short.
 
+## Title Naming Rules
+
+Use this title shape for Qase cases:
+
+`Core - [Feature] - [Description]`
+
+- `Core` means the same behavior can be tested on more than one platform or entry point, such as public checkout, widget checkout, Box Office, dashboard, or mobile.
+- Do not use `Core` for a case that is specific to one surface. Start those titles with the surface or app area instead, such as `Box Office - [Feature] - [Description]`, `Public Checkout - [Feature] - [Description]`, `Widget - [Feature] - [Description]`, or `Dashboard - [Feature] - [Description]`.
+- `[Feature]` is the main product area or workflow the case touches, such as `Discounts`, `Checkout`, `Refunds`, `Exchanges`, `Assigned Seating`, `Group Sales`, or `Reports`.
+- `[Description]` is a short one-line behavior statement that makes it clear what the person is testing.
+- Keep the description readable and specific. Prefer `Verify partial discounts stay correct after basket changes` over vague wording like `Verify discount behavior`.
+- Do not stack too many areas into the feature segment. If the case touches several areas, choose the area where the main user action happens and put the rest in the description or tags.
+
+Examples:
+
+```markdown
+TC-1: Core - Discounts - Verify partial discount totals across checkout entry points
+TC-2: Box Office - Discounts - Verify partial discounts on in-person payment types
+TC-3: Public Checkout - Holds - Verify held discounted tickets keep the same total at purchase
+TC-4: Box Office - Group Sales - Verify partial discounts during a group sale
+```
+
 ## Parameterization Rules
 
 Use Qase single parameters to eliminate duplicate test cases. If the input lists multiple variants of the same variable, such as email types, payment methods, or delivery methods, define one test case with a named parameter instead of writing separate cases for each value.

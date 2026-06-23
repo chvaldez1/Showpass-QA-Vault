@@ -17,6 +17,8 @@ function usage() {
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-id <id> --case-file <path> --case-number <n> --apply
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-id <id> --case-file <path> --case-number <n> --update <case-id> --dry-run
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-id <id> --case-file <path> --case-number <n> --update <case-id> --apply
+  node "05 Tooling/scripts/create-or-update-qase-case.mjs" --batch-plan <path> --dry-run
+  node "05 Tooling/scripts/create-or-update-qase-case.mjs" --batch-plan <path> --apply
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --verify <case-id>
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-info <suite-id>
 
@@ -26,6 +28,7 @@ Notes:
   --update must only be used with an existing Qase case ID.
   --dry-run is the default for create payloads.
   --apply is required before creating or updating a Qase case.
+  --batch-plan runs multiple create/update operations in one process, including apply-time verification.
   .env must provide QASE_TESTOPS_API_TOKEN or QASE_API_TOKEN, plus QASE_PROJECT_CODE.`);
 }
 
@@ -231,6 +234,41 @@ function buildPayload({ caseFile, caseNumber, suiteId }) {
   };
 }
 
+function readBatchPlan(planPath) {
+  const plan = JSON.parse(fs.readFileSync(planPath, "utf8"));
+  const operations = Array.isArray(plan.operations) ? plan.operations : plan;
+  if (!Array.isArray(operations) || operations.length === 0) {
+    throw new Error("Batch plan must be a non-empty array or contain an operations array");
+  }
+
+  return operations.map((operation, index) => {
+    const action = operation.action ?? (operation.caseId ? "update" : "create");
+    const normalized = {
+      label: operation.label ?? `operation-${index + 1}`,
+      action,
+      caseFile: operation.caseFile ?? plan.caseFile,
+      caseNumber: operation.caseNumber ?? operation.case_number,
+      suiteId: operation.suiteId ?? operation.suite_id ?? plan.suiteId ?? plan.suite_id,
+      caseId: operation.caseId ?? operation.case_id ?? operation.update,
+    };
+
+    if (!["create", "update"].includes(normalized.action)) {
+      throw new Error(`Invalid batch action for ${normalized.label}: ${normalized.action}`);
+    }
+    if (!normalized.caseFile) throw new Error(`Missing caseFile for ${normalized.label}`);
+    if (!normalized.caseNumber) throw new Error(`Missing caseNumber for ${normalized.label}`);
+    if (!normalized.suiteId) throw new Error(`Missing suiteId for ${normalized.label}`);
+    if (normalized.action === "update" && !normalized.caseId) {
+      throw new Error(`Missing caseId for update ${normalized.label}`);
+    }
+    if (normalized.action === "create" && normalized.caseId) {
+      throw new Error(`Create operation ${normalized.label} must not include caseId`);
+    }
+
+    return normalized;
+  });
+}
+
 function summarizePayload(payload, mode) {
   return {
     mode,
@@ -325,10 +363,123 @@ async function qaseRequest(path, options = {}) {
   return { status: response.status, body };
 }
 
+async function dryRunBatchOperation(operation) {
+  const payload = buildPayload({
+    caseFile: operation.caseFile,
+    caseNumber: operation.caseNumber,
+    suiteId: operation.suiteId,
+  });
+
+  if (operation.action === "update") {
+    const { body: existingBody } = await qaseRequest(
+      `/case/{project}/${operation.caseId}`
+    );
+    return {
+      label: operation.label,
+      action: operation.action,
+      ...summarizeUpdate({
+        existing: existingBody.result,
+        payload,
+        mode: "dry-run-update",
+        caseId: operation.caseId,
+      }),
+    };
+  }
+
+  return {
+    label: operation.label,
+    action: operation.action,
+    qase_will_assign_case_id: true,
+    ...summarizePayload(payload, "dry-run-create"),
+  };
+}
+
+async function applyBatchOperation(operation) {
+  const payload = buildPayload({
+    caseFile: operation.caseFile,
+    caseNumber: operation.caseNumber,
+    suiteId: operation.suiteId,
+  });
+
+  if (operation.action === "update") {
+    const { body: beforeBody } = await qaseRequest(
+      `/case/{project}/${operation.caseId}`
+    );
+    const { status } = await qaseRequest(`/case/{project}/${operation.caseId}`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    });
+    const { body: verifiedBody } = await qaseRequest(
+      `/case/{project}/${operation.caseId}`
+    );
+
+    return {
+      label: operation.label,
+      action: operation.action,
+      ok: true,
+      http_status: status,
+      updated_case_id: Number(operation.caseId),
+      before: summarizeCase(beforeBody.result),
+      verified: summarizeCase(verifiedBody.result),
+    };
+  }
+
+  const { status, body } = await qaseRequest("/case/{project}", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+  const createdCaseId = body.result?.id;
+  const { body: verifiedBody } = await qaseRequest(
+    `/case/{project}/${createdCaseId}`
+  );
+
+  return {
+    label: operation.label,
+    action: operation.action,
+    ok: true,
+    http_status: status,
+    created_case_id: createdCaseId,
+    verified: summarizeCase(verifiedBody.result),
+  };
+}
+
+async function runBatchPlan({ planPath, apply }) {
+  const operations = readBatchPlan(planPath);
+  const results = [];
+
+  for (const operation of operations) {
+    results.push(
+      apply
+        ? await applyBatchOperation(operation)
+        : await dryRunBatchOperation(operation)
+    );
+  }
+
+  return {
+    mode: apply ? "batch-apply" : "batch-dry-run",
+    operation_count: operations.length,
+    results,
+  };
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
     usage();
+    return;
+  }
+
+  if (args["batch-plan"]) {
+    console.log(
+      JSON.stringify(
+        await runBatchPlan({
+          planPath: args["batch-plan"],
+          apply: Boolean(args.apply),
+        }),
+        null,
+        2
+      )
+    );
     return;
   }
 

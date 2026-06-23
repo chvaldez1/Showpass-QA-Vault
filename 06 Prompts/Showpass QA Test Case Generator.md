@@ -46,7 +46,9 @@ Write manual test cases so a QA user can execute them without translating implem
 - Order cases by execution workflow, not by backend class or implementation detail.
 - Prefer an execution order such as discount entry paths and purchase handoff, basket recalculation with fees and tender, item identity and split boundaries, post-transaction financial workflows, and rollback.
 - Do not use Markdown numbered lists for test case titles because they are hard to copy and paste. Label each test case as `TC-1: Title`, `TC-2: Title`, and so on.
-- Use Qase-style titles that include the product area and behavior, such as `TC-1: Core - Discounts - Verify partial discount totals in public and widget checkout`.
+- Use the title format from [[05 Tooling/Qase Test Case Writing Rules#Title Naming Rules]]: `Core - [Feature] - [Description]`.
+- Use `Core` only when the same behavior can be tested across more than one platform or entry point. For one-surface cases, start with the surface or app area, such as `Box Office`, `Public Checkout`, `Widget`, or `Dashboard`.
+- Use `[Feature]` for the main app area or workflow the case mostly touches. Use `[Description]` for a short one-line behavior statement that someone can understand without reading the steps.
 - Avoid cramped or malformed title wording. Titles should read naturally after the prefix, with a space after `Verify`.
 - Use the same `TC-*` labels in the Minimum Execution Set.
 - Keep technical source behavior in source-backed behavior or risk sections; keep test steps focused on what the customer, Box Office employee, organizer, or dashboard user sees and does.

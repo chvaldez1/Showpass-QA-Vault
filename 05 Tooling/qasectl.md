@@ -53,6 +53,8 @@ If the user confirms a bulk operation, dry-run every affected case and summarize
 3. Load credentials from the existing vault `.env`; do not ask for or echo tokens when `.env` is present.
 4. Read the current case payloads from Qase and save the important before-state in command output or a short note.
 5. Prefer the reusable script at `05 Tooling/scripts/create-or-update-qase-case.mjs` for case creation, updates, and verification.
+   - For one case, use the single-case command.
+   - For more than one approved write, use `--batch-plan` so dry-run, apply, and apply-time verification happen through one script process.
 6. Dry run before any write:
    - print each local draft label, such as `TC-1`
    - for creates, confirm no Qase case ID is supplied and Qase will assign the new ID
@@ -62,7 +64,7 @@ If the user confirms a bulk operation, dry-run every affected case and summarize
    - print a count or compact diff for long fields like `steps`
 7. Review dry-run output against the confirmed request. If the change is broad, ambiguous, or destructive, pause for confirmation again.
 8. Run the apply mode only after the dry run is clean and the confirmed scope still matches the request exactly.
-9. Re-read Qase after applying and verify the requested text or field state is correct.
+9. Re-read Qase after applying and verify the requested text or field state is correct. When using `--batch-plan --apply`, use the returned `verified` payloads as the apply-time verification unless deeper field inspection is needed.
 10. Delete temporary scripts unless they are intentionally useful for reuse.
 
 Prefer `05 Tooling/scripts/create-or-update-qase-case.mjs` over fragile inline shell JSON for Qase writes. The script parses `.env`, constructs JSON payloads with structured objects, avoids shell interpolation for request bodies, dry-runs by default, and verifies cases by ID.
@@ -98,6 +100,16 @@ node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
   --case-number 5 \
   --update 4817 \
   --dry-run
+
+# Dry run multiple approved writes from one plan file
+node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
+  --batch-plan "/private/tmp/qase-batch-plan.json" \
+  --dry-run
+
+# Apply and verify multiple approved writes from one plan file
+node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
+  --batch-plan "/private/tmp/qase-batch-plan.json" \
+  --apply
 ```
 
 For wording updates, make replacements idempotent. Example: when changing `Guestlist` to `Guestlists`, use a boundary-aware replacement so existing `Guestlists` does not become `Guestlistss`, and verify both the old term and accidental double-plural forms are gone.

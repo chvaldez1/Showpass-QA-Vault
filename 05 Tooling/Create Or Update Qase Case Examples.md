@@ -34,6 +34,48 @@ Verify the created case:
 node "05 Tooling/scripts/create-or-update-qase-case.mjs" --verify 4817
 ```
 
+## Run Multiple Writes With One Approval
+
+Use a batch plan when one approved request includes multiple Qase writes, such as updating one existing case and creating one new case. The script dry-runs or applies every operation in one process, and apply mode verifies each changed case before returning.
+
+Example plan:
+
+```json
+{
+  "caseFile": "03 Test Cases/itemized-partial-apply-to-each-split-test-cases.md",
+  "suiteId": 1023,
+  "operations": [
+    {
+      "label": "TC-3 hold update",
+      "action": "update",
+      "caseNumber": 3,
+      "caseId": 4860
+    },
+    {
+      "label": "TC-4 group sale create",
+      "action": "create",
+      "caseNumber": 4
+    }
+  ]
+}
+```
+
+Dry run the whole plan:
+
+```bash
+node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
+  --batch-plan "/private/tmp/qase-batch-plan.json" \
+  --dry-run
+```
+
+Apply and verify the whole plan:
+
+```bash
+node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
+  --batch-plan "/private/tmp/qase-batch-plan.json" \
+  --apply
+```
+
 ## Update An Existing Case
 
 Dry run the update first. This reads the current Qase case and prints a before/after summary.
@@ -71,4 +113,5 @@ node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-info 144
 - `--update` must only be used with an existing Qase case ID.
 - `--suite-id` is required for both create and update; changing it moves the case to that suite.
 - `--apply` is required for writes.
+- Use `--batch-plan` for approved multi-case work so Qase read, write, and verification happen in one network-approved process.
 - The recommended approval prefix is `node "05 Tooling/scripts/create-or-update-qase-case.mjs"`, so future runs through this script can avoid repeated approval prompts.
