@@ -1,5 +1,5 @@
 Discount code:
 
 ```
-Peter-I-100-2--
+SOCCER-100
 ```
