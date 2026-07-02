@@ -73,12 +73,38 @@ Bug signals:
 - Partial itemized exchanges offset the full original sale instead of only selected items.
 - Payout, payment type breakdown, transaction detail, and exports disagree on Cash, Other, exchange adjustment, or replacement invoice totals.
 
+## Gap Analysis Addendum
+
+Sources reviewed for missing practical coverage:
+
+- Backend: `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/models/invoice_management/invoice.py`
+- Backend: `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/models/credit_management/user_credit.py`
+- Backend: `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/services/user_credits/exchanges/credit_create_validation.py`
+- Backend: `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/services/user_credits/exchanges/exchange_cancellations.py`
+- Backend: `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/tests/test_invoice_exchange.py`
+- Backend: `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/tests/test_admin_refunds.py`
+- Backend: `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/tests/test_api_discounts.py`
+- Backend: `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/tests/test_square_oauth_invoice_refund.py`
+- Backend: `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/reports/services/financial_reports/financial_report.py`
+- Backend: `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/reports/constants.py`
+- Frontend: `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/features/exchanges/hooks/usePublicExchangeManager.ts`
+- Frontend: `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/shared/components/application/data-display/NavBarBanners/NavBarExchangeBanner.web.tsx`
+- Frontend: `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/shared/modules/exchanges/components/CancelItemizedExchangeBanner/CancelItemizedExchangeBanner.web.tsx`
+- Playwright patterns: `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/box-office-journey.ts`
+- Playwright patterns: `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/shared/banner/ExchangeCreditBanner.ts`
+
+Missing practical cases added:
+
+- Canceling an active temporary exchange before replacement checkout, to verify the original Cash or Other sale is not left in an in-progress exchange state.
+- Refunding a completed Cash or Other exchange chain, to verify the refund, exchange adjustment, and exchange refund correction remain aligned.
+- Exchanging Square Terminal purchases across internal Showpass Square and external client Square setups, to verify settlement and fee attribution.
+
 ## Qase-Ready Manual Test Cases
 
 ### Test Case 1: Box Office - Exchanges - Verify same-value Cash or Other exchange settlement
 
-**Priority:** High  
-**Type:** Regression  
+**Priority:** High
+**Type:** Regression
 **Area:** Box Office exchanges
 
 **Title:** Box Office - Exchanges - Verify same-value Cash or Other exchange settlement
@@ -97,7 +123,7 @@ Bug signals:
 
 **Tags:** box-office, exchanges, payouts
 
-**Parameters:**  
+**Parameters:**
 OriginalPayment: Cash, Other
 
 **Steps:**
@@ -116,8 +142,8 @@ OriginalPayment: Cash, Other
 
 ### Test Case 2: Box Office - Exchanges - Verify disabled Other full-credit exchange remains blocked
 
-**Priority:** High  
-**Type:** Regression  
+**Priority:** High
+**Type:** Regression
 **Area:** Box Office exchanges
 
 **Title:** Box Office - Exchanges - Verify disabled Other full-credit exchange remains blocked
@@ -152,8 +178,8 @@ OriginalPayment: Cash, Other
 
 ### Test Case 3: Box Office - Exchanges - Verify higher-value replacement top-up handling
 
-**Priority:** High  
-**Type:** Regression  
+**Priority:** High
+**Type:** Regression
 **Area:** Box Office exchanges
 
 **Title:** Box Office - Exchanges - Verify higher-value replacement top-up handling
@@ -172,7 +198,7 @@ OriginalPayment: Cash, Other
 
 **Tags:** box-office, exchanges, payouts
 
-**Parameters:**  
+**Parameters:**
 OriginalPayment: Cash, Other
 
 **Steps:**
@@ -191,8 +217,8 @@ OriginalPayment: Cash, Other
 
 ### Test Case 4: Box Office - Exchanges - Verify lower-value replacement credit handling
 
-**Priority:** High  
-**Type:** Regression  
+**Priority:** High
+**Type:** Regression
 **Area:** Box Office exchanges
 
 **Title:** Box Office - Exchanges - Verify lower-value replacement credit handling
@@ -211,7 +237,7 @@ OriginalPayment: Cash, Other
 
 **Tags:** box-office, exchanges, credits
 
-**Parameters:**  
+**Parameters:**
 OriginalPayment: Cash, Other
 
 **Steps:**
@@ -249,7 +275,7 @@ OriginalPayment: Cash, Other
 
 **Tags:** box-office, exchanges, payouts
 
-**Parameters:**  
+**Parameters:**
 OriginalPayment: Cash, Other
 
 **Steps:**
@@ -266,12 +292,45 @@ OriginalPayment: Cash, Other
 
 [https://app.qase.io/case/SPT-4827](https://app.qase.io/case/SPT-4827)
 
-### 
+### Test Case 6: Box Office - Exchanges - Verify temporary Cash or Other exchange can be canceled before checkout
+
+**Priority:** High
+**Type:** Regression
+**Area:** Box Office exchanges
+
+**Title:** Box Office - Exchanges - Verify temporary Cash or Other exchange can be canceled before checkout
+
+**Description:** Validates that a customer can cancel a temporary exchange credit from a Box Office Cash or enabled Other sale before replacement checkout. This protects against stuck exchange credit, missing tickets, and blocked follow-up exchanges after the replacement purchase is not completed.
+
+| Platform     | View    |
+|--------------|---------|
+| WebBoxOffice | Desktop |
+| WebPublic    | Desktop |
+
+**Preconditions:** Cash and Other Box Office payments are enabled. `enable_box_office_other_full_credit_exchanges` is enabled for the Other parameter value. The original sale is attached to a customer account that can access the order from My Orders.
+
+**Postconditions:** No replacement invoice or exchange adjustment invoice should remain for the canceled attempt.
+
+**Tags:** box-office, exchanges, edge-case
+
+**Parameters:**
+OriginalPayment: Cash, Other
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Complete a Box Office sale for one `QA Original 50` assigned to the customer account. | OriginalPayment | The original invoice is completed with the selected external payment type and appears in the customer's orders. |
+| Sign in as the customer and start an itemized exchange from the order. | OriginalPayment | A temporary Exchange Credit is created and the replacement checkout path is available. |
+| Leave the replacement checkout without completing the purchase. |  | No replacement invoice is created. |
+| Cancel the active exchange from the visible exchange banner or exchange control. |  | The temporary Exchange Credit is removed and the exchange banner no longer appears. |
+| Review the original transaction and tickets. |  | The original transaction remains available and the original tickets are still valid. |
+| Start a new exchange from the same original transaction. | OriginalPayment | A new exchange can be started without an unused-credit error. |
 
 ### Test Case 7: Box Office - Exchanges - Verify itemized external-payment exchange scoping
 
-**Priority:** High  
-**Type:** Regression  
+**Priority:** High
+**Type:** Regression
 **Area:** Box Office exchanges
 
 **Title:** Box Office - Exchanges - Verify itemized external-payment exchange scoping
@@ -290,7 +349,7 @@ OriginalPayment: Cash, Other
 
 **Tags:** box-office, exchanges, tickets
 
-**Parameters:**  
+**Parameters:**
 ItemMix: MultipleTickets, AssignedSeating, TicketAndProduct, TicketAndMembership, TicketAndAddOn
 
 **Steps:**
@@ -305,7 +364,7 @@ ItemMix: MultipleTickets, AssignedSeating, TicketAndProduct, TicketAndMembership
 | Review mixed-item adjustment rows where available. | ItemMix | Adjustment rows are not duplicated across item handlers. |
 
 
-[https://app.qase.io/case/SPT-4831](https://app.qase.io/case/SPT-4831)
+
 
 ### Test Case 8: Box Office - Exchanges - Verify original sale modifiers do not break exchange settlement
 
@@ -342,6 +401,39 @@ Modifier: Discount, AccountCredit, GroupSale, HoldPurchase, RequiredQuestions, F
 | Review replacement invoice details. | Modifier | Customer, credit, fulfillment, or metadata fields remain consistent with the selected modifier. |
 | Review settlement or payout detail. | Modifier | Settlement uses the discounted, credited, or otherwise modified exchanged value instead of the original face value. |
 
+
+### Test Case 9: Box Office - Exchanges - Verify refund after Cash or Other exchange keeps correction totals aligned
+
+**Priority:** High
+**Type:** Regression
+**Area:** Box Office exchanges
+
+**Title:** Box Office - Exchanges - Verify refund after Cash or Other exchange keeps correction totals aligned
+
+**Description:** Validates that refunding a completed Cash or enabled Other exchange chain creates the expected refund and exchange refund correction records. This protects against duplicate organizer payout, missing correction rows, and mismatched totals after the replacement tickets are refunded.
+
+| Platform     | View    |
+|--------------|---------|
+| WebBoxOffice | Desktop |
+
+**Preconditions:** A same-value or higher-value exchange from Test Case 1 or Test Case 3 has been completed and the replacement transaction is refundable.
+
+**Postconditions:** Refund, exchange adjustment, and exchange refund correction invoices remain available for settlement/report review.
+
+**Tags:** box-office, exchanges, refunds
+
+**Parameters:**
+OriginalPayment: Cash, Other
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open the completed replacement transaction from the Cash or enabled Other exchange chain. | OriginalPayment | The replacement transaction and linked exchange adjustment are visible. |
+| Refund the replacement transaction using an available full refund option. | OriginalPayment | The replacement tickets are refunded or voided according to normal refund behavior. |
+| Review the linked invoice chain. |  | A refund invoice and exchange refund correction invoice are created for the exchange chain. |
+| Compare the exchange adjustment and exchange refund correction values. |  | The correction offsets the exchange adjustment without changing the original external-payment sale total. |
+| Review payout or transaction detail for the full chain. |  | Original sale, replacement, adjustment, refund, and correction totals do not duplicate organizer payout. |
 
 ### Test Case 10: Box Office - Exchanges - Verify reporting agrees across Cash and Other exchange chains
 
@@ -381,6 +473,41 @@ ReportSurface: TransactionsDetail, PayoutDetail, PaymentTypeBreakdown, CsvExport
 
 [https://showpass.atlassian.net/browse/SPW-19636](https://showpass.atlassian.net/browse/SPW-19636)
 
+### Test Case 11: Box Office - Exchanges - Verify Square settlement and fees across account setups
+
+**Priority:** High
+**Type:** Regression
+**Area:** Box Office exchanges
+
+**Title:** Box Office - Exchanges - Verify Square settlement and fees across account setups
+
+**Description:** Validates that a venue employee can exchange a Square Terminal Box Office sale and collect any upgrade balance through the selected Square account setup. This protects against incorrect Square fee attribution, missing Square account context, and duplicate settlement when Exchange Credit covers part of the replacement purchase.
+
+| Platform     | View    |
+|--------------|---------|
+| WebBoxOffice | Desktop |
+
+**Preconditions:** Square Terminal payments, exchanges, and itemized exchanges are enabled. `QA Original 50` and `QA Upgrade 75` exist with stable fees and taxes. One venue or account setup uses the Showpass Square account, and one uses the client's connected Square account.
+
+**Postconditions:** Original, replacement, exchange adjustment, and report rows remain available for settlement and fee review.
+
+**Tags:** box-office, exchanges, fees-and-taxes
+
+**Parameters:**
+SquareAccountSetup: InternalShowpassSquare, ExternalClientSquare
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Complete a Box Office sale for one `QA Original 50` using Square Terminal. | SquareAccountSetup | The original invoice completes as a Square Terminal sale for the selected account setup. |
+| Start an exchange from the original transaction and select one `QA Upgrade 75`. | SquareAccountSetup | Checkout shows Exchange Credit applied and a remaining upgrade balance. |
+| Collect the remaining upgrade balance with Square Terminal. | SquareAccountSetup | The replacement purchase succeeds and records the selected Square account setup. |
+| Review the original, replacement, and exchange adjustment invoices. | SquareAccountSetup | Square fees, taxes, Exchange Credit, and adjustment values are on the expected rows without duplicate settlement. |
+| Review payout detail or financial report output for the date range. | SquareAccountSetup | Internal Square and external client Square rows use the correct Square settlement or adjustment columns and match invoice totals. |
+
+[https://app.qase.io/case/SPT-4914](https://app.qase.io/case/SPT-4914)
+
 ## Minimum Execution Set
 
 Run these first if time is limited:
@@ -390,9 +517,12 @@ Run these first if time is limited:
 3. Test Case 2.
 4. Test Case 3 with Other.
 5. Test Case 5 with Cash and Other.
-6. Test Case 7 with `MultipleTickets`.
-7. Test Case 8 with `Discount` and `AccountCredit`.
-8. Test Case 10 with `PayoutDetail` and `PaymentTypeBreakdown`.
+6. Test Case 6 with Cash.
+7. Test Case 7 with `MultipleTickets`.
+8. Test Case 8 with `Discount` and `AccountCredit`.
+9. Test Case 9 with Cash.
+10. Test Case 10 with `PayoutDetail` and `PaymentTypeBreakdown`.
+11. Test Case 11 with both Square account setups.
 
 ## Open Questions
 

@@ -30,4 +30,5 @@ Agents should keep work aligned with this folder contract:
 - Prefer checklists, short workflows, and focused QA notes.
 - Capture behavior, risks, test cases, and automation candidates.
 - Update notes only when they make QA work easier to repeat.
+- When appending or revising notes, preserve existing user edits, links, IDs, headings, and surrounding content unless the user explicitly asks to remove or rewrite them.
 - Keep notes short enough for both humans and AI agents to scan quickly.
