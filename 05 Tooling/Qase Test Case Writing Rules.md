@@ -83,6 +83,8 @@ Use Qase single parameters to eliminate duplicate test cases. If the input lists
 - Put each parameter on its own line.
 - Do not use backticks, brackets, or extra formatting around parameter names or values.
 - Use Qase parameter groups when related variables always change together, such as platform and view, so only realistic combinations are tested.
+- Before creating separate cases for the same behavior across product areas, check whether the area can be a parameter. For example, protected-page login enforcement for account, dashboard, and Box Office should usually be one case with a `ProtectedArea` or `ProtectedPage` parameter, unless the flow or expected result is materially different.
+- If a parameterized case needs area-specific permission checks, keep those checks in the Expected Result or Preconditions instead of splitting cases only by area.
 
 Example:
 
@@ -126,6 +128,7 @@ Only include combinations relevant to the behavior under test.
 - Do not duplicate test cases solely based on platform or view differences if behavior is identical.
 - Use a single test case for multiple views when UI behavior and outcomes are the same.
 - Represent platform or view differences only in Qase parameters if behavior differs meaningfully.
+- Use a single test case for multiple protected surfaces when the behavior is the same, such as redirecting logged-out users to login and returning authorized users to the requested page. Parameterize the protected surface instead of creating one case for account, dashboard, and Box Office.
 
 Separate test cases are allowed only when:
 
@@ -133,6 +136,7 @@ Separate test cases are allowed only when:
 - A feature is available on one platform or view but not another.
 - Expected results differ based on platform or view.
 - Historical risk or known issues are platform/view-specific.
+- The permission model or recovery path is different enough that one parameterized Expected Result would become unclear or overloaded.
 
 ## Approved Tags
 

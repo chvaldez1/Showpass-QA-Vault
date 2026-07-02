@@ -20,6 +20,7 @@ function usage() {
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --batch-plan <path> --dry-run
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --batch-plan <path> --apply
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --verify <case-id>
+  node "05 Tooling/scripts/create-or-update-qase-case.mjs" --delete <case-id> --apply
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-info <suite-id>
 
 Notes:
@@ -28,6 +29,7 @@ Notes:
   --update must only be used with an existing Qase case ID.
   --dry-run is the default for create payloads.
   --apply is required before creating or updating a Qase case.
+  --delete requires --apply and must only be used after explicit user confirmation.
   --batch-plan runs multiple create/update operations in one process, including apply-time verification.
   .env must provide QASE_TESTOPS_API_TOKEN or QASE_API_TOKEN, plus QASE_PROJECT_CODE.`);
 }
@@ -176,6 +178,11 @@ function parseParams(section) {
   return params.length > 0 ? params : undefined;
 }
 
+function formatParamsForQase(params) {
+  if (!params) return undefined;
+  return Object.fromEntries(params.map((param) => [param.title, param.values]));
+}
+
 function parseMarkdownTableRow(line) {
   const trimmed = line.trim();
   if (!trimmed.startsWith("|") || !trimmed.endsWith("|")) return null;
@@ -213,10 +220,9 @@ function parseSteps(section) {
 function buildPayload({ caseFile, caseNumber, suiteId }) {
   const markdown = fs.readFileSync(caseFile, "utf8");
   const section = extractCase(markdown, caseNumber);
-  const priorityText = (getBoldField(section, "Priority", false) || "medium")
-    .toLowerCase();
-  const priority = PRIORITY[priorityText];
-  if (!priority) throw new Error(`Unsupported priority: ${priorityText}`);
+  const priorityText = getBoldField(section, "Priority", false).toLowerCase();
+  const priority = priorityText ? PRIORITY[priorityText] : undefined;
+  if (priorityText && !priority) throw new Error(`Unsupported priority: ${priorityText}`);
 
   return {
     title: getTitle(section),
@@ -229,7 +235,7 @@ function buildPayload({ caseFile, caseNumber, suiteId }) {
     layer: DEFAULT_LAYER,
     suite_id: Number(suiteId),
     tags: parseTags(section),
-    params: parseParams(section),
+    params: formatParamsForQase(parseParams(section)),
     steps: parseSteps(section),
   };
 }
@@ -314,18 +320,10 @@ function summarizeUpdate({ existing, payload, mode, caseId }) {
     changed_fields: {
       title: existing.title !== payload.title,
       suite_id: existing.suite_id !== payload.suite_id,
-      priority: existing.priority !== payload.priority,
+      priority: payload.priority !== undefined && existing.priority !== payload.priority,
       tags: JSON.stringify((existing.tags ?? []).map((tag) => tag.title)) !==
         JSON.stringify(payload.tags),
-      params:
-        JSON.stringify(existing.params ?? null) !==
-        JSON.stringify(
-          payload.params
-            ? Object.fromEntries(
-                payload.params.map((param) => [param.title, param.values])
-              )
-            : null
-        ),
+      params: JSON.stringify(existing.params ?? null) !== JSON.stringify(payload.params ?? null),
       steps_count: (existing.steps?.length ?? 0) !== payload.steps.length,
       description: existing.description !== payload.description,
       preconditions: existing.preconditions !== payload.preconditions,
@@ -503,6 +501,43 @@ async function main() {
   if (args.verify) {
     const { body } = await qaseRequest(`/case/{project}/${args.verify}`);
     console.log(JSON.stringify(summarizeCase(body.result), null, 2));
+    return;
+  }
+
+  if (args.delete) {
+    if (!args.apply) {
+      const { body } = await qaseRequest(`/case/{project}/${args.delete}`);
+      console.log(
+        JSON.stringify(
+          {
+            mode: "dry-run-delete",
+            delete_case_id: Number(args.delete),
+            before: summarizeCase(body.result),
+          },
+          null,
+          2
+        )
+      );
+      return;
+    }
+
+    const { body: beforeBody } = await qaseRequest(`/case/{project}/${args.delete}`);
+    const { status } = await qaseRequest(`/case/{project}/${args.delete}`, {
+      method: "DELETE",
+    });
+    console.log(
+      JSON.stringify(
+        {
+          ok: true,
+          mode: "apply-delete",
+          http_status: status,
+          deleted_case_id: Number(args.delete),
+          before: summarizeCase(beforeBody.result),
+        },
+        null,
+        2
+      )
+    );
     return;
   }
 
