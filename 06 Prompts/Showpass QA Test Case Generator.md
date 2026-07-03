@@ -27,6 +27,11 @@ If the user specifies only a filename, treat it as relative to `03 Test Cases/`.
 Example:
 `employees-qa-test-cases.md` means `03 Test Cases/employees-qa-test-cases.md`.
 
+Template files are protected reusable scaffolds. If the requested output path is named `*Template.md`, such as `03 Test Cases/Test Case Template.md`, do not overwrite it for generated cases or gap analysis unless the user explicitly says to overwrite or edit the template itself. Instead, create a feature-specific note in the same folder, using a filename such as:
+`03 Test Cases/<feature-or-scenario>-test-cases.md`
+or
+`03 Test Cases/<feature-or-scenario>-qase-gap-analysis.md`
+
 If the user specifies a path outside `03 Test Cases/`, keep the test case output under `03 Test Cases/` unless they explicitly say the file must be outside that folder.
 
 If the user does not specify an output file, create a new note under:
@@ -132,7 +137,7 @@ Use this flow when the goal is to compare existing Qase knowledge against the co
 2. Inspect backend behavior as the source of truth.
 3. Inspect frontend code to see how users follow that backend behavior.
 4. Compare Qase coverage against source behavior.
-5. Write the output under `03 Test Cases/`. If the user gave only a filename, place that filename in `03 Test Cases/`; if no output file is specified, create a new suitably named note there.
+5. Write the output under `03 Test Cases/`. If the user gave only a filename, place that filename in `03 Test Cases/`; if no output file is specified, create a new suitably named note there. If the requested path is a `*Template.md` file, create a feature-specific gap-analysis note instead unless the user explicitly says to overwrite the template.
 
 The output should separate:
 
@@ -163,4 +168,4 @@ When a user does approve Qase updates, follow [[05 Tooling/qasectl#Qase Update W
 
 ## Agent Reminder
 
-Read the canonical workflow first. For new-feature coverage, use the New Feature Test Case Flow and do not call the output a gap analysis. For gap analysis, read Qase first, inspect source code second, then write findings under `03 Test Cases/`. Bare filenames from the user should be resolved inside `03 Test Cases/`. Keep vault notes short and reference source paths instead of copying workflow content. Write cases from the perspective of the real Showpass actor, such as customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user. Do not use `the tester` phrasing in generated Qase cases. Preserve user edits when revising an existing note. Prefer plain product wording over abstract QA or implementation terms unless the technical term is required for accuracy.
+Read the canonical workflow first. For new-feature coverage, use the New Feature Test Case Flow and do not call the output a gap analysis. For gap analysis, read Qase first, inspect source code second, then write findings under `03 Test Cases/`. Bare filenames from the user should be resolved inside `03 Test Cases/`. Never overwrite a `*Template.md` file with generated output unless the user explicitly asks to edit or overwrite that template. Keep vault notes short and reference source paths instead of copying workflow content. Write cases from the perspective of the real Showpass actor, such as customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user. Do not use `the tester` phrasing in generated Qase cases. Preserve user edits when revising an existing note. Prefer plain product wording over abstract QA or implementation terms unless the technical term is required for accuracy.

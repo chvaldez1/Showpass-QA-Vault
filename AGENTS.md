@@ -32,6 +32,7 @@ Agents should keep work aligned with this folder contract:
 - Update notes only when they make QA work easier to repeat.
 - When appending or revising notes, preserve existing user edits, links, IDs, headings, and surrounding content unless the user explicitly asks to remove or rewrite them.
 - Keep notes short enough for both humans and AI agents to scan quickly.
+- Treat files named `*Template.md` as reusable scaffolds, not generated-output targets. If a prompt points at a template path for generated QA output, create a feature-specific note in the same folder unless the user explicitly says to overwrite or edit the template itself.
 
 ## Qase Workflow Rules
 

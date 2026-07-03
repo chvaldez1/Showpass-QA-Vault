@@ -112,7 +112,7 @@ Each test case description must include a Markdown table listing the supported P
 
 ```markdown
 | Platform            | View    |
-|---------------------|---------|
+| ------------------- | ------- |
 | Electron            | Desktop |
 | WebPublic           | Desktop |
 | Widget              | Desktop |
@@ -142,7 +142,7 @@ Separate test cases are allowed only when:
 
 Only use tags from this list. Do not invent new tags. If the user suggests additional tags, include them only if they appear in this approved list.
 
-facebook, discovery, attraction, google, public, dashboard, analytics, cauldron, widget, check-in, group-sales, admin-actions, marketplace, fees-taxes, basket, discounts, packages, edge-case, transaction-payload, api-testing, holds, refunds, tracking-links, guest-user, cart, payment, notifications, mobile-view, authenticated-user, popular-cities, memberships, assigned-seating, tickets, post-purchase, orders, user-settings, events, appearance, registration, login, user, renewals, search-filters, home-page, organizer, checkout, season-passes, waitlists, quickbooks, donations, resale, products, exchanges, nfc, transfers, my-orders, purchases, payouts, transactions, printing, abandoned-carts, reports, employee-permissions, credits, ticket-package, bulk-update, fees-and-taxes, pwyc, profile, edit-event, create-event, stripe, event, box-office, internal-rate-card
+facebook, discovery, attraction, google, public, dashboard, analytics, cauldron, widget, check-in, group-sales, admin-actions, marketplace, fees-taxes, basket, discounts, packages, edge-case, transaction-payload, api-testing, holds, refunds, tracking-links, guest-user, cart, payment, notifications, mobile-view, authenticated-user, popular-cities, memberships, assigned-seating, tickets, post-purchase, orders, user-settings, events, appearance, registration, login, user, renewals, search-filters, home-page, organizer, checkout, season-passes, waitlists, quickbooks, donations, resale, products, exchanges, nfc, transfers, my-orders, purchases, payouts, transactions, printing, abandoned-carts, reports, employee-permissions, credits, ticket-package, bulk-update, fees-and-taxes, pwyc, profile, edit-event, create-event, stripe, event, box-office, internal-rate-card, custom-questions
 
 Tag discipline:
 
