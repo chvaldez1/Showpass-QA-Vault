@@ -15,7 +15,7 @@ Use this file for generated QA test cases. Prefer grouped, Qase-ready manual cov
 
 ## Existing Qase Coverage
 
-- 
+- [SPT-#### - Existing Qase title](https://app.qase.io/case/SPT-####) - Covered / Needs update / Related only
 
 ## Source-Backed Behavior
 
@@ -65,7 +65,12 @@ Use this file for generated QA test cases. Prefer grouped, Qase-ready manual cov
 |-------------|------|-----------------|
 | [User action] | [Only if required] | [Observable result] |
 
-**Notes:** [Important setup, risk, backend dependency, or observation.]
+**Test Case Notes**
+- Qase status: Covered / Partial / Missing / Not in scope
+- Qase links:
+  - [SPT-#### - Existing Qase title](https://app.qase.io/case/SPT-####)
+- Qase action: No change / Update existing / Create new / Confirm not needed
+- Coverage notes: [Important setup, risk, backend dependency, or reason this needs a Qase update/create.]
 
 ## Regression Coverage
 

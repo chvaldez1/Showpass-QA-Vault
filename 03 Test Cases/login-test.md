@@ -71,43 +71,48 @@ This note covers all known entry points where a Showpass user can reach login, p
 
 ## Entry Paths
 
-| Platform / View                | Entry Path                                                                                         | Login Surface                             |
-| ------------------------------ | -------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| WebPublic / Desktop and Mobile | `/accounts/login/`                                                                                 | Full login page                           |
-| WebPublic / Desktop and Mobile | `/accounts/login/?next=<protected-path>`                                                           | Full login page with return URL           |
-| WebPublic / Desktop and Mobile | Public header/login action                                                                         | Login page or account modal               |
-| WebPublic / Desktop and Mobile | Public event, venue/profile, favorite/save, ticket voucher, Spotify presale                        | Login page or account modal               |
-| WebPublic / Desktop and Mobile | Account or order action that opens `AccountModal`                                                  | Account modal authentication              |
-| WebPublic / Desktop and Mobile | `/account/*`                                                                                       | Login redirect with `next`                |
-| WebBoxOffice / Desktop         | `/manage/*`                                                                                        | Login redirect with `next`                |
-| WebBoxOffice / Desktop         | `/manage/box-office/*`                                                                             | Login redirect with `next`                |
-| WebPublic / Desktop and Mobile | `/checkout/`, `/checkout/link/[id]`, `/checkout/hold/[id]`, `/checkout/transfers/[transaction_id]` | Checkout authentication or login redirect |
-| React Native Public / Mobile   | Public checkout purchase webview                                                                   | Checkout authentication or sign-up        |
-| Widget / Desktop and Mobile    | `/widget/tickets/events/checkout`                                                                  | No supported authenticated widget login   |
-| WebPublic / Desktop            | `/accounts/signup/`, `/accounts/password-reset/`, `/accounts/claim/[uuid]`                         | Account auth pages                        |
-| WebPublic / Desktop and Mobile | `/accounts/google/login/callback/`, `/accounts/facebook/login/callback/`, `/accounts/sso/login/callback/` | Provider callback                         |
-| WebPublic / Desktop            | Legacy `/accounts/password/reset/`, `/accounts/password/reset/key/<uid>-<key>/`, `/accounts/claim/<uuid>/<uuid2>/`, `/accounts/t-claim/<uuid>/<uuid2>/` | Legacy account recovery or claim links    |
-| React Native Public / Mobile   | `LoginScreen`, `SsoLoginScreen`, signup, password reset, OTP                                       | Native auth screens                       |
-| React Native Public / Mobile   | Facebook, Google, SAML, and Apple native provider flows                                            | Native provider authentication            |
-| React Native Public / Mobile   | Authenticated webview content                                                                      | Native webview token                      |
-| Electron / Desktop             | `/manage/box-office/sell` startup                                                                  | Web login in desktop shell                |
+| Platform / View                | Entry Path                                                                                                                                                                                         | Login Surface                             |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| WebPublic / Desktop and Mobile | `/accounts/login/`                                                                                                                                                                                 | Full login page                           |
+| WebPublic / Desktop and Mobile | `/accounts/login/?next=<protected-path>`                                                                                                                                                           | Full login page with return URL           |
+| WebPublic / Desktop and Mobile | Public header/login action                                                                                                                                                                         | Login page or account modal               |
+| WebPublic / Desktop and Mobile | Public event, venue/profile, favorite/save, ticket voucher                                                                                                                                         | Login page or account modal               |
+| WebPublic / Desktop and Mobile | Account or order action that opens `AccountModal`                                                                                                                                                  | Account modal authentication              |
+| WebPublic / Desktop and Mobile | `/account/*`                                                                                                                                                                                       | Login redirect with `next`                |
+| WebBoxOffice / Desktop         | `/manage/*`                                                                                                                                                                                        | Login redirect with `next`                |
+| WebBoxOffice / Desktop         | `/manage/box-office/*`                                                                                                                                                                             | Login redirect with `next`                |
+| WebPublic / Desktop and Mobile | `/checkout/`, `/checkout/link/[id]`, `/checkout/hold/[id]`                                                                                                                                         | Checkout authentication or login redirect |
+| WebPublic / Desktop and Mobile | `/checkout/transfers/[transaction_id]`                                                                                                                                                             | Customer transfer checkout authentication |
+| React Native Public / Mobile   | Public checkout purchase webview                                                                                                                                                                   | Checkout authentication or sign-up        |
+| Widget / Desktop and Mobile    | `/widget/tickets/events/checkout`                                                                                                                                                                  | No supported authenticated widget login   |
+| WebPublic / Desktop            | `/accounts/signup/`, `/accounts/password-reset/`, `/accounts/claim/[uuid]`                                                                                                                         | Account auth pages                        |
+| WebPublic / Desktop and Mobile | `/accounts/google/login/callback/`, `/accounts/facebook/login/callback/`, `/accounts/sso/login/callback/`                                                                                          | Provider callback                         |
+| WebPublic / Desktop            | Legacy `/accounts/password/reset/`, `/accounts/password/reset/key/<uid>-<key>/`, `/accounts/claim/<uuid>/<uuid2>/`, `/accounts/t-claim/<uuid>/<uuid2>/`                                            | Legacy account recovery or claim links    |
+| WebBoxOffice / Desktop         | `/manage/group-sales`, `/manage/group-sales/[id]`, `/manage/group-sales/[id]/distribute`, `/manage/group-sales/[id]/history`, `/manage/group-sales/[id]/team`, `/manage/group-sales/[id]/settings` | Group-sale dashboard authentication       |
+| WebPublic / Desktop and Mobile | Group-sale distribution or transfer claim link from email                                                                                                                                          | Recipient login/sign-up before claim      |
+| React Native Public / Mobile   | `LoginScreen`, `SsoLoginScreen`, signup, password reset, OTP                                                                                                                                       | Native auth screens                       |
+| React Native Public / Mobile   | Facebook, Google, SAML, and Apple native provider flows                                                                                                                                            | Native provider authentication            |
+| React Native Public / Mobile   | Authenticated webview content                                                                                                                                                                      | Native webview token                      |
+| Electron / Desktop             | `/manage/box-office/sell` startup                                                                                                                                                                  | Web login in desktop shell                |
 
 ## FE / BE Entry-Point Gap Analysis
 
 | Area                           | Backend Source Of Truth                                                                              | Frontend Exposure                                                                                                         | Coverage Status / Gap                                                                                                                                                                                                                                |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Direct web login               | `/api/auth/login/` with email/password, OTP, captcha, and platform-aware captcha actions             | `/accounts/login/`, `LoginForm`, `OtpForm`, checkout auth container, account modal                                        | Covered by TC-1, TC-5, TC-8, and existing Qase OTP cases. Missing local negative coverage for invalid credentials, captcha-required states, OTP resend, and invalid OTP; keep these in existing Qase unless a fresh local regression case is needed. |
+| Direct web login               | `/api/auth/login/` with email/password, OTP, captcha, and platform-aware captcha actions             | `/accounts/login/`, `LoginForm`, `OtpForm`, checkout auth container, account modal                                        | Covered by TC-1, TC-5, TC-8, and titled Qase cases in the coverage notes. Do not duplicate basic credential, captcha, OTP, show-password, invalid-login, or lockout coverage. |
 | Protected account pages        | Backend session/profile check plus frontend `withUser` redirect                                      | `/account/*` pages using `withUser` redirect to `/accounts/login/?next=<resolvedUrl>`                                     | Covered by TC-2 and TC-14. Entry table is complete for account-page entry points at the wildcard level.                                                                                                                                              |
-| Dashboard and Box Office pages | Auth/profile and permission-backed APIs protect dashboard and employee data                          | `/manage/*` middleware redirects logged-out users; Electron starts at `/manage/box-office/sell`                           | Covered by TC-3, TC-4, TC-12, and TC-14. Keep permission-denied checks in TC-4 because login success alone is not enough for Box Office access.                                                                                                      |
-| Public checkout                | Backend checkout APIs rely on authenticated customer or guest customer data                          | Checkout uses `AuthenticationContainer`, sign-up, login, and guest checkout; native webview sends `LOGIN` to native app   | Covered by TC-5 and TC-11. Gap: native checkout webview should explicitly verify checkout reloads after native login and does not lose basket context.                                                                                               |
+| Dashboard and Box Office pages | Auth/profile and permission-backed APIs protect dashboard and employee data                          | `/manage/*` middleware redirects logged-out users; Electron starts at `/manage/box-office/sell`                           | Covered by TC-3, TC-4, TC-12, TC-14, and TC-16. Keep permission-denied checks in TC-4 because login success alone is not enough for Box Office or group-sale access.                                                                                  |
+| Public checkout                | Backend checkout APIs rely on authenticated customer or guest customer data                          | Checkout uses `AuthenticationContainer`, sign-up, login, and guest checkout; native webview sends `LOGIN` to native app   | Covered by TC-5 and [SPT-4055 - Public Checkout - Login - Verify authentication preserves checkout entry point and basket](https://app.qase.io/case/SPT-4055). Standalone protected webview auth remains a local coverage item without a direct Qase match. |
+| Customer transfer checkout     | Backend transfer checkout routes preserve a transfer transaction until the recipient authenticates    | `/checkout/transfers/[transaction_id]` uses checkout authentication before completing the transfer checkout                | Covered by TC-15 and [SPT-4055 - Public Checkout - Login - Verify authentication preserves checkout entry point and basket](https://app.qase.io/case/SPT-4055). Keep this separate from group-sale distributor transfers.                             |
+| Group-sale distributor transfer | Backend `TicketsTransfer` can be customer-group scoped; claim uses `/api/user/tickets/transfers/{uuid}/claim/` | Group Sales pages use `/manage/group-sales/[id]/distribute` and transfer history; recipient claim opens from email/distribution link | Covered by TC-16 and related Qase group-sale cases, including updated [SPT-1309 - Core - Group Sales - Claim distributed items after recipient authentication](https://app.qase.io/case/SPT-1309).                         |
 | Widget checkout                | No supported authenticated widget login path found in current frontend coverage                      | Widget checkout route should stay embedded and avoid unsupported auth redirects                                           | Covered by TC-6. No extra login entry path found.                                                                                                                                                                                                    |
 | Web social login               | Backend supports Google, Facebook, and Apple API endpoints                                           | Web login renders Google, Facebook, and SAML; no Next.js Apple button or Apple callback route found                       | Correct TC-13 to Google, Facebook, and SAML only for web. Apple remains native-mobile/API coverage unless a web Apple login surface is added.                                                                                                        |
 | Native social login            | Backend supports Facebook, Google, Apple, and SAML token exchange                                    | Native `LoginScreen` renders Facebook, Google, SAML, and Apple buttons                                                    | Covered by TC-10. Keep Apple coverage here, not in web provider callbacks.                                                                                                                                                                           |
-| SAML web login                 | Backend has domain check, initiate, ACS, metadata, and token exchange                                | Web login uses SSO email lookup, popup auth window, `/accounts/sso/login/callback/`, and broadcast-channel reconciliation | Success covered by TC-1 and TC-13. Gap: unsupported SSO domain, popup blocked, callback `error`, missing code, replayed code, and failed token exchange should be covered by one focused SAML error case.                                            |
-| SAML mobile login              | Backend requires `platform=mobile`, valid `pkce_challenge`, one-time code, and valid `pkce_verifier` | Native SAML generates PKCE, opens IdP in app browser, receives `showpass://sso/callback`, and exchanges the code          | Success covered by TC-10. Gap: mobile SAML cancel, invalid callback, missing/malformed PKCE, and token exchange failure are not covered locally.                                                                                                     |
-| Account creation               | Backend `/api/auth/registration/` requires first name and can require captcha                        | Web signup page, account modal signup, checkout signup, native create-account screen                                      | Covered by TC-5 and TC-9 as login-adjacent paths. Email verification endpoints exist but are not a current login entry point unless product enables verification.                                                                                    |
+| SAML web login                 | Backend has domain check, initiate, ACS, metadata, and token exchange                                | Web login uses SSO email lookup, popup auth window, `/accounts/sso/login/callback/`, and broadcast-channel reconciliation | Success and common recovery paths are covered by TC-1, TC-13, [SPT-4394 - Core - Authentication - SSO - Successful SAML authentication with supported domain](https://app.qase.io/case/SPT-4394), and [SPT-4897 - Core - Authentication - SSO - Validate unsupported domain and failed SAML login recovery](https://app.qase.io/case/SPT-4897). No required Qase change. |
+| SAML mobile login              | Backend requires `platform=mobile`, valid `pkce_challenge`, one-time code, and valid `pkce_verifier` | Native SAML generates PKCE, opens IdP in app browser, receives `showpass://sso/callback`, and exchanges the code          | Covered by TC-10 and [SPT-4898 - Core - Authentication - SSO - Complete mobile SAML login with PKCE callback](https://app.qase.io/case/SPT-4898) for mobile SAML success, replayed code, and invalid verifier. No required Qase change. |
+| Account creation               | Backend `/api/auth/registration/` requires first name and can require captcha                        | Web signup page, account modal signup, checkout signup, native create-account screen                                      | Covered by TC-5, TC-9, [SPT-1877 - Core - Authentication - Verify login screen appearance and basic interaction](https://app.qase.io/case/SPT-1877), and [SPT-3207 - Core - Authentication - Verify captcha during account creation](https://app.qase.io/case/SPT-3207) as login-adjacent paths. Email verification endpoints exist but are not a current login entry point unless product enables verification. |
 | Password reset                 | Backend exposes dj-rest-auth reset plus legacy `/accounts/password/reset/` and reset-key URL         | Frontend page is `/accounts/password-reset/`; reset-key page is `/accounts/password/reset/key/[slug]`                     | Covered by TC-9. Gap: verify legacy `/accounts/password/reset/` links still render or redirect correctly because backend and frontend paths differ.                                                                                                  |
-| Account claim                  | Backend legacy claim routes use two path params, including ticket claim redirect                     | Frontend has `/accounts/claim/[uuid]` and reads optional `uuid2`/`id` query params                                        | Regression listed, but gap remains for claim-link variants from email/order/ticket sources, especially `/accounts/t-claim/<uuid>/<uuid2>/`.                                                                                                          |
+| Account claim                  | Backend legacy claim routes use two path params, including ticket claim redirect                     | Frontend has `/accounts/claim/[uuid]` and reads optional `uuid2`/`id` query params                                        | Covered by [SPT-4966 - Core - Authentication - Orders - Verify claim links preserve login and claim context](https://app.qase.io/case/SPT-4966).                                                                                                      |
 | Social account conflict        | Backend returns explicit conflicts when provider email matches an unconnected account                | Web callbacks currently show generic login failure and close the popup after a delay                                      | Gap: verify customers with existing email/password accounts get a recoverable message or support path when trying provider login with the same email.                                                                                                |
 | Token refresh/profile support  | Backend supports token refresh/verify, JWT obtain/refresh/verify, and `/api/auth/profile/`           | Middleware, `withUser`, native auth, and webview cookie renewal rely on these support APIs                                | Not a separate manual entry path. Cover through session persistence, webview auth, logout cleanup, and automation/API checks.                                                                                                                        |
 
@@ -143,7 +148,7 @@ This note covers all known entry points where a Showpass user can reach login, p
 - OTP-enabled customer account.
 - Google, Facebook, SAML SSO, and Apple provider accounts where enabled.
 - Public event or venue page with a visible login-dependent action.
-- Valid public checkout basket, checkout link, hold link, transfer checkout, and widget checkout.
+- Valid public checkout basket, checkout link, hold link, customer transfer checkout, group-sale distribution or claim link, and widget checkout.
 - Unique email address for checkout sign-up.
 - Native mobile app build and Electron desktop app build for the same environment.
 
@@ -172,6 +177,21 @@ LoginMethod: EmailPassword, OtpEmailPassword, Google, Facebook, SamlSso
 | For OTP login, complete the verification step before continuing. | Valid OTP code | Protected content is not available until the valid code is accepted. |
 | Refresh the logged-in page. |  | The customer remains logged in as the same account. |
 
+**Test Case Notes**
+- Qase status: Covered by existing cases.
+- Qase links:
+  - [SPT-3202 - Core - Authentication - Verify successful login with valid credentials](https://app.qase.io/case/SPT-3202)
+  - [SPT-3214 - Core - Authentication - OTP - Verify OTP is requested after valid primary authentication](https://app.qase.io/case/SPT-3214)
+  - [SPT-3215 - Core - Authentication - OTP - Verify successful login with a valid OTP](https://app.qase.io/case/SPT-3215)
+  - [SPT-3216 - Core - Authentication - OTP - Verify incorrect or expired OTP is rejected](https://app.qase.io/case/SPT-3216)
+  - [SPT-3217 - Core - Authentication - OTP - Verify resend code timer and latest-code login](https://app.qase.io/case/SPT-3217)
+  - [SPT-3218 - Core - Authentication - OTP - Verify OTP is not requested for ineligible users](https://app.qase.io/case/SPT-3218)
+  - [SPT-3219 - Core - Authentication - OTP - Verify OTP is not requested after invalid primary credentials](https://app.qase.io/case/SPT-3219)
+  - [SPT-3220 - Public - Login - Verify Google login returns to Showpass from public pages](https://app.qase.io/case/SPT-3220)
+  - [SPT-3221 - Public - Login - Verify Facebook login returns to Showpass from public pages](https://app.qase.io/case/SPT-3221)
+  - [SPT-4394 - Core - Authentication - SSO - Successful SAML authentication with supported domain](https://app.qase.io/case/SPT-4394)
+- Qase action: No change for base direct login; provider conflict remains separate suggested coverage.
+
 ### TC-2: Core - Login - Verify protected account pages return after login
 
 **Description:** Validates that a logged-out customer is sent to login from protected account pages and returns to the requested account page after authenticating.
@@ -188,12 +208,19 @@ LoginMethod: EmailPassword, OtpEmailPassword, Google, Facebook, SamlSso
 **Parameters:**  
 AccountPage: SavedEvents, MyOrders, ProfilePayment
 
-| Step Action | Data | Expected Result |
-| --- | --- | --- |
-| Open the selected protected account page directly. | AccountPage | The customer is redirected to login with the account page preserved as the return path. |
-| Log in with a valid customer account. | Email and password | The selected account page opens after login. |
-| Review the account information shown on the page. |  | The page shows account data for the logged-in customer only. |
-| Refresh the page. |  | The same account page remains available without another login prompt. |
+| Step Action                                        | Data               | Expected Result                                                                         |
+| -------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------- |
+| Open the selected protected account page directly. | AccountPage        | The customer is redirected to login with the account page preserved as the return path. |
+| Log in with a valid customer account.              | Email and password | The selected account page opens after login.                                            |
+| Review the account information shown on the page.  |                    | The page shows account data for the logged-in customer only.                            |
+| Refresh the page.                                  |                    | The same account page remains available without another login prompt.                   |
+
+**Test Case Notes**
+- Qase status: Covered by existing cases.
+- Qase links:
+  - [SPT-4939 - Core - Login - Verify protected pages require login for logged-out users](https://app.qase.io/case/SPT-4939)
+  - [SPT-4772 - Core - User Account - Verify protected account pages are blocked for logged-out users](https://app.qase.io/case/SPT-4772)
+- Qase action: No change.
 
 ### TC-3: Dashboard - Login - Verify dashboard deep links return after login
 
@@ -217,6 +244,12 @@ DashboardPage: ManageEvents, ManageOrders, ManageReports
 | Confirm the visible organization context. |  | Dashboard content belongs to an organization the user can access. |
 | Refresh the dashboard page. |  | The page remains available without another login prompt. |
 
+**Test Case Notes**
+- Qase status: Covered by existing case.
+- Qase links:
+  - [SPT-4939 - Core - Login - Verify protected pages require login for logged-out users](https://app.qase.io/case/SPT-4939)
+- Qase action: No change.
+
 ### TC-4: Box Office - Login - Verify Box Office deep links return after login
 
 **Description:** Validates that Box Office employees must log in before accessing Box Office pages and return to the requested Box Office page after authenticating.
@@ -239,6 +272,12 @@ BoxOfficePage: Sell, Checkout, Transactions, Holds, Settings
 | Confirm the visible venue or organization context. |  | Box Office content belongs to a venue or organization the employee can access. |
 | Try the same page with an account missing Box Office access. | Account without Box Office permission | The account does not get usable Box Office access. |
 
+**Test Case Notes**
+- Qase status: Partial coverage.
+- Qase links:
+  - [SPT-4939 - Core - Login - Verify protected pages require login for logged-out users](https://app.qase.io/case/SPT-4939)
+- Qase action: Consider update or separate case if missing Box Office permission denial after login must be explicit in Qase.
+
 ### TC-5: Public Checkout - Login - Verify checkout continues after authentication
 
 **Description:** Validates that a signed-out buyer can log in or sign up during public checkout, return to the same checkout flow, and keep basket and account ownership correct.
@@ -255,7 +294,7 @@ BoxOfficePage: Sell, Checkout, Transactions, Holds, Settings
 
 **Parameters:**  
 LoginAction: Login, SignUp  
-CheckoutEntryPoint: CheckoutPage, CheckoutLink, HoldLink, TransferCheckout
+CheckoutEntryPoint: CheckoutPage, CheckoutLink, HoldLink
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
@@ -265,6 +304,12 @@ CheckoutEntryPoint: CheckoutPage, CheckoutLink, HoldLink, TransferCheckout
 | Review basket and customer details after authentication. |  | Basket contents are preserved and buyer information belongs to the authenticated account. |
 | Complete payment. |  | Purchase completes successfully for the authenticated buyer. |
 | Open buyer orders or the order detail page. |  | The completed order is visible under the authenticated buyer account. |
+
+**Test Case Notes**
+- Qase status: Covered by existing case.
+- Qase links:
+  - [SPT-4055 - Public Checkout - Login - Verify authentication preserves checkout entry point and basket](https://app.qase.io/case/SPT-4055)
+- Qase action: No change.
 
 ### TC-6: Widget - Login - Verify widget checkout does not expose unsupported login
 
@@ -286,6 +331,13 @@ CheckoutEntryPoint: CheckoutPage, CheckoutLink, HoldLink, TransferCheckout
 | Continue using the supported widget purchase path. |  | Widget checkout remains in the embedded context. |
 | Review the checkout contents. |  | Basket contents remain correct and the widget does not send the buyer into a login loop. |
 
+**Test Case Notes**
+- Qase status: Covered by adjacent widget/guest checkout cases.
+- Qase links:
+  - [SPT-2437 - Widget - Checkout - Verify guest session and basket continuity in regular and private browsing contexts](https://app.qase.io/case/SPT-2437)
+  - [SPT-4929 - Core - Checkout - Gate guest checkout availability by venue and basket state](https://app.qase.io/case/SPT-4929)
+- Qase action: No change unless product reintroduces authenticated widget login.
+
 ### TC-7: Public - Login - Verify public page login actions return to the intended context
 
 **Description:** Validates that login-dependent public actions start login and return the customer to the intended public page or action.
@@ -300,7 +352,7 @@ CheckoutEntryPoint: CheckoutPage, CheckoutLink, HoldLink, TransferCheckout
 **Tags:** login, public, events
 
 **Parameters:**  
-PublicAction: HeaderLogin, FavoriteEvent, TicketVoucherLogin, SpotifyPresaleLogin
+PublicAction: HeaderLogin, FavoriteEvent, TicketVoucherLogin
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
@@ -308,6 +360,12 @@ PublicAction: HeaderLogin, FavoriteEvent, TicketVoucherLogin, SpotifyPresaleLogi
 | Trigger the selected login action. | PublicAction | The customer reaches the login surface for that action. |
 | Log in with a valid customer account. | Email and password | The customer returns to the public page or completes the selected action where supported. |
 | Refresh the public page. |  | The page still shows the customer as logged in. |
+
+**Test Case Notes**
+- Qase status: Covered by created Qase case.
+- Qase links:
+  - [SPT-4964 - Public - Login - Verify public page login actions return to the intended context](https://app.qase.io/case/SPT-4964)
+- Qase action: No change.
 
 ### TC-8: Core - Login - Verify account modal login returns to the original action
 
@@ -327,6 +385,13 @@ PublicAction: HeaderLogin, FavoriteEvent, TicketVoucherLogin, SpotifyPresaleLogi
 | Start an account or order action that requires login. | Account modal action | The account modal opens with the login flow. |
 | Log in from the modal. | Email and password | The modal closes or advances without sending the customer to an unrelated page. |
 | Continue the original action. |  | The action can continue with data for the logged-in customer. |
+
+**Test Case Notes**
+- Qase status: Covered by created generic modal case; claimed-order modal remains covered separately.
+- Qase links:
+  - [SPT-4965 - Core - Authentication - Verify account modal login returns to the original account action](https://app.qase.io/case/SPT-4965)
+  - [SPT-2559 - Core - Authentication - Orders - Verify login modal on claimed order page (not logged in) without redirection](https://app.qase.io/case/SPT-2559)
+- Qase action: No change.
 
 ### TC-9: Core - Login - Verify signup and password reset paths return to login
 
@@ -351,6 +416,16 @@ AuthEntryPoint: Signup, PasswordReset
 | Return to login when the flow requires it. |  | The login page is available without losing the relevant return context. |
 | Log in with the new or updated credentials. | Email and password | The customer is authenticated successfully. |
 
+**Test Case Notes**
+- Qase status: Covered for signup, password reset request, legacy reset request, and reset-link completion.
+- Qase links:
+  - [SPT-1877 - Core - Authentication - Verify login screen appearance and basic interaction](https://app.qase.io/case/SPT-1877)
+  - [SPT-1879 - Core - Authentication - Verify 'Reset Password' screen UI and error message display](https://app.qase.io/case/SPT-1879)
+  - [SPT-3206 - Core - Authentication - Verify password reset request entry points and email validation](https://app.qase.io/case/SPT-3206)
+  - [SPT-3207 - Core - Authentication - Verify captcha during account creation](https://app.qase.io/case/SPT-3207)
+  - [SPT-4908 - Core - Authentication - Verify password reset link completion and invalid token handling](https://app.qase.io/case/SPT-4908)
+- Qase action: No change.
+
 ### TC-10: Mobile App - Login - Verify native login methods authenticate the correct user
 
 **Description:** Validates that native mobile login methods authenticate the correct customer and return the app to a logged-in state.
@@ -373,6 +448,21 @@ NativeLoginMethod: EmailPassword, OtpEmailPassword, Facebook, Google, SamlSso, A
 | For OTP login, complete the OTP screen before continuing. | Valid OTP code | The app does not complete login until the valid code is accepted. |
 | Navigate to an account or home area. |  | The app shows the logged-in customer's information. |
 
+**Test Case Notes**
+- Qase status: Covered by updated native Apple login case.
+- Qase links:
+  - [SPT-1877 - Core - Authentication - Verify login screen appearance and basic interaction](https://app.qase.io/case/SPT-1877)
+  - [SPT-3202 - Core - Authentication - Verify successful login with valid credentials](https://app.qase.io/case/SPT-3202)
+  - [SPT-3222 - React Native Public - Login - Verify Apple login authenticates the customer in the native app](https://app.qase.io/case/SPT-3222)
+  - [SPT-3214 - Core - Authentication - OTP - Verify OTP is requested after valid primary authentication](https://app.qase.io/case/SPT-3214)
+  - [SPT-3215 - Core - Authentication - OTP - Verify successful login with a valid OTP](https://app.qase.io/case/SPT-3215)
+  - [SPT-3216 - Core - Authentication - OTP - Verify incorrect or expired OTP is rejected](https://app.qase.io/case/SPT-3216)
+  - [SPT-3217 - Core - Authentication - OTP - Verify resend code timer and latest-code login](https://app.qase.io/case/SPT-3217)
+  - [SPT-3218 - Core - Authentication - OTP - Verify OTP is not requested for ineligible users](https://app.qase.io/case/SPT-3218)
+  - [SPT-3219 - Core - Authentication - OTP - Verify OTP is not requested after invalid primary credentials](https://app.qase.io/case/SPT-3219)
+  - [SPT-4898 - Core - Authentication - SSO - Complete mobile SAML login with PKCE callback](https://app.qase.io/case/SPT-4898)
+- Qase action: No change.
+
 ### TC-11: Mobile App - Login - Verify authenticated webview content uses the native session
 
 **Description:** Validates that protected web content opened inside the native app uses the native app session instead of asking for normal browser login.
@@ -392,6 +482,12 @@ NativeLoginMethod: EmailPassword, OtpEmailPassword, Facebook, Google, SamlSso, A
 | Navigate to another protected webview page. |  | Protected content belongs to the native-app customer. |
 | Refresh or reopen the webview when supported. |  | The page does not enter a login loop. |
 
+**Test Case Notes**
+- Qase status: Conditional; no direct Qase coverage found and not included in the 2026-07-03 Qase push.
+- Qase links:
+  - None found in the 2026-07-03 Qase pull.
+- Qase action: Confirm whether standalone authenticated mobile webview content remains in login scope before creating a new Qase case.
+
 ### TC-12: Desktop App - Login - Verify desktop startup opens Box Office after login
 
 **Description:** Validates that the Electron desktop app starts from the Box Office route, requires login when needed, and opens Box Office after authentication.
@@ -410,6 +506,12 @@ NativeLoginMethod: EmailPassword, OtpEmailPassword, Facebook, Google, SamlSso, A
 | Log in with a Box Office-capable account. | Email and password | Box Office Sell opens for the expected venue or organization. |
 | Refresh the desktop window. |  | Box Office remains available without another login prompt. |
 | Quit and reopen the desktop app. |  | The app restores the expected session or cleanly asks for login without looping. |
+
+**Test Case Notes**
+- Qase status: Covered by existing case.
+- Qase links:
+  - [SPT-4923 - Electron - Authentication - Persist box office session after app restart](https://app.qase.io/case/SPT-4923)
+- Qase action: No change.
 
 ### TC-13: Public - Login - Verify provider callbacks return authenticated
 
@@ -436,6 +538,16 @@ ProviderAccountState: NewProviderAccount, LinkedProviderAccount
 | Review the signed-in state on Showpass. | ProviderAccountState | New provider accounts create a Showpass customer account and linked provider accounts sign in to the existing customer account. |
 | Open a protected customer page. | `/account/my-orders` | The page opens for the provider-authenticated customer without another login prompt. |
 
+**Test Case Notes**
+- Qase status: Covered for Google, Facebook, SAML success, common SAML recovery, and provider-email conflict.
+- Qase links:
+  - [SPT-3220 - Public - Login - Verify Google login returns to Showpass from public pages](https://app.qase.io/case/SPT-3220)
+  - [SPT-3221 - Public - Login - Verify Facebook login returns to Showpass from public pages](https://app.qase.io/case/SPT-3221)
+  - [SPT-4963 - Public - Login - Verify provider login conflict is recoverable for an existing email](https://app.qase.io/case/SPT-4963)
+  - [SPT-4394 - Core - Authentication - SSO - Successful SAML authentication with supported domain](https://app.qase.io/case/SPT-4394)
+  - [SPT-4897 - Core - Authentication - SSO - Validate unsupported domain and failed SAML login recovery](https://app.qase.io/case/SPT-4897)
+- Qase action: No change.
+
 ### TC-14: Core - Login - Verify logout removes protected access
 
 **Description:** Validates that logout removes access to protected account, dashboard, Box Office, and checkout entry points.
@@ -452,15 +564,85 @@ ProviderAccountState: NewProviderAccount, LinkedProviderAccount
 **Tags:** login, authenticated-user, edge-case
 
 **Parameters:**  
-ProtectedArea: Account, Dashboard, BoxOffice, Checkout
+ProtectedArea: Account, Dashboard, BoxOffice, GroupSales, Checkout
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Open the selected protected area while logged in. | ProtectedArea | Protected content is visible for the logged-in account. |
 | Log out using the normal logout action. |  | The app shows a logged-out state. |
 | Reopen the same protected area. | ProtectedArea | The app requires login before protected content is available. |
-| Use browser back or app back to return to the previous protected page. |  | Protected account, dashboard, Box Office, or checkout data is not visible or usable. |
+| Use browser back or app back to return to the previous protected page. |  | Protected account, dashboard, Box Office, group-sale, or checkout data is not visible or usable. |
 | Refresh any protected page that appears after logout. |  | The app keeps the user logged out and does not restore protected content. |
+
+**Test Case Notes**
+- Qase status: Covered by existing cases.
+- Qase links:
+  - [SPT-3205 - Core - Authentication - Verify logout removes access to protected pages](https://app.qase.io/case/SPT-3205)
+  - [SPT-1357 - Electron - Box Office - Verify logout behavior with an active basket](https://app.qase.io/case/SPT-1357)
+  - [SPT-4923 - Electron - Authentication - Persist box office session after app restart](https://app.qase.io/case/SPT-4923)
+- Qase action: No change.
+
+### TC-15: Customer Transfer - Login - Verify transfer checkout continues after authentication
+
+**Description:** Validates that a logged-out transfer recipient can open a customer transfer checkout link, authenticate, and return to the same transfer checkout context.
+
+| Platform | View |
+| --- | --- |
+| WebPublic | Desktop |
+| WebPublic | Mobile |
+
+**Preconditions:** A valid customer transfer checkout link exists for a logged-out recipient. The recipient has valid login credentials or can sign up.
+**Postconditions:** The transfer checkout belongs to the authenticated recipient, or the transfer remains safely incomplete if checkout is abandoned.
+**Tags:** login, checkout, transfer
+
+**Parameters:**
+LoginAction: Login, SignUp
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open the customer transfer checkout link while logged out. | `/checkout/transfers/[transaction_id]` | Transfer checkout loads and requires recipient authentication before completion. |
+| Start the selected authentication action from transfer checkout. | LoginAction | Login or sign-up starts without losing the transfer checkout transaction. |
+| Complete authentication. | LoginAction | The recipient returns to the same transfer checkout flow. |
+| Review the transfer checkout contents and recipient account. |  | The transfer checkout contents are preserved and customer information belongs to the authenticated recipient. |
+| Complete or abandon transfer checkout. |  | Completion creates the expected recipient-owned order or the transfer remains safely incomplete. |
+
+**Test Case Notes**
+- Qase status: Covered by existing checkout authentication case.
+- Qase links:
+  - [SPT-4055 - Public Checkout - Login - Verify authentication preserves checkout entry point and basket](https://app.qase.io/case/SPT-4055)
+- Qase action: No change if SPT-4055 still explicitly includes transfer checkout; update SPT-4055 if `/checkout/transfers/[transaction_id]` was removed from its parameters.
+
+### TC-16: Group Sales - Login - Verify distributed group-sale transfer can be accepted after authentication
+
+**Description:** Validates that a group-sale distribution or transfer recipient who starts from a claim link can authenticate and access the claimed group-sale items or distribution portal.
+
+| Platform | View |
+| --- | --- |
+| WebPublic | Desktop |
+| WebPublic | Mobile |
+
+**Preconditions:** A Box Office employee has distributed group-sale items or created a customer-group transfer for a recipient email. The recipient is logged out.
+**Postconditions:** The recipient has access to the claimed group-sale items or distribution portal, and the original transfer is no longer claimable by the wrong account.
+**Tags:** login, group-sales, transfer
+
+**Parameters:**
+RecipientAuthState: ExistingUser, NewUser
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open the group-sale distribution or transfer claim link from email while logged out. | Claim link | The recipient reaches login or sign-up before protected claim content is available. |
+| Authenticate as the intended recipient. | RecipientAuthState | Authentication completes without dropping the original claim context. |
+| Accept or claim the distributed group-sale items. | Claim link | The claim succeeds for the authenticated recipient. |
+| Open the claimed items or distribution portal. |  | The recipient can access the expected group-sale items or portal content. |
+| Reopen the same claim link as another account. | Different authenticated account | The transfer cannot be claimed or exposed to the wrong account. |
+
+**Test Case Notes**
+- Qase status: Covered by updated group-sale recipient authentication case.
+- Qase links:
+  - [SPT-1309 - Core - Group Sales - Claim distributed items after recipient authentication](https://app.qase.io/case/SPT-1309)
+  - [SPT-1306 - WebBoxOffice - Group Sales - Distributor can transfer allocated tickets to their own email](https://app.qase.io/case/SPT-1306)
+  - [SPT-1310 - WebBoxOffice - Group Sales - Mass distribute items by CSV upload](https://app.qase.io/case/SPT-1310)
+- Qase action: No change.
 
 ## Minimum Execution Set
 
@@ -474,6 +656,8 @@ ProtectedArea: Account, Dashboard, BoxOffice, Checkout
 - TC-11: Mobile App - Login - Verify authenticated webview content uses the native session
 - TC-12: Desktop App - Login - Verify desktop startup opens Box Office after login
 - TC-14: Core - Login - Verify logout removes protected access
+- TC-15: Customer Transfer - Login - Verify transfer checkout continues after authentication
+- TC-16: Group Sales - Login - Verify distributed group-sale transfer can be accepted after authentication
 
 ## Regression Coverage
 
@@ -484,41 +668,99 @@ ProtectedArea: Account, Dashboard, BoxOffice, Checkout
 - Deprecated SDK login popup if still supported.
 - Password reset, legacy password reset, and reset-key return to login.
 - Provider-specific callback routes for Google, Facebook, and SAML.
-- Native Apple login until a web Apple login surface exists.
+- Native Apple login.
 - SAML error handling for unsupported domain, popup/deep-link failure, callback error, and token exchange failure.
+- Customer transfer checkout at `/checkout/transfers/[transaction_id]`.
+- Group-sale distribution or transfer claim from a logged-out recipient.
 
 ## Existing Qase Coverage Notes
 
+Qase pull summary from the read-only bulk workflow:
+
+- Pull date: 2026-07-03.
+- Total cases scanned: 1,552.
+- Local candidate filter: title, tags, and known-login IDs for login, logout, signup, password reset, SAML/SSO, Google, Facebook, Apple, OTP, claim, account modal, authenticated access, webview, widget, protected pages, checkout login, and guest checkout.
+- Candidate cases filtered locally: 98.
+- Full details reviewed: see the titled Qase links grouped below.
+
 Strong existing login coverage:
 
-| Area | Qase Cases |
-| --- | --- |
-| Basic login and validation | 3202, 3203, 3204 |
-| Logout and Electron session persistence | 3205, 1357, 4923 |
-| Password reset and account creation | 1879, 3206, 3207, 4908 |
-| OTP login and OTP negatives | 3214, 3215, 3216, 3217, 3218, 3219 |
-| Social and SAML SSO | 3220, 3221, 3222, 4394, 4897, 4898 |
-| Checkout login or guest checkout adjacency | 4055, 2437, 4929 |
-| Order claim/login modal adjacency | 2558, 2559 |
-| Login analytics | 3317 |
+- Basic login, validation, captcha, and lockout:
+  - [SPT-3202 - Core - Authentication - Verify successful login with valid credentials](https://app.qase.io/case/SPT-3202)
+  - [SPT-3203 - Core - Authentication - Verify login with invalid credentials and error handling](https://app.qase.io/case/SPT-3203)
+  - [SPT-3204 - Core - Authentication - Verify 'Show Password' button functionality](https://app.qase.io/case/SPT-3204)
+  - [SPT-4909 - Core - Authentication - Verify repeated failed login attempts lock authentication endpoints](https://app.qase.io/case/SPT-4909)
+- Logout and Electron session persistence:
+  - [SPT-3205 - Core - Authentication - Verify logout removes access to protected pages](https://app.qase.io/case/SPT-3205)
+  - [SPT-1357 - Electron - Box Office - Verify logout behavior with an active basket](https://app.qase.io/case/SPT-1357)
+  - [SPT-4923 - Electron - Authentication - Persist box office session after app restart](https://app.qase.io/case/SPT-4923)
+- Password reset and account creation:
+  - [SPT-1877 - Core - Authentication - Verify login screen appearance and basic interaction](https://app.qase.io/case/SPT-1877)
+  - [SPT-1879 - Core - Authentication - Verify 'Reset Password' screen UI and error message display](https://app.qase.io/case/SPT-1879)
+  - [SPT-3206 - Core - Authentication - Verify password reset request entry points and email validation](https://app.qase.io/case/SPT-3206)
+  - [SPT-3207 - Core - Authentication - Verify captcha during account creation](https://app.qase.io/case/SPT-3207)
+  - [SPT-4908 - Core - Authentication - Verify password reset link completion and invalid token handling](https://app.qase.io/case/SPT-4908)
+- OTP login and OTP negatives:
+  - [SPT-3214 - Core - Authentication - OTP - Verify OTP is requested after valid primary authentication](https://app.qase.io/case/SPT-3214)
+  - [SPT-3215 - Core - Authentication - OTP - Verify successful login with a valid OTP](https://app.qase.io/case/SPT-3215)
+  - [SPT-3216 - Core - Authentication - OTP - Verify incorrect or expired OTP is rejected](https://app.qase.io/case/SPT-3216)
+  - [SPT-3217 - Core - Authentication - OTP - Verify resend code timer and latest-code login](https://app.qase.io/case/SPT-3217)
+  - [SPT-3218 - Core - Authentication - OTP - Verify OTP is not requested for ineligible users](https://app.qase.io/case/SPT-3218)
+  - [SPT-3219 - Core - Authentication - OTP - Verify OTP is not requested after invalid primary credentials](https://app.qase.io/case/SPT-3219)
+- Social and SAML SSO:
+  - [SPT-3220 - Public - Login - Verify Google login returns to Showpass from public pages](https://app.qase.io/case/SPT-3220)
+  - [SPT-3221 - Public - Login - Verify Facebook login returns to Showpass from public pages](https://app.qase.io/case/SPT-3221)
+  - [SPT-3222 - React Native Public - Login - Verify Apple login authenticates the customer in the native app](https://app.qase.io/case/SPT-3222)
+  - [SPT-4963 - Public - Login - Verify provider login conflict is recoverable for an existing email](https://app.qase.io/case/SPT-4963)
+  - [SPT-4394 - Core - Authentication - SSO - Successful SAML authentication with supported domain](https://app.qase.io/case/SPT-4394)
+  - [SPT-4897 - Core - Authentication - SSO - Validate unsupported domain and failed SAML login recovery](https://app.qase.io/case/SPT-4897)
+  - [SPT-4898 - Core - Authentication - SSO - Complete mobile SAML login with PKCE callback](https://app.qase.io/case/SPT-4898)
+- Checkout login or guest checkout adjacency:
+  - [SPT-4055 - Public Checkout - Login - Verify authentication preserves checkout entry point and basket](https://app.qase.io/case/SPT-4055)
+  - [SPT-2437 - Widget - Checkout - Verify guest session and basket continuity in regular and private browsing contexts](https://app.qase.io/case/SPT-2437)
+  - [SPT-2946 - Core - Checkout - Guest checkout - Claim or connect purchased basket to account](https://app.qase.io/case/SPT-2946)
+  - [SPT-4929 - Core - Checkout - Gate guest checkout availability by venue and basket state](https://app.qase.io/case/SPT-4929)
+- Group-sale transfer and distribution:
+  - [SPT-1306 - WebBoxOffice - Group Sales - Distributor can transfer allocated tickets to their own email](https://app.qase.io/case/SPT-1306)
+  - [SPT-1309 - Core - Group Sales - Claim distributed items after recipient authentication](https://app.qase.io/case/SPT-1309)
+  - [SPT-1310 - WebBoxOffice - Group Sales - Mass distribute items by CSV upload](https://app.qase.io/case/SPT-1310)
+- Protected pages and account access:
+  - [SPT-3205 - Core - Authentication - Verify logout removes access to protected pages](https://app.qase.io/case/SPT-3205)
+  - [SPT-4772 - Core - User Account - Verify protected account pages are blocked for logged-out users](https://app.qase.io/case/SPT-4772)
+  - [SPT-4939 - Core - Login - Verify protected pages require login for logged-out users](https://app.qase.io/case/SPT-4939)
+- Order claim/login modal adjacency:
+  - [SPT-2558 - Core - Authentication - Orders - Verify error when claiming guest purchase with different email](https://app.qase.io/case/SPT-2558)
+  - [SPT-2559 - Core - Authentication - Orders - Verify login modal on claimed order page (not logged in) without redirection](https://app.qase.io/case/SPT-2559)
+  - [SPT-2946 - Core - Checkout - Guest checkout - Claim or connect purchased basket to account](https://app.qase.io/case/SPT-2946)
+  - [SPT-4965 - Core - Authentication - Verify account modal login returns to the original account action](https://app.qase.io/case/SPT-4965)
+  - [SPT-4966 - Core - Authentication - Orders - Verify claim links preserve login and claim context](https://app.qase.io/case/SPT-4966)
+- Login analytics:
+  - [SPT-3317 - Core - Analytics - Internal - Verify login interaction events](https://app.qase.io/case/SPT-3317)
 
 Qase update status from the merged notes:
 
-- Qase 4939 is the consolidated protected-pages case for logged-out account, manage, and Box Office access.
-- Duplicate Qase 4940 was deleted after dashboard and Box Office protected-page coverage moved into Qase 4939.
-- Qase 4055 was updated for checkout login/sign-up preservation across checkout page, checkout link, hold link, and transfer checkout.
-- Qase 3205 was updated for logout cleanup across account, dashboard, Box Office, checkout, back, and refresh behavior.
-- Google and Facebook provider cases were updated to public-page customer flows in Qase 3220 and 3221. Apple coverage in Qase 3222 should be treated as native-mobile/API coverage unless a web Apple login surface is confirmed.
+- [SPT-4939 - Core - Login - Verify protected pages require login for logged-out users](https://app.qase.io/case/SPT-4939) is the consolidated protected-pages case for logged-out account, manage, and Box Office access.
+- Deleted the duplicate protected-pages case after dashboard and Box Office protected-page coverage moved into [SPT-4939 - Core - Login - Verify protected pages require login for logged-out users](https://app.qase.io/case/SPT-4939).
+- [SPT-4055 - Public Checkout - Login - Verify authentication preserves checkout entry point and basket](https://app.qase.io/case/SPT-4055) was updated for checkout login/sign-up preservation across checkout page, checkout link, hold link, and transfer checkout.
+- [SPT-3205 - Core - Authentication - Verify logout removes access to protected pages](https://app.qase.io/case/SPT-3205) was updated for logout cleanup across account, dashboard, Box Office, checkout, back, and refresh behavior.
+- Google and Facebook provider cases were updated to public-page customer flows in [SPT-3220 - Public - Login - Verify Google login returns to Showpass from public pages](https://app.qase.io/case/SPT-3220) and [SPT-3221 - Public - Login - Verify Facebook login returns to Showpass from public pages](https://app.qase.io/case/SPT-3221).
+- [SPT-3222 - React Native Public - Login - Verify Apple login authenticates the customer in the native app](https://app.qase.io/case/SPT-3222) now covers native Apple login instead of stale WebPublic Apple login.
+- [SPT-4897 - Core - Authentication - SSO - Validate unsupported domain and failed SAML login recovery](https://app.qase.io/case/SPT-4897) already covers unsupported SSO domain, popup/auth-window failure, IdP failure, retry, and successful recovery.
+- [SPT-4898 - Core - Authentication - SSO - Complete mobile SAML login with PKCE callback](https://app.qase.io/case/SPT-4898) already covers mobile SAML success with PKCE plus replay or invalid verifier rejection.
+- [SPT-4055 - Public Checkout - Login - Verify authentication preserves checkout entry point and basket](https://app.qase.io/case/SPT-4055) already covers WebPublic and ReactNativePublic checkout login/sign-up preservation across checkout page, checkout link, hold link, and customer transfer checkout.
+- [SPT-1309 - Core - Group Sales - Claim distributed items after recipient authentication](https://app.qase.io/case/SPT-1309) now covers group-sale recipient acceptance after logged-out authentication.
+- [SPT-4909 - Core - Authentication - Verify repeated failed login attempts lock authentication endpoints](https://app.qase.io/case/SPT-4909) already covers repeated failed login attempts and JWT endpoint lockout behavior.
+- Created [SPT-4963 - Public - Login - Verify provider login conflict is recoverable for an existing email](https://app.qase.io/case/SPT-4963).
+- Created [SPT-4964 - Public - Login - Verify public page login actions return to the intended context](https://app.qase.io/case/SPT-4964).
+- Created [SPT-4965 - Core - Authentication - Verify account modal login returns to the original account action](https://app.qase.io/case/SPT-4965).
+- Created [SPT-4966 - Core - Authentication - Orders - Verify claim links preserve login and claim context](https://app.qase.io/case/SPT-4966).
 
-Do not duplicate Qase cases for basic credentials, OTP, password reset, account protected-page coverage, widget login, or standalone mobile webview auth. Remaining deferred gaps: functional public login actions after canonical fixtures are agreed; SAML error handling; provider-email conflict recovery; legacy claim-link variants.
+Do not duplicate Qase cases for basic credentials, invalid credentials, captcha, OTP, repeated failed attempts, checkout login preservation, customer transfer checkout, group-sale distribution basics, account protected-page coverage, logout cleanup, widget guest checkout, public action login, provider conflict, account modal login, claim-link login, native Apple login, password reset, or basic SAML success/failure recovery.
 
 ## Suggested New Or Updated Qase Coverage
 
-- Add one SAML error-handling case with parameters for UnsupportedDomain, PopupBlockedOrClosed, CallbackError, MissingCode, ReplayedCode, and TokenExchangeFailed.
-- Add one mobile SAML recovery case with parameters for CancelledBrowser, InvalidDeepLinkCallback, MissingOrMalformedPkce, and TokenExchangeFailed.
-- Add one provider conflict case for Google/Facebook login attempted with an email already registered as an unlinked Showpass account.
-- Update claim-link coverage to include `/accounts/claim/<uuid>/<uuid2>/`, `/accounts/t-claim/<uuid>/<uuid2>/`, and the frontend `/accounts/claim/[uuid]` route with `uuid2` query data.
-- Update password reset coverage to include both frontend `/accounts/password-reset/` and backend legacy `/accounts/password/reset/` links, plus reset-key completion.
+- None required from the approved 2026-07-03 Qase push scope.
+- Conditional follow-up: confirm whether standalone authenticated mobile webview content remains in login scope before creating Qase coverage for TC-11.
 
 ## Suggested Automated Coverage
 
