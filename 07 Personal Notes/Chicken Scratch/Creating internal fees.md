@@ -1,0 +1,11 @@
+- turn on all rate modules from the get go
+- never change affirm/afterpay
+- processing fee changes a lot
+  - mostly like this 0 + 3%
+- condensed view misses a lot
+- Connecting Square is required to edit a rate card
+- The dropdown changes item types when you click face
+- New UI looks chaotic
+- never have 2 card rate cards
+- price range is used for 2 rate cards
+- disocvery/resell is rare

@@ -31,6 +31,7 @@ Notes:
   --apply is required before creating or updating a Qase case.
   --delete requires --apply and must only be used after explicit user confirmation.
   --batch-plan runs multiple create/update operations in one process, including apply-time verification.
+  Markdown Parameters are sent as Qase single params. Keep Platform/View in the description table unless a grouped-param workflow is explicitly requested.
   .env must provide QASE_TESTOPS_API_TOKEN or QASE_API_TOKEN, plus QASE_PROJECT_CODE.`);
 }
 

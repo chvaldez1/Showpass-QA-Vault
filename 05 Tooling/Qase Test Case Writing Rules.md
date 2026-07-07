@@ -82,7 +82,8 @@ Use Qase single parameters to eliminate duplicate test cases. If the input lists
 - Use this format in the Parameters section: `ParameterName: Value1, Value2, Value3`
 - Put each parameter on its own line.
 - Do not use backticks, brackets, or extra formatting around parameter names or values.
-- Use Qase parameter groups when related variables always change together, such as platform and view, so only realistic combinations are tested.
+- Keep Platform and View in the Description table by default. Do not add Platform or View as Qase parameters unless the user explicitly asks for Qase grouped parameters.
+- Keep unique flow variables, such as LoginAction, AuthEntryPoint, PaymentMethod, or RecipientAuthState, as single Qase parameters.
 - Before creating separate cases for the same behavior across product areas, check whether the area can be a parameter. For example, protected-page login enforcement for account, dashboard, and Box Office should usually be one case with a `ProtectedArea` or `ProtectedPage` parameter, unless the flow or expected result is materially different.
 - If a parameterized case needs area-specific permission checks, keep those checks in the Expected Result or Preconditions instead of splitting cases only by area.
 

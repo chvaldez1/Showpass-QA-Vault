@@ -99,7 +99,7 @@ This note covers all known entry points where a Showpass user can reach login, p
 
 | Area                           | Backend Source Of Truth                                                                              | Frontend Exposure                                                                                                         | Coverage Status / Gap                                                                                                                                                                                                                                |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Direct web login               | `/api/auth/login/` with email/password, OTP, captcha, and platform-aware captcha actions             | `/accounts/login/`, `LoginForm`, `OtpForm`, checkout auth container, account modal                                        | Covered by TC-1, TC-5, TC-8, and titled Qase cases in the coverage notes. Do not duplicate basic credential, captcha, OTP, show-password, invalid-login, or lockout coverage. |
+| Direct web login               | `/api/auth/login/` with email/password, OTP, captcha, and platform-aware captcha actions             | `/accounts/login/`, `LoginForm`, `OtpForm`, checkout auth container, account modal                                        | Covered by TC-1, TC-5, TC-7, and titled Qase cases in the coverage notes. Do not duplicate basic credential, captcha, OTP, show-password, invalid-login, or lockout coverage. |
 | Protected account pages        | Backend session/profile check plus frontend `withUser` redirect                                      | `/account/*` pages using `withUser` redirect to `/accounts/login/?next=<resolvedUrl>`                                     | Covered by TC-2 and TC-14. Entry table is complete for account-page entry points at the wildcard level.                                                                                                                                              |
 | Dashboard and Box Office pages | Auth/profile and permission-backed APIs protect dashboard and employee data                          | `/manage/*` middleware redirects logged-out users; Electron starts at `/manage/box-office/sell`                           | Covered by TC-3, TC-4, TC-12, TC-14, and TC-16. Keep permission-denied checks in TC-4 because login success alone is not enough for Box Office or group-sale access.                                                                                  |
 | Public checkout                | Backend checkout APIs rely on authenticated customer or guest customer data                          | Checkout uses `AuthenticationContainer`, sign-up, login, and guest checkout; native webview sends `LOGIN` to native app   | Covered by TC-5 and [SPT-4055 - Public Checkout - Login - Verify authentication preserves checkout entry point and basket](https://app.qase.io/case/SPT-4055). Standalone protected webview auth remains a local coverage item without a direct Qase match. |
@@ -338,60 +338,34 @@ CheckoutEntryPoint: CheckoutPage, CheckoutLink, HoldLink
   - [SPT-4929 - Core - Checkout - Gate guest checkout availability by venue and basket state](https://app.qase.io/case/SPT-4929)
 - Qase action: No change unless product reintroduces authenticated widget login.
 
-### TC-7: Public - Login - Verify public page login actions return to the intended context
+### TC-7: Public - Login - Verify public and modal login actions return to the intended context
 
-**Description:** Validates that login-dependent public actions start login and return the customer to the intended public page or action.
+**Description:** Validates that login-dependent public and in-page modal actions start login and return the customer to the intended page or action.
 
 | Platform | View |
 | --- | --- |
 | WebPublic | Desktop |
 | WebPublic | Mobile |
 
-**Preconditions:** The customer is logged out and a public page has the selected login-dependent action.  
-**Postconditions:** The customer is logged in and the public page shows the correct logged-in state.  
-**Tags:** login, public, events
+**Preconditions:** The customer is logged out and the selected public or account-modal action is available.
+**Postconditions:** The customer is logged in and the original page or action shows the correct logged-in state.
+**Tags:** login, public, authenticated-user
 
 **Parameters:**  
-PublicAction: HeaderLogin, FavoriteEvent, TicketVoucherLogin
+LoginAction: HeaderLogin, FavoriteEvent, TicketVoucherLogin, AccountModalAction
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Open a public page with the selected action. | PublicAction | The public page is visible while the customer is logged out. |
-| Trigger the selected login action. | PublicAction | The customer reaches the login surface for that action. |
-| Log in with a valid customer account. | Email and password | The customer returns to the public page or completes the selected action where supported. |
-| Refresh the public page. |  | The page still shows the customer as logged in. |
+| Open a public page or account action with the selected login action. | LoginAction | The page or modal entry point is visible while the customer is logged out. |
+| Trigger the selected login action. | LoginAction | The customer reaches the correct login surface for that action. |
+| Log in with a valid customer account. | Email and password | The customer returns to the original page or the original modal action can continue. |
+| Refresh the page. |  | The page still shows the customer as logged in and does not reopen login unnecessarily. |
 
 **Test Case Notes**
 - Qase status: Covered by created Qase case.
 - Qase links:
-  - [SPT-4964 - Public - Login - Verify public page login actions return to the intended context](https://app.qase.io/case/SPT-4964)
-- Qase action: No change.
-
-### TC-8: Core - Login - Verify account modal login returns to the original action
-
-**Description:** Validates that in-page login through the account modal authenticates the customer and allows the original account or order action to continue.
-
-| Platform | View |
-| --- | --- |
-| WebPublic | Desktop |
-| WebPublic | Mobile |
-
-**Preconditions:** The customer is logged out and can start an action that opens the account modal.  
-**Postconditions:** The customer is logged in and the original action can continue.  
-**Tags:** login, authenticated-user, orders
-
-| Step Action | Data | Expected Result |
-| --- | --- | --- |
-| Start an account or order action that requires login. | Account modal action | The account modal opens with the login flow. |
-| Log in from the modal. | Email and password | The modal closes or advances without sending the customer to an unrelated page. |
-| Continue the original action. |  | The action can continue with data for the logged-in customer. |
-
-**Test Case Notes**
-- Qase status: Covered by created generic modal case; claimed-order modal remains covered separately.
-- Qase links:
-  - [SPT-4965 - Core - Authentication - Verify account modal login returns to the original account action](https://app.qase.io/case/SPT-4965)
-  - [SPT-2559 - Core - Authentication - Orders - Verify login modal on claimed order page (not logged in) without redirection](https://app.qase.io/case/SPT-2559)
-- Qase action: No change.
+  - [SPT-4964 - Public - Login - Verify public and modal login actions return to the intended context](https://app.qase.io/case/SPT-4964)
+- Qase action: Updated SPT-4964 to include `AccountModalAction`; treat [SPT-4965 - Core - Authentication - Verify account modal login returns to the original account action](https://app.qase.io/case/SPT-4965) as duplicate/superseded.
 
 ### TC-9: Core - Login - Verify signup and password reset paths return to login
 
@@ -651,7 +625,7 @@ RecipientAuthState: ExistingUser, NewUser
 - TC-3: Dashboard - Login - Verify dashboard deep links return after login
 - TC-4: Box Office - Login - Verify Box Office deep links return after login
 - TC-5: Public Checkout - Login - Verify checkout continues after authentication
-- TC-7: Public - Login - Verify public page login actions return to the intended context
+- TC-7: Public - Login - Verify public and modal login actions return to the intended context
 - TC-10: Mobile App - Login - Verify native login methods authenticate the correct user
 - TC-11: Mobile App - Login - Verify authenticated webview content uses the native session
 - TC-12: Desktop App - Login - Verify desktop startup opens Box Office after login
@@ -732,7 +706,6 @@ Strong existing login coverage:
   - [SPT-2558 - Core - Authentication - Orders - Verify error when claiming guest purchase with different email](https://app.qase.io/case/SPT-2558)
   - [SPT-2559 - Core - Authentication - Orders - Verify login modal on claimed order page (not logged in) without redirection](https://app.qase.io/case/SPT-2559)
   - [SPT-2946 - Core - Checkout - Guest checkout - Claim or connect purchased basket to account](https://app.qase.io/case/SPT-2946)
-  - [SPT-4965 - Core - Authentication - Verify account modal login returns to the original account action](https://app.qase.io/case/SPT-4965)
   - [SPT-4966 - Core - Authentication - Orders - Verify claim links preserve login and claim context](https://app.qase.io/case/SPT-4966)
 - Login analytics:
   - [SPT-3317 - Core - Analytics - Internal - Verify login interaction events](https://app.qase.io/case/SPT-3317)
@@ -751,15 +724,16 @@ Qase update status from the merged notes:
 - [SPT-1309 - Core - Group Sales - Claim distributed items after recipient authentication](https://app.qase.io/case/SPT-1309) now covers group-sale recipient acceptance after logged-out authentication.
 - [SPT-4909 - Core - Authentication - Verify repeated failed login attempts lock authentication endpoints](https://app.qase.io/case/SPT-4909) already covers repeated failed login attempts and JWT endpoint lockout behavior.
 - Created [SPT-4963 - Public - Login - Verify provider login conflict is recoverable for an existing email](https://app.qase.io/case/SPT-4963).
-- Created [SPT-4964 - Public - Login - Verify public page login actions return to the intended context](https://app.qase.io/case/SPT-4964).
-- Created [SPT-4965 - Core - Authentication - Verify account modal login returns to the original account action](https://app.qase.io/case/SPT-4965).
+- Updated [SPT-4964 - Public - Login - Verify public and modal login actions return to the intended context](https://app.qase.io/case/SPT-4964) to absorb generic account-modal return coverage.
+- Created [SPT-4965 - Core - Authentication - Verify account modal login returns to the original account action](https://app.qase.io/case/SPT-4965), but it is now treated as duplicate/superseded by SPT-4964.
 - Created [SPT-4966 - Core - Authentication - Orders - Verify claim links preserve login and claim context](https://app.qase.io/case/SPT-4966).
 
 Do not duplicate Qase cases for basic credentials, invalid credentials, captcha, OTP, repeated failed attempts, checkout login preservation, customer transfer checkout, group-sale distribution basics, account protected-page coverage, logout cleanup, widget guest checkout, public action login, provider conflict, account modal login, claim-link login, native Apple login, password reset, or basic SAML success/failure recovery.
 
 ## Suggested New Or Updated Qase Coverage
 
-- None required from the approved 2026-07-03 Qase push scope.
+- No remaining required Qase update for SPT-4964.
+- Treat [SPT-4965 - Core - Authentication - Verify account modal login returns to the original account action](https://app.qase.io/case/SPT-4965) as duplicate/superseded after SPT-4964 absorbed the generic account-modal return path.
 - Conditional follow-up: confirm whether standalone authenticated mobile webview content remains in login scope before creating Qase coverage for TC-11.
 
 ## Suggested Automated Coverage

@@ -143,6 +143,8 @@ Prefer `05 Tooling/scripts/create-or-update-qase-case.mjs` over fragile inline s
 
 Local draft labels such as `TC-1` are not Qase case IDs. For new cases, do not pass `--update`; Qase assigns the new case ID during apply. Use `--update <case-id>` only when modifying an existing Qase case that already has a real Qase ID.
 
+Parameter caveat: the reusable script sends Markdown `Parameters` as Qase `params`, which Qase stores as separate single parameters. Keep Platform and View in the Description table by default, and use Markdown `Parameters` only for single flow variables such as `LoginAction` or `PaymentMethod`. If the user explicitly asks for Qase grouped parameters, use an explicit `parameters` payload with `type: "group"` and verify the readback contains `.result.parameters[].type == "group"`. As of the 2026-07-06 SPT-4964 check, Qase API PATCH preserved a true Platform/View group but did not preserve a mixed payload containing both a group and a separate single parameter; add or confirm mixed grouped-plus-single parameters in the Qase UI when needed.
+
 For copyable examples, see [[05 Tooling/Create Or Update Qase Case Examples]].
 
 Reusable command pattern:
