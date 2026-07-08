@@ -17,7 +17,7 @@ Goal contract:
 - Constraints: do not make code, Qase, or vault changes unless explicitly asked; do not invent unsupported behavior; avoid test bloat by proposing representative P0/P1 automation coverage instead of every permutation.
 - Boundaries: use only the linked backend, frontend, Playwright, and vault references below; treat source repos and Qase as read-only unless explicitly told otherwise.
 - Iteration policy: after each pass, use the evidence gathered to choose the next highest-risk entry path, realistic scenario mix, fixture gap, or P0/P1 money-movement risk to inspect.
-- Blocked stop condition: stop and report when the next useful step requires product confirmation, secrets, payment-provider access, destructive data setup, Qase/code writes, or when no defensible source-backed path remains.
+- Blocked stop condition: stop and report when the next useful planning step requires product confirmation, secrets, payment-provider access, destructive data setup, Qase writes, or when no defensible source-backed path remains. If code writes would be next, convert that into a planning handoff note and continue with another read-only planning target.
 
 Backend is the source of truth. Start from [[01 Repositories/Backend - web-app]]:
 - /Users/christianvaldez/Documents/Showpass/repos/web-app
@@ -77,7 +77,8 @@ Hallucination and exit rules:
 - If Playwright coverage cannot be found, say `No coverage found in inspected files` and list the inspected paths.
 - If a finding depends on Qase/manual coverage, do not infer it; mark it as `Needs read-only Qase check`.
 - If the same type of gap repeats across many permutations, summarize the pattern once and propose representative automation coverage.
-- Exit the current exploration branch when the next step would require product confirmation, secrets, payment-provider access, destructive data setup, or Qase/code writes.
+- Exit the current exploration branch when the next planning step would require product confirmation, secrets, payment-provider access, destructive data setup, or Qase writes.
+- If code implementation would be next, do not exit or block. Mark the item `Planning Ready`, record the future file/assertion/fixture/review criteria, and continue read-only planning.
 - Exit the goal when remaining work is low-risk duplication, unsupported by source, or blocked by missing access/context.
 
 Every finding must include:

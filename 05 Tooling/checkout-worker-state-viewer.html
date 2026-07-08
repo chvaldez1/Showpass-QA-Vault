@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout Automation Worker State</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --text: #1f2933;
+      --muted: #64748b;
+      --line: #d9e2ec;
+      --accent: #0f766e;
+      --accent-weak: #ccfbf1;
+      --warn: #b45309;
+      --danger: #b91c1c;
+      --ready: #166534;
+      --parked: #7c2d12;
+      --shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    header {
+      background: #0b1220;
+      color: #f8fafc;
+      padding: 20px 24px;
+      border-bottom: 1px solid #111827;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .subhead {
+      margin-top: 6px;
+      color: #cbd5e1;
+      max-width: 980px;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      gap: 16px;
+      padding: 16px;
+    }
+
+    aside,
+    section {
+      min-width: 0;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    button,
+    input,
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--text);
+      padding: 9px 10px;
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      font-weight: 650;
+    }
+
+    button.secondary {
+      background: #fff;
+      color: var(--accent);
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      margin-bottom: 4px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 12px;
+    }
+
+    .metric .value {
+      font-size: 24px;
+      font-weight: 750;
+    }
+
+    .metric .label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .status-row {
+      display: grid;
+      gap: 8px;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr);
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .kv:last-child {
+      border-bottom: 0;
+    }
+
+    .kv .key {
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .kv .value {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .candidate-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .candidate {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .candidate-header {
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+      padding: 12px;
+      cursor: pointer;
+    }
+
+    .rank {
+      display: grid;
+      place-items: center;
+      min-height: 42px;
+      border-radius: 6px;
+      background: #e2e8f0;
+      font-weight: 800;
+    }
+
+    .candidate-title {
+      font-weight: 750;
+      overflow-wrap: anywhere;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 7px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border-radius: 999px;
+      background: #eef2f7;
+      color: #334155;
+      padding: 3px 8px;
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .pill.p0 {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .pill.p1 {
+      background: #ffedd5;
+      color: #9a3412;
+    }
+
+    .pill.ready {
+      background: #dcfce7;
+      color: var(--ready);
+    }
+
+    .pill.parked {
+      background: #ffedd5;
+      color: var(--parked);
+    }
+
+    .score {
+      min-width: 58px;
+      text-align: right;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .scorebar {
+      height: 4px;
+      background: #e5e7eb;
+      overflow: hidden;
+    }
+
+    .scorebar span {
+      display: block;
+      height: 100%;
+      background: var(--accent);
+    }
+
+    .candidate-body {
+      display: none;
+      border-top: 1px solid var(--line);
+      padding: 12px;
+      background: #fbfdff;
+    }
+
+    .candidate.open .candidate-body {
+      display: block;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .detail-block {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+    }
+
+    .detail-block.full {
+      grid-column: 1 / -1;
+    }
+
+    ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    li {
+      margin: 4px 0;
+      overflow-wrap: anywhere;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      background: #eef2f7;
+      border-radius: 4px;
+      padding: 1px 4px;
+      overflow-wrap: anywhere;
+    }
+
+    .empty {
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+      background: var(--panel);
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+    }
+
+    .error {
+      display: none;
+      margin-top: 10px;
+      color: var(--danger);
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      border-radius: 6px;
+      padding: 8px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 960px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(140px, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      header {
+        padding: 16px;
+      }
+
+      main {
+        padding: 10px;
+      }
+
+      .grid,
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .candidate-header {
+        grid-template-columns: 44px minmax(0, 1fr);
+      }
+
+      .score {
+        grid-column: 2;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Checkout Automation Worker State</h1>
+    <div class="subhead">A compact dashboard for the recursive checkout automation planning state.</div>
+  </header>
+
+  <main>
+    <aside>
+      <div class="panel toolbar">
+        <div>
+          <button id="loadDefault">Load default JSON</button>
+          <div class="small">Works when served from the vault root or from `05 Tooling/` with a local web server.</div>
+        </div>
+        <div>
+          <label for="fileInput">Or select Worker State JSON</label>
+          <input id="fileInput" type="file" accept="application/json,.json">
+        </div>
+        <div>
+          <label for="search">Search</label>
+          <input id="search" type="search" placeholder="candidate, risk, proof, path">
+        </div>
+        <div>
+          <label for="priorityFilter">Priority</label>
+          <select id="priorityFilter">
+            <option value="">All priorities</option>
+          </select>
+        </div>
+        <div>
+          <label for="statusFilter">Status</label>
+          <select id="statusFilter">
+            <option value="">All statuses</option>
+          </select>
+        </div>
+        <div>
+          <label for="sortBy">Sort</label>
+          <select id="sortBy">
+            <option value="rank">Rank</option>
+            <option value="score">Score</option>
+            <option value="priority">Priority</option>
+            <option value="status">Status</option>
+          </select>
+        </div>
+        <button id="expandAll" class="secondary">Expand all</button>
+        <button id="collapseAll" class="secondary">Collapse all</button>
+        <div id="loadError" class="error"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Resume</h2>
+        <div id="resumePanel" class="status-row empty">Load state to see resume details.</div>
+      </div>
+
+      <div class="panel">
+        <h2>Latest Proof</h2>
+        <div id="proofPanel" class="status-row empty">Load state to see latest proof refinement.</div>
+      </div>
+    </aside>
+
+    <section>
+      <div id="metrics" class="grid"></div>
+
+      <div class="panel">
+        <h2>Current Answer</h2>
+        <div id="currentAnswer" class="status-row empty">Load state to see current best automation recommendation.</div>
+      </div>
+
+      <div class="panel">
+        <h2>Candidates</h2>
+        <div id="candidateCount" class="small"></div>
+      </div>
+      <div id="candidateList" class="candidate-list">
+        <div class="empty">Load `Checkout Automation Worker State.json` to view candidates.</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const defaultPaths = [
+      "../02 Feature QA/Checkout Automation Worker State.json",
+      "02 Feature QA/Checkout Automation Worker State.json"
+    ];
+
+    const els = {
+      loadDefault: document.getElementById("loadDefault"),
+      fileInput: document.getElementById("fileInput"),
+      search: document.getElementById("search"),
+      priorityFilter: document.getElementById("priorityFilter"),
+      statusFilter: document.getElementById("statusFilter"),
+      sortBy: document.getElementById("sortBy"),
+      expandAll: document.getElementById("expandAll"),
+      collapseAll: document.getElementById("collapseAll"),
+      loadError: document.getElementById("loadError"),
+      metrics: document.getElementById("metrics"),
+      resumePanel: document.getElementById("resumePanel"),
+      proofPanel: document.getElementById("proofPanel"),
+      currentAnswer: document.getElementById("currentAnswer"),
+      candidateCount: document.getElementById("candidateCount"),
+      candidateList: document.getElementById("candidateList")
+    };
+
+    let state = null;
+    let expanded = new Set();
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function normalize(value) {
+      return String(value ?? "").toLowerCase();
+    }
+
+    function titleCase(value) {
+      return String(value ?? "")
+        .replaceAll("_", " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+    }
+
+    function showError(message) {
+      els.loadError.textContent = message;
+      els.loadError.style.display = "block";
+    }
+
+    function clearError() {
+      els.loadError.textContent = "";
+      els.loadError.style.display = "none";
+    }
+
+    async function loadDefaultJson() {
+      clearError();
+      const errors = [];
+      for (const path of defaultPaths) {
+        try {
+          const response = await fetch(path, { cache: "no-store" });
+          if (!response.ok) {
+            throw new Error(`${response.status} ${response.statusText}`);
+          }
+          state = await response.json();
+          expanded = new Set();
+          render();
+          return;
+        } catch (error) {
+          errors.push(`${path}: ${error.message}`);
+        }
+      }
+      showError("Could not load default JSON. Use the file picker or serve the vault with a local web server. " + errors.join(" | "));
+    }
+
+    function loadFile(file) {
+      clearError();
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          state = JSON.parse(reader.result);
+          expanded = new Set();
+          render();
+        } catch (error) {
+          showError(`Invalid JSON: ${error.message}`);
+        }
+      };
+      reader.onerror = () => showError("Could not read selected file.");
+      reader.readAsText(file);
+    }
+
+    function renderMetrics() {
+      const candidates = state.candidates || [];
+      const p0 = candidates.filter((item) => item.priority === "P0").length;
+      const ready = candidates.filter((item) => normalize(item.status).includes("ready")).length;
+      const parked = candidates.filter((item) => normalize(item.status).includes("park")).length;
+      const noGaps = state.summary?.no_gap_confirmations ?? "-";
+      const metrics = [
+        ["Candidates", candidates.length],
+        ["P0 Candidates", p0],
+        ["Ready", ready],
+        ["Parked", parked],
+        ["No-Gap Records", noGaps],
+        ["Current Best", state.current_best_candidate || "-"],
+        ["Latest Proof", state.latest_p0_refinement?.id || "-"],
+        ["Decision", state.decision_queue?.recommended_decision || "-"]
+      ];
+      els.metrics.innerHTML = metrics.map(([label, value]) => `
+        <div class="metric">
+          <div class="value">${escapeHtml(value)}</div>
+          <div class="label">${escapeHtml(label)}</div>
+        </div>
+      `).join("");
+    }
+
+    function kv(key, value) {
+      return `
+        <div class="kv">
+          <div class="key">${escapeHtml(key)}</div>
+          <div class="value">${formatValue(value)}</div>
+        </div>
+      `;
+    }
+
+    function formatValue(value) {
+      if (Array.isArray(value)) {
+        if (!value.length) return "<span class=\"small\">None</span>";
+        return `<ul>${value.map((item) => `<li>${formatValue(item)}</li>`).join("")}</ul>`;
+      }
+      if (value && typeof value === "object") {
+        return `<pre><code>${escapeHtml(JSON.stringify(value, null, 2))}</code></pre>`;
+      }
+      if (value === null || value === undefined || value === "") {
+        return "<span class=\"small\">None</span>";
+      }
+      return escapeHtml(value);
+    }
+
+    function renderStatusPanels() {
+      const answer = state.current_best_answer || {};
+      els.currentAnswer.className = "status-row";
+      els.currentAnswer.innerHTML = [
+        kv("Automate next", `${answer.automate_next || state.current_best_candidate || "-"} - ${answer.title || ""}`),
+        kv("Why now", answer.reason),
+        kv("Risk reduced", answer.risk_reduced),
+        kv("Confidence", answer.confidence),
+        kv("Last checkpoint", state.last_checkpoint)
+      ].join("");
+
+      const investigation = state.active_investigation || {};
+      const decision = state.decision_queue || {};
+      els.resumePanel.className = "status-row";
+      els.resumePanel.innerHTML = [
+        kv("Active packet", investigation.candidate_id),
+        kv("Next step", investigation.next_step || decision.recommended_next_planning_action),
+        kv("Decision", decision.recommended_decision),
+        kv("Unblocker", decision.recommended_unblocker),
+        kv("Planning task", state.planning_phase?.next_planning_task)
+      ].join("");
+
+      const proof = state.latest_p0_refinement || {};
+      els.proofPanel.className = "status-row";
+      els.proofPanel.innerHTML = [
+        kv("ID", proof.id),
+        kv("Candidate", proof.candidate_id),
+        kv("Type", proof.type),
+        kv("Summary", proof.summary),
+        kv("Confidence", proof.confidence),
+        kv("Verification", proof.verification_needed)
+      ].join("");
+    }
+
+    function setupFilters() {
+      const candidates = state.candidates || [];
+      const priorities = [...new Set(candidates.map((item) => item.priority).filter(Boolean))].sort();
+      const statuses = [...new Set(candidates.map((item) => item.status).filter(Boolean))].sort();
+      const currentPriority = els.priorityFilter.value;
+      const currentStatus = els.statusFilter.value;
+      els.priorityFilter.innerHTML = `<option value="">All priorities</option>${priorities.map((item) => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`).join("")}`;
+      els.statusFilter.innerHTML = `<option value="">All statuses</option>${statuses.map((item) => `<option value="${escapeHtml(item)}">${escapeHtml(titleCase(item))}</option>`).join("")}`;
+      els.priorityFilter.value = priorities.includes(currentPriority) ? currentPriority : "";
+      els.statusFilter.value = statuses.includes(currentStatus) ? currentStatus : "";
+    }
+
+    function candidateSearchText(candidate) {
+      return [
+        candidate.id,
+        candidate.title,
+        candidate.priority,
+        candidate.status,
+        candidate.confidence,
+        candidate.why_now,
+        candidate.what_to_automate,
+        candidate.qa_handoff,
+        candidate.first_action,
+        candidate.decision_needed,
+        candidate.default_decision,
+        ...(candidate.acceptance_criteria || []),
+        candidate.entry_path,
+        candidate.scenario_mix,
+        candidate.next_step,
+        candidate.could_change_ranking,
+        ...(candidate.evidence_refs || []).map((ref) => [ref.type, ref.path, ref.line, ref.note].join(" "))
+      ].join(" ");
+    }
+
+    function filteredCandidates() {
+      const query = normalize(els.search.value);
+      const priority = els.priorityFilter.value;
+      const status = els.statusFilter.value;
+      const sortBy = els.sortBy.value;
+      const candidates = (state.candidates || []).filter((candidate) => {
+        if (priority && candidate.priority !== priority) return false;
+        if (status && candidate.status !== status) return false;
+        if (query && !normalize(candidateSearchText(candidate)).includes(query)) return false;
+        return true;
+      });
+
+      return candidates.sort((a, b) => {
+        if (sortBy === "score") return (b.score ?? 0) - (a.score ?? 0);
+        if (sortBy === "priority") return String(a.priority).localeCompare(String(b.priority)) || (a.rank ?? 999) - (b.rank ?? 999);
+        if (sortBy === "status") return String(a.status).localeCompare(String(b.status)) || (a.rank ?? 999) - (b.rank ?? 999);
+        return (a.rank ?? 999) - (b.rank ?? 999);
+      });
+    }
+
+    function pillClass(value) {
+      const text = normalize(value);
+      if (text === "p0") return "p0";
+      if (text === "p1") return "p1";
+      if (text.includes("ready") || text.includes("refined")) return "ready";
+      if (text.includes("park")) return "parked";
+      return "";
+    }
+
+    function evidenceList(refs) {
+      if (!Array.isArray(refs) || !refs.length) {
+        return "<span class=\"small\">No evidence refs listed.</span>";
+      }
+      return `<ul>${refs.map((ref) => {
+        if (typeof ref === "string") return `<li><code>${escapeHtml(ref)}</code></li>`;
+        const path = `${ref.path ?? ""}${ref.line ? `:${ref.line}` : ""}`;
+        return `<li><code>${escapeHtml(path)}</code>${ref.type ? ` <span class="pill">${escapeHtml(ref.type)}</span>` : ""}${ref.note ? `<div class="small">${escapeHtml(ref.note)}</div>` : ""}</li>`;
+      }).join("")}</ul>`;
+    }
+
+    function renderCandidates() {
+      const candidates = filteredCandidates();
+      els.candidateCount.textContent = `${candidates.length} shown of ${(state.candidates || []).length}`;
+      if (!candidates.length) {
+        els.candidateList.innerHTML = "<div class=\"empty\">No candidates match the current filters.</div>";
+        return;
+      }
+
+      els.candidateList.innerHTML = candidates.map((candidate) => {
+        const isOpen = expanded.has(candidate.id);
+        const score = Number(candidate.score ?? 0);
+        return `
+          <article class="candidate ${isOpen ? "open" : ""}" data-id="${escapeHtml(candidate.id)}">
+            <div class="candidate-header" role="button" tabindex="0">
+              <div class="rank">#${escapeHtml(candidate.rank ?? "-")}</div>
+              <div>
+                <div class="candidate-title">${escapeHtml(candidate.id)} - ${escapeHtml(candidate.title)}</div>
+                <div class="meta">
+                  <span class="pill ${pillClass(candidate.priority)}">${escapeHtml(candidate.priority)}</span>
+                  <span class="pill ${pillClass(candidate.status)}">${escapeHtml(titleCase(candidate.status))}</span>
+                  <span class="pill">${escapeHtml(candidate.confidence || "Unknown confidence")}</span>
+                </div>
+              </div>
+              <div class="score">${escapeHtml(candidate.score ?? "-")}</div>
+            </div>
+            <div class="scorebar"><span style="width: ${Math.max(0, Math.min(score, 100))}%"></span></div>
+            <div class="candidate-body">
+              <div class="detail-grid">
+                <div class="detail-block">
+                  <h3>What To Automate</h3>
+                  <div>${formatValue(candidate.what_to_automate || candidate.qa_handoff || candidate.title)}</div>
+                </div>
+                <div class="detail-block">
+                  <h3>First Action</h3>
+                  <div>${formatValue(candidate.first_action || candidate.recommended_first_test || candidate.next_step)}</div>
+                </div>
+                ${candidate.qa_handoff ? `
+                <div class="detail-block full">
+                  <h3>QA Handoff</h3>
+                  <div>${formatValue(candidate.qa_handoff)}</div>
+                </div>
+                ` : ""}
+                ${candidate.acceptance_criteria ? `
+                <div class="detail-block full">
+                  <h3>Acceptance Criteria</h3>
+                  <div>${formatValue(candidate.acceptance_criteria)}</div>
+                </div>
+                ` : ""}
+                ${candidate.decision_needed || candidate.default_decision ? `
+                <div class="detail-block full">
+                  <h3>Decision Needed / Default</h3>
+                  <div>${formatValue(candidate.decision_needed || "No decision needed.")}</div>
+                  ${candidate.default_decision ? `<div class="small">Default: ${escapeHtml(candidate.default_decision)}</div>` : ""}
+                </div>
+                ` : ""}
+                <div class="detail-block">
+                  <h3>What This Means</h3>
+                  <div>${formatValue(candidate.reader_summary || candidate.why_now)}</div>
+                </div>
+                <div class="detail-block">
+                  <h3>Representative First Test</h3>
+                  <div>${formatValue(candidate.recommended_first_test || candidate.scenario_mix)}</div>
+                </div>
+                <div class="detail-block">
+                  <h3>Entry Path</h3>
+                  <div>${formatValue(candidate.entry_path)}</div>
+                </div>
+                <div class="detail-block">
+                  <h3>Not Asking For</h3>
+                  <div>${formatValue(candidate.not_a_matrix || "No explicit exclusion recorded.")}</div>
+                </div>
+                <div class="detail-block full">
+                  <h3>Next Step</h3>
+                  <div>${formatValue(candidate.next_step)}</div>
+                </div>
+                ${candidate.ranking_basis || candidate.production_usage_caveat ? `
+                <div class="detail-block full">
+                  <h3>Ranking Basis</h3>
+                  <div>${formatValue(candidate.ranking_basis || "No ranking basis recorded.")}</div>
+                </div>
+                <div class="detail-block full">
+                  <h3>Provider / Volume Caveat</h3>
+                  <div>${formatValue(candidate.production_usage_caveat || "No provider-volume caveat recorded.")}</div>
+                </div>
+                ` : ""}
+                <div class="detail-block full">
+                  <h3>Could Change Ranking</h3>
+                  <div>${formatValue(candidate.could_change_ranking)}</div>
+                </div>
+                <div class="detail-block full">
+                  <h3>Evidence</h3>
+                  ${evidenceList(candidate.evidence_refs)}
+                </div>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      document.querySelectorAll(".candidate").forEach((card) => {
+        const header = card.querySelector(".candidate-header");
+        const toggle = () => {
+          const id = card.dataset.id;
+          if (expanded.has(id)) expanded.delete(id);
+          else expanded.add(id);
+          card.classList.toggle("open");
+        };
+        header.addEventListener("click", toggle);
+        header.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            toggle();
+          }
+        });
+      });
+    }
+
+    function render() {
+      if (!state) return;
+      renderMetrics();
+      setupFilters();
+      renderStatusPanels();
+      renderCandidates();
+    }
+
+    els.loadDefault.addEventListener("click", loadDefaultJson);
+    els.fileInput.addEventListener("change", (event) => {
+      const file = event.target.files?.[0];
+      if (file) loadFile(file);
+    });
+    [els.search, els.priorityFilter, els.statusFilter, els.sortBy].forEach((control) => {
+      control.addEventListener("input", renderCandidates);
+      control.addEventListener("change", renderCandidates);
+    });
+    els.expandAll.addEventListener("click", () => {
+      expanded = new Set((state?.candidates || []).map((item) => item.id));
+      renderCandidates();
+    });
+    els.collapseAll.addEventListener("click", () => {
+      expanded = new Set();
+      renderCandidates();
+    });
+
+    loadDefaultJson();
+  </script>
+</body>
+</html>

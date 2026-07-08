@@ -17,6 +17,23 @@ Score each finding out of 100.
 | Fixture / test leverage | 10 | Would one fixture or test unlock broad critical-path coverage? |
 | Customer / support impact | 10 | Would failure create buyer confusion, organizer support burden, refunds, chargebacks, or trust issues? |
 
+## Production Usage Adjustment
+
+The score is not complete until production usage is considered.
+
+When two candidates have similar money-movement risk, prefer the path that moves more real checkout volume. Payment-provider share matters: Stripe-dominant paths should outrank lower-volume provider paths unless the lower-volume path has stronger incident evidence, a clearer uncovered P0 failure, or substantially better automation leverage.
+
+Use this adjustment during re-ranking:
+
+| Signal | Adjustment |
+| --- | ---: |
+| Dominant production payment path or checkout surface | +5 to +10 |
+| Moderate production usage | +2 to +5 |
+| Low or specialized production usage | 0 |
+| Unknown production usage | mark `Needs volume confirmation` instead of treating the score as final |
+
+If production volume is unknown, label the ranking as **automation-readiness ranking**, not final business-priority ranking.
+
 ## Priority Bands
 
 | Priority | Score | Meaning |
