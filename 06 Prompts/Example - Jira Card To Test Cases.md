@@ -19,6 +19,7 @@ Scope:
 - Verify the implementation behavior against backend source first.
 - Use frontend source to confirm the user flow, routes, UI states, permissions, and visible outcomes.
 - Use Playwright only for existing automation patterns.
+- Do not run git diff, branch comparison, or changed-file discovery unless I explicitly ask for diff-based coverage.
 
 Source code:
 - Backend:
@@ -48,6 +49,7 @@ Include:
 Constraints:
 - Do not query Qase unless I explicitly ask for a gap analysis.
 - Do not update Qase.
+- Do not run git diff or branch comparison unless I explicitly ask for diff-based coverage.
 - Use [[05 Tooling/Qase Test Case Writing Rules]].
 - Use `TC-*` labels for test cases.
 - Keep steps executable by the relevant Showpass actor.

@@ -383,7 +383,7 @@
 <body>
   <header>
     <h1>Checkout Automation Worker State</h1>
-    <div class="subhead">A compact dashboard for the recursive checkout automation planning state.</div>
+    <div class="subhead">A compact dashboard for checkout automation planning. ID shorthand: `CHK` means checkout, so `AUTO-CHK-002` means checkout automation candidate 002.</div>
   </header>
 
   <main>
@@ -655,11 +655,14 @@
         candidate.decision_needed,
         candidate.default_decision,
         ...(candidate.acceptance_criteria || []),
+        candidate.criticality_review?.business_invariant,
+        candidate.criticality_review?.incident_alignment,
+        candidate.criticality_review?.priority_reason,
+        candidate.criticality_review?.ranking_action,
         candidate.entry_path,
         candidate.scenario_mix,
         candidate.next_step,
-        candidate.could_change_ranking,
-        ...(candidate.evidence_refs || []).map((ref) => [ref.type, ref.path, ref.line, ref.note].join(" "))
+        candidate.could_change_ranking
       ].join(" ");
     }
 
@@ -690,17 +693,6 @@
       if (text.includes("ready") || text.includes("refined")) return "ready";
       if (text.includes("park")) return "parked";
       return "";
-    }
-
-    function evidenceList(refs) {
-      if (!Array.isArray(refs) || !refs.length) {
-        return "<span class=\"small\">No evidence refs listed.</span>";
-      }
-      return `<ul>${refs.map((ref) => {
-        if (typeof ref === "string") return `<li><code>${escapeHtml(ref)}</code></li>`;
-        const path = `${ref.path ?? ""}${ref.line ? `:${ref.line}` : ""}`;
-        return `<li><code>${escapeHtml(path)}</code>${ref.type ? ` <span class="pill">${escapeHtml(ref.type)}</span>` : ""}${ref.note ? `<div class="small">${escapeHtml(ref.note)}</div>` : ""}</li>`;
-      }).join("")}</ul>`;
     }
 
     function renderCandidates() {
@@ -758,6 +750,15 @@
                   ${candidate.default_decision ? `<div class="small">Default: ${escapeHtml(candidate.default_decision)}</div>` : ""}
                 </div>
                 ` : ""}
+                ${candidate.criticality_review ? `
+                <div class="detail-block full">
+                  <h3>Criticality Review</h3>
+                  ${kv("Invariant", candidate.criticality_review.business_invariant)}
+                  ${kv("Incident fit", candidate.criticality_review.incident_alignment)}
+                  ${kv("Priority reason", candidate.criticality_review.priority_reason)}
+                  ${kv("Ranking action", candidate.criticality_review.ranking_action)}
+                </div>
+                ` : ""}
                 <div class="detail-block">
                   <h3>What This Means</h3>
                   <div>${formatValue(candidate.reader_summary || candidate.why_now)}</div>
@@ -791,10 +792,6 @@
                 <div class="detail-block full">
                   <h3>Could Change Ranking</h3>
                   <div>${formatValue(candidate.could_change_ranking)}</div>
-                </div>
-                <div class="detail-block full">
-                  <h3>Evidence</h3>
-                  ${evidenceList(candidate.evidence_refs)}
                 </div>
               </div>
             </div>

@@ -10,13 +10,14 @@ Related notes:
 - [[04 Automation/Checkout Automation Phase 2 Planning]]
 - [[02 Feature QA/Checkout Money Movement Risk Scoring]]
 - [[02 Feature QA/Checkout Automation Decision Queue]]
+- [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
 
 ## Current Best Answer
 
 **Automate next:** AUTO-CHK-002 - Duplicate submit/retry creates one paid outcome  
-**Why now:** Existing Authorize repro coverage can exercise panic-click, slow purchase, and replay behavior, but inspected coverage does not prove exactly one final paid transaction, order, and issued ticket set.  
+**Why now:** Still the strongest automation-readiness P0: it proves the recurring business invariant that retry/replay cannot create duplicate paid transaction, order, or ticket outcomes. Provider order remains caveated until Stripe/payment-volume priority is confirmed.  
 **Confidence:** High  
-**Risk reduced:** Duplicate charge, duplicate order, duplicate confirmation, and duplicate ticket issuance risk after retry/replay behavior.  
+**Risk reduced:** Duplicate charge, duplicate order, duplicate confirmation, duplicate ticket issuance, and final-state disagreement after retry/replay behavior.  
 **Planning status:** Planning packet ready; `PROOF-CHK-002` refines the first implementation contract. Implementation is out of scope for this worker; continue planning the next highest-value P0 target.
 **Ranking caveat:** This is currently an automation-readiness ranking, not final business-priority ranking. `AUTO-CHK-002` is first because the Authorize repro harness is concrete and the duplicate-submit final-state gap is clear. If Stripe carries most production checkout volume, add or promote a Stripe-specific duplicate-submit/retry or PaymentIntent recovery candidate before treating this rank as final.
 **QA handoff:** Automate one duplicate-submit/retry final-state proof. Submit or replay the same checkout attempt twice, then assert exactly one paid transaction, one paid order/invoice, and one issued ticket set. The only open choice is provider path: use the existing Authorize.net replay harness by default, or switch to a Stripe equivalent first if Stripe volume is the business priority.
@@ -32,6 +33,8 @@ Related notes:
 
 **Blocked-step redirect:** Implementation-needed work is never a goal-level blocker. Branch blockers are local only: park product/business/provider/hardware/secret/destructive-setup/read-only-access questions, re-rank, and continue to the next read-only target. Use `/goal blocked` only when every high-value planning branch is ready, parked, duplicated, or unsupported and no defensible read-only planning remains.
 
+**Incident calibration:** `assets/csv/major-critical.csv` was reviewed on 2026-07-09. Criticality now means a reusable business invariant can break, not merely that a Jira card was labeled Critical/Major. Do not force multi-day exploration once Major/Critical incident buckets stop changing the P0/P1 ranking, fixture needs, or assertion contracts.
+
 ## Visual Snapshot
 
 ```mermaid
@@ -46,7 +49,7 @@ flowchart LR
 
 ## Top Automation Candidates
 
-Reader note: a candidate is not asking for every listed checkout variant. Use `what_to_automate`, `first_action`, and `acceptance_criteria` in Worker State as the QA handoff. Use `recommended_first_test` only as supporting detail, and `not_a_matrix` for what should not be tested first. Rankings include automation readiness; production payment-provider volume can change final business priority.
+Reader note: a candidate is not asking for every listed checkout variant. Use `what_to_automate`, `first_action`, `acceptance_criteria`, and `criticality_review` in Worker State as the QA handoff. Use `recommended_first_test` only as supporting detail, and `not_a_matrix` for what should not be tested first. Rankings include automation readiness; production payment-provider volume can change final business priority. P1 scores are intentionally below 80 after the Jira calibration so P1 means important backlog context, not active P0.
 
 | Rank | ID | Priority | Score | Candidate | Why Now | Status |
 | ---: | --- | --- | ---: | --- | --- | --- |
@@ -57,26 +60,26 @@ Reader note: a candidate is not asking for every listed checkout variant. Use `w
 | 5 | AUTO-CHK-013 | P0 | 90 | Assigned seating payment failure/retry preserves seat ownership | Assigned-seat success and generic failed-payment coverage exist separately, but inspected coverage does not prove failure/retry seat ownership | Planning Ready / Proof Refined |
 | 6 | AUTO-CHK-007 | P0 | 89 | Checkout tracking-link unavailable-item paid outcome | Review logic prunes unavailable extras, but inspected E2E coverage does not prove final paid order after pruning | Planning Ready |
 | 7 | AUTO-CHK-008 | P0 | 84 | Package revenue-realization reporting reconciliation | Package purchase automation is broad, and Qase detail is related but does not prove child stat allocation reporting reconciliation | Planning Ready |
-| 8 | AUTO-CHK-005 | P1 | 90 | Membership event-batch hold-link checkout reconciliation | Backend route/tests prove path, and user APIs can expose member id plus generated hold link | Fixture plan tightened |
-| 9 | AUTO-CHK-011 | P1 | 88 | Stripe PaymentIntent cancel/webhook recovery creates no paid order and remains retry-safe | Backend tests and Qase cover the class, but exact Playwright recovery final-state proof was not found | Planning Ready |
-| 10 | AUTO-CHK-012 | P1 | 87 | One-click wallet checkout cancel/failure/retry creates no paid order until final success | Source and Qase cover the path, but Playwright needs wallet provider/browser strategy | Planning Parked |
-| 11 | AUTO-CHK-010 | P1 | 86 | Guest checkout claim/connect preserves paid order ownership | Source and Qase cover the risk, but exact Playwright paid-order ownership flow was not found | Planning Ready |
-| 12 | AUTO-CHK-019 | P1 | 86 | Resale checkout buyer charge and seller-side completion reconciliation | Backend/Qase cover resale purchase, but inspected Playwright does not prove buyer paid order plus seller completion/refund/payout state | Planning Ready / Manual-backed |
-| 13 | AUTO-CHK-014 | P1 | 85 | Waitlist async fulfillment creates one paid order and reconciled revenue | Playwright covers join/Pending only; backend and Qase cover later fulfillment, payment, tickets, and revenue stats | Planning Ready / Manual-backed |
-| 14 | AUTO-CHK-017 | P1 | 85 | Credit-applied checkout remaining balance reconciles to charged amount | Backend/Qase and zero-cost automation exist, but partial credit plus remaining charge reconciliation is not proven | Planning Ready / Manual-backed |
-| 15 | AUTO-CHK-016 | P1 | 84 | Payment-plan checkout installment totals reconcile to Dashboard/API state | Backend covers lifecycle, but inspected Playwright does not prove checkout plus Dashboard/API reconciliation | Planning Ready / Backend-covered |
-| 16 | AUTO-CHK-018 | P1 | 84 | Configured rate-card fee and tax-on-fee checkout reconciliation | Backend/Dashboard/Qase cover configured fees, but inspected Playwright only proves generic service-fee totals | Planning Ready / Manual-backed |
-| 17 | AUTO-CHK-015 | P1 | 83 | Refund-protection upsell checkout creates linked protection-only invoice | Tokenized post-purchase protection checkout is source-backed, but exact Playwright coverage was not found | Planning Ready / Backend-covered |
-| 18 | AUTO-CHK-020 | P1 | 82 | Checkout upgrade offer replaces item and reconciles upgraded paid outcome | Backend/frontend support upgrade replacement and Qase/manual coverage exists, but inspected Playwright does not prove paid upgraded outcome | Planning Ready / Manual-backed |
-| 19 | AUTO-CHK-009 | P1 | 82 | Square Terminal async completion finalizes one paid Box Office order | Async terminal completion is source-backed and manually covered, but Playwright needs hardware/provider strategy | Planning Parked |
-| 20 | AUTO-CHK-004 | P1 | 78 | Gift-card stored value checkout reconciliation | Public gift-card checkout route exists and Playwright coverage was not found | Needs business priority |
+| 8 | AUTO-CHK-011 | P1 | 79 | Stripe PaymentIntent cancel/webhook recovery creates no paid order and remains retry-safe | High incident alignment, but Playwright feasibility depends on a safe Stripe hook/provider fixture | Planning Ready |
+| 9 | AUTO-CHK-005 | P1 | 78 | Membership event-batch hold-link checkout reconciliation | Membership/hold issues recur, but this is fixture-heavy and below direct charge/failure P0s | Fixture plan tightened |
+| 10 | AUTO-CHK-017 | P1 | 77 | Credit-applied checkout remaining balance reconciles to charged amount | Credits and charge mismatches recur, but existing backend/manual/zero-cost coverage lowers P0 urgency | Planning Ready / Manual-backed |
+| 11 | AUTO-CHK-018 | P1 | 76 | Configured rate-card fee and tax-on-fee checkout reconciliation | Fees/taxes recur, but broad manual/backend coverage and generic Playwright fee checks reduce urgency | Planning Ready / Manual-backed |
+| 12 | AUTO-CHK-019 | P1 | 75 | Resale checkout buyer charge and seller-side completion reconciliation | Money, ownership, and payout risk exists, but backend/Qase/manual coverage is broad | Planning Ready / Manual-backed |
+| 13 | AUTO-CHK-014 | P1 | 74 | Waitlist async fulfillment creates one paid order and reconciled revenue | Async fulfillment maps to incident patterns, but backend/Qase cover much of the lifecycle | Planning Ready / Manual-backed |
+| 14 | AUTO-CHK-016 | P1 | 73 | Payment-plan checkout installment totals reconcile to Dashboard/API state | Delayed money path, but backend coverage is strong and final release needs a safe trigger | Planning Ready / Backend-covered |
+| 15 | AUTO-CHK-010 | P1 | 72 | Guest checkout claim/connect preserves paid order ownership | Ownership/access issues recur, but manual Qase coverage exists and money movement is less direct | Planning Ready |
+| 16 | AUTO-CHK-015 | P1 | 71 | Refund-protection upsell checkout creates linked protection-only invoice | Post-purchase money path, but backend coverage exists and core protection checkout is already no-gap | Planning Ready / Backend-covered |
+| 17 | AUTO-CHK-020 | P1 | 70 | Checkout upgrade offer replaces item and reconciles upgraded paid outcome | Item replacement affects total/inventory/fulfillment, but Qase/manual and source behavior lower urgency | Planning Ready / Manual-backed |
+| 18 | AUTO-CHK-012 | P1 | 69 | One-click wallet checkout cancel/failure/retry creates no paid order until final success | Real provider risk, but parked until wallet browser/provider strategy exists | Planning Parked |
+| 19 | AUTO-CHK-009 | P1 | 68 | Square Terminal async completion finalizes one paid Box Office order | Terminal async state maps to incidents, but hardware/provider strategy blocks reliable automation | Planning Parked |
+| 20 | AUTO-CHK-004 | P1 | 64 | Gift-card stored value checkout reconciliation | Gift-card/credit signal exists, but business priority and product-scope decision are still needed | Needs business priority |
 
 ## Active Investigation
 
 **Packet:** AUTO-CHK-013  
 **Hypothesis:** Assigned-seat failure/retry coverage can be made deterministic by using the best-available assigned-seating path to capture seat identifiers before payment, then proving failed-payment no-ownership and retry same-seat ownership through API plus order proof.  
 **Current evidence:** Best-available assigned seating already returns a basket response that `captureSeatIdentifiers()` can read; manual `clickCheckout` does not expose the same response. User ticket item serialization exposes seat identifiers, while the failed-Affirm terminal currently returns `void`. `PROOF-CHK-006` records the first implementation contract.  
-**Next inspection step:** Resume P0-only planning with `AUTO-CHK-007`, `AUTO-CHK-008`, or a P0 ranking/assertion-contract review. Current best remains `AUTO-CHK-002`.
+**Next inspection step:** Resume with a P0 ranking/assertion-contract review, or refine `AUTO-CHK-007` / `AUTO-CHK-008` only if that could change the current top P0 recommendation. Current best remains `AUTO-CHK-002`.
 
 ## Re-Ranking Log
 
@@ -159,6 +162,8 @@ Reader note: a candidate is not asking for every listed checkout variant. Use `w
 | 2026-07-07 | Recorded PROOF-CHK-005 | Refined AUTO-CHK-006 first implementation contract: upgrade existing `CheckoutAddOns` confirmation proof to pass base ticket and add-on product lines plus combined paid total |
 | 2026-07-07 | Recorded PROOF-CHK-006 | Refined AUTO-CHK-013 first implementation contract: use best-available seat capture, failed-Affirm context, no-paid seat ownership proof, and retry same-seat paid ownership proof |
 | 2026-07-07 | Applied QA handoff schema to all candidates | Worker State now gives every candidate `what_to_automate`, `qa_handoff`, `first_action`, `decision_needed`, `default_decision`, and `acceptance_criteria` for reviewer/UI handoff |
+| 2026-07-09 | Calibrated criticality from Jira export | Reviewed 1,352 exported SPD Major/Critical cards; current top checkout candidates remain directionally aligned, but support scripts/config/hardware/demo cards should not promote automation unless they expose recurring business logic |
+| 2026-07-09 | Normalized Worker State candidate scoring | Added `criticality_review` to every candidate and lowered P1 backlog scores below 80 so priority bands match the rubric |
 
 ## No-Gap Confirmations
 
@@ -220,8 +225,11 @@ P1/lower packets are preserved, not deleted or pruned. Use [[06 Prompts/Checkout
 
 **Last completed loop:** `PROOF-CHK-006` for `AUTO-CHK-013`.  
 **Current best automation remains:** `AUTO-CHK-002`.  
-**Resume next with:** `AUTO-CHK-007`, `AUTO-CHK-008`, or a P0 ranking/assertion-contract review.  
+**CSV status:** learned and checkpointed; do not reread `assets/csv/major-critical.csv` unless a newer export is provided.  
+**Worker State status:** every candidate has QA handoff fields plus `criticality_review`; P1 scores are normalized below 80.  
+**Resume next with:** P0 ranking/assertion-contract review, or refine `AUTO-CHK-007` / `AUTO-CHK-008` only if that could change the current top P0 recommendation.  
 **Read first after `/goal resume`:** this Mission Control note, then [[02 Feature QA/Checkout Automation Worker State.json]].  
+**Fresh session checkpoint:** open [[06 Prompts/Checkout Recursive Automation Prioritization Worker]], then read `resume_checkpoint`, `incident_calibration_policy`, and `candidates[].criticality_review` in Worker State before doing any new search.  
 **Do not resume by implementing tests:** this worker is planning-only; implementation stays a separate task.
 
 ## Retrieval Hints

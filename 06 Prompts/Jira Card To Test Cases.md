@@ -22,6 +22,7 @@ Source code:
   /Users/christianvaldez/Documents/Showpass/repos/showpass-frontend
 - Use Playwright only for existing automation patterns:
   /Users/christianvaldez/Documents/Showpass/repos/showpass-playwright
+- Do not run git diff, branch comparison, or changed-file discovery unless explicitly asked for diff-based coverage. Inspect relevant source files directly from the Jira context, branch name, route, API, or feature terms.
 
 Output:
 - Write Qase-ready cases under `03 Test Cases/`.
@@ -30,6 +31,7 @@ Output:
 
 Constraints:
 - Do not query or update Qase unless explicitly asked for a Qase gap analysis.
+- Do not run git diff or branch comparison unless explicitly asked for diff-based coverage.
 - Use [[05 Tooling/Qase Test Case Writing Rules]].
 - Keep cases executable by a Showpass customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user.
 - Do not write `the tester`.

@@ -55,9 +55,10 @@ Use this flow when the user says to generate tests from a Jira card, pastes a Ji
 5. Continue through the canonical QA workflow and this vault note before writing test cases.
 6. Verify behavior against backend source first when the Jira card touches APIs, validation, permissions, checkout, payments, credits, refunds, settlement, reports, or other source-of-truth logic.
 7. Verify frontend behavior for routes, UI state, forms, copy, entry paths, permissions, and visible outcomes.
-8. Use Playwright only for existing automation patterns unless the user asks for automation work.
-9. If the user asks for new coverage from the Jira card, use [[#New Feature Test Case Flow]] unless they explicitly ask for Qase gap analysis.
-10. If the user asks whether existing Qase coverage is enough, use [[#Read / Gap Analysis Flow]] and [[05 Tooling/qasectl]].
+8. Do not run git diff, branch comparison, or changed-file discovery for Jira-card test generation unless the user explicitly asks for diff-based coverage. Inspect the relevant source files directly from the Jira context, branch name, route, API, or feature terms.
+9. Use Playwright only for existing automation patterns unless the user asks for automation work.
+10. If the user asks for new coverage from the Jira card, use [[#New Feature Test Case Flow]] unless they explicitly ask for Qase gap analysis.
+11. If the user asks whether existing Qase coverage is enough, use [[#Read / Gap Analysis Flow]] and [[05 Tooling/qasectl]].
 
 Example request:
 
@@ -86,6 +87,7 @@ Write Qase-ready cases to:
 
 Constraints:
 - Do not query or update Qase unless I explicitly ask for a gap analysis.
+- Do not run git diff or branch comparison unless I explicitly ask for diff-based coverage.
 - Use [[05 Tooling/Qase Test Case Writing Rules]].
 - Include a short Jira Intake Summary, Sources Reviewed, source-backed behavior, risks, manual test cases, minimum execution set, automation candidates, and open questions.
 ```
@@ -214,4 +216,4 @@ When a user does approve Qase updates, follow [[05 Tooling/qasectl#Qase Update W
 
 ## Agent Reminder
 
-Read the canonical workflow first. If the input is a Jira card, read [[05 Tooling/jiractl]], fetch the card, summarize Jira intake briefly, then verify behavior against source before generating cases. For new-feature coverage, use the New Feature Test Case Flow and do not call the output a gap analysis. For gap analysis, read Qase first, inspect source code second, then write findings under `03 Test Cases/`. Bare filenames from the user should be resolved inside `03 Test Cases/`. Never overwrite a `*Template.md` file with generated output unless the user explicitly asks to edit or overwrite that template. Keep vault notes short and reference source paths instead of copying workflow content. Write cases from the perspective of the real Showpass actor, such as customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user. Do not use `the tester` phrasing in generated Qase cases. Preserve user edits when revising an existing note. Prefer plain product wording over abstract QA or implementation terms unless the technical term is required for accuracy.
+Read the canonical workflow first. If the input is a Jira card, read [[05 Tooling/jiractl]], fetch the card, summarize Jira intake briefly, then verify behavior against source before generating cases. For Jira-card test generation, do not run git diff or branch comparison unless the user explicitly asks for diff-based coverage. For new-feature coverage, use the New Feature Test Case Flow and do not call the output a gap analysis. For gap analysis, read Qase first, inspect source code second, then write findings under `03 Test Cases/`. Bare filenames from the user should be resolved inside `03 Test Cases/`. Never overwrite a `*Template.md` file with generated output unless the user explicitly asks to edit or overwrite that template. Keep vault notes short and reference source paths instead of copying workflow content. Write cases from the perspective of the real Showpass actor, such as customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user. Do not use `the tester` phrasing in generated Qase cases. Preserve user edits when revising an existing note. Prefer plain product wording over abstract QA or implementation terms unless the technical term is required for accuracy.

@@ -4,6 +4,25 @@ Use this rubric to rank checkout findings during open-ended exploration.
 
 Related prompt: [[06 Prompts/Checkout Money Movement Exploration Goal]]
 
+Related incident calibration: [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
+
+## Criticality Definition
+
+Critical means a business invariant can break, not just that a Jira card was labeled Critical.
+
+A checkout automation candidate is critical when it can prove or prevent one of these recurring Major/Critical incident patterns:
+
+- Money moves but order, invoice, confirmation, receipt, provider state, or Dashboard state disagrees.
+- Failed, canceled, pending, or retried payment creates paid fulfillment.
+- Successful payment leaves no usable order, ticket, confirmation, or receipt.
+- Inventory, hold, assigned seat, membership, package, waitlist, transfer, or resale ownership becomes wrong.
+- Refund, exchange, credit, gift card, fee, tax, discount, or payout math is wrong.
+- A live or near-live sales path is blocked for checkout, Box Office, transfer, or assigned seating.
+- Reporting, attribution, transaction detail, or payout views materially disagree with actual sales.
+- Async provider, webhook, scheduled job, or background task mutates final state incorrectly.
+
+Do not treat a card as automation-critical only because support needed a script, import, data move, config change, printer/device workaround, or demo setup. Promote those only when they expose recurring product behavior that can break money, fulfillment, inventory, ownership, reporting, or access.
+
 ## Score
 
 Score each finding out of 100.
@@ -34,11 +53,25 @@ Use this adjustment during re-ranking:
 
 If production volume is unknown, label the ranking as **automation-readiness ranking**, not final business-priority ranking.
 
+## Incident Pattern Adjustment
+
+Use exported Major/Critical Jira cards as calibration, but classify the business logic first.
+
+| Signal | Adjustment |
+| --- | ---: |
+| Matches a recurring Major/Critical business invariant from [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]] | +5 to +10 |
+| Matches a real incident and has weak/no Playwright final-state proof | +5 |
+| One-off support script or data correction that fixed recurring product logic | +2 to +5 |
+| One-off support script, data move, import, config update, hardware/printer issue, or demo setup with no reusable product invariant | -5 to -15 |
+| Existing backend, Playwright, Qase/manual, and Dashboard/API coverage already prove the invariant | -5 to -10 |
+
+If the incident signal is only "this was marked Critical" and the business invariant is unclear, mark `Needs incident classification` instead of promoting the candidate.
+
 ## Priority Bands
 
 | Priority | Score | Meaning |
 | --- | ---: | --- |
-| P0 | 80-100 | Critical money movement or order integrity coverage gap. |
+| P0 | 80-100 | Critical business invariant gap around money, order, fulfillment, inventory, ownership, reporting, or async final state. |
 | P1 | 60-79 | High-risk checkout path that should be covered soon. |
 | P2 | 40-59 | Useful regression or edge coverage. |
 | P3 | 0-39 | Low-risk, duplicate, or deferred coverage. |

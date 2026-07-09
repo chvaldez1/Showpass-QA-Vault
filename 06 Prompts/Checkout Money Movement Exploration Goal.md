@@ -4,6 +4,7 @@ Use this prompt when launching an open-ended checkout QA exploration goal focuse
 
 Related notes:
 - [[02 Feature QA/Checkout Money Movement Risk Scoring]]
+- [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
 - [[02 Feature QA/Checkout Critical Path Gap Analysis]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
 - [[03 Test Cases/Checkout Money Movement Test Drafts]]
@@ -30,6 +31,14 @@ Use Playwright as the automation reference. Start from [[01 Repositories/QA Auto
 
 Use this vault for findings only:
 - /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault
+
+Use exported incident signal for criticality calibration:
+- /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/assets/csv/major-critical.csv
+
+Criticality rule:
+- Critical means a reusable business invariant can break, not just that a Jira card was labeled Critical or Major.
+- Promote patterns that affect money movement, paid/unpaid final state, order/ticket fulfillment, inventory/seat ownership, refund/exchange/credit/payout math, live sales blocking, reporting disagreement, or async provider/background task final state.
+- Do not promote support scripts, imports, data moves, config/content requests, hardware/printer issues, or demo setup unless they expose recurring product behavior.
 
 Primary focus:
 - all checkout entry paths and platforms that can reach money movement
@@ -60,9 +69,10 @@ Run repeated exploration passes. For each pass:
 2. Inventory checkout entry paths and platforms that can exercise the behavior.
 3. Identify realistic scenario mixes that combine entry path, ticket type, fees, discounts, payment type, extra items, identity, and inventory state.
 4. Compare against existing Playwright coverage, fixtures, factories, and Qase/manual coverage.
-5. Record gaps, unclear behavior, missing fixtures, and automation candidates.
-6. Score each finding out of 100 using [[02 Feature QA/Checkout Money Movement Risk Scoring]].
-7. Prioritize P0 and P1 items first.
+5. Compare against local Major/Critical incident buckets when that could change ranking.
+6. Record gaps, unclear behavior, missing fixtures, and automation candidates.
+7. Score each finding out of 100 using [[02 Feature QA/Checkout Money Movement Risk Scoring]].
+8. Prioritize P0 and P1 items first.
 
 Avoid test bloat:
 - Do not create every permutation.
@@ -79,6 +89,7 @@ Hallucination and exit rules:
 - If the same type of gap repeats across many permutations, summarize the pattern once and propose representative automation coverage.
 - Exit the current exploration branch when the next planning step would require product confirmation, secrets, payment-provider access, destructive data setup, or Qase writes.
 - If code implementation would be next, do not exit or block. Mark the item `Planning Ready`, record the future file/assertion/fixture/review criteria, and continue read-only planning.
+- Do not keep running just to make the goal last longer. Stop incident calibration when two consecutive business-invariant buckets produce no P0/P1 ranking change, no new fixture need, and no new assertion contract.
 - Exit the goal when remaining work is low-risk duplication, unsupported by source, or blocked by missing access/context.
 
 Every finding must include:
