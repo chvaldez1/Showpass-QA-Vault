@@ -4,6 +4,11 @@ This note points to the canonical agent workflow file. The full workflow is not 
 
 ## Canonical QA Workflow
 
+Start with the vault repo notes:
+- [[01 Repositories/QA Automation - showpass-playwright]]
+- [[01 Repositories/Backend - web-app]]
+- [[01 Repositories/Frontend - showpass-frontend]]
+
 Repo:
 `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`
 
@@ -16,6 +21,21 @@ Full path:
 Use this workflow when the goal is Qase-ready manual QA coverage, regression coverage, or Playwright-friendly scenarios for a PR or frontend change.
 
 Do not duplicate the workflow content here. Read the canonical QA workflow before generating test cases.
+
+## Workflow Routing
+
+Default to test-case generation unless the user explicitly asks to compare against existing Qase coverage.
+
+- Use [[#Test Case Generator Flow]] for new test cases, regression coverage, PR QA plans, Jira-card coverage, and source-backed manual case drafts.
+- Use [[#Read / Gap Analysis Flow]] only when the user asks for gap analysis, existing Qase coverage, coverage comparison, whether Qase coverage is enough, or suggested Qase updates.
+- Do not query Qase during the generator flow.
+- Do not call generated test cases a gap analysis unless existing Qase coverage was read and compared against source behavior.
+- Do not write to Qase from either flow unless the user explicitly approves a Qase update after a dry-run preview.
+
+Example prompts:
+- New cases without Qase comparison: [[06 Prompts/Example - Generate Test Cases]]
+- Jira-card test cases: [[06 Prompts/Example - Jira Card To Test Cases]]
+- Existing Qase coverage comparison: [[06 Prompts/Example - Qase Gap Analysis]]
 
 ## Vault Output Target
 
@@ -57,7 +77,7 @@ Use this flow when the user says to generate tests from a Jira card, pastes a Ji
 7. Verify frontend behavior for routes, UI state, forms, copy, entry paths, permissions, and visible outcomes.
 8. Do not run git diff, branch comparison, or changed-file discovery for Jira-card test generation unless the user explicitly asks for diff-based coverage. Inspect the relevant source files directly from the Jira context, branch name, route, API, or feature terms.
 9. Use Playwright only for existing automation patterns unless the user asks for automation work.
-10. If the user asks for new coverage from the Jira card, use [[#New Feature Test Case Flow]] unless they explicitly ask for Qase gap analysis.
+10. If the user asks for new coverage from the Jira card, use [[#Test Case Generator Flow]] unless they explicitly ask for Qase gap analysis.
 11. If the user asks whether existing Qase coverage is enough, use [[#Read / Gap Analysis Flow]] and [[05 Tooling/qasectl]].
 
 Example request:
@@ -74,6 +94,8 @@ Jira:
 - Treat Jira as intake only, not source of truth.
 
 Source code:
+- Start from the vault repo notes:
+  [[01 Repositories/Backend - web-app]], [[01 Repositories/Frontend - showpass-frontend]], and [[01 Repositories/QA Automation - showpass-playwright]]
 - Verify backend behavior first:
   /Users/christianvaldez/Documents/Showpass/repos/web-app
 - Verify the frontend user flow:
@@ -120,14 +142,14 @@ Write manual test cases so a QA user can execute them without translating implem
 - Expected results should be observable and testable. State what should be visible, unchanged, issued, selected, charged, refunded, exchanged, or reported.
 - When editing an existing generated note, preserve user edits and improve only the requested wording or structure unless the user explicitly asks for a rewrite.
 
-## New Feature Test Case Flow
+## Test Case Generator Flow
 
-Use this flow when the user is creating coverage for a new feature, new switch, new route, new behavior, or new regression target and is not asking to compare against existing Qase cases.
+Use this flow when the user wants new source-backed test cases or a QA plan and is not asking to compare against existing Qase cases. This includes new features, switches, routes, PRs, APIs, workflows, regressions, bug fixes, and Jira-card coverage.
 
 Do not label the output as a gap analysis unless the user explicitly asks to compare existing coverage against source behavior.
 
 1. Treat the user request as new coverage.
-2. Skip Qase lookup when the user says Qase is not needed or the feature is new and existing coverage is not expected.
+2. Do not query Qase in this flow.
 3. Inspect backend behavior first when backend source is provided or the feature affects APIs, validation, permissions, checkout, payments, credits, refunds, settlement, reports, or other source-of-truth logic.
 4. Inspect frontend behavior when the user flow, route, UI state, or entry path needs frontend confirmation.
 5. Identify all meaningful entry paths, setup choices, state transitions, permissions, feature flags, and downstream surfaces.
@@ -143,7 +165,7 @@ The output should separate:
 - Risk areas
 - State-space / setup matrix
 - Recommended test data
-- Manual test cases ordered by execution workflow, using `TC-*` labels and Qase-ready structure only when the user asks for that format
+- Manual test cases ordered by execution workflow, using `TC-*` labels and Qase-ready structure when the user asks for Qase-ready output
 - Minimum execution set
 - Suggested automated coverage
 - Open questions that block confident coverage
@@ -179,7 +201,7 @@ Example title:
 
 ## Read / Gap Analysis Flow
 
-Use this flow when the goal is to compare existing Qase knowledge against the codebase before creating or updating cases.
+Use this flow only when the goal is to compare existing Qase knowledge against the codebase before creating or updating cases.
 
 1. Read existing Qase cases for the feature, route, ticket, API, or keyword using `qasectl` when available.
 2. Inspect backend behavior as the source of truth.
@@ -210,10 +232,10 @@ When a user does approve Qase updates, follow [[05 Tooling/qasectl#Qase Update W
 
 ## Source Context
 
-- Backend first source of truth: `/Users/christianvaldez/Documents/Showpass/repos/web-app`
-- Frontend follows backend behavior: `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`
-- Playwright automation patterns: `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`
+- Backend first source of truth: [[01 Repositories/Backend - web-app]] (`/Users/christianvaldez/Documents/Showpass/repos/web-app`)
+- Frontend follows backend behavior: [[01 Repositories/Frontend - showpass-frontend]] (`/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`)
+- Playwright automation patterns: [[01 Repositories/QA Automation - showpass-playwright]] (`/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`)
 
 ## Agent Reminder
 
-Read the canonical workflow first. If the input is a Jira card, read [[05 Tooling/jiractl]], fetch the card, summarize Jira intake briefly, then verify behavior against source before generating cases. For Jira-card test generation, do not run git diff or branch comparison unless the user explicitly asks for diff-based coverage. For new-feature coverage, use the New Feature Test Case Flow and do not call the output a gap analysis. For gap analysis, read Qase first, inspect source code second, then write findings under `03 Test Cases/`. Bare filenames from the user should be resolved inside `03 Test Cases/`. Never overwrite a `*Template.md` file with generated output unless the user explicitly asks to edit or overwrite that template. Keep vault notes short and reference source paths instead of copying workflow content. Write cases from the perspective of the real Showpass actor, such as customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user. Do not use `the tester` phrasing in generated Qase cases. Preserve user edits when revising an existing note. Prefer plain product wording over abstract QA or implementation terms unless the technical term is required for accuracy.
+Read the canonical workflow first. If the input is a Jira card, read [[05 Tooling/jiractl]], fetch the card, summarize Jira intake briefly, then verify behavior against source before generating cases. For Jira-card test generation, do not run git diff or branch comparison unless the user explicitly asks for diff-based coverage. For simple generation, PR coverage, new-feature coverage, or regression coverage, use the Test Case Generator Flow and do not query Qase. For gap analysis, read Qase first, inspect source code second, then write findings under `03 Test Cases/`. Bare filenames from the user should be resolved inside `03 Test Cases/`. Never overwrite a `*Template.md` file with generated output unless the user explicitly asks to edit or overwrite that template. Keep vault notes short and reference source paths instead of copying workflow content. Write cases from the perspective of the real Showpass actor, such as customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user. Do not use `the tester` phrasing in generated Qase cases. Preserve user edits when revising an existing note. Prefer plain product wording over abstract QA or implementation terms unless the technical term is required for accuracy.

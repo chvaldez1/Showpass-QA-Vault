@@ -22,6 +22,8 @@ Scope:
 - Do not run git diff, branch comparison, or changed-file discovery unless I explicitly ask for diff-based coverage.
 
 Source code:
+- Start from the vault repo notes:
+  [[01 Repositories/Backend - web-app]], [[01 Repositories/Frontend - showpass-frontend]], and [[01 Repositories/QA Automation - showpass-playwright]]
 - Backend:
   /Users/christianvaldez/Documents/Showpass/repos/web-app
 - Frontend:

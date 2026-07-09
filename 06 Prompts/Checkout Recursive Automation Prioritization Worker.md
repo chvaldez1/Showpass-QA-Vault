@@ -67,9 +67,9 @@ Output notes:
 - Decision queue: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Decision Queue.md
 
 Source repos:
-- Backend source of truth: /Users/christianvaldez/Documents/Showpass/repos/web-app
-- Frontend user paths: /Users/christianvaldez/Documents/Showpass/repos/showpass-frontend
-- Playwright automation: /Users/christianvaldez/Documents/Showpass/repos/showpass-playwright
+- Backend source of truth: [[01 Repositories/Backend - web-app]] - /Users/christianvaldez/Documents/Showpass/repos/web-app
+- Frontend user paths: [[01 Repositories/Frontend - showpass-frontend]] - /Users/christianvaldez/Documents/Showpass/repos/showpass-frontend
+- Playwright automation: [[01 Repositories/QA Automation - showpass-playwright]] - /Users/christianvaldez/Documents/Showpass/repos/showpass-playwright
 
 Loop efficiently until the ranking is defensible or the user stops. This worker is planning-only: it decides what should be automated next among P0/highest-risk checkout paths and prepares reviewer-ready automation planning packets, but it does not implement tests, edit source repos, or ask for source-write authorization.
 

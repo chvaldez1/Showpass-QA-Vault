@@ -4,6 +4,8 @@ Use this prompt after manual test cases are validated.
 
 ## Workflow Selection Guide
 
+Start with the vault repo note: [[01 Repositories/QA Automation - showpass-playwright]].
+
 Use the specs README to choose the right automation workflow:
 `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/specs/README.md`
 
@@ -22,6 +24,9 @@ Do not create CI automation from a draft or blocked spec. Prefer `Browser-Verifi
 
 ```text
 You are helping convert validated Showpass QA test cases into Playwright automation.
+
+Start from the vault repo notes:
+[[01 Repositories/QA Automation - showpass-playwright]], [[01 Repositories/Backend - web-app]], and [[01 Repositories/Frontend - showpass-frontend]]
 
 Follow existing patterns in:
 /Users/christianvaldez/Documents/Showpass/repos/showpass-playwright

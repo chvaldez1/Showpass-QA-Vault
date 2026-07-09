@@ -16,6 +16,8 @@ Jira:
 - Treat Jira as intake context only.
 
 Source code:
+- Start from the vault repo notes:
+  [[01 Repositories/Backend - web-app]], [[01 Repositories/Frontend - showpass-frontend]], and [[01 Repositories/QA Automation - showpass-playwright]]
 - Verify backend behavior first:
   /Users/christianvaldez/Documents/Showpass/repos/web-app
 - Verify the frontend user flow:

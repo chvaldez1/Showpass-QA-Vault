@@ -35,9 +35,9 @@ Read first on every loop:
 - /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Worker State.json
 
 Source repos:
-- Backend: /Users/christianvaldez/Documents/Showpass/repos/web-app
-- Frontend: /Users/christianvaldez/Documents/Showpass/repos/showpass-frontend
-- Playwright: /Users/christianvaldez/Documents/Showpass/repos/showpass-playwright
+- Backend: [[01 Repositories/Backend - web-app]] - /Users/christianvaldez/Documents/Showpass/repos/web-app
+- Frontend: [[01 Repositories/Frontend - showpass-frontend]] - /Users/christianvaldez/Documents/Showpass/repos/showpass-frontend
+- Playwright: [[01 Repositories/QA Automation - showpass-playwright]] - /Users/christianvaldez/Documents/Showpass/repos/showpass-playwright
 - Vault: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault
 
 Operating mode:
