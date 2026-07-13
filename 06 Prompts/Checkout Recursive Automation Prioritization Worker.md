@@ -38,7 +38,10 @@ Resume checkpoint:
 - Every candidate should already have `what_to_automate`, `qa_handoff`, `first_action`, `decision_needed`, `default_decision`, `acceptance_criteria`, and `criticality_review`.
 - P1 backlog scores should stay below 80 unless new evidence promotes the item back into active P0 scope.
 - Current best remains `AUTO-CHK-002` unless provider-volume evidence, stronger incident evidence, or newly discovered coverage changes the ranking.
-- Next useful work is a P0 ranking/assertion-contract review, or refinement of `AUTO-CHK-007` / `AUTO-CHK-008` only if it can change the top P0 recommendation.
+- `P0-SATURATION-CHK-001` confirms the P0 reviewer set is structurally complete: ranks 1-6 have reviewer-readable handoff fields and proof contracts, and `AUTO-CHK-008` has a proof contract if package reporting is promoted.
+- Current reviewer gate is `DECISION-QUEUE-SYNC-CHK-003` / `DEC-CHK-046` through `DEC-CHK-050`.
+- Next useful work is reviewer-driven: approve or revise ranks 1-6, decide whether provider volume changes the `AUTO-CHK-002` first implementation path, or explicitly promote `AUTO-CHK-008` package reporting.
+- Do not repeat P0 saturation, handoff, ranking, assertion-contract, CSV, or broad exploration audits unless reviewer feedback, new evidence, or candidate content changes.
 
 Operating mode:
 - This is a planning loop, not an implementation loop.
@@ -114,7 +117,7 @@ For each loop:
 7. Update Worker State JSON.
 8. Update Mission Control last as the durable checkpoint.
 9. If the current packet is planning-ready, do not stop for source-write authorization or ask to implement it. Mark it ready for later implementation outside this worker, keep it ranked, and move to the next highest-value planning target.
-10. If every P0/highest-risk candidate is already planning-ready, perform a read-only P0 ranking review, P0 fixture leverage pass, P0 assertion-contract pass, P0 Qase/local coverage check, or no-gap confirmation for a likely-P0 path before considering the P0 phase exhausted.
+10. If every P0/highest-risk candidate is already planning-ready, perform a read-only P0 ranking review, P0 fixture leverage pass, P0 assertion-contract pass, P0 Qase/local coverage check, or no-gap confirmation for a likely-P0 path before considering the P0 phase exhausted. If `P0-SATURATION-CHK-001` is current and no reviewer feedback or candidate content changed, do not repeat saturation or handoff audits; fix only artifact drift, then keep the reviewer gate stable.
 
 Jira calibration pass:
 - Use `assets/csv/major-critical.csv` as local incident signal before broad new exploration.

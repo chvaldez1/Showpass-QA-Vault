@@ -8,6 +8,7 @@ Start with the vault repo notes:
 - [[01 Repositories/QA Automation - showpass-playwright]]
 - [[01 Repositories/Backend - web-app]]
 - [[01 Repositories/Frontend - showpass-frontend]]
+- [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
 
 Repo:
 `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`
@@ -21,6 +22,65 @@ Full path:
 Use this workflow when the goal is Qase-ready manual QA coverage, regression coverage, or Playwright-friendly scenarios for a PR or frontend change.
 
 Do not duplicate the workflow content here. Read the canonical QA workflow before generating test cases.
+
+This vault note is the required Showpass overlay. If the canonical workflow is more general, this note decides how to classify criticality, scope cases, and explain what is being tested.
+
+## Testing Intent Gate
+
+Before writing test cases, answer: **what are we testing and why does it matter?**
+
+Use the Major/Critical Jira calibration in [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]] as a quality bar, not as a reason to over-test. A test case should protect a reusable product behavior or business invariant, not just mirror a support request.
+
+Start with this one-sentence intent:
+
+`We are testing whether <actor/surface> can <workflow> while <business invariant> stays true; this matters because <bad outcome>, and we will prove it with <observable proof>.`
+
+Every generated test-case note should include a short `Testing Intent` section before the cases:
+
+| Field | Required Answer |
+| --- | --- |
+| Criticality bucket | Money/order state, fulfillment/access, inventory/ownership, refund/exchange/credit/payout math, reporting/dashboard agreement, permission boundary, async final state, live sales completion, or lower-signal support task. |
+| Business invariant | What must always remain true? |
+| User or business impact | Who is hurt if this breaks: customer, organizer, Box Office employee, support, finance, attendee, or reporting user? |
+| Failure mode | What bad outcome are we preventing? |
+| Observable proof | What visible or source-backed result proves the invariant is still true? |
+| Source of truth | Backend, frontend, Jira intake, product behavior, or existing Playwright pattern used to prove the behavior. |
+| Primary surfaces | Public checkout, Widget, Box Office, Dashboard, My Orders, mobile app, API, reports, payouts, or another named surface. |
+| In scope | The exact workflows, states, roles, and data that must be covered. |
+| Out of scope | Similar-looking variants that should not be tested now because they do not change the risk. |
+| Confidence | High / Medium / Low, based on source evidence and unresolved questions. |
+
+If the testing intent cannot be stated clearly, stop and add `Open Questions` instead of creating a broad case list.
+
+After `Testing Intent`, add a compact `Proof Target Map`:
+
+| Proof Target | Why It Matters | Covered By |
+| --- | --- | --- |
+| Example: failed payment does not issue tickets | Prevents unpaid fulfillment | TC-1 |
+
+Keep the map small. Most requests should have 1-5 proof targets. Every generated case must map to a proof target or it should be removed, deferred, or called out as a lower-priority manual check.
+
+Use this criticality filter:
+
+- Prioritize cases that protect money movement, paid/unpaid final state, order or ticket fulfillment, inventory/seat ownership, refund/exchange/credit/payout math, live sales completion, reporting disagreement, permissions/ownership, or async provider/background task final state.
+- Treat scripts, imports, one-off data moves, config/content requests, hardware/printer issues, and demo setup as lower signal unless they reveal reusable product behavior.
+- Prefer one representative high-risk path over a matrix of low-signal permutations.
+- Add a new case only when it proves a different invariant, actor impact, entry path, state transition, permission boundary, or financial/fulfillment outcome.
+
+Use these CSV-calibrated proof buckets when deciding what is worth testing:
+
+| Bucket | Test When The Case Proves |
+| --- | --- |
+| Money/order state | Charged amount, payment status, order, invoice, receipt, or Dashboard state cannot disagree. |
+| Fulfillment/access | A paid customer gets usable tickets/orders, and an unpaid customer does not. |
+| Inventory/ownership | Ticket quantity, holds, seats, memberships, packages, resale, waitlist, or transfers remain owned by the right party. |
+| Financial math | Refunds, exchanges, discounts, credits, gift cards, fees, taxes, payouts, or settlements calculate and display correctly. |
+| Reporting/dashboard agreement | Organizer-facing totals, transaction details, reports, and payout views match the real order state. |
+| Permission boundary | The wrong user, employee, organizer, or account cannot view, claim, refund, edit, or fulfill the wrong thing. |
+| Async final state | Provider callbacks, scheduled jobs, webhooks, retries, cancels, or delayed payment states cannot create duplicate, stuck, or incorrect final outcomes. |
+| Live sales completion | A real checkout, Box Office, transfer, or assigned seating sales path is not blocked. |
+
+If a request only describes a script, import, data cleanup, configuration, hardware/printer issue, demo setup, or one-off support workaround, narrow the output to the reusable product behavior. If no reusable behavior is source-backed, write narrow verification notes and `Open Questions` instead of broad regression cases.
 
 ## Workflow Routing
 
@@ -75,10 +135,11 @@ Use this flow when the user says to generate tests from a Jira card, pastes a Ji
 5. Continue through the canonical QA workflow and this vault note before writing test cases.
 6. Verify behavior against backend source first when the Jira card touches APIs, validation, permissions, checkout, payments, credits, refunds, settlement, reports, or other source-of-truth logic.
 7. Verify frontend behavior for routes, UI state, forms, copy, entry paths, permissions, and visible outcomes.
-8. Do not run git diff, branch comparison, or changed-file discovery for Jira-card test generation unless the user explicitly asks for diff-based coverage. Inspect the relevant source files directly from the Jira context, branch name, route, API, or feature terms.
-9. Use Playwright only for existing automation patterns unless the user asks for automation work.
-10. If the user asks for new coverage from the Jira card, use [[#Test Case Generator Flow]] unless they explicitly ask for Qase gap analysis.
-11. If the user asks whether existing Qase coverage is enough, use [[#Read / Gap Analysis Flow]] and [[05 Tooling/qasectl]].
+8. Classify the card by business invariant before writing cases. If it is mainly a one-off script, import, config, printer/device, or demo request, generate only narrow verification cases unless source review shows recurring product behavior.
+9. Do not run git diff, branch comparison, or changed-file discovery for Jira-card test generation unless the user explicitly asks for diff-based coverage. Inspect the relevant source files directly from the Jira context, branch name, route, API, or feature terms.
+10. Use Playwright only for existing automation patterns unless the user asks for automation work.
+11. If the user asks for new coverage from the Jira card, use [[#Test Case Generator Flow]] unless they explicitly ask for Qase gap analysis.
+12. If the user asks whether existing Qase coverage is enough, use [[#Read / Gap Analysis Flow]] and [[05 Tooling/qasectl]].
 
 Example request:
 
@@ -111,13 +172,14 @@ Constraints:
 - Do not query or update Qase unless I explicitly ask for a gap analysis.
 - Do not run git diff or branch comparison unless I explicitly ask for diff-based coverage.
 - Use [[05 Tooling/Qase Test Case Writing Rules]].
-- Include a short Jira Intake Summary, Sources Reviewed, source-backed behavior, risks, manual test cases, minimum execution set, automation candidates, and open questions.
+- Include Testing Intent, a short Jira Intake Summary, Sources Reviewed, source-backed behavior, risks, manual test cases, minimum execution set, automation candidates, and open questions.
 ```
 
 ## Test Case Voice And Grouping
 
 Write manual test cases so a QA user can execute them without translating implementation language.
 
+- Start from the `Testing Intent` section. Test cases should trace back to the business invariant and failure mode.
 - Order cases by execution workflow, not by backend class or implementation detail.
 - Prefer an execution order such as discount entry paths and purchase handoff, basket recalculation with fees and tender, item identity and split boundaries, post-transaction financial workflows, and rollback.
 - Do not use Markdown numbered lists for test case titles because they are hard to copy and paste. Label each test case as `TC-1: Title`, `TC-2: Title`, and so on.
@@ -132,6 +194,7 @@ Write manual test cases so a QA user can execute them without translating implem
 - Prefer readable PascalCase parameter values such as `TwoSelectedOneDiscounted`, `FlatFeePlusTax`, `OtherCustomType`, and `ExchangeAfterPartialRefund`.
 - Keep parameters easy to execute. Prefer one high-signal value for baseline coverage and only add variants when they materially change behavior or risk.
 - Do not combine too many broad axes in one test case. If a case needs more than 2-3 parameters, split it or move lower-risk variants to the minimum execution set, test data notes, or automation candidates.
+- Do not create every platform, role, payment type, or state permutation. Add a variant only when it changes the invariant being proved or catches a realistic Major/Critical-style failure.
 - For complex features, use one representative parameter value for the primary manual case, then create separate cases for materially different flows such as Box Office payment, basket changes, refunds, exchanges, or assigned seating.
 - Choose 1-3 accurate approved tags. Prefer one surface tag, such as `public`, `widget`, or `box-office`, plus one feature tag, such as `discounts`, `checkout`, `basket`, `fees-and-taxes`, `refunds`, `exchanges`, or `reports`.
 - Do not tag every related domain in a broad case. Tags should help someone find the case, not list every risk.
@@ -150,19 +213,25 @@ Do not label the output as a gap analysis unless the user explicitly asks to com
 
 1. Treat the user request as new coverage.
 2. Do not query Qase in this flow.
-3. Inspect backend behavior first when backend source is provided or the feature affects APIs, validation, permissions, checkout, payments, credits, refunds, settlement, reports, or other source-of-truth logic.
-4. Inspect frontend behavior when the user flow, route, UI state, or entry path needs frontend confirmation.
-5. Identify all meaningful entry paths, setup choices, state transitions, permissions, feature flags, and downstream surfaces.
-6. Write the output under `03 Test Cases/` with a `*-test-cases.md` or `*-coverage-plan.md` filename.
+3. Write a concise Testing Intent draft before case generation. Identify the criticality bucket, business invariant, affected actor, failure mode, observable proof, primary surfaces, in-scope paths, out-of-scope variants, and confidence.
+4. Create a small Proof Target Map with the specific outcomes the cases must prove.
+5. Inspect backend behavior first when backend source is provided or the feature affects APIs, validation, permissions, checkout, payments, credits, refunds, settlement, reports, or other source-of-truth logic.
+6. Inspect frontend behavior when the user flow, route, UI state, or entry path needs frontend confirmation.
+7. Identify all meaningful entry paths, setup choices, state transitions, permissions, feature flags, and downstream surfaces.
+8. Remove low-value permutations. Keep only cases that prove a distinct invariant, actor impact, state transition, permission boundary, financial outcome, fulfillment outcome, or reporting outcome.
+9. Write the output under `03 Test Cases/` with a `*-test-cases.md` or `*-coverage-plan.md` filename.
 
 The output should separate:
 
+- Testing Intent
+- Proof Target Map
 - Summary of new behavior
 - Sources reviewed
 - Assumptions and unknowns
 - Source-backed behavior
 - Entry paths
 - Risk areas
+- Coverage decisions: why these cases were included and what was intentionally excluded
 - State-space / setup matrix
 - Recommended test data
 - Manual test cases ordered by execution workflow, using `TC-*` labels and Qase-ready structure when the user asks for Qase-ready output
@@ -211,6 +280,7 @@ Use this flow only when the goal is to compare existing Qase knowledge against t
 
 The output should separate:
 
+- Testing Intent
 - Existing Qase coverage
 - Source-backed behavior found in code
 - Coverage gaps
@@ -238,4 +308,4 @@ When a user does approve Qase updates, follow [[05 Tooling/qasectl#Qase Update W
 
 ## Agent Reminder
 
-Read the canonical workflow first. If the input is a Jira card, read [[05 Tooling/jiractl]], fetch the card, summarize Jira intake briefly, then verify behavior against source before generating cases. For Jira-card test generation, do not run git diff or branch comparison unless the user explicitly asks for diff-based coverage. For simple generation, PR coverage, new-feature coverage, or regression coverage, use the Test Case Generator Flow and do not query Qase. For gap analysis, read Qase first, inspect source code second, then write findings under `03 Test Cases/`. Bare filenames from the user should be resolved inside `03 Test Cases/`. Never overwrite a `*Template.md` file with generated output unless the user explicitly asks to edit or overwrite that template. Keep vault notes short and reference source paths instead of copying workflow content. Write cases from the perspective of the real Showpass actor, such as customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user. Do not use `the tester` phrasing in generated Qase cases. Preserve user edits when revising an existing note. Prefer plain product wording over abstract QA or implementation terms unless the technical term is required for accuracy.
+Read the canonical workflow first, then apply this vault overlay. Before writing cases, complete the Testing Intent gate and Proof Target Map so the output states the criticality bucket, business invariant, actor impact, failure mode, observable proof, scope, non-goals, and confidence. Every generated case should map back to one proof target. If the input is a Jira card, read [[05 Tooling/jiractl]], fetch the card, summarize Jira intake briefly, classify the business invariant, then verify behavior against source before generating cases. For Jira-card test generation, do not run git diff or branch comparison unless the user explicitly asks for diff-based coverage. For simple generation, PR coverage, new-feature coverage, or regression coverage, use the Test Case Generator Flow and do not query Qase. For gap analysis, read Qase first, inspect source code second, then write findings under `03 Test Cases/`. Bare filenames from the user should be resolved inside `03 Test Cases/`. Never overwrite a `*Template.md` file with generated output unless the user explicitly asks to edit or overwrite that template. Keep vault notes short and reference source paths instead of copying workflow content. Write cases from the perspective of the real Showpass actor, such as customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user. Do not use `the tester` phrasing in generated Qase cases. Preserve user edits when revising an existing note. Prefer plain product wording over abstract QA or implementation terms unless the technical term is required for accuracy.

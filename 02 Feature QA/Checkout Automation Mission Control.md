@@ -8,6 +8,7 @@ Related notes:
 - [[02 Feature QA/Checkout Critical Path Gap Analysis]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
 - [[04 Automation/Checkout Automation Phase 2 Planning]]
+- [[04 Automation/Checkout Playwright Automation Review Checkpoint]]
 - [[02 Feature QA/Checkout Money Movement Risk Scoring]]
 - [[02 Feature QA/Checkout Automation Decision Queue]]
 - [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
@@ -15,12 +16,12 @@ Related notes:
 ## Current Best Answer
 
 **Automate next:** AUTO-CHK-002 - Duplicate submit/retry creates one paid outcome  
-**Why now:** Still the strongest automation-readiness P0: it proves the recurring business invariant that retry/replay cannot create duplicate paid transaction, order, or ticket outcomes. Provider order remains caveated until Stripe/payment-volume priority is confirmed.  
+**Why now:** Still the strongest automation-readiness P0: it proves the recurring business invariant that retry/replay cannot create duplicate paid transaction, order, or ticket outcomes. `DUP-CHK-003` tightened the proof recipe: preserve replay evidence, return `invoiceData.transaction_id`, filter Dashboard by that transaction id, and verify confirmation/My Orders shows exactly one expected ticket set. Use the existing Authorize replay harness by default; promote a Stripe equivalent first only if provider volume/business priority says Stripe should drive the first proof.
 **Confidence:** High  
 **Risk reduced:** Duplicate charge, duplicate order, duplicate confirmation, duplicate ticket issuance, and final-state disagreement after retry/replay behavior.  
 **Planning status:** Planning packet ready; `PROOF-CHK-002` refines the first implementation contract. Implementation is out of scope for this worker; continue planning the next highest-value P0 target.
-**Ranking caveat:** This is currently an automation-readiness ranking, not final business-priority ranking. `AUTO-CHK-002` is first because the Authorize repro harness is concrete and the duplicate-submit final-state gap is clear. If Stripe carries most production checkout volume, add or promote a Stripe-specific duplicate-submit/retry or PaymentIntent recovery candidate before treating this rank as final.
-**QA handoff:** Automate one duplicate-submit/retry final-state proof. Submit or replay the same checkout attempt twice, then assert exactly one paid transaction, one paid order/invoice, and one issued ticket set. The only open choice is provider path: use the existing Authorize.net replay harness by default, or switch to a Stripe equivalent first if Stripe volume is the business priority.
+**Ranking caveat:** This is currently an automation-readiness ranking, not final business-priority ranking. `AUTO-CHK-002` is first because duplicate-submit final-state is the highest-value invariant and the Authorize replay harness is ready. `STRIPE-CHK-001` did not find an inspected Stripe duplicate-submit/replay harness. If Stripe carries most production checkout volume, promote a Stripe-specific duplicate-submit/retry proof only after choosing a safe deterministic Stripe path.
+**QA handoff:** Automate one duplicate-submit/retry final-state proof. Submit or replay the same checkout attempt twice, preserve evidence that the replay happened, then assert exactly one Dashboard transaction row for `invoiceData.transaction_id`, one paid order/invoice, and one issued ticket set. The only open choice is provider path: use the existing Authorize.net replay harness by default, or switch to a Stripe WebPublic PaymentIntent capture/replay proof first if Stripe volume is the business priority.
 
 **Selected packet:** AUTO-CHK-003 - Dashboard transaction total reconciliation  
 **Selection note:** User selected AUTO-CHK-003 after confirming AUTO-CHK-001 planning is done. AUTO-CHK-003 is now planning-ready, so the worker should continue to the next highest-value planning target instead of stopping for implementation.
@@ -34,6 +35,8 @@ Related notes:
 **Blocked-step redirect:** Implementation-needed work is never a goal-level blocker. Branch blockers are local only: park product/business/provider/hardware/secret/destructive-setup/read-only-access questions, re-rank, and continue to the next read-only target. Use `/goal blocked` only when every high-value planning branch is ready, parked, duplicated, or unsupported and no defensible read-only planning remains.
 
 **Incident calibration:** `assets/csv/major-critical.csv` was reviewed on 2026-07-09. Criticality now means a reusable business invariant can break, not merely that a Jira card was labeled Critical/Major. Do not force multi-day exploration once Major/Critical incident buckets stop changing the P0/P1 ranking, fixture needs, or assertion contracts.
+
+**Review checkpoint:** `P0-SATURATION-CHK-001` confirms the P0 reviewer set is structurally complete. Ranks 1-6 have reviewer-readable QA handoff fields and proof contracts, and `AUTO-CHK-008` now has a proof contract if package reporting is promoted. `PROMPT-SYNC-CHK-001` synced the reusable worker prompt to this checkpoint, and `ARTIFACT-SYNC-CHK-001` synced the reviewer-facing notes so fresh sessions do not repeat completed P0 audits. `PHASE2-GATE-SYNC-CHK-002` synced [[04 Automation/Checkout Automation Phase 2 Planning]] with `DECISION-QUEUE-SYNC-CHK-003`, so [[02 Feature QA/Checkout Automation Decision Queue]], [[04 Automation/Checkout Money Movement Automation Backlog]], and [[04 Automation/Checkout Playwright Automation Review Checkpoint]] name the same current reviewer gate. `MODE-SYNC-CHK-001` confirms the checkpoint is a planning recommendation for future Playwright work, not an implementation run. `LEVERAGE-CHK-001` adds the efficient future implementation order: shared `CheckoutResult` / `invoiceData.transaction_id` and final-state proof helpers first, then failed-payment context and entry-specific adapters. `AUTO-CHK-002` remains first, and `AUTO-CHK-008` stays review-separately unless package reporting/payout confidence is a current priority.
 
 ## Visual Snapshot
 
@@ -53,13 +56,13 @@ Reader note: a candidate is not asking for every listed checkout variant. Use `w
 
 | Rank | ID | Priority | Score | Candidate | Why Now | Status |
 | ---: | --- | --- | ---: | --- | --- | --- |
-| 1 | AUTO-CHK-002 | P0 | 96 | Duplicate submit/retry creates one paid outcome | Repro harness exists, but final one-charge/order/ticket proof is missing; confirm Stripe volume before treating this as final business priority | Planning Ready / Proof Refined |
-| 2 | AUTO-CHK-001 | P0 | 94 | Failed payment no paid order/tickets/inventory | Failed Affirm is the fastest source-backed representative path | Planning Ready / Proof Refined |
-| 3 | AUTO-CHK-003 | P0 | 92 | Dashboard transaction total reconciliation | Existing helper receives expected total, but does not assert Dashboard Settlement amount | Planning Ready / Proof Refined |
-| 4 | AUTO-CHK-006 | P0 | 91 | Mixed ticket plus checkout add-on reconciliation | Existing CheckoutAddOns path exercises mixed basket, but inspected confirmation proof only passes add-on item details | Planning Ready / Proof Refined |
-| 5 | AUTO-CHK-013 | P0 | 90 | Assigned seating payment failure/retry preserves seat ownership | Assigned-seat success and generic failed-payment coverage exist separately, but inspected coverage does not prove failure/retry seat ownership | Planning Ready / Proof Refined |
-| 6 | AUTO-CHK-007 | P0 | 89 | Checkout tracking-link unavailable-item paid outcome | Review logic prunes unavailable extras, but inspected E2E coverage does not prove final paid order after pruning | Planning Ready |
-| 7 | AUTO-CHK-008 | P0 | 84 | Package revenue-realization reporting reconciliation | Package purchase automation is broad, and Qase detail is related but does not prove child stat allocation reporting reconciliation | Planning Ready |
+| 1 | AUTO-CHK-002 | P0 | 96 | Duplicate submit/retry creates one paid outcome | One-paid-outcome proof is highest value; `DUP-CHK-003` confirmed ready replay, transaction-id, Dashboard, and order/ticket proof surfaces | Planning Ready / Proof Surface Refined |
+| 2 | AUTO-CHK-001 | P0 | 94 | Failed payment no paid order/tickets/inventory | `FAILED-CHK-002` confirmed the first proof: failed Affirm WebPublic guest returns failed-checkout context, then proves no paid invoice/order and no invoice-items/tickets | Planning Ready / Proof Surface Refined |
+| 3 | AUTO-CHK-003 | P0 | 92 | Dashboard transaction total reconciliation | `DASH-CHK-002` confirmed one helper assertion: compare Dashboard `financial-breakdown-row-Settlement amount` against existing expected paid total input | Planning Ready / Proof Surface Refined |
+| 4 | AUTO-CHK-006 | P0 | 91 | Mixed ticket plus checkout add-on reconciliation | `MIXED-CHK-002` confirmed the proof contract: existing CheckoutAddOns path should verify base ticket line, add-on product line, and combined paid total | Planning Ready / Proof Surface Refined |
+| 5 | AUTO-CHK-013 | P0 | 90 | Assigned seating payment failure/retry preserves seat ownership | `SEAT-CHK-002` confirmed the proof contract: capture serialized seat identifiers, prove failed payment creates no paid owner, then prove retry creates exactly one paid owner | Planning Ready / Proof Surface Refined |
+| 6 | AUTO-CHK-007 | P0 | 89 | Checkout tracking-link unavailable-item paid outcome | `TRACK-CHK-002` confirmed the proof contract: pause on review, assert unavailable items, carry pruned expectations, then prove paid order excludes unavailable quantities | Planning Ready / Proof Surface Refined |
+| 7 | AUTO-CHK-008 | P0 | 84 | Package revenue-realization reporting reconciliation | Real reporting/payout risk, but backend covers allocation math and it is less direct than the first six checkout failures | Planning Ready / Review Separately |
 | 8 | AUTO-CHK-011 | P1 | 79 | Stripe PaymentIntent cancel/webhook recovery creates no paid order and remains retry-safe | High incident alignment, but Playwright feasibility depends on a safe Stripe hook/provider fixture | Planning Ready |
 | 9 | AUTO-CHK-005 | P1 | 78 | Membership event-batch hold-link checkout reconciliation | Membership/hold issues recur, but this is fixture-heavy and below direct charge/failure P0s | Fixture plan tightened |
 | 10 | AUTO-CHK-017 | P1 | 77 | Credit-applied checkout remaining balance reconciles to charged amount | Credits and charge mismatches recur, but existing backend/manual/zero-cost coverage lowers P0 urgency | Planning Ready / Manual-backed |
@@ -76,10 +79,10 @@ Reader note: a candidate is not asking for every listed checkout variant. Use `w
 
 ## Active Investigation
 
-**Packet:** AUTO-CHK-013  
-**Hypothesis:** Assigned-seat failure/retry coverage can be made deterministic by using the best-available assigned-seating path to capture seat identifiers before payment, then proving failed-payment no-ownership and retry same-seat ownership through API plus order proof.  
-**Current evidence:** Best-available assigned seating already returns a basket response that `captureSeatIdentifiers()` can read; manual `clickCheckout` does not expose the same response. User ticket item serialization exposes seat identifiers, while the failed-Affirm terminal currently returns `void`. `PROOF-CHK-006` records the first implementation contract.  
-**Next inspection step:** Resume with a P0 ranking/assertion-contract review, or refine `AUTO-CHK-007` / `AUTO-CHK-008` only if that could change the current top P0 recommendation. Current best remains `AUTO-CHK-002`.
+**Packet:** ARTIFACT-SYNC-CHK-001
+**Hypothesis:** Reviewer-facing artifacts should mirror `PROMPT-SYNC-CHK-001` so fresh sessions do not miss the current reviewer-driven resume state.
+**Current evidence:** Decision Queue, Automation Backlog, Phase 2 Planning, Review Checkpoint, Mission Control, Worker State, and the recursive prompt now point at the same completed P0 saturation checkpoint and reviewer gate.
+**Next inspection step:** Reviewer should inspect [[04 Automation/Checkout Playwright Automation Review Checkpoint]], [[04 Automation/Checkout Money Movement Automation Backlog]], [[04 Automation/Checkout Automation Phase 2 Planning]], and `DEC-CHK-046` through `DEC-CHK-050` as the current answer to "what should we automate next?" Do not repeat P0 saturation, handoff, ranking, assertion-contract, CSV, or broad exploration audits unless reviewer feedback or candidate content changes.
 
 ## Re-Ranking Log
 
@@ -164,6 +167,38 @@ Reader note: a candidate is not asking for every listed checkout variant. Use `w
 | 2026-07-07 | Applied QA handoff schema to all candidates | Worker State now gives every candidate `what_to_automate`, `qa_handoff`, `first_action`, `decision_needed`, `default_decision`, and `acceptance_criteria` for reviewer/UI handoff |
 | 2026-07-09 | Calibrated criticality from Jira export | Reviewed 1,352 exported SPD Major/Critical cards; current top checkout candidates remain directionally aligned, but support scripts/config/hardware/demo cards should not promote automation unless they expose recurring business logic |
 | 2026-07-09 | Normalized Worker State candidate scoring | Added `criticality_review` to every candidate and lowered P1 backlog scores below 80 so priority bands match the rubric |
+| 2026-07-13 | Recorded PROOF-CHK-007 | Refined AUTO-CHK-007 first implementation contract: inspect checkout-link review before checkout, assert unavailable items, carry pruned quantity/line/total expectations, complete card payment, and prove final paid order excludes unavailable quantities |
+| 2026-07-13 | Created REVIEW-CHK-001 | Added [[04 Automation/Checkout Playwright Automation Review Checkpoint]] so the reviewer can approve, revise, or defer the high-value Playwright shortlist before more exploration |
+| 2026-07-13 | Recorded RANK-CHK-001 | Sanity-checked the P0 shortlist; ranks 1-6 remain the recommended next Playwright batch, `AUTO-CHK-008` remains review-separately, and current best remains `AUTO-CHK-002` |
+| 2026-07-13 | Recorded PROVIDER-CHK-001 | Checked Stripe versus Authorize duplicate-submit readiness; no inspected Stripe replay harness found, so `AUTO-CHK-002` remains first by automation readiness |
+| 2026-07-13 | Recorded PACKAGE-CHK-001 | Checked `AUTO-CHK-008` immediate-batch fit; no ranking change, ranks 1-6 remain the recommended next Playwright batch, and package reporting stays review-separately unless it is a current business priority |
+| 2026-07-13 | Recorded STRIPE-CHK-001 | Refined `AUTO-CHK-002` provider handoff: duplicate-submit final-state is the risk, Authorize is the ready default harness, and Stripe should be first only if provider volume/business priority overrides the default |
+| 2026-07-13 | Recorded FAILED-CHK-001 | Confirmed `AUTO-CHK-001` should start with failed Affirm WebPublic guest; Stripe decline/failure is a later provider-priority fixture unless reviewer explicitly promotes it |
+| 2026-07-13 | Recorded DASH-CHK-001 | Confirmed `AUTO-CHK-003` should be a shared Dashboard Settlement amount assertion upgrade, not a new checkout scenario |
+| 2026-07-13 | Recorded MIXED-CHK-001 | Confirmed `AUTO-CHK-006` should be one existing CheckoutAddOns verification upgrade: pass both base event ticket and add-on product lines into confirmation/order verification and assert the combined paid total |
+| 2026-07-13 | Recorded SEAT-CHK-001 | Confirmed `AUTO-CHK-013` should be one WebPublic best-available assigned-seat failure/retry proof using serialized seat identifiers, not a seating-platform matrix |
+| 2026-07-13 | Recorded RANK-CHK-002 | Confirmed the top-six Playwright shortlist remains stable after `SEAT-CHK-001`; current best remains `AUTO-CHK-002` and `AUTO-CHK-008` stays review-separately |
+| 2026-07-13 | Recorded DUP-CHK-003 | Refined `AUTO-CHK-002` proof surfaces: replay evidence, `invoiceData.transaction_id`, Dashboard one-row transaction filter, and confirmation/My Orders ticket-set proof |
+| 2026-07-13 | Recorded FAILED-CHK-002 | Synced `AUTO-CHK-001` Worker State proof contract: return failed-checkout context, keep failed-Affirm UI recovery, assert no venue invoice/order, and assert no invoice-items/tickets for the failed buyer/event/ticket context |
+| 2026-07-13 | Recorded DASH-CHK-002 | Synced `AUTO-CHK-003` Worker State proof contract: assert Dashboard `financial-breakdown-row-Settlement amount` from `amount_paid` / `amountPaid` against `pricingFeesTaxes.valueOnTransactionPage` through an existing Box Office caller |
+| 2026-07-13 | Recorded MIXED-CHK-002 | Synced `AUTO-CHK-006` Worker State proof contract: existing CheckoutAddOns flow should verify base ticket line, add-on product line, and combined paid total; venue invoice-items API is fallback only if UI detail cannot prove both lines |
+| 2026-07-13 | Recorded SEAT-CHK-002 | Synced `AUTO-CHK-013` Worker State proof contract: capture serialized seat identifiers, prove failed payment creates no paid owner, then prove retry creates exactly one paid ticket owner; canvas state is not primary proof |
+| 2026-07-13 | Recorded TRACK-CHK-002 | Synced `AUTO-CHK-007` Worker State proof contract: pause on checkout-link review, assert unavailable items, carry pruned expected lines and total, then prove paid order excludes unavailable quantities |
+| 2026-07-13 | Recorded READY-CHK-001 | Audited top-six readiness; ranks 1-6 have proof contracts, QA handoff fields, and acceptance criteria; no ranking change |
+| 2026-07-13 | Recorded LEVERAGE-CHK-001 | Identified shared future implementation sequence for ranks 1-6: result/transaction-id proof helpers first, failed-payment context and entry-specific adapters second |
+| 2026-07-13 | Recorded BACKLOG-SYNC-CHK-001 | Synced automation backlog with current Worker State: top-six batch, normalized P1 scores, `AUTO-CHK-008` review-separately, and `LEVERAGE-CHK-001` |
+| 2026-07-13 | Recorded DECISION-SYNC-CHK-001 | Synced decision queue with current reviewer gate: `DEC-CHK-043` through `DEC-CHK-045`, no implementation authorization step, and no broad exploration before reviewer input |
+| 2026-07-13 | Recorded MODE-SYNC-CHK-001 | Confirmed the shortlist is a recommendation for future Playwright automation, not work being implemented by this planning worker |
+| 2026-07-13 | Recorded HANDOFF-AUDIT-CHK-001 | Audited top-six candidate handoff fields; all have reviewer-readable automation target, first action, decision/default, acceptance criteria, first test, not-a-matrix guidance, and proof contract |
+| 2026-07-13 | Recorded REVIEW-CHECKPOINT-SYNC-CHK-001 | Synced the human review checkpoint with `HANDOFF-AUDIT-CHK-001` so reviewers see the top-six handoff audit is already done |
+| 2026-07-13 | Recorded DECISION-QUEUE-SYNC-CHK-002 | Synced the decision queue with `HANDOFF-AUDIT-CHK-001` and `REVIEW-CHECKPOINT-SYNC-CHK-001`; current decision rows are `DEC-CHK-046` through `DEC-CHK-048` |
+| 2026-07-13 | Recorded BACKLOG-REVIEW-SYNC-CHK-002 | Synced the automation backlog current recommendation with `DECISION-QUEUE-SYNC-CHK-002`, `HANDOFF-AUDIT-CHK-001`, and `REVIEW-CHECKPOINT-SYNC-CHK-001` |
+| 2026-07-13 | Recorded PHASE2-REVIEW-SYNC-CHK-001 | Synced Phase 2 Planning with current Worker State, normalized P1 scores below 80, and the latest reviewer gate; no ranking change |
+| 2026-07-13 | Recorded DECISION-QUEUE-SYNC-CHK-003 | Synced Decision Queue, Automation Backlog, and Review Checkpoint with `PHASE2-REVIEW-SYNC-CHK-001`; current decision rows are `DEC-CHK-046` through `DEC-CHK-050`; no ranking change |
+| 2026-07-13 | Recorded PHASE2-GATE-SYNC-CHK-002 | Synced Phase 2 Planning with `DECISION-QUEUE-SYNC-CHK-003`; no ranking change |
+| 2026-07-13 | Recorded P0-SATURATION-CHK-001 | Audited P0 reviewer readiness; ranks 1-6 are complete and `AUTO-CHK-008` now has a proof contract if promoted; no ranking change |
+| 2026-07-13 | Recorded PROMPT-SYNC-CHK-001 | Synced the reusable recursive worker prompt with `P0-SATURATION-CHK-001`; fresh sessions should not repeat completed P0 saturation, handoff, ranking, or broad exploration audits unless reviewer feedback or candidate content changes |
+| 2026-07-13 | Recorded ARTIFACT-SYNC-CHK-001 | Synced reviewer-facing artifacts with `PROMPT-SYNC-CHK-001`; no ranking change |
 
 ## No-Gap Confirmations
 
@@ -181,11 +216,24 @@ Reader note: a candidate is not asking for every listed checkout variant. Use `w
 | ID | Supports | Contract | Result |
 | --- | --- | --- | --- |
 | PROOF-CHK-001 | AUTO-CHK-002, AUTO-CHK-001, AUTO-CHK-006, AUTO-CHK-007, AUTO-CHK-013 | Carry `invoiceData.id`, `invoiceData.transaction_id`, buyer identity, expected total, expected item lines, and expected ticket quantity; use Dashboard transaction filter, My Orders order detail, and venue invoice/invoice-items APIs for paid/no-paid proof | No ranking change; use as later implementation handoff |
-| PROOF-CHK-002 | AUTO-CHK-002 | Start with WebPublic guest `diagnostic-replay-purchase`; return `CheckoutResult` or `invoiceData`; preserve replay response evidence; prove exactly one Dashboard transaction row by `transaction_id`; use venue invoice/invoice-items API only for item quantity/detail support | No ranking change; current best remains `AUTO-CHK-002` |
-| PROOF-CHK-003 | AUTO-CHK-001 | Start with failed Affirm WebPublic guest; return failed-payment context instead of `void`; carry unique buyer email, event id, ticket type id, `CartResult.itemId`, requested quantity, and expected total; prove no venue invoice by exact email and no invoice-items by `invoice__email`, `event`, and `ticket_type` | No ranking change; current best remains `AUTO-CHK-002` |
+| PROOF-CHK-002 | AUTO-CHK-002 | Start with WebPublic guest `diagnostic-replay-purchase`; return `CheckoutResult` or `invoiceData`; preserve replay response evidence; prove exactly one Dashboard transaction row by `invoiceData.transaction_id`; verify confirmation/My Orders shows one expected ticket set; use venue invoice/invoice-items API only if UI detail cannot prove item quantity clearly | No ranking change; current best remains `AUTO-CHK-002` |
+| PROOF-CHK-003 | AUTO-CHK-001 | Start with failed Affirm WebPublic guest; return failed-checkout context instead of `void`; carry unique buyer email, event id, ticket type id, `CartResult.itemId`, requested quantity, and expected total; keep failure UI recovery; prove no venue invoice/order by exact buyer context and no venue invoice-items/tickets by event and ticket type | No ranking change; current best remains `AUTO-CHK-002` |
 | PROOF-CHK-004 | AUTO-CHK-003 | Add `pricingFeesTaxes` to `TransactionPage.verifyTransactionDetails`; assert `financial-breakdown-row-Settlement amount` contains `pricingFeesTaxes.valueOnTransactionPage`; use `amount_paid` / `amountPaid`, not header gross revenue; exercise through an existing Box Office caller first | No ranking change; current best remains `AUTO-CHK-002` |
-| PROOF-CHK-005 | AUTO-CHK-006 | Preserve base ticket `ItemDetails` from `extractEventItemDetails`, build add-on product `ItemDetails` from `addOns`, pass both lines to `verifyOrderConfirmationThroughCheckout`, and keep `getVerificationTotal(productData, true)` as combined paid-total proof; add venue invoice-items API proof only if UI detail cannot prove both lines | No ranking change; current best remains `AUTO-CHK-002` |
-| PROOF-CHK-006 | AUTO-CHK-013 | Start with WebPublic best-available assigned seating; capture selected seat identifiers from basket response; return failed-Affirm context instead of `void`; prove no paid order/ticket item owns the selected seat after failure; retry once and prove exactly one paid ticket item owns the same seat | No ranking change; current best remains `AUTO-CHK-002` |
+| PROOF-CHK-005 | AUTO-CHK-006 | Capture the base ticket expectation from the CheckoutAddOns basket response plus event ticket fixture fields, build add-on product `ItemDetails` from `addOns`, pass both lines to `verifyOrderConfirmationThroughCheckout`, and keep `getVerificationTotal(productData, true)` as combined paid-total proof; add venue invoice-items API proof only if UI detail cannot prove both lines | No ranking change; current best remains `AUTO-CHK-002` |
+| PROOF-CHK-006 | AUTO-CHK-013 | Start with WebPublic best-available assigned seating; capture serialized seat identifiers from basket response; use failed Affirm for the failed attempt; prove no paid order/ticket item owns the selected seat after failure; retry once and prove exactly one paid ticket item owns the same seat; do not use canvas state as the primary proof | No ranking change; current best remains `AUTO-CHK-002` |
+| PROOF-CHK-007 | AUTO-CHK-007 | Reuse WebPublic checkout-link flow, but pause on the review page before `ReviewCheckoutButton.clickCheckoutButton()`; assert unavailable items are visible; carry requested, removed, remaining, expected line, and pruned total data; complete card payment; prove confirmation/My Orders or API excludes unavailable quantities and matches the pruned total | No ranking change; current best remains `AUTO-CHK-002`; synced into Worker State as `TRACK-CHK-002` |
+| PROOF-CHK-008 | AUTO-CHK-008 | If package reporting is promoted, use one deterministic revenue-realization package checkout; preserve invoice/transaction/package identity and expected child stat expectations; use venue invoice-items API as primary proof for child/sub-ticket stat rows; use Dashboard transaction detail only for identity and paid-total reconciliation | No ranking change; keep `AUTO-CHK-008` review-separately unless package reporting/payout confidence is current priority |
+
+## Shared Batch Leverage
+
+`LEVERAGE-CHK-001` found the most efficient future implementation path for the top-six batch:
+
+1. Preserve `CheckoutResult` / `invoiceData.transaction_id` from successful checkout and replay paths.
+2. Reuse Dashboard transaction-id filtering plus My Orders order-detail proof as the default paid final-state surface.
+3. Add failed-payment context for the failed Affirm branch so negative invoice/item lookups have buyer, event, ticket type, quantity, and total context.
+4. Add only narrow entry adapters for checkout-link review pause, mixed add-on expected lines, and assigned-seat serialized identifiers.
+
+This does not change the ranking. It just prevents the later implementation from becoming six disconnected tests.
 
 ## Planning Parked / Needs Decision
 
@@ -219,15 +267,15 @@ P1/lower packets are preserved, not deleted or pruned. Use [[06 Prompts/Checkout
 
 | Phase | Status | Next Output |
 | --- | --- | --- |
-| Phase 2 | Planning-Only Loop Active | `AUTO-CHK-002`, `AUTO-CHK-001`, `AUTO-CHK-003`, `AUTO-CHK-006`, and `AUTO-CHK-013` have proof refinements recorded. Resume with `AUTO-CHK-007`, `AUTO-CHK-008`, or a P0 ranking/assertion-contract review. If implementation would be next, convert it to a handoff note and continue; do not stop or mark blocked for source writes. |
+| Phase 2 | Review Checkpoint Active | `PROMPT-SYNC-CHK-001` synced the reusable prompt with `P0-SATURATION-CHK-001`, and `ARTIFACT-SYNC-CHK-001` synced reviewer-facing artifacts to the same checkpoint. Fresh sessions should resume from the reviewer gate instead of repeating completed P0 audits. The top-six recommendation is QA-readable and does not need another broad handoff pass. `MODE-SYNC-CHK-001` confirms this phase is recommendation-only: no Playwright/source/Qase implementation is happening inside the worker. `LEVERAGE-CHK-001` confirms ranks 1-6 remain the recommended Playwright batch and identifies the efficient future implementation sequence. Current best remains `AUTO-CHK-002`; use the ready Authorize replay proof by default unless Stripe provider volume/business priority says Stripe should be first. `AUTO-CHK-008` stays review-separately unless package reporting/payout confidence is a current priority. |
 
 ## Resume Checkpoint
 
-**Last completed loop:** `PROOF-CHK-006` for `AUTO-CHK-013`.  
+**Last completed loop:** `ARTIFACT-SYNC-CHK-001` synced reviewer-facing artifacts with `PROMPT-SYNC-CHK-001`.
 **Current best automation remains:** `AUTO-CHK-002`.  
 **CSV status:** learned and checkpointed; do not reread `assets/csv/major-critical.csv` unless a newer export is provided.  
-**Worker State status:** every candidate has QA handoff fields plus `criticality_review`; P1 scores are normalized below 80.  
-**Resume next with:** P0 ranking/assertion-contract review, or refine `AUTO-CHK-007` / `AUTO-CHK-008` only if that could change the current top P0 recommendation.  
+**Worker State status:** latest checkpoint is `ARTIFACT-SYNC-CHK-001`; every candidate has QA handoff fields plus `criticality_review`; ranks 1-6 have `proof_surface_contract`, reviewer-readable handoffs, acceptance criteria, and a shared future implementation sequence; `AUTO-CHK-008` also has a proof contract if promoted; P1 scores are normalized below 80; current decision gate is `DEC-CHK-046` through `DEC-CHK-050`.
+**Resume next with:** review [[04 Automation/Checkout Playwright Automation Review Checkpoint]], [[04 Automation/Checkout Money Movement Automation Backlog]], [[04 Automation/Checkout Automation Phase 2 Planning]], and [[02 Feature QA/Checkout Automation Decision Queue]] as the current "what to automate next" recommendation. The review checkpoint, backlog, Phase 2 Planning, decision queue, Worker State, and reusable prompt already reference `HANDOFF-AUDIT-CHK-001`, `PHASE2-GATE-SYNC-CHK-002`, `P0-SATURATION-CHK-001`, `PROMPT-SYNC-CHK-001`, and `ARTIFACT-SYNC-CHK-001`; do not repeat the handoff, saturation, ranking, assertion-contract, CSV, or broad exploration audits unless reviewer feedback or candidate content changes. If approved, use `LEVERAGE-CHK-001` as the future implementation sequence in a separate task. If resumed without reviewer changes, avoid broad exploration and keep the recommendation stable.
 **Read first after `/goal resume`:** this Mission Control note, then [[02 Feature QA/Checkout Automation Worker State.json]].  
 **Fresh session checkpoint:** open [[06 Prompts/Checkout Recursive Automation Prioritization Worker]], then read `resume_checkpoint`, `incident_calibration_policy`, and `candidates[].criticality_review` in Worker State before doing any new search.  
 **Do not resume by implementing tests:** this worker is planning-only; implementation stays a separate task.

@@ -24,6 +24,8 @@ Current answer:
 
 > `AUTO-CHK-002` - Duplicate submit/retry creates one paid outcome.
 
+Current reviewer gate: `DECISION-QUEUE-SYNC-CHK-003`. Review `DEC-CHK-046` through `DEC-CHK-050`, [[04 Automation/Checkout Playwright Automation Review Checkpoint]], [[04 Automation/Checkout Money Movement Automation Backlog]], and this note together. `HANDOFF-AUDIT-CHK-001` already confirmed the top-six handoff fields, `P0-SATURATION-CHK-001` confirmed the P0 reviewer set is structurally complete, and `PROMPT-SYNC-CHK-001` / `ARTIFACT-SYNC-CHK-001` confirm fresh sessions should not repeat completed P0 audits unless reviewer feedback or candidate content changes.
+
 This phase does not implement tests. When a packet is ready for implementation, keep it ranked and continue with the next read-only planning target.
 
 If the active `/goal` objective says to stop when source-code writes would be required, treat that as a planning boundary only. The correct action is to mark the packet `Planning Ready`, record the later implementation shape, and continue planning.
@@ -39,21 +41,21 @@ If the next action would be implementation, convert it into a handoff note and k
 | 3 | AUTO-CHK-003 | 92 | P0 | Use as helper-leverage packet for Dashboard money assertions |
 | 4 | AUTO-CHK-006 | 91 | P0 | Shape mixed-basket assertion packet |
 | 5 | AUTO-CHK-013 | 90 | P0 | Planning-ready assigned-seat failed-payment/retry ownership packet; fixture contract refined |
-| 6 | AUTO-CHK-007 | 89 | P0 | Planning packet ready for checkout-link unavailable-item paid outcome |
-| 7 | AUTO-CHK-008 | 84 | P0 | Planning-ready package revenue-realization reporting packet |
-| 8 | AUTO-CHK-005 | 90 | P1 | Keep as fixture-spike packet |
-| 9 | AUTO-CHK-011 | 88 | P1 | Planning-ready Stripe PaymentIntent recovery packet; Qase/manual coverage exists |
-| 10 | AUTO-CHK-012 | 87 | P1 | Park until wallet-capable browser/provider simulator strategy exists |
-| 11 | AUTO-CHK-010 | 86 | P1 | Planning-ready identity-ownership packet; Qase/manual coverage exists |
-| 12 | AUTO-CHK-019 | 86 | P1 | Planning-ready resale checkout buyer/seller final-state packet; Qase/manual coverage exists |
-| 13 | AUTO-CHK-014 | 85 | P1 | Planning-ready waitlist async fulfillment packet; Qase/manual coverage exists |
-| 14 | AUTO-CHK-017 | 85 | P1 | Planning-ready partial-credit remaining-balance packet; Qase/manual coverage exists |
-| 15 | AUTO-CHK-016 | 84 | P1 | Planning-ready payment-plan checkout reconciliation packet; backend coverage exists |
-| 16 | AUTO-CHK-018 | 84 | P1 | Planning-ready configured rate-card fee/tax-on-fee packet; Qase/manual coverage exists |
-| 17 | AUTO-CHK-015 | 83 | P1 | Planning-ready refund-protection upsell packet; backend coverage exists |
-| 18 | AUTO-CHK-020 | 82 | P1 | Planning-ready checkout upgrade replacement packet; Qase/manual coverage exists |
-| 19 | AUTO-CHK-009 | 82 | P1 | Park until Square Terminal hardware/provider simulator strategy exists |
-| 20 | AUTO-CHK-004 | 78 | P1 | Hold until gift-card business priority is confirmed |
+| 6 | AUTO-CHK-007 | 89 | P0 | Proof refined for checkout-link unavailable-item paid outcome |
+| 7 | AUTO-CHK-008 | 84 | P0 | Review separately; promote only if package reporting/payout confidence is current priority |
+| 8 | AUTO-CHK-011 | 79 | P1 | Planning-ready Stripe PaymentIntent recovery packet; Qase/manual coverage exists |
+| 9 | AUTO-CHK-005 | 78 | P1 | Keep as fixture-spike packet |
+| 10 | AUTO-CHK-017 | 77 | P1 | Planning-ready partial-credit remaining-balance packet; Qase/manual coverage exists |
+| 11 | AUTO-CHK-018 | 76 | P1 | Planning-ready configured rate-card fee/tax-on-fee packet; Qase/manual coverage exists |
+| 12 | AUTO-CHK-019 | 75 | P1 | Planning-ready resale checkout buyer/seller final-state packet; Qase/manual coverage exists |
+| 13 | AUTO-CHK-014 | 74 | P1 | Planning-ready waitlist async fulfillment packet; Qase/manual coverage exists |
+| 14 | AUTO-CHK-016 | 73 | P1 | Planning-ready payment-plan checkout reconciliation packet; backend coverage exists |
+| 15 | AUTO-CHK-010 | 72 | P1 | Planning-ready identity-ownership packet; Qase/manual coverage exists |
+| 16 | AUTO-CHK-015 | 71 | P1 | Planning-ready refund-protection upsell packet; backend coverage exists |
+| 17 | AUTO-CHK-020 | 70 | P1 | Planning-ready checkout upgrade replacement packet; Qase/manual coverage exists |
+| 18 | AUTO-CHK-012 | 69 | P1 | Park until wallet-capable browser/provider simulator strategy exists |
+| 19 | AUTO-CHK-009 | 68 | P1 | Park until Square Terminal hardware/provider simulator strategy exists |
+| 20 | AUTO-CHK-004 | 64 | P1 | Hold until gift-card business priority is confirmed |
 
 ## AUTO-CHK-002 Planning Packet
 
@@ -384,14 +386,18 @@ Use this checklist when implementation is later handled outside this worker.
 | --- | --- |
 | Test scope | Add one checkout-link scenario; do not expand every tracking-link type |
 | Suite placement | `tests/web/checkout/tracking-links` or adjacent checkout-link-specific spec |
-| Entry path | Reuse `webPublicJourney(...).fromCheckoutLink(...)` |
+| Entry path | Reuse `webPublicJourney(...).fromCheckoutLink(...)`, but inspect the review page before `ReviewCheckoutButton.clickCheckoutButton()` |
 | Fixture setup | Existing basket identity plus checkout link with at least two configured extras where one can be unavailable |
-| Quantity contract | Track requested quantity, unavailable/removed quantity, and expected remaining quantity |
+| Quantity contract | Track requested quantity, unavailable/removed quantity, expected remaining quantity, expected item lines, and pruned expected total |
 | Payment path | Card payment through existing tracking-link runner style |
 | Confirmation proof | Verify final order/confirmation contains only remaining available items and expected total |
 | Dashboard/API proof | Add only if confirmation/order detail cannot prove no unavailable quantity was charged |
 | Non-goal | do not test every tracking-link type, customer state, or inventory state in the first implementation |
 | Qase context | partial related case Qase 4802; no exact paid-order reconciliation case found |
+
+## AUTO-CHK-007 Proof Refinement
+
+`PROOF-CHK-007`: pause on the checkout-link review page, assert unavailable items are visible, carry pruned expected quantity/line/total data into checkout, complete card payment, then prove the paid confirmation/order contains only the available remaining items.
 
 ## AUTO-CHK-007 Assertion Contract
 
@@ -399,6 +405,7 @@ Use this checklist when implementation is later handled outside this worker.
 | --- | --- |
 | existing basket identity is reused before checkout | checkout link can fork or replace the buyer basket incorrectly |
 | unavailable quantity is shown before checkout | buyer may not be told configured extras were pruned |
+| requested, removed, remaining, and pruned total data are carried into the payment proof | final assertions may still compare against the original requested link quantity |
 | checkout proceeds with only valid remaining items | unavailable items may still reach payment |
 | final paid total equals pruned basket total | buyer can be charged for unavailable or removed quantities |
 | confirmation/order detail excludes unavailable items | paid fulfillment can include inventory that was unavailable |
@@ -950,12 +957,14 @@ For each pass, do one compact planning improvement:
 | 33 | Refine AUTO-CHK-001 failed-payment no-paid proof | done - PROOF-CHK-003 recorded; first implementation should return failed-payment context and prove no venue invoice/invoice-items for the failed buyer/event/ticket |
 | 34 | Refine AUTO-CHK-003 Dashboard settlement proof | done - PROOF-CHK-004 recorded; helper should assert `financial-breakdown-row-Settlement amount` using existing `valueOnTransactionPage` inputs |
 | 35 | Hold AUTO-CHK-004 | parked - resume only if gift-card purchases are confirmed in scope |
+| 36 | Sync Phase 2 planning with latest reviewer gate | superseded - PHASE2-REVIEW-SYNC-CHK-001 first aligned P1 scores; use PHASE2-GATE-SYNC-CHK-002 for the current gate |
+| 37 | Sync Phase 2 planning with current reviewer gate | done - PHASE2-GATE-SYNC-CHK-002 recorded; resume now points at `DECISION-QUEUE-SYNC-CHK-003` / `DEC-CHK-046` through `DEC-CHK-050` |
 
 ## Exit Rules
 
 Stop planning when:
 
-- all high-value P0/P1 packets have reviewer-ready handoff checklists and remaining work is low-risk duplication
+- all high-value P0 packets have reviewer-ready handoff checklists and remaining work is low-risk duplication; P1/lower packets stay preserved for the separate continuation prompt
 - the next useful planning step requires secrets, product confirmation, destructive setup, provider/hardware strategy, or missing read-only access/context
 - planning starts duplicating existing packet content without changing planning clarity
 

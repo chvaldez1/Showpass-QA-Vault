@@ -8,31 +8,54 @@ Related notes:
 - [[06 Prompts/Checkout Money Movement Exploration Goal]]
 - [[02 Feature QA/Checkout Critical Path Gap Analysis]]
 - [[02 Feature QA/Checkout Money Movement Risk Scoring]]
+- [[04 Automation/Checkout Playwright Automation Review Checkpoint]]
+- [[02 Feature QA/Checkout Automation Decision Queue]]
+
+## Current Recommendation
+
+Current best: `AUTO-CHK-002` - duplicate submit/retry creates one paid outcome.
+
+Recommended next Playwright batch: ranks 1-6. `AUTO-CHK-008` is real P0 reporting/payout coverage, but review it separately unless package reporting is a current business priority.
+
+Current reviewer gate: `DECISION-QUEUE-SYNC-CHK-003`. Review `DEC-CHK-046` through `DEC-CHK-050`, [[04 Automation/Checkout Playwright Automation Review Checkpoint]], [[04 Automation/Checkout Automation Phase 2 Planning]], and this backlog together. `HANDOFF-AUDIT-CHK-001` already confirmed the top-six handoff fields, `P0-SATURATION-CHK-001` confirmed the P0 reviewer set is structurally complete, and `PROMPT-SYNC-CHK-001` / `ARTIFACT-SYNC-CHK-001` confirm fresh sessions should not repeat completed P0 audits unless reviewer feedback or candidate content changes.
+
+Use `LEVERAGE-CHK-001` for the future implementation order: shared `CheckoutResult` / `invoiceData.transaction_id` and final-state proof helpers first, then failed-payment context and narrow adapters for checkout links, add-ons, and assigned seating.
 
 ## Candidate Index
 
 | Priority | Score | Candidate | Fixture Need | Status |
 | --- | ---: | --- | --- | --- |
-| P0 | 96 | AUTO-CHK-002 - Duplicate submit/retry creates one paid outcome | Duplicate submit harness / one-invoice assertion | Planning packet ready |
-| P0 | 94 | AUTO-CHK-001 - Failed payment no paid order/tickets/inventory | Failed Affirm no-paid-outcome assertion | Planning packet ready |
-| P0 | 92 | AUTO-CHK-003 - Dashboard transaction total reconciliation | Transaction detail `amount_paid` / Settlement amount assertion helper | Planning packet ready |
-| P0 | 91 | AUTO-CHK-006 - Mixed ticket plus checkout add-on reconciliation | Existing CheckoutAddOns path / order-confirmation item list upgrade | Planning ready |
-| P0 | 90 | AUTO-CHK-013 - Assigned seating payment failure/retry preserves seat ownership | Assigned-seat failure/retry fixture plus seat identity assertion | Fixture contract refined |
-| P0 | 89 | AUTO-CHK-007 - Checkout tracking-link unavailable-item paid outcome | Checkout-link existing-basket / unavailable-item final-order assertion | Planning ready |
-| P0 | 84 | AUTO-CHK-008 - Package revenue-realization reporting reconciliation | Package revenue-realization fixture plus API-first stat allocation proof | Planning Ready |
-| P1 | 90 | AUTO-CHK-005 - Membership event-batch hold-link checkout reconciliation | Member hold-link basket fixture with price, expiry, and inventory/seat state | Fixture plan tightened |
-| P1 | 88 | AUTO-CHK-011 - Stripe PaymentIntent cancel/webhook recovery creates no paid order and remains retry-safe | Safe provider simulation or test hook for canceled intent / OAuth delay | Planning ready; Qase/manual coverage exists |
-| P1 | 87 | AUTO-CHK-012 - One-click wallet checkout cancel/failure/retry creates no paid order until final success | Wallet-capable browser/device or provider simulator strategy | Planning parked |
-| P1 | 86 | AUTO-CHK-010 - Guest checkout claim/connect preserves paid order ownership | Guest paid-order claim/connect helper and owner-scoped My Orders assertion | Planning ready; Qase/manual coverage exists |
-| P1 | 86 | AUTO-CHK-019 - Resale checkout buyer charge and seller-side completion reconciliation | Resale listing fixture plus buyer/seller final-state proof | Planning ready; Qase/manual coverage exists |
-| P1 | 85 | AUTO-CHK-014 - Waitlist async fulfillment creates one paid order and reconciled revenue | Waitlist fulfillment trigger / one paid invoice-ticket-revenue proof | Planning ready; Qase/manual coverage exists |
-| P1 | 85 | AUTO-CHK-017 - Credit-applied checkout remaining balance reconciles to charged amount | Partial-credit fixture plus remaining card charge and Dashboard/API Credit applied proof | Planning ready; Qase/manual coverage exists |
-| P1 | 84 | AUTO-CHK-016 - Payment-plan checkout installment totals reconcile to Dashboard/API state | Payment-plan ticket fixture plus initial invoice, fee row, and pending-ticket proof | Planning ready; backend coverage exists |
-| P1 | 84 | AUTO-CHK-018 - Configured rate-card fee and tax-on-fee checkout reconciles charged amount and Dashboard fee rows | Configured-fee fixture plus fee/tax row and invoice reconciliation proof | Planning ready; Qase/manual coverage exists |
-| P1 | 83 | AUTO-CHK-015 - Refund-protection upsell checkout creates linked protection-only invoice | Tokenized upsell basket fixture plus source/upsell invoice proof | Planning ready; backend coverage exists |
-| P1 | 82 | AUTO-CHK-020 - Checkout upgrade offer replaces item and reconciles upgraded paid outcome | Upgrade-path fixture plus upgraded item/order/total/inventory proof | Planning ready; Qase/manual coverage exists |
-| P1 | 82 | AUTO-CHK-009 - Square Terminal async completion finalizes one paid Box Office order | Square Terminal hardware/provider simulator or mocked webhook strategy | Planning parked |
-| P1 | 78 | AUTO-CHK-004 - Gift card stored value checkout reconciliation | Public gift-card purchase fixture | Needs business priority |
+| P0 | 96 | AUTO-CHK-002 - Duplicate submit/retry creates one paid outcome | Duplicate submit harness / one-final-paid-outcome proof | Planning Ready / Proof Surface Refined |
+| P0 | 94 | AUTO-CHK-001 - Failed payment no paid order/tickets/inventory | Failed Affirm no-paid-outcome context and assertion | Planning Ready / Proof Surface Refined |
+| P0 | 92 | AUTO-CHK-003 - Dashboard transaction total reconciliation | Shared Settlement amount assertion helper | Planning Ready / Proof Surface Refined |
+| P0 | 91 | AUTO-CHK-006 - Mixed ticket plus checkout add-on reconciliation | Existing CheckoutAddOns path / base-plus-add-on order proof | Planning Ready / Proof Surface Refined |
+| P0 | 90 | AUTO-CHK-013 - Assigned seating payment failure/retry preserves seat ownership | Best-available seat identifiers plus failed-payment/retry proof | Planning Ready / Proof Surface Refined |
+| P0 | 89 | AUTO-CHK-007 - Checkout tracking-link unavailable-item paid outcome | Checkout-link review-page pruning / pruned paid-order assertion | Planning Ready / Proof Surface Refined |
+| P0 | 84 | AUTO-CHK-008 - Package revenue-realization reporting reconciliation | Package revenue-realization fixture plus API-first stat allocation proof | Planning Ready / Review Separately |
+| P1 | 79 | AUTO-CHK-011 - Stripe PaymentIntent cancel/webhook recovery creates no paid order and remains retry-safe | Safe provider simulation or test hook for canceled intent / OAuth delay | Planning Ready |
+| P1 | 78 | AUTO-CHK-005 - Membership event-batch hold-link checkout reconciliation | Member hold-link basket fixture with price, expiry, and inventory/seat state | Fixture plan tightened |
+| P1 | 77 | AUTO-CHK-017 - Credit-applied checkout remaining balance reconciles to charged amount | Partial-credit fixture plus remaining card charge and Dashboard/API Credit applied proof | Planning Ready / Manual-backed |
+| P1 | 76 | AUTO-CHK-018 - Configured rate-card fee and tax-on-fee checkout reconciliation | Configured-fee fixture plus fee/tax row and invoice reconciliation proof | Planning Ready / Manual-backed |
+| P1 | 75 | AUTO-CHK-019 - Resale checkout buyer charge and seller-side completion reconciliation | Resale listing fixture plus buyer/seller final-state proof | Planning Ready / Manual-backed |
+| P1 | 74 | AUTO-CHK-014 - Waitlist async fulfillment creates one paid order and reconciled revenue | Waitlist fulfillment trigger / one paid invoice-ticket-revenue proof | Planning Ready / Manual-backed |
+| P1 | 73 | AUTO-CHK-016 - Payment-plan checkout installment totals reconcile to Dashboard/API state | Payment-plan ticket fixture plus initial invoice, fee row, and pending-ticket proof | Planning Ready / Backend-covered |
+| P1 | 72 | AUTO-CHK-010 - Guest checkout claim/connect preserves paid order ownership | Guest paid-order claim/connect helper and owner-scoped My Orders assertion | Planning Ready / Manual-backed |
+| P1 | 71 | AUTO-CHK-015 - Refund-protection upsell checkout creates linked protection-only invoice | Tokenized upsell basket fixture plus source/upsell invoice proof | Planning Ready / Backend-covered |
+| P1 | 70 | AUTO-CHK-020 - Checkout upgrade offer replaces item and reconciles upgraded paid outcome | Upgrade-path fixture plus upgraded item/order/total/inventory proof | Planning Ready / Manual-backed |
+| P1 | 69 | AUTO-CHK-012 - One-click wallet checkout cancel/failure/retry creates no paid order until final success | Wallet-capable browser/device or provider simulator strategy | Planning Parked |
+| P1 | 68 | AUTO-CHK-009 - Square Terminal async completion finalizes one paid Box Office order | Square Terminal hardware/provider simulator or mocked webhook strategy | Planning Parked |
+| P1 | 64 | AUTO-CHK-004 - Gift-card stored value checkout reconciliation | Public gift-card purchase fixture | Needs business priority |
+
+## Shared Batch Leverage
+
+`LEVERAGE-CHK-001` prevents the top-six from turning into six unrelated tests.
+
+| Step | Future Implementation Order | Unlocks |
+| ---: | --- | --- |
+| 1 | Preserve `CheckoutResult` / `invoiceData.transaction_id` from successful checkout and replay paths | `AUTO-CHK-002`, `AUTO-CHK-003`, `AUTO-CHK-006`, `AUTO-CHK-007` |
+| 2 | Reuse Dashboard transaction-id filtering plus My Orders order-detail proof as the default paid final-state surface | `AUTO-CHK-002`, `AUTO-CHK-003`, `AUTO-CHK-006`, `AUTO-CHK-007` |
+| 3 | Add failed-payment context for failed Affirm so negative invoice/item lookups have buyer, event, ticket type, quantity, and total context | `AUTO-CHK-001`, `AUTO-CHK-013` |
+| 4 | Add narrow adapters for checkout-link review pause, mixed add-on expected lines, and assigned-seat serialized identifiers | `AUTO-CHK-006`, `AUTO-CHK-013`, `AUTO-CHK-007` |
 
 ## Shared Proof Contracts
 
@@ -393,7 +416,7 @@ Detail file: `/private/tmp/qase-checkout-addon-case-details.json`.
 **Score:** 89/100  
 **Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Checkout Tracking-Link Unavailable-Item Pruning Is Not Proven Through Paid Order Reconciliation]]  
 **Automation type:** E2E assertion scenario on checkout tracking link  
-**Status:** Planning ready
+**Status:** Planning ready / Proof refined
 
 ## Why Automate
 
@@ -425,15 +448,20 @@ Use one checkout-link scenario with:
 | Area | Decision |
 | --- | --- |
 | Test scope | One checkout-link scenario; do not expand every tracking-link type |
-| Entry path | Reuse `webPublicJourney(...).fromCheckoutLink(...)` |
+| Entry path | Reuse `webPublicJourney(...).fromCheckoutLink(...)`, but inspect the review page before `ReviewCheckoutButton.clickCheckoutButton()` |
 | Fixture setup | Existing basket identity plus checkout link with two configured extras where one can be unavailable |
-| Quantity contract | Track requested quantity, unavailable/removed quantity, and expected remaining quantity |
+| Quantity contract | Track requested quantity, unavailable/removed quantity, expected remaining quantity, expected item lines, and pruned expected total |
 | Payment path | Card payment through existing tracking-link runner style |
 | Confirmation proof | Verify final order/confirmation contains only remaining available items and expected total |
 | Non-goal | do not test every customer state or inventory state in the first implementation |
 
+## Proof Refinement
+
+`PROOF-CHK-007`: assert the unavailable-items review state first, then complete payment and reconcile the final order against the pruned basket. Use `invoiceData.transaction_id` plus confirmation/My Orders item details first; add venue invoice-items API proof only if the UI cannot prove the unavailable line was excluded.
+
 ## Assertions
 
+- Review page shows unavailable configured items before checkout continues.
 - Basket before payment contains only available remaining items plus intended existing-basket items.
 - Payment total matches the pruned basket.
 - Confirmation/order detail excludes unavailable quantities.

@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "status": "active_planning_only",
-  "last_checkpoint": "2026-07-09 normalized candidate scores and criticality reviews after Jira CSV calibration",
+  "last_checkpoint": "2026-07-13 ARTIFACT-SYNC-CHK-001 synced reviewer-facing artifacts with prompt checkpoint",
   "primary_question": "What should we automate next to reduce the most checkout money-movement risk?",
   "current_best_answer": {
     "automate_next": "AUTO-CHK-002",
     "title": "Duplicate submit/retry creates one paid outcome",
-    "reason": "Still the strongest automation-readiness P0: it proves the recurring business invariant that retry/replay cannot create duplicate paid transaction, order, or ticket outcomes. Provider order remains caveated until Stripe/payment-volume priority is confirmed.",
+    "reason": "Still the strongest automation-readiness P0: it proves the recurring business invariant that retry/replay cannot create duplicate paid transaction, order, or ticket outcomes. STRIPE-CHK-001 strengthened the provider handoff, and DUP-CHK-003 confirmed the ready proof surfaces: replay evidence, returned invoiceData.transaction_id, Dashboard transaction-id filtering, and confirmation/My Orders item proof. Use the existing Authorize replay harness by default; promote a Stripe equivalent first only if provider volume/business priority says Stripe should drive the first proof.",
     "confidence": "High",
     "risk_reduced": "Duplicate charge, duplicate order, duplicate confirmation, duplicate ticket issuance, and final-state disagreement after retry/replay behavior.",
     "blocked_by": null
@@ -99,33 +99,6 @@
   },
   "previous_p0_refinement": {
     "timestamp": "2026-07-07",
-    "id": "PROOF-CHK-005",
-    "candidate_id": "AUTO-CHK-006",
-    "type": "assertion-contract refinement",
-    "summary": "AUTO-CHK-006 remains rank 4 and planning-ready. The first implementation should upgrade the existing CheckoutAddOns branch rather than add another product permutation: preserve the base event ticket ItemDetails from extractEventItemDetails, build add-on product ItemDetails from addOns, pass both lines to verifyOrderConfirmationThroughCheckout, and keep getVerificationTotal(productData, true) as the combined paid-total proof. If barcode expectations differ between the ticket and product lines, pass expectedBarcodeQuantity as an array aligned to itemDetails. Use venue invoice-items API filtered by invoice__transaction_id plus event/ticket_type/product/product_attribute only if UI confirmation cannot prove both fulfillment lines.",
-    "evidence_refs": [
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts:284",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts:311",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts:389",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts:405",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts:434",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts:442",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts:444",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/user/account/my-orders/MyOrdersPage.ts:78",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/user/account/my-orders/MyOrdersPage.ts:238",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/user/account/my-orders/MyOrdersPage.ts:269",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/shared/types/checkout.ts:18",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/utils/payment-helpers.ts:109",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/utils/payment-helpers.ts:134",
-      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/services/purchase/ticket_basket_purchase_service.py:111",
-      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/services/ticket_generator_service.py:90",
-      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/filters/filters.py:239"
-    ],
-    "confidence": "High",
-    "verification_needed": "Later implementation should start inside the existing CheckoutAddOns branch, prove both base ticket and add-on product appear in the same paid order, and only add venue invoice-items API proof if the UI order detail cannot distinguish both fulfillment lines reliably."
-  },
-  "latest_p0_refinement": {
-    "timestamp": "2026-07-07",
     "id": "PROOF-CHK-006",
     "candidate_id": "AUTO-CHK-013",
     "type": "assertion-contract refinement",
@@ -152,6 +125,40 @@
     "confidence": "High",
     "verification_needed": "Later implementation should confirm the best-available assigned-seating fixture is stable in the target environment and should not rely on seating-canvas visual state alone; use API ticket item seat data plus My Orders/Dashboard transaction identity."
   },
+  "latest_p0_refinement": {
+    "timestamp": "2026-07-13",
+    "id": "PROOF-CHK-007",
+    "candidate_id": "AUTO-CHK-007",
+    "type": "assertion-contract refinement",
+    "summary": "AUTO-CHK-007 remains rank 6 and planning-ready. The first implementation should reuse the existing WebPublic checkout-link flow but pause on the review page before clicking checkout: assert the unavailable-items heading/details are visible, carry requested quantity, unavailable/removed quantity, expected remaining quantity, expected item lines, and expected pruned total, then complete card payment and prove the paid order/confirmation contains only remaining available items. Use invoiceData.transaction_id plus My Orders/confirmation details first; add venue invoice-items API proof only if UI detail cannot prove the excluded unavailable line.",
+    "evidence_refs": [
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/analytics/models.py:584",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/analytics/models.py:617",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/analytics/front/views.py:12",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/shared/checkout/components/CheckoutTrackingLinkReview/CheckoutTrackingLinkReview.web.tsx:73",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/shared/checkout/components/CheckoutTrackingLinkReview/CheckoutTrackingLinkReview.web.tsx:191",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/shared/checkout/components/CheckoutTrackingLinkReview/CheckoutTrackingLinkReview.web.tsx:363",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/shared/checkout/components/CheckoutTrackingLinkReview/CheckoutTrackingLinkReview.web.tsx:367",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:698",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:703",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:707",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/CheckoutLinkPage.ts:10",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/shared/components/buttons/ReviewCheckoutButton.ts:10",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-engine.ts:108",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:1404",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:1454",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/steps/PaymentStep.ts:437",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/steps/PaymentStep.ts:462",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/user/account/my-orders/MyOrdersPage.ts:76",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/user/account/my-orders/MyOrdersPage.ts:89",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/web/checkout/tracking-links/checkout-tracking-links-runner.ts:102",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/shared/checkout/components/CheckoutTrackingLinkReview/CheckoutTrackingLinkReview.test.tsx:319",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/shared/checkout/components/CheckoutTrackingLinkReview/CheckoutTrackingLinkReview.test.tsx:448"
+    ],
+    "confidence": "Medium",
+    "verification_needed": "Later implementation must create or choose a deterministic fixture where a checkout link has at least two configured extras/items, only one becomes unavailable, and the remaining item can still be purchased without destructive inventory setup.",
+    "ranking_change": "none; current best remains AUTO-CHK-002"
+  },
   "summary": {
     "candidates": 20,
     "ready": 16,
@@ -161,16 +168,16 @@
     "no_gap_confirmations": 6
   },
   "active_investigation": {
-    "candidate_id": "AUTO-CHK-013",
-    "hypothesis": "Assigned-seat failure/retry coverage can be made deterministic by using the best-available assigned-seating path to capture seat identifiers before payment, then proving failed-payment no-ownership and retry same-seat ownership through API plus order proof.",
-    "next_step": "Use PROOF-CHK-006 as the implementation handoff refinement for AUTO-CHK-013, then continue P0-only planning with AUTO-CHK-007, AUTO-CHK-008, or a P0 ranking/assertion-contract review. Current best remains AUTO-CHK-002."
+    "candidate_id": "ARTIFACT-SYNC-CHK-001",
+    "hypothesis": "The reviewer-facing artifacts should also reference PROMPT-SYNC-CHK-001 so fresh sessions do not miss the current reviewer-driven resume state.",
+    "next_step": "No ranking change. Sync Decision Queue, Automation Backlog, Phase 2 Planning, and Review Checkpoint current sections with PROMPT-SYNC-CHK-001; then keep the next action reviewer-driven."
   },
   "decision_queue": {
     "path": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Decision Queue.md",
-    "recommended_decision": "DEC-CHK-039",
-    "recommended_unblocker": "No implementation unblocker needed. AUTO-CHK-013 has PROOF-CHK-006 refined; current best remains AUTO-CHK-002.",
-    "recommended_next_planning_action": "Run a P0 ranking/assertion-contract review, or refine AUTO-CHK-007/AUTO-CHK-008 only if that could change the current top P0 recommendation. Do not reopen broad CSV analysis or lower-priority discovery unless explicitly requested.",
-    "resume_rule": "CSV calibration is complete. Resume from Worker State JSON and Mission Control; continue P0-only ranking/assertion-contract work. Do not reread the CSV or reopen P1/lower discovery unless explicitly requested."
+    "recommended_decision": "DEC-CHK-050",
+    "recommended_unblocker": "Reviewer checkpoint, automation backlog, Phase 2 Planning, and decision queue are current. No implementation unblocker is needed; use these review artifacts to approve, revise, or defer the high-value Playwright shortlist.",
+    "recommended_next_planning_action": "Review REVIEW-CHK-001, HANDOFF-AUDIT-CHK-001, REVIEW-CHECKPOINT-SYNC-CHK-001, PHASE2-REVIEW-SYNC-CHK-001, PROMPT-SYNC-CHK-001, ARTIFACT-SYNC-CHK-001, and the synced automation backlog as a recommendation list, not as implemented tests. After review, approve ranks 1-6, explicitly choose whether AUTO-CHK-002 starts from the ready Authorize replay proof or a Stripe duplicate-submit proof, or explicitly promote AUTO-CHK-008 package reporting if that is a current priority.",
+    "resume_rule": "Resume from Mission Control, Worker State, the review checkpoint, automation backlog, Phase 2 Planning, and DEC-CHK-046 through DEC-CHK-050. PROMPT-SYNC-CHK-001 and ARTIFACT-SYNC-CHK-001 confirm fresh sessions should not repeat completed P0 audits. Do not reread the CSV or reopen P1/lower discovery unless reviewer outcome changes priority."
   },
   "selected_packet": {
     "id": "AUTO-CHK-003",
@@ -184,33 +191,775 @@
     "qase_context": "Partial related case found: Qase 935; no exact reusable Dashboard Settlement amount assertion case recorded."
   },
   "latest_result": {
-    "timestamp": "2026-07-07",
-    "candidate_id": "AUTO-CHK-013",
-    "type": "assertion-contract refinement",
-    "result_id": "PROOF-CHK-006",
-    "summary": "AUTO-CHK-013 remains rank 5 and planning-ready. The first implementation should start with WebPublic best-available assigned seating because clickBestAvailableCheckout already returns a basket response that captureSeatIdentifiers can read. Preserve selected seat identifiers before payment, make the failed-Affirm branch return scoped failure context instead of void, prove no paid invoice/order/ticket item owns that seat after the failed attempt, then retry once and prove exactly one paid order/ticket item contains the same seat identifiers. Do not start with manual seat selection unless the manual clickCheckout helper is upgraded to expose the same basket response.",
-    "evidence_refs": [
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/assigned-seating/events/assigned-seating-purchase-flows.ts:70",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:706",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:734",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:760",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/assigned-seating/SeatingPage.ts:130",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/assigned-seating/SeatingPage.ts:141",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/utils/api-helpers.ts:221",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:1220",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:1243",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:1372",
-      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/steps/PaymentStep.ts:386",
-      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/serializers.py:1219",
-      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/serializers.py:1296",
-      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/viewsets.py:807",
-      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/models/seating_management/seating_permissions.py:431",
-      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/models/seating_management/seating_permissions.py:448",
-      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/models/seating_management/seating_usage.py:14"
+    "timestamp": "2026-07-13",
+    "id": "ARTIFACT-SYNC-CHK-001",
+    "type": "reviewer_artifact_prompt_sync",
+    "summary": "No ranking change. Synced reviewer-facing current sections with PROMPT-SYNC-CHK-001 so Decision Queue, Automation Backlog, Phase 2 Planning, Review Checkpoint, Mission Control, and Worker State point fresh sessions at the same reviewer-driven checkpoint.",
+    "current_best_candidate": "AUTO-CHK-002",
+    "ranking_change": "none; current best remains AUTO-CHK-002 and ranks 1-6 remain the recommended Playwright batch",
+    "status": "reviewer_artifacts_current",
+    "synced_paths": [
+      "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Decision Queue.md",
+      "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Money Movement Automation Backlog.md",
+      "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Automation Phase 2 Planning.md",
+      "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Playwright Automation Review Checkpoint.md"
+    ],
+    "result_id": "ARTIFACT-SYNC-CHK-001",
+    "depends_on": [
+      "PROMPT-SYNC-CHK-001",
+      "P0-SATURATION-CHK-001",
+      "DECISION-QUEUE-SYNC-CHK-003"
     ],
     "confidence": "High",
-    "verification_needed": "Later implementation should confirm the best-available assigned-seating fixture is stable in the target environment and should not rely on seating-canvas visual state alone; use API ticket item seat data plus My Orders/Dashboard transaction identity.",
-    "ranking_change": "none; current best remains AUTO-CHK-002"
+    "verification_needed": "Reviewer input is now the next useful action unless new evidence or candidate content changes: approve/revise ranks 1-6, choose provider path for AUTO-CHK-002, or explicitly promote AUTO-CHK-008 package reporting."
+  },
+  "p0_saturation_audit": {
+    "timestamp": "2026-07-13",
+    "id": "P0-SATURATION-CHK-001",
+    "type": "p0_readiness_saturation_audit",
+    "result": "No ranking change. P0 reviewer set is structurally complete for planning handoff.",
+    "current_best": "AUTO-CHK-002",
+    "recommended_batch": [
+      "AUTO-CHK-002",
+      "AUTO-CHK-001",
+      "AUTO-CHK-003",
+      "AUTO-CHK-006",
+      "AUTO-CHK-013",
+      "AUTO-CHK-007"
+    ],
+    "review_separately": [
+      "AUTO-CHK-008"
+    ],
+    "audit_result": {
+      "ranks_1_to_6_missing_required_fields": [],
+      "auto_chk_008_change": "Added proof_surface_contract so the package reporting candidate is complete if reviewer promotes it.",
+      "next_useful_action": "Reviewer approval/revision, provider-volume decision for AUTO-CHK-002, or explicit package-reporting priority decision for AUTO-CHK-008."
+    },
+    "not_doing": [
+      "writing Playwright tests",
+      "editing source repositories",
+      "creating fixtures in source code",
+      "writing Qase cases",
+      "broad exploration before reviewer input"
+    ]
+  },
+  "prompt_sync": {
+    "timestamp": "2026-07-13",
+    "id": "PROMPT-SYNC-CHK-001",
+    "type": "recursive_worker_prompt_sync",
+    "path": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/06 Prompts/Checkout Recursive Automation Prioritization Worker.md",
+    "result": "No ranking change. The reusable worker prompt now treats P0-SATURATION-CHK-001 as completed work and points fresh sessions to reviewer-driven decisions instead of another P0 ranking/assertion-contract audit.",
+    "current_best": "AUTO-CHK-002",
+    "recommended_batch": [
+      "AUTO-CHK-002",
+      "AUTO-CHK-001",
+      "AUTO-CHK-003",
+      "AUTO-CHK-006",
+      "AUTO-CHK-013",
+      "AUTO-CHK-007"
+    ],
+    "review_separately": [
+      "AUTO-CHK-008"
+    ],
+    "current_reviewer_gate": "DECISION-QUEUE-SYNC-CHK-003 / DEC-CHK-046 through DEC-CHK-050",
+    "not_doing": [
+      "writing Playwright tests",
+      "editing source repositories",
+      "creating fixtures in source code",
+      "writing Qase cases",
+      "repeating P0 saturation, handoff, or broad exploration without reviewer change"
+    ]
+  },
+  "reviewer_artifact_sync": {
+    "timestamp": "2026-07-13",
+    "id": "ARTIFACT-SYNC-CHK-001",
+    "type": "reviewer_artifact_prompt_sync",
+    "result": "No ranking change. Reviewer-facing current sections now reference PROMPT-SYNC-CHK-001 so fresh sessions and reviewers understand the P0 saturation audit is complete and the next useful action is reviewer-driven.",
+    "current_best": "AUTO-CHK-002",
+    "recommended_batch": [
+      "AUTO-CHK-002",
+      "AUTO-CHK-001",
+      "AUTO-CHK-003",
+      "AUTO-CHK-006",
+      "AUTO-CHK-013",
+      "AUTO-CHK-007"
+    ],
+    "review_separately": [
+      "AUTO-CHK-008"
+    ],
+    "synced_paths": [
+      "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Decision Queue.md",
+      "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Money Movement Automation Backlog.md",
+      "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Automation Phase 2 Planning.md",
+      "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Playwright Automation Review Checkpoint.md"
+    ],
+    "current_reviewer_gate": "DECISION-QUEUE-SYNC-CHK-003 / DEC-CHK-046 through DEC-CHK-050",
+    "next_action": "Reviewer approval or revision of ranks 1-6, provider path decision for AUTO-CHK-002, or explicit package-reporting priority decision for AUTO-CHK-008.",
+    "not_doing": [
+      "writing Playwright tests",
+      "editing source repositories",
+      "creating fixtures in source code",
+      "writing Qase cases",
+      "repeating P0 saturation, handoff, ranking, assertion-contract, CSV, or broad exploration audits without reviewer change"
+    ]
+  },
+  "phase2_planning_sync": {
+    "timestamp": "2026-07-13",
+    "id": "PHASE2-GATE-SYNC-CHK-002",
+    "type": "phase2_planning_sync",
+    "path": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Automation Phase 2 Planning.md",
+    "result": "No ranking change. Phase 2 Planning now mirrors current ranking, normalized P1 scores, and DECISION-QUEUE-SYNC-CHK-003.",
+    "current_best": "AUTO-CHK-002",
+    "reviewer_gate": "DECISION-QUEUE-SYNC-CHK-003 / DEC-CHK-046 through DEC-CHK-050",
+    "not_doing": [
+      "writing Playwright tests",
+      "editing source repositories",
+      "creating fixtures in source code",
+      "writing Qase cases",
+      "reopening P1/lower discovery without reviewer input"
+    ]
+  },
+  "planning_mode_sync": {
+    "timestamp": "2026-07-13",
+    "id": "MODE-SYNC-CHK-001",
+    "type": "planning_mode_sync",
+    "result": "No ranking change. The worker remains planning-only and exists to tell the team what to automate next.",
+    "current_best": "AUTO-CHK-002",
+    "recommended_batch": [
+      "AUTO-CHK-002",
+      "AUTO-CHK-001",
+      "AUTO-CHK-003",
+      "AUTO-CHK-006",
+      "AUTO-CHK-013",
+      "AUTO-CHK-007"
+    ],
+    "not_doing": [
+      "writing Playwright tests",
+      "editing source repositories",
+      "creating fixtures in source code",
+      "writing Qase cases"
+    ],
+    "reviewer_reading_rule": "Treat each candidate as a recommended future Playwright proof with a first action and acceptance criteria, not as an active implementation task."
+  },
+  "handoff_clarity_audit": {
+    "timestamp": "2026-07-13",
+    "id": "HANDOFF-AUDIT-CHK-001",
+    "type": "top_six_handoff_clarity_audit",
+    "audited_candidates": [
+      "AUTO-CHK-002",
+      "AUTO-CHK-001",
+      "AUTO-CHK-003",
+      "AUTO-CHK-006",
+      "AUTO-CHK-013",
+      "AUTO-CHK-007"
+    ],
+    "required_fields_present": [
+      "what_to_automate",
+      "qa_handoff",
+      "first_action",
+      "decision_needed",
+      "default_decision",
+      "acceptance_criteria",
+      "reader_summary",
+      "recommended_first_test",
+      "not_a_matrix",
+      "proof_surface_contract"
+    ],
+    "result": "Top-six candidates are reviewer-readable and can be used as the current recommendation for what to automate next.",
+    "ranking_change": "none",
+    "next_decision": "Reviewer should approve/revise ranks 1-6, decide whether Stripe/provider volume changes AUTO-CHK-002, or explicitly promote AUTO-CHK-008 package reporting."
+  },
+  "review_checkpoint_sync": {
+    "timestamp": "2026-07-13",
+    "id": "REVIEW-CHECKPOINT-SYNC-CHK-001",
+    "type": "review_checkpoint_sync",
+    "target": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Playwright Automation Review Checkpoint.md",
+    "result": "No ranking change. Human review checkpoint should now show HANDOFF-AUDIT-CHK-001 as the latest handoff clarity audit.",
+    "current_best": "AUTO-CHK-002",
+    "recommended_batch": [
+      "AUTO-CHK-002",
+      "AUTO-CHK-001",
+      "AUTO-CHK-003",
+      "AUTO-CHK-006",
+      "AUTO-CHK-013",
+      "AUTO-CHK-007"
+    ],
+    "next_decision": "Reviewer should approve/revise ranks 1-6, decide provider path for AUTO-CHK-002, or explicitly promote AUTO-CHK-008 package reporting."
+  },
+  "decision_queue_sync": {
+    "timestamp": "2026-07-13",
+    "id": "DECISION-QUEUE-SYNC-CHK-003",
+    "type": "decision_queue_sync",
+    "target": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Decision Queue.md",
+    "result": "No ranking change. Decision queue should reflect HANDOFF-AUDIT-CHK-001, REVIEW-CHECKPOINT-SYNC-CHK-001, PHASE2-REVIEW-SYNC-CHK-001, and the current reviewer gate.",
+    "current_decisions": [
+      "DEC-CHK-046",
+      "DEC-CHK-047",
+      "DEC-CHK-048",
+      "DEC-CHK-049",
+      "DEC-CHK-050"
+    ],
+    "expected_decision_state": {
+      "current_best": "AUTO-CHK-002",
+      "review_gate": "Review REVIEW-CHK-001, HANDOFF-AUDIT-CHK-001, REVIEW-CHECKPOINT-SYNC-CHK-001, PHASE2-REVIEW-SYNC-CHK-001, and the synced automation backlog before further broad exploration.",
+      "implementation_policy": "Do not ask for implementation authorization from this planning worker.",
+      "ranking_change_inputs": [
+        "Stripe/provider production priority changes AUTO-CHK-002 provider path",
+        "package reporting or payout confidence promotes AUTO-CHK-008",
+        "reviewer revises the top-six Playwright batch"
+      ]
+    },
+    "confidence": "High"
+  },
+  "automation_backlog_sync": {
+    "timestamp": "2026-07-13",
+    "id": "BACKLOG-REVIEW-SYNC-CHK-002",
+    "type": "automation_backlog_sync",
+    "target": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Money Movement Automation Backlog.md",
+    "result": "No ranking change. Backlog now reflects the current top-six reviewer-ready batch, normalized P1 scores, LEVERAGE-CHK-001, HANDOFF-AUDIT-CHK-001, REVIEW-CHECKPOINT-SYNC-CHK-001, and DECISION-QUEUE-SYNC-CHK-002.",
+    "expected_backlog_state": {
+      "current_best": "AUTO-CHK-002",
+      "immediate_batch": [
+        "AUTO-CHK-002",
+        "AUTO-CHK-001",
+        "AUTO-CHK-003",
+        "AUTO-CHK-006",
+        "AUTO-CHK-013",
+        "AUTO-CHK-007"
+      ],
+      "review_separately": [
+        "AUTO-CHK-008"
+      ],
+      "p1_score_rule": "P1 scores stay below 80 unless new evidence promotes a candidate back into active P0 scope.",
+      "leverage_note": "Use LEVERAGE-CHK-001: shared CheckoutResult/invoiceData.transaction_id and final-state proof helpers first, then failed-payment context and entry-specific adapters.",
+      "review_gate": "Use DECISION-QUEUE-SYNC-CHK-002 and DEC-CHK-046 through DEC-CHK-048 as the current reviewer gate. HANDOFF-AUDIT-CHK-001 already confirmed the top-six handoff fields."
+    },
+    "confidence": "High"
+  },
+  "p0_batch_leverage_plan": {
+    "timestamp": "2026-07-13",
+    "id": "LEVERAGE-CHK-001",
+    "type": "fixture_and_helper_leverage_plan",
+    "result": "No ranking change. Ranks 1-6 are still the next recommended Playwright batch, but the efficient future implementation order is shared proof plumbing first, candidate-specific paths second.",
+    "supports_candidates": [
+      "AUTO-CHK-002",
+      "AUTO-CHK-001",
+      "AUTO-CHK-003",
+      "AUTO-CHK-006",
+      "AUTO-CHK-013",
+      "AUTO-CHK-007"
+    ],
+    "recommended_future_sequence": [
+      {
+        "step": 1,
+        "name": "Shared paid-checkout result contract",
+        "future_work": "Preserve CheckoutResult/invoiceData.transaction_id from terminal successful checkout/replay paths so Dashboard and My Orders proof can target the exact paid outcome.",
+        "unlocks": [
+          "AUTO-CHK-002",
+          "AUTO-CHK-003",
+          "AUTO-CHK-006",
+          "AUTO-CHK-007"
+        ]
+      },
+      {
+        "step": 2,
+        "name": "Shared final-state proof helpers",
+        "future_work": "Use TransactionPage.filterByTransactionId and MyOrdersPage.verifyOrderConfirmationThroughCheckout as the default paid-outcome proof surface before adding API fallback detail.",
+        "unlocks": [
+          "AUTO-CHK-002",
+          "AUTO-CHK-003",
+          "AUTO-CHK-006",
+          "AUTO-CHK-007"
+        ]
+      },
+      {
+        "step": 3,
+        "name": "Failed-payment context",
+        "future_work": "Change the failed Affirm terminal path from void to a FailedCheckoutContext carrying buyer, event, ticket type, cart item, quantity, and expected total for negative invoice/item lookups.",
+        "unlocks": [
+          "AUTO-CHK-001",
+          "AUTO-CHK-013"
+        ]
+      },
+      {
+        "step": 4,
+        "name": "Entry-specific adapters",
+        "future_work": "Add only the narrow adapters each proof needs: checkout-link review-page pause/pruned expected lines, CheckoutAddOns base-plus-add-on expected lines, and assigned-seat serialized identifier capture.",
+        "unlocks": [
+          "AUTO-CHK-006",
+          "AUTO-CHK-013",
+          "AUTO-CHK-007"
+        ]
+      }
+    ],
+    "not_asking_for": "Do not implement these helpers inside this planning worker, and do not create every checkout permutation. This is a future implementation order for the approved top-six batch.",
+    "confidence": "High"
+  },
+  "p0_batch_readiness_audit": {
+    "timestamp": "2026-07-13",
+    "id": "READY-CHK-001",
+    "type": "p0_batch_readiness_audit",
+    "result": "No ranking change. Ranks 1-6 are structurally ready as the recommended Playwright automation batch.",
+    "current_best_candidate": "AUTO-CHK-002",
+    "ready_batch": [
+      "AUTO-CHK-002",
+      "AUTO-CHK-001",
+      "AUTO-CHK-003",
+      "AUTO-CHK-006",
+      "AUTO-CHK-013",
+      "AUTO-CHK-007"
+    ],
+    "readiness_checks": [
+      "Each ready-batch candidate has reviewer-readable handoff fields.",
+      "Each ready-batch candidate has acceptance criteria.",
+      "Each ready-batch candidate has proof_surface_contract.",
+      "The review checkpoint explains what to automate first and what is intentionally not a matrix."
+    ],
+    "next_action": "Reviewer should approve or revise ranks 1-6, decide whether Stripe provider volume changes AUTO-CHK-002, or explicitly promote AUTO-CHK-008 package reporting as a separate priority.",
+    "confidence": "High"
+  },
+  "duplicate_outcome_proof_surface_check": {
+    "timestamp": "2026-07-13",
+    "id": "DUP-CHK-003",
+    "type": "proof_surface_refinement",
+    "candidate_id": "AUTO-CHK-002",
+    "result": "No ranking change. AUTO-CHK-002 remains rank 1 and now has a clearer future proof recipe.",
+    "qa_handoff": "Build one duplicate-submit proof by composing existing surfaces: preserve replay evidence, return invoiceData.transaction_id, filter Dashboard by that transaction id, and verify confirmation/My Orders show exactly the expected ticket set once.",
+    "proof_surfaces": [
+      "Authorize diagnostic-replay-purchase captures and replays the same real /purchase/ payload.",
+      "Authorize repro state stores purchaseResponses and purchaseReplays and attaches them as JSON test evidence.",
+      "PaymentStep returns invoiceData and asserts the confirmation transaction id matches invoiceData.transaction_id.",
+      "TransactionPage.filterByTransactionId waits for the transaction-id-filtered invoices response and asserts exactly one actions row.",
+      "MyOrdersPage.verifyOrderConfirmationThroughCheckout opens order detail by invoiceData.transaction_id and verifies expected item details.",
+      "CheckoutResult can carry invoiceData, item type, item id, and quantity out of terminal payWith* flows."
+    ],
+    "backend_evidence": [
+      "Public purchase validation locks the basket and rejects purchase if invoice_id already exists.",
+      "Venue purchase validation locks the basket and rejects purchase if invoice_id already exists.",
+      "Basket concurrency docs call out checkout idempotency and locking."
+    ],
+    "implementation_shape_later": [
+      "Use WebPublic guest diagnostic-replay-purchase first unless Stripe provider priority overrides it.",
+      "Change the repro runner to return CheckoutResult or invoiceData instead of void.",
+      "Assert repro state contains the scheduled replay and replay response evidence.",
+      "Use invoiceData.transaction_id to prove exactly one Dashboard transaction row.",
+      "Use confirmation/My Orders or API item detail to prove exactly one expected ticket set was issued."
+    ],
+    "not_a_matrix": "Do not add every provider/surface/retry style first. The first proof is one deterministic replay plus one final-state assertion chain."
+  },
+  "ranking_sanity_check": {
+    "timestamp": "2026-07-13",
+    "id": "RANK-CHK-002",
+    "type": "p0_ranking_sanity_check",
+    "source": "Worker State top-candidate handoff fields plus REVIEW-CHK-001 after SEAT-CHK-001",
+    "checks": [
+      "Ranks 1-6 are direct money-movement, fulfillment, inventory, seat-ownership, or total-reconciliation risks.",
+      "Ranks 1-6 each have one representative Playwright proof rather than a scenario matrix.",
+      "Ranks 1-6 each have acceptance criteria that can be handed to another QA.",
+      "AUTO-CHK-002 remains first by automation readiness, with provider-volume caveat preserved.",
+      "AUTO-CHK-008 remains review-separately because it is reporting/payout reconciliation rather than direct charge/failure protection.",
+      "SEAT-CHK-001 refined rank 5 without changing the ranking: AUTO-CHK-013 is one best-available assigned-seat failure/retry proof, not a seating matrix.",
+      "P1/lower candidates remain backlog context and should not be reopened without reviewer direction or new incident/provider evidence."
+    ],
+    "recommended_reviewer_action": "Approve ranks 1-6 as the next Playwright automation batch, decide whether Stripe volume should alter AUTO-CHK-002 provider path, and decide whether AUTO-CHK-008 stays in the immediate batch.",
+    "ranking_change": "none; current best remains AUTO-CHK-002",
+    "next_planning_action": "Do not do broad exploration before reviewer input. If resumed without reviewer changes, only perform targeted P0 assertion-contract or fixture-leverage checks that could change the current ranking."
+  },
+  "provider_order_check": {
+    "timestamp": "2026-07-13",
+    "id": "PROVIDER-CHK-001",
+    "type": "provider_order_check",
+    "question": "Should Stripe replace the existing Authorize.net replay path as the first duplicate-submit automation target?",
+    "result": "No ranking change. Keep AUTO-CHK-002 first by automation readiness. The inspected source shows ready Authorize replay mechanics and broad Stripe checkout coverage, but not an inspected Stripe duplicate-submit/replay harness.",
+    "why": "The business invariant is provider-agnostic: duplicate submit or retry must create exactly one paid transaction/order/ticket set. The current first implementation should use the path with a ready replay harness unless the reviewer confirms Stripe volume/business priority should drive the first proof.",
+    "stripe_evidence": [
+      "Stripe System/Custom Gateway PaymentIntent and Charge API card tests are configured as critical single-event checkout paths.",
+      "Stripe PaymentIntent post-transaction flow waits for basket invoice_id/status and financial invoice response.",
+      "No inspected Playwright file showed a Stripe duplicate-submit, panic-click, or same-/purchase/ replay harness."
+    ],
+    "authorize_evidence": [
+      "Authorize diagnostic-replay-purchase is a configured real repro scenario.",
+      "The Authorize helper captures the original /purchase/ request and posts the same payload again after a delay.",
+      "The shared submit guard only applies to Authorize.net, so existing duplicate-submit tooling is provider-specific rather than generic."
+    ],
+    "backend_evidence": [
+      "User purchase validation locks the basket and rejects purchase if invoice_id already exists.",
+      "The basket is marked purchase_in_progress while frontend/provider payment confirms.",
+      "Post-purchase locks the basket and asserts post_purchase_completed is false and ticket_items.count() is zero before issuing tickets."
+    ],
+    "recommendation": "Keep AUTO-CHK-002 rank 1. In the review checkpoint, default to the existing Authorize diagnostic replay proof. Promote a Stripe-specific duplicate-submit/retry proof only if Stripe production volume is the deciding business input and a safe deterministic replay/retry design is chosen.",
+    "inspected_files": [
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/misc/Authorize/authorize-invalid-ots-repro.config.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/misc/Authorize/authorize-invalid-ots-repro.helpers.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/events/single-events-config.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/steps/PaymentStep.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/utils/authorize-submit-guard.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/serializers.py",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/models/order_management/order_basket.py"
+    ],
+    "no_coverage_found": "No coverage found in inspected files for a Stripe duplicate-submit/retry or same-/purchase/ replay Playwright harness.",
+    "ranking_change": "none; current best remains AUTO-CHK-002",
+    "confidence": "High"
+  },
+  "stripe_duplicate_design_check": {
+    "timestamp": "2026-07-13",
+    "id": "STRIPE-CHK-001",
+    "type": "provider_handoff_refinement",
+    "question": "Does Stripe evidence change what we should automate first for duplicate-submit/retry risk?",
+    "result": "No ranking change. AUTO-CHK-002 remains the top automation candidate because duplicate-submit final-state integrity is the risk. The default first path is still the existing Authorize replay harness because it is ready. Stripe should replace it only if provider volume/business priority says the first proof must cover Stripe.",
+    "why": "The source-backed invariant is provider-agnostic: duplicate purchase attempts must produce one paid transaction/order/ticket set. Frontend source shows concurrent purchase calls can be initiated, backend source has the basket lock and already-invoiced rejection, and Playwright has broad Stripe checkout coverage but no inspected Stripe replay or duplicate-submit harness.",
+    "qa_handoff": "Tell the implementing QA to automate one duplicate-submit final-state proof. Default to Authorize diagnostic replay; switch to Stripe only if the review decision says provider volume makes Stripe the first business-priority target.",
+    "stripe_if_chosen": {
+      "what_to_build_later": "One deterministic Stripe duplicate-submit/retry proof, not a provider matrix.",
+      "recommended_shape": "Use WebPublic Stripe System Gateway PaymentIntent card checkout, capture the normal /purchase/ POST, replay the same purchase payload once after the original settles or after a short controlled delay, then assert one final paid outcome.",
+      "acceptance_criteria": [
+        "The original Stripe checkout completes or reaches the controlled replay point.",
+        "The same /purchase/ request is replayed once with preserved evidence.",
+        "Replay is rejected or produces no second paid outcome.",
+        "Dashboard/API shows exactly one paid transaction/order/invoice for the captured transaction id or basket context.",
+        "Issued ticket count matches the requested quantity once."
+      ],
+      "do_not_start_with": "Do not begin with every Stripe mode, 3DS, wallet, webhook, Widget, Box Office, or panic-click variant. Add variants only if they prove a different duplicate-outcome risk."
+    },
+    "backend_evidence": [
+      "Purchase validation locks the basket with select_for_update and rejects when invoice_id already exists.",
+      "The basket is marked purchase_in_progress before finalization unless kept pending.",
+      "PaymentValidationError refreshes basket idempotency key after rollback.",
+      "Stripe PaymentIntent setup has a dedicated stripe/payment-intent action and can lock basket row behind a waffle switch.",
+      "Stripe payment metadata includes basket_id, basket_uuid, customer email, and idempotency_key."
+    ],
+    "frontend_evidence": [
+      "PaymentManager.purchase starts a purchase flow but race-condition tests demonstrate two concurrent purchase calls are not guarded at manager level.",
+      "StripePaymentGateway.purchase sends purchaseData to repository.purchase for the basket.",
+      "Public checkout PurchaseButton triggers the purchase flow through the Complete transaction button."
+    ],
+    "playwright_evidence": [
+      "Single-event checkout config contains critical Stripe System/Custom Gateway PaymentIntent and Charge API card flows.",
+      "PaymentStep.submitOrder waits for /purchase/ and returns invoiceData after confirmation.",
+      "PaymentIntent checkout flow waits for basket invoice_id/status and financial invoice response.",
+      "Authorize diagnostic-replay-purchase already captures and replays the real /purchase/ payload."
+    ],
+    "inspected_files": [
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/serializers.py",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/viewsets.py",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/models/order_management/order_basket.py",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/shared/modules/payments/PaymentManager.race-conditions.test.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/shared/modules/payments/PaymentManager.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/shared/modules/payments/gateways/StripePaymentGateway/StripePaymentGateway.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/shared/checkout/components/steps/payment/components/PurchaseButton.web.tsx",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/shared/checkout/components/steps/payment/hooks/usePurchaseFlow.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/events/single-events-config.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/steps/PaymentStep.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/shared/components/buttons/CompleteTransactionButton.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/misc/Authorize/authorize-invalid-ots-repro.config.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/misc/Authorize/authorize-invalid-ots-repro.helpers.ts"
+    ],
+    "no_coverage_found": "No coverage found in inspected files for a Stripe duplicate-submit/retry or same-/purchase/ replay Playwright harness.",
+    "ranking_change": "none; current best remains AUTO-CHK-002",
+    "confidence": "High",
+    "verification_needed": "Production provider volume is not in source. Reviewer should decide whether Stripe business priority overrides the faster ready Authorize replay proof."
+  },
+  "failed_payment_provider_check": {
+    "timestamp": "2026-07-13",
+    "id": "FAILED-CHK-001",
+    "type": "failed_payment_provider_path_check",
+    "question": "Should AUTO-CHK-001 use failed Affirm or a Stripe decline/failure path as the first no-paid-outcome Playwright proof?",
+    "result": "No ranking change. Keep failed Affirm WebPublic guest as the first proof because it is the inspected deterministic failed-payment Playwright path. Stripe decline/failure should be added later only if reviewer/provider priority requires a Stripe-specific failed-payment representative.",
+    "why": "The missing assertion is final state after a failed payment: no paid invoice/order, no usable tickets, and no permanent inventory/seat ownership. Existing failed Affirm coverage already drives a provider failure and returns the buyer to payment. Inspected Stripe evidence showed declined-card fixture data and unit-level Stripe error handling, but no end-to-end Stripe decline no-paid-outcome Playwright proof.",
+    "qa_handoff": "Tell the implementing QA to start with failed Affirm WebPublic guest, return failure context from the flow, then assert no paid invoice/order/tickets for the failed attempt. Do not start by building Stripe decline unless reviewer explicitly chooses Stripe as the representative failure provider.",
+    "stripe_if_chosen": {
+      "what_to_build_later": "One deterministic Stripe decline or PaymentIntent failure no-paid-outcome proof.",
+      "recommended_shape": "Use the existing declined Stripe test card only after confirming the checkout flow can deterministically produce a failed provider state without flake or secrets, then reuse the same no-paid invoice/order/ticket assertions.",
+      "do_not_start_with": "Do not build a matrix of card decline, 3DS failure, webhook failure, Widget, and assigned seating before the first failed-payment no-paid-outcome proof is stable."
+    },
+    "backend_evidence": [
+      "TicketBasketPurchaseService finalizes purchase inside a transaction and refreshes idempotency after PaymentValidationError.",
+      "User purchase serializer also refreshes basket idempotency after PaymentValidationError outside its atomic block.",
+      "These support a retryable failed-payment state but do not by themselves prove no paid final state in Playwright."
+    ],
+    "frontend_evidence": [
+      "PaymentManager catches purchase errors, resets basket state, and attempts gateway renewCheckoutSession for recovery.",
+      "useBasketPaymentService.reset calls the basket reset endpoint and returns basket state to pending when an ambient basket exists.",
+      "Stripe error serialization unit coverage includes card_declined / requires_payment_method handling."
+    ],
+    "playwright_evidence": [
+      "single-events-affirm-failed generates WebPublic and Widget matrices for failed Affirm.",
+      "WebPublic failed Affirm path calls payWithAffirmExpectingFailure().result().",
+      "PaymentStep submitAffirmFailureOrder asserts the /purchase/ payload and then fails on the Stripe Affirm page.",
+      "A declined Stripe card fixture exists, but rg found no inspected Playwright usage of declinedByBank, wrongCvv, or card_declined in checkout tests."
+    ],
+    "inspected_files": [
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/events/single-events-affirm-failed.test.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/steps/PaymentStep.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/fixtures/staticData/test-cards.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/shared/modules/payments/PaymentManager.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/shared/modules/payments/services/useBasketPaymentService.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/shared/modules/payments/utils/stripe/stripe.test.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/services/purchase/ticket_basket_purchase_service.py",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/serializers.py"
+    ],
+    "no_coverage_found": "No coverage found in inspected Playwright files for a Stripe declined-card or PaymentIntent failure no-paid-outcome E2E proof.",
+    "ranking_change": "none; AUTO-CHK-001 remains rank 2 and current best remains AUTO-CHK-002",
+    "confidence": "High",
+    "verification_needed": "Reviewer/provider priority can still choose Stripe decline as the first failed-payment provider path, but source inspection does not show a ready Stripe failed-payment Playwright harness."
+  },
+  "failed_payment_no_paid_outcome_surface_check": {
+    "timestamp": "2026-07-13",
+    "id": "FAILED-CHK-002",
+    "type": "failed_payment_no_paid_outcome_surface_sync",
+    "candidate_id": "AUTO-CHK-001",
+    "result": "No ranking change. AUTO-CHK-001 remains rank 2, but its Worker State candidate now has an explicit proof_surface_contract for later implementation.",
+    "what_to_automate": "One failed-payment no-paid-outcome proof: payment fails, then no paid invoice/order, no invoice items/tickets, and no permanent inventory ownership exist for that failed attempt.",
+    "first_action": "Use failed Affirm WebPublic guest. Return FailedCheckoutContext from payWithAffirmExpectingFailure().result(), keep UI failure recovery assertions, then run exact negative lookups using buyer/event/ticket context.",
+    "not_a_matrix": "Do not start with every provider, failure type, platform, assigned-seating branch, or webhook failure. Stripe failure can be promoted only if provider priority overrides the ready failed-Affirm path.",
+    "source_backed_assertion_contract": [
+      "FailedPaymentStep currently returns void, so it must return context before strong negative assertions can be added.",
+      "CartResult already carries item id, item type, requested quantity, quantity, and items added.",
+      "Venue invoice search/filter supports exact email and transaction/order context for absence checks.",
+      "Venue invoice-items endpoint supports event and ticket_type filters for absence of item lines.",
+      "PaymentManager and basket reset behavior support buyer recovery after purchase errors, but Playwright still needs final-state absence proof."
+    ],
+    "evidence_refs": [
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/events/single-events-affirm-failed.test.ts:31",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/events/single-events-affirm-failed.test.ts:89",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:136",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:298",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:1326",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-engine.ts:80",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/steps/PaymentStep.ts:390",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/external/AffirmPaymentPage.ts:61",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/serializers.py:1104",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/serializers.py:1209",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/filters/filters.py:194",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/filters/filters.py:244",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/viewsets/viewsets.py:219",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/viewsets/viewsets.py:663",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/shared/modules/payments/PaymentManager.ts:626",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/shared/modules/payments/services/useBasketPaymentService.ts:115"
+    ],
+    "ranking_change": "none; current best remains AUTO-CHK-002 and AUTO-CHK-001 remains rank 2",
+    "confidence": "High",
+    "verification_needed": "Later implementation must use unique buyer/test data and exact API filters so the absence checks cannot pass or fail because of prior runs."
+  },
+  "dashboard_settlement_assertion_check": {
+    "timestamp": "2026-07-13",
+    "id": "DASH-CHK-001",
+    "type": "dashboard_settlement_assertion_leverage_check",
+    "question": "Should AUTO-CHK-003 create a new checkout scenario or upgrade the existing Dashboard transaction verification helper?",
+    "result": "No ranking change. AUTO-CHK-003 remains rank 3 and should be implemented later as a shared Dashboard settlement assertion/helper upgrade, not a new checkout scenario.",
+    "why": "The money risk is that checkout and Dashboard can disagree about the amount actually paid. Source shows Dashboard Settlement amount deliberately uses amount_paid, not the gross/header value. Existing Playwright Box Office checkout callers already pass expected totals into TransactionPage.verifyTransaction, but the helper currently verifies identity/contact fields and does not assert pricingFeesTaxes or the Settlement amount row.",
+    "qa_handoff": "Tell the implementing QA to add one assertion to TransactionPage.verifyTransactionDetails: open the completed transaction, find financial-breakdown-row-Settlement amount, and compare it to pricingFeesTaxes.valueOnTransactionPage. Prove it first with an existing Box Office discounted checkout caller.",
+    "what_not_to_do": "Do not create a new checkout flow for this first. Do not assert the header/gross revenue value. Do not build a matrix of discount, fee, tax, credit, and gift-card cases before the shared settlement assertion works.",
+    "backend_evidence": [
+      "Venue invoice serializer exposes amount_paid and transaction_id.",
+      "Venue invoice viewset supports transaction_id search/lookup for transaction detail identity."
+    ],
+    "frontend_evidence": [
+      "toTransaction maps amount_paid to amountPaid.",
+      "SaleStyleBreakdown comments that Settlement amount deliberately reads amount_paid while the header reads gross amount.",
+      "SaleStyleBreakdown renders a highlighted Settlement amount row using amountPaid.",
+      "BreakdownLineItem exposes stable data-testid financial-breakdown-row-{label}."
+    ],
+    "playwright_evidence": [
+      "TransactionPage.verifyTransaction accepts pricingFeesTaxes.valueOnTransactionPage.",
+      "TransactionPage.verifyTransactionDetails currently checks customer identity, sold-by email, transaction id, and labels but not Settlement amount.",
+      "Box Office journey passes expectedTotal or priceDetails.expectedTotal into pricingFeesTaxes.valueOnTransactionPage.",
+      "Single discount Box Office checkout test passes expectedTotalBO into verifyTransaction."
+    ],
+    "inspected_files": [
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/serializers/serializers.py",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/viewsets/viewsets.py",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/transactions/domain/toTransaction.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/transactions/ui/components/transactions-detail/financial-breakdown/variants/SaleStyleBreakdown.web.tsx",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/transactions/ui/components/transactions-detail/financial-breakdown/BreakdownLineItem.web.tsx",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/dashboard/box-office/TransactionPage.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/box-office-journey.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/discounts/single-discount-code.test.ts"
+    ],
+    "ranking_change": "none; AUTO-CHK-003 remains rank 3 and current best remains AUTO-CHK-002",
+    "confidence": "High",
+    "verification_needed": "Later implementation should confirm the expected total string format matches Dashboard currency formatting and failure output names transaction id/number plus expected and actual Settlement amount."
+  },
+  "dashboard_settlement_contract_sync": {
+    "timestamp": "2026-07-13",
+    "id": "DASH-CHK-002",
+    "type": "dashboard_settlement_contract_sync",
+    "candidate_id": "AUTO-CHK-003",
+    "result": "No ranking change. AUTO-CHK-003 remains rank 3, but its Worker State candidate now has an explicit proof_surface_contract for later implementation.",
+    "what_to_automate": "One shared Dashboard transaction helper assertion: completed checkout's expected paid total must match the Dashboard Settlement amount row.",
+    "first_action": "Extend TransactionPage.verifyTransactionDetails to read financial-breakdown-row-Settlement amount and compare it with pricingFeesTaxes.valueOnTransactionPage, then prove it through an existing Box Office discounted checkout caller.",
+    "not_a_matrix": "Do not create a new checkout scenario or fee/discount/tax matrix first. One helper assertion should strengthen existing callers that already pass expected totals.",
+    "source_backed_assertion_contract": [
+      "Backend VenueBasedInvoiceSerializer exposes amount_paid and transaction_id.",
+      "Frontend toTransaction maps amount_paid to amountPaid.",
+      "SaleStyleBreakdown intentionally renders Settlement amount from amountPaid instead of gross/header revenue.",
+      "BreakdownLineItem exposes financial-breakdown-row-{label} test ids.",
+      "TransactionPage.verifyTransaction already accepts pricingFeesTaxes.valueOnTransactionPage.",
+      "Existing Box Office callers already pass expectedTotal/expectedTotalBO into verifyTransaction."
+    ],
+    "evidence_refs": [
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/serializers/serializers.py:636",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/viewsets/viewsets.py:219",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/transactions/domain/toTransaction.ts:74",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/transactions/ui/components/transactions-detail/financial-breakdown/BreakdownLineItem.web.tsx:48",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/transactions/ui/components/transactions-detail/financial-breakdown/variants/SaleStyleBreakdown.web.tsx:218",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/dashboard/box-office/TransactionPage.ts:235",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/dashboard/box-office/TransactionPage.ts:301",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/box-office-journey.ts:512",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/discounts/single-discount-code.test.ts:417"
+    ],
+    "ranking_change": "none; current best remains AUTO-CHK-002 and AUTO-CHK-003 remains rank 3",
+    "confidence": "High",
+    "verification_needed": "Later implementation should normalize expected/rendered currency formatting and include transaction number/id plus expected/actual Settlement amount in failure output."
+  },
+  "mixed_basket_contract_sync": {
+    "timestamp": "2026-07-13",
+    "id": "MIXED-CHK-002",
+    "type": "mixed_basket_contract_sync",
+    "candidate_id": "AUTO-CHK-006",
+    "result": "No ranking change. AUTO-CHK-006 remains rank 4, but its Worker State candidate now has an explicit proof_surface_contract for later implementation.",
+    "what_to_automate": "One mixed-basket final-state proof: a buyer pays for one event ticket plus one checkout add-on product, then the final order proves both fulfillment lines and the combined paid total.",
+    "first_action": "Use the existing WebPublic CheckoutAddOns path. Capture the base event ticket expectation from the addItemToCart response and event ticket fixture fields, build add-on product ItemDetails from addOns, then pass both lines into verifyOrderConfirmationThroughCheckout with the existing combined total helper.",
+    "not_a_matrix": "Do not start with product, add-on, membership, package, fee, discount, and platform permutations. One event-ticket plus product-add-on proof covers the mixed-basket invariant first.",
+    "source_backed_assertion_contract": [
+      "Backend checkout docs identify TicketBasket as the mutable container for tickets and products/add-ons.",
+      "Backend purchase docs say ticket/product lines branch into issued item outcomes after purchase.",
+      "Venue invoice-items API exposes invoice item fields and can filter by invoice transaction id, event, ticket_type, product, and product_attribute if UI proof is insufficient.",
+      "The existing CheckoutAddOns Playwright branch adds an event ticket before checkout and completes payment with addOns.",
+      "The existing combined total helper already returns checkoutAddOns.combinedTotal for add-on checkout.",
+      "The inspected order confirmation verification currently builds expected itemDetails only from addOns, so it can miss a missing base ticket line."
+    ],
+    "evidence_refs": [
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/docs/systems/ticket_baskets_checkout_state_and_inventory.md:14",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/docs/systems/ticket_basket_purchase_flow.md:28",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/serializers/serializers.py:667",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/filters/filters.py:244",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/viewsets/viewsets.py:663",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts:298",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts:311",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts:405",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts:434",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts:442",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/user/account/my-orders/MyOrdersPage.ts:76",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/user/account/my-orders/MyOrdersPage.ts:231",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/utils/payment-helpers.ts:141"
+    ],
+    "ranking_change": "none; current best remains AUTO-CHK-002 and AUTO-CHK-006 remains rank 4",
+    "confidence": "High",
+    "verification_needed": "Later implementation should confirm the base event ticket display fields and add venue invoice-items API reconciliation only if UI order detail cannot prove both lines."
+  },
+  "assigned_seating_contract_sync": {
+    "timestamp": "2026-07-13",
+    "id": "SEAT-CHK-002",
+    "type": "assigned_seating_contract_sync",
+    "candidate_id": "AUTO-CHK-013",
+    "result": "No ranking change. AUTO-CHK-013 remains rank 5, but its Worker State candidate now has an explicit proof_surface_contract for later implementation.",
+    "what_to_automate": "One assigned-seat failed-payment and retry ownership proof: capture the selected seat, fail payment, prove no paid owner, retry, then prove exactly one paid ticket owns that same seat.",
+    "first_action": "Use WebPublic best-available assigned seating. Capture selected seat identifiers from the basket response before payment, use failed Affirm for the failed attempt, run negative seat/order/ticket lookups, then retry once and assert the same identifiers appear on exactly one paid ticket/order.",
+    "not_a_matrix": "Do not start with manual selection, Widget, Box Office, location seating, every provider failure, or canvas assertions. One best-available WebPublic failed-Affirm plus retry proof covers the core seat-ownership invariant first.",
+    "source_backed_assertion_contract": [
+      "Assigned seating uses EventSeatUsage/EventLocationUsage as event-time claim records and basket holds can create temporary usage state before final purchase.",
+      "EventSeatUsage is the concrete seat claim with basket and basket-hold traceability.",
+      "Seat permissions distinguish claimed seats and hold-claimed seats, and purchased item groups mark selected permissions sold.",
+      "User ticket-item serialization exposes seat identifier, location_identifier, and segment_identifier for assigned-seating order proof.",
+      "Best-available assigned seating can return the basket response before payment and captureSeatIdentifiers extracts serialized seat identifiers from that response.",
+      "Existing assigned-seating Playwright coverage proves successful card purchase, while generic failed-Affirm coverage proves a failed payment path, but inspected coverage does not combine them into assigned-seat failed-payment/retry ownership proof."
+    ],
+    "evidence_refs": [
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/docs/systems/assigned_seating_and_permissions.md:61",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/docs/systems/ticket_baskets_checkout_state_and_inventory.md:68",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/models/seating_management/seating_usage.py:14",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/models/seating_management/seating_permissions.py:431",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/models/seating_management/seating_permissions.py:448",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/serializers.py:1228",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/serializers.py:1305",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/viewsets.py:807",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/assigned-seating/BestAvailableSeatSelection.ts:54",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/assigned-seating/SeatingPage.ts:129",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/utils/api-helpers.ts:221",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:750",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:1454",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/assigned-seating/events/assigned-seating-purchase-flows.ts:70",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/events/single-events-affirm-failed.test.ts:89",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/steps/PaymentStep.ts:390"
+    ],
+    "ranking_change": "none; current best remains AUTO-CHK-002 and AUTO-CHK-013 remains rank 5",
+    "confidence": "High",
+    "verification_needed": "Later implementation should confirm the exact API filter for no-paid seat ownership after failed payment and keep canvas state out of the primary proof."
+  },
+  "tracking_link_contract_sync": {
+    "timestamp": "2026-07-13",
+    "id": "TRACK-CHK-002",
+    "type": "tracking_link_contract_sync",
+    "candidate_id": "AUTO-CHK-007",
+    "result": "No ranking change. AUTO-CHK-007 remains rank 6, but its Worker State candidate now has an explicit proof_surface_contract for later implementation.",
+    "what_to_automate": "One checkout-link unavailable-item pruning proof: review page shows unavailable configured items, payment proceeds only with remaining available items, and final paid order/total excludes unavailable quantities.",
+    "first_action": "Extend or wrap fromCheckoutLink so the test pauses on the review page before ReviewCheckoutButton.clickCheckoutButton(), asserts unavailable items, records requested/removed/remaining quantities and pruned total, then completes card payment and verifies the final order.",
+    "not_a_matrix": "Do not start with every checkout-link configuration, platform, customer state, or unavailable-item type. One deterministic partial-unavailability link proves the final-state invariant first.",
+    "source_backed_assertion_contract": [
+      "Checkout-link review uses modifyItems and carries latest basket config so multiple extras stay on the same basket.",
+      "Checkout-link review preserves existing basket identity before processing configured extras.",
+      "Checkout-link review renders an unavailable-items heading for failed extras before checkout continues.",
+      "Existing Playwright tracking-link coverage opens checkout links and pays with card for normal link data.",
+      "ReviewCheckoutButton is the boundary to pause before checkout continues.",
+      "PaymentStep returns invoice data after payment and My Orders can verify item details and total for the paid order."
+    ],
+    "evidence_refs": [
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/shared/checkout/components/CheckoutTrackingLinkReview/CheckoutTrackingLinkReview.web.tsx:73",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/shared/checkout/components/CheckoutTrackingLinkReview/CheckoutTrackingLinkReview.web.tsx:191",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/shared/checkout/components/CheckoutTrackingLinkReview/CheckoutTrackingLinkReview.web.tsx:367",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts:687",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/web/checkout/tracking-links/checkout-tracking-links-runner.ts:101",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/web/checkout/tracking-links/checkout-tracking-links-runner.ts:115",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/CheckoutLinkPage.ts:11",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/shared/components/buttons/ReviewCheckoutButton.ts:10",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-engine.ts:108",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/steps/PaymentStep.ts:436",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/user/account/my-orders/MyOrdersPage.ts:76",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/analytics/models.py:584",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/analytics/models.py:617"
+    ],
+    "ranking_change": "none; current best remains AUTO-CHK-002 and AUTO-CHK-007 remains rank 6",
+    "confidence": "High",
+    "verification_needed": "Later implementation should confirm a deterministic partial-unavailability fixture and expected pruned-total calculation before writing the Playwright test."
+  },
+  "package_reporting_check": {
+    "timestamp": "2026-07-13",
+    "id": "PACKAGE-CHK-001",
+    "type": "package_reporting_batch_fit_check",
+    "question": "Should AUTO-CHK-008 package revenue-realization reporting stay in the immediate Playwright batch?",
+    "result": "No ranking change. AUTO-CHK-008 remains a real lower-P0 reporting/payout packet, but ranks 1-6 remain the recommended next Playwright batch because they protect more direct duplicate-charge, failed-payment, final-state, fulfillment, seat-ownership, and unavailable-inventory risks.",
+    "why": "Backend source shows package revenue-realization affects reporting and settlement truth through child invoice-item stat fields. Existing Playwright package coverage proves purchase paths across WebPublic, Widget, and Box Office, but inspected files do not assert child stat allocation or reporting reconciliation. The missing proof is valuable but less immediate than direct charge/failure/fulfillment risks unless package reporting/payout confidence is a current business priority.",
+    "backend_evidence": [
+      "Package realization is a two-stage system and can change reporting/settlement truth without changing the parent sale.",
+      "Purchase-time allocation sets percent_allocation_applied_from_package on child item groups.",
+      "Invoice-item propagation disperses parent stat totals into child *_stat fields.",
+      "Backend tests prove parent stats can zero while child invoice items carry realized final_amount_stat, amount_paid_stat, amount_earned_stat, service_charges_stat, and fee stats.",
+      "Venue invoice-items API exposes final_amount_stat, amount_paid_stat, amount_earned_stat, tax_stat, and is_sub_ticket."
+    ],
+    "playwright_evidence": [
+      "Package purchase flows cover WebPublic, Widget, and Box Office package checkout paths.",
+      "Package fixtures define package totals and package content, but inspected fixture fields do not expose expected child revenue allocation values."
+    ],
+    "no_coverage_found": "No coverage found in inspected files for package child revenue-realization final_amount_stat, amount_paid_stat, amount_earned_stat, is_sub_ticket, or percent allocation assertions in Playwright package tests/pages/fixtures.",
+    "inspected_files": [
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/packages/package-purchase-flows.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/packages/package-composable-helpers.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/fixtures/staticData/event-packages.ts",
+      "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/docs/systems/package_revenue_realization.md",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/docs/systems/financial_flows.md",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/services/revenue_realization/ticket_item_group_allocation.py",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/services/revenue_realization/invoice_item_propagation/invoice_item_propagators.py",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/main/tests/test_modules/test_module_prices/test_per_item_fee_application.py",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/serializers/serializers.py",
+      "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/viewsets/viewsets.py"
+    ],
+    "recommendation": "Keep AUTO-CHK-008 as review-separately lower P0. Include it in the next batch only if package reporting/payout confidence is a current business priority; otherwise implement ranks 1-6 first.",
+    "ranking_change": "none; current best remains AUTO-CHK-002",
+    "confidence": "Medium-High"
   },
   "candidates": [
     {
@@ -219,7 +968,7 @@
       "priority": "P0",
       "score": 96,
       "title": "Duplicate submit/retry creates one paid outcome",
-      "status": "planning_ready",
+      "status": "planning_ready_proof_refined",
       "confidence": "High",
       "why_now": "Duplicate charge and duplicate order risks are P0; existing repro harness exercises risky behavior but does not prove exactly one final paid outcome.",
       "entry_path": "WebPublic / Widget / Box Office",
@@ -280,25 +1029,32 @@
           "note": "Payment completion returns invoiceData and verifies confirmation order ID matches invoiceData.transaction_id."
         }
       ],
-      "what_to_automate": "Duplicate-submit/retry checkout final-state proof.",
-      "qa_handoff": "Build one Playwright test that tries to submit or replay the same checkout purchase twice, then proves the buyer ends with exactly one paid outcome.",
-      "first_action": "Default path: use the existing Authorize.net diagnostic-replay-purchase scenario because the replay harness already exists. If the team says Stripe volume should drive this priority, first create or find the same duplicate-submit proof for Stripe and use the same assertions.",
-      "decision_needed": "Provider choice only: should the first duplicate-submit proof use the existing Authorize.net replay harness, or should we prioritize a Stripe equivalent because Stripe has higher production volume?",
-      "default_decision": "If no provider decision is made, proceed with the existing Authorize.net replay proof because it is the fastest available way to test the duplicate-submit invariant.",
+      "what_to_automate": "Duplicate-submit/retry final-state proof: one buyer attempt is submitted or replayed twice, but only one paid transaction/order/ticket set exists.",
+      "qa_handoff": "Build one Playwright proof for duplicate purchase attempts. This is about the one-paid-outcome invariant; Authorize is only the ready default harness, not the business claim that Authorize is more important than Stripe.",
+      "first_action": "Default path: use the existing Authorize.net diagnostic-replay-purchase WebPublic guest scenario. Change the runner to return CheckoutResult or invoiceData, preserve the replay evidence attachment, then use invoiceData.transaction_id to assert exactly one Dashboard transaction row and one confirmation/My Orders ticket set. If reviewer says Stripe volume should drive the first proof, build the same deterministic capture/replay shape on WebPublic Stripe System Gateway PaymentIntent card checkout first.",
+      "decision_needed": "Provider choice only: use the ready Authorize replay path by default, or explicitly promote a Stripe duplicate-submit proof if production/provider priority says Stripe should be first.",
+      "default_decision": "If no provider decision is made, proceed with the existing Authorize.net replay proof because it is the fastest available way to cover the duplicate-submit final-state invariant.",
       "acceptance_criteria": [
         "The same checkout purchase attempt is submitted or replayed twice.",
-        "Dashboard/API shows exactly one successful paid transaction for the captured transaction id.",
+        "Dashboard/API shows exactly one successful paid transaction for invoiceData.transaction_id.",
         "Exactly one paid order or invoice exists for the buyer/event checkout context.",
-        "Issued ticket count matches the requested quantity once, with no duplicate ticket set.",
+        "Confirmation/My Orders or API item detail shows the issued ticket count matches the requested quantity once, with no duplicate ticket set.",
         "Replay evidence is preserved so a reviewer can see the duplicate attempt happened."
       ],
-      "next_step": "Automate a duplicate-submit/retry final-state proof later. Default first implementation is the existing Authorize.net diagnostic-replay-purchase WebPublic guest scenario; switch to a Stripe equivalent first only if provider volume makes Stripe the higher business-priority proof.",
-      "could_change_ranking": "Lower or split this ranking if production payment volume makes Stripe the more business-critical first target, or if hidden Qase/API coverage already proves one paid outcome. Keep high if the team wants the fastest duplicate-submit final-state proof using an existing repro harness.",
-      "reader_summary": "This is ranked first as the fastest ready duplicate-submit proof because an Authorize.net replay harness already exists. It is not saying Authorize is more important than Stripe. If Stripe carries more checkout volume, a Stripe duplicate-submit/retry proof should be reviewed for promotion.",
-      "recommended_first_test": "Create one duplicate-submit proof. Use the existing Authorize.net diagnostic-replay-purchase path by default: send a normal /purchase/ request, replay the same payload, then assert one paid transaction, one order/invoice, and one issued ticket set. If Stripe volume is the business priority, build/find the same proof on Stripe first.",
-      "not_a_matrix": "Do not treat this as final provider priority. It is one ready replay proof. If Stripe is the dominant provider, create or promote the equivalent Stripe duplicate-submit/retry final-state proof before finalizing the automation order.",
+      "next_step": "Later implementation should automate one duplicate-submit/retry final-state proof. Default first implementation is the existing Authorize.net diagnostic-replay-purchase WebPublic guest scenario: return CheckoutResult/invoiceData, assert replay evidence exists, filter Dashboard by invoiceData.transaction_id, and prove one paid transaction/order/ticket set. Switch to a Stripe equivalent first only if provider volume makes Stripe the higher business-priority proof.",
+      "could_change_ranking": "Lower or split this ranking if production payment volume makes Stripe the more business-critical first target and a safe Stripe replay/retry harness is identified, or if hidden Qase/API coverage already proves one paid outcome. Keep high if the team wants the fastest duplicate-submit final-state proof using an existing repro harness.",
+      "reader_summary": "This is ranked first because duplicate paid outcomes are the highest-risk invariant and there is already one ready replay harness. It is not saying Authorize is more important than Stripe. STRIPE-CHK-001 found frontend duplicate-call risk, backend duplicate-basket protection, broad Stripe checkout coverage, and no inspected Stripe replay harness.",
+      "recommended_first_test": "Create one duplicate-submit proof. Use the existing Authorize.net diagnostic-replay-purchase WebPublic guest path by default: send a normal /purchase/ request, replay the same payload, return invoiceData, assert exactly one Dashboard transaction row for invoiceData.transaction_id, and verify confirmation/My Orders shows one expected ticket set. If Stripe volume is the business priority, use WebPublic Stripe System Gateway PaymentIntent card checkout and build the same capture/replay proof there first.",
+      "not_a_matrix": "Do not start with every provider, surface, or retry style. Pick one deterministic duplicate-submit proof; add Stripe, Widget, Box Office, 3DS, wallet, panic-click, or webhook variants only if each proves a distinct duplicate-outcome risk.",
+      "proof_surface_contract": {
+        "replay_proof": "Use AuthorizeInvalidOtsReproState.purchaseReplays plus the attached JSON evidence to prove the duplicate /purchase/ attempt happened.",
+        "identity_proof": "Use invoiceData.transaction_id returned from PaymentStep and CheckoutResult as the stable identity for Dashboard/My Orders/API lookups.",
+        "transaction_count_proof": "Use TransactionPage.filterByTransactionId to narrow Dashboard to the transaction id and assert exactly one transaction actions row.",
+        "ticket_count_proof": "Use confirmation/My Orders item detail first; add venue invoice/invoice-items API support only if UI detail cannot prove issued ticket count clearly.",
+        "provider_default": "Use Authorize replay by default because it is ready; use Stripe first only if provider volume/business priority explicitly overrides readiness."
+      },
       "ranking_basis": "Highest current automation-readiness target for duplicate-submit one-paid-outcome proof, not proof that Authorize.net is the highest-volume payment provider.",
-      "production_usage_caveat": "If Stripe carries most checkout volume, add or promote a Stripe duplicate-submit/retry final-state candidate and compare it against this Authorize repro target.",
+      "production_usage_caveat": "If Stripe carries most checkout volume, promote a Stripe duplicate-submit/retry final-state proof before or beside the Authorize repro target. STRIPE-CHK-001 did not find an existing Stripe replay harness in inspected files, so this would be a new implementation shape later.",
       "criticality_review": {
         "calibrated_on": "2026-07-09",
         "business_invariant": "Duplicate paid outcome prevention",
@@ -314,7 +1070,7 @@
       "priority": "P0",
       "score": 94,
       "title": "Failed payment no paid order/tickets/inventory",
-      "status": "planning_ready",
+      "status": "planning_ready_proof_refined",
       "confidence": "High",
       "why_now": "Highest direct payment failure integrity gap found so far.",
       "entry_path": "WebPublic / Widget",
@@ -341,7 +1097,7 @@
         {
           "type": "playwright",
           "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/steps/PaymentStep.ts",
-          "line": 386,
+          "line": 390,
           "note": "Failure helper asserts request and failure, not final no-paid-outcome state."
         },
         {
@@ -353,7 +1109,7 @@
         {
           "type": "playwright",
           "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-journey.ts",
-          "line": 1244,
+          "line": 1326,
           "note": "FailedPaymentStep currently returns void and cannot carry failure context for no-paid-outcome assertions."
         },
         {
@@ -363,29 +1119,37 @@
           "note": "Affirm failure verifies failure toast and payment-step recovery."
         }
       ],
-      "next_step": "Automate a failed-payment no-paid-outcome proof later. Start with failed Affirm WebPublic guest, return failure context from the flow, and assert no paid invoice/order, no usable tickets, and no permanent inventory consumption.",
-      "could_change_ranking": "If product requires Stripe card decline or webhook failure as the representative path, this becomes a fixture-design task; current evidence supports failed Affirm as the fastest first P0 proof.",
+      "next_step": "Later implementation should automate one failed-payment no-paid-outcome proof. Start with failed Affirm WebPublic guest, return failure context from the flow, then assert no paid invoice/order, no invoice items/tickets, and no permanent inventory ownership for the unique buyer/event/ticket context.",
+      "could_change_ranking": "If provider volume or incidents require Stripe card decline, PaymentIntent failure, or webhook failure as the representative path, this becomes a fixture-design task; current evidence supports failed Affirm as the fastest first P0 proof.",
       "reader_summary": "Protect checkout from creating paid fulfillment when the payment fails.",
-      "recommended_first_test": "Use failed Affirm on WebPublic guest checkout, return failure context, and prove no paid invoice, no issued ticket, and no permanent inventory consumption for that buyer/event/ticket.",
-      "not_a_matrix": "Do not start with every failure type. Failed Affirm is the first deterministic representative path; card decline, webhook failure, Widget, and assigned seating are later only if they prove separate risk.",
+      "recommended_first_test": "Use failed Affirm on WebPublic guest checkout. Return a FailedCheckoutContext with buyer email, event id, ticket type id, CartResult item id, requested quantity, and expected total; keep the failure toast/payment-step assertion; then prove no paid invoice and no invoice items/tickets exist for that failed attempt. Add Stripe decline later only if reviewer wants Stripe as the representative failed-payment provider.",
+      "not_a_matrix": "Do not start with every failure type. Failed Affirm is the first deterministic representative path; Stripe decline, webhook failure, Widget, and assigned seating are later only if they prove separate risk.",
       "what_to_automate": "Failed-payment no-paid-outcome proof.",
-      "qa_handoff": "Build one Playwright test where payment fails, then prove no paid order, invoice, usable tickets, or permanent inventory ownership were created.",
-      "first_action": "Start with the failed Affirm WebPublic guest path because it is already source-backed and representative of a failed payment before paid fulfillment.",
-      "decision_needed": "No product decision needed for the first proof. Add Stripe decline, Widget, or assigned-seating variants later only if they prove a different failure risk.",
+      "qa_handoff": "Build one failed-payment proof: make payment fail, then prove the failed attempt produced no paid invoice/order, no invoice items or usable tickets, and no permanent inventory ownership.",
+      "first_action": "Start with the failed Affirm WebPublic guest path. Make payWithAffirmExpectingFailure().result() return a FailedCheckoutContext instead of void, carrying buyer email, event id, ticket type id, CartResult item id, requested quantity, and expected total for negative API/Dashboard lookups.",
+      "decision_needed": "No product decision needed for the first proof. Choose Stripe decline/failure first only if reviewer/provider priority explicitly requires a Stripe-specific failed-payment representative.",
       "default_decision": "Proceed with failed Affirm WebPublic guest as the first no-paid-outcome proof.",
       "acceptance_criteria": [
         "Checkout reaches payment and the payment attempt fails intentionally.",
         "The test keeps a unique buyer, event, ticket type, quantity, and expected total context.",
-        "Dashboard/API lookup finds no paid invoice or order for that failed attempt.",
-        "No usable ticket item is issued for the failed attempt.",
+        "Venue invoice lookup by exact buyer/email context finds no paid invoice or order for that failed attempt.",
+        "Venue invoice-items lookup by event and ticket type finds no issued paid items for the failed attempt.",
         "Inventory, hold, or seat ownership is not permanently consumed by the failed attempt."
       ],
+      "proof_surface_contract": {
+        "failure_context_proof": "Change FailedPaymentStep and completeOrderExpectingAffirmFailure to return a FailedCheckoutContext instead of void; keep CartResult plus buyer email, event id, ticket type id, requested quantity, and expected total.",
+        "ui_failure_proof": "Keep AffirmPaymentPage.fail assertions that the provider failure returns the buyer to checkout and shows the payment error state.",
+        "no_invoice_proof": "Use venue invoice search/filter with a unique buyer email and relevant checkout context to assert no paid invoice/order exists for the failed attempt.",
+        "no_item_proof": "Use venue invoice-items filtering by event and ticket_type, scoped by the failed buyer/invoice context where available, to assert no paid issued item lines exist.",
+        "inventory_proof": "For the first non-seating proof, no permanent ownership is primarily proven by no paid invoice/items; deeper seat ownership belongs to AUTO-CHK-013.",
+        "provider_default": "Use failed Affirm WebPublic guest by default because it is the inspected deterministic failed-payment harness; use Stripe first only if provider priority explicitly overrides readiness."
+      },
       "criticality_review": {
         "calibrated_on": "2026-07-09",
         "business_invariant": "Failed payment must not create paid fulfillment",
         "incident_alignment": "High",
         "priority_reason": "Directly matches incidents where failed/declined payments still issue tickets or create paid state.",
-        "ranking_action": "Keep P0; first proof remains failed Affirm WebPublic guest no-paid-outcome.",
+        "ranking_action": "Keep P0; first proof remains failed Affirm WebPublic guest no-paid-outcome. Stripe decline/failure is a later provider-priority variant unless reviewer explicitly promotes it.",
         "jira_csv_reread_required": false
       }
     },
@@ -395,7 +1159,7 @@
       "priority": "P0",
       "score": 92,
       "title": "Dashboard transaction total reconciliation",
-      "status": "planning_ready",
+      "status": "planning_ready_proof_refined",
       "confidence": "High",
       "why_now": "Dashboard transaction helpers already receive expected totals, and frontend/backend expose stable amount-paid and breakdown fields, but inspected Playwright assertions do not verify post-payment money reconciliation.",
       "entry_path": "Box Office first, then one public/widget critical checkout",
@@ -404,20 +1168,20 @@
         {
           "type": "backend",
           "path": "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/serializers/serializers.py",
-          "line": 606,
+          "line": 636,
           "note": "Venue invoice serializer exposes items_total_amount, tax, discounts, amount_paid, transaction_id, amount_earned, final_amount, service_charges, and related reconciliation fields."
         },
         {
           "type": "backend",
           "path": "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/api/venue_based/viewsets/viewsets.py",
-          "line": 181,
+          "line": 219,
           "note": "VenueBasedInvoiceViewSet powers venue financial invoice reads and filters by transaction_id."
         },
         {
           "type": "frontend",
-          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/transactions/ui/components/transactions-detail/HeaderSummaryBlock.web.tsx",
-          "line": 309,
-          "note": "Dashboard transaction detail renders stable header-summary test IDs for amount, fees, taxes, and extra lines such as discounts."
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/transactions/domain/toTransaction.ts",
+          "line": 74,
+          "note": "toTransaction maps backend amount_paid to frontend amountPaid for transaction detail rendering."
         },
         {
           "type": "frontend",
@@ -434,19 +1198,19 @@
         {
           "type": "playwright",
           "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/dashboard/box-office/TransactionPage.ts",
-          "line": 276,
+          "line": 301,
           "note": "verifyTransaction accepts pricingFeesTaxes."
         },
         {
           "type": "playwright",
           "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/dashboard/box-office/TransactionPage.ts",
-          "line": 210,
+          "line": 235,
           "note": "Inspected detail assertions did not assert expected total."
         },
         {
           "type": "playwright",
           "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/box-office-journey.ts",
-          "line": 460,
+          "line": 512,
           "note": "Box Office journey passes priceDetails.expectedTotal into verifyTransaction, but the helper currently ignores it."
         },
         {
@@ -462,16 +1226,16 @@
           "note": "Existing Box Office discount test passes expectedTotalBO into verifyTransaction and can be strengthened by the helper assertion."
         }
       ],
-      "next_step": "Automate the Dashboard settlement-total assertion later by updating TransactionPage.verifyTransactionDetails, then prove it through one existing Box Office checkout with adjusted totals.",
+      "next_step": "Automate the Dashboard settlement-total assertion later by updating TransactionPage.verifyTransactionDetails to read financial-breakdown-row-Settlement amount, then prove it through one existing Box Office checkout with adjusted totals.",
       "could_change_ranking": "If AUTO-CHK-002 is deferred for Authorize harness risk, this becomes the next best unblocked automation enabler because it improves many existing checkout tests.",
       "reader_summary": "Make Dashboard transaction detail prove the same paid total that checkout expected. This is mostly a shared assertion/helper upgrade, not a new checkout scenario matrix.",
-      "recommended_first_test": "Upgrade the existing Dashboard transaction helper so an existing Box Office checkout with a known expected total asserts the transaction detail Settlement amount equals that expected total.",
-      "not_a_matrix": "Do not create product, membership, discount, fee, and tax permutations first. Add the Settlement amount assertion once, then existing tests that already pass expected totals can benefit.",
+      "recommended_first_test": "Upgrade the existing Dashboard transaction helper so an existing Box Office checkout with a known expected total asserts financial-breakdown-row-Settlement amount equals pricingFeesTaxes.valueOnTransactionPage.",
+      "not_a_matrix": "Do not create a new checkout scenario first. Add the Settlement amount assertion once, then existing tests that already pass expected totals can benefit. Add discount, fee, tax, credit, or gift-card variants only if each proves a different settlement risk.",
       "what_to_automate": "Dashboard transaction settlement-total reconciliation assertion.",
       "qa_handoff": "Upgrade the Dashboard transaction check so completed checkout tests prove the settlement amount matches the expected paid total.",
-      "first_action": "Start by adding pricingFeesTaxes to TransactionPage.verifyTransactionDetails and use an existing Box Office discounted checkout caller as the first proof.",
+      "first_action": "Start by making TransactionPage.verifyTransactionDetails assert financial-breakdown-row-Settlement amount against pricingFeesTaxes.valueOnTransactionPage, then prove it through an existing Box Office discounted checkout caller.",
       "decision_needed": "No new scenario decision needed for the first proof. This is primarily a shared assertion/helper upgrade.",
-      "default_decision": "Use an existing Box Office checkout with known fees/discounts instead of creating a new checkout flow.",
+      "default_decision": "Use an existing Box Office checkout with known fees/discounts instead of creating a new checkout flow. Assert the Settlement amount row from amount_paid, not the gross/header amount.",
       "acceptance_criteria": [
         "A completed checkout exposes the expected paid total in test data.",
         "Dashboard transaction detail opens for the completed transaction.",
@@ -479,6 +1243,14 @@
         "The assertion uses the paid amount, not a gross revenue/header value.",
         "Failure output identifies the transaction and expected/actual settlement amount."
       ],
+      "proof_surface_contract": {
+        "expected_total_source": "Use pricingFeesTaxes.valueOnTransactionPage already passed to TransactionPage.verifyTransaction, with Box Office expectedTotal/expectedTotalBO as the first proof input.",
+        "dashboard_row_source": "Read the stable financial-breakdown-row-Settlement amount test id from the opened transaction detail.",
+        "amount_semantics": "Compare against Settlement amount sourced from backend amount_paid/frontend amountPaid, not the gross/header revenue amount.",
+        "first_proof_caller": "Use an existing Box Office discounted checkout caller that already passes expectedTotalBO/valueOnTransactionPage before adding new checkout scenarios.",
+        "helper_shape": "Extend TransactionPage.verifyTransactionDetails to assert expected versus rendered Settlement amount and include transaction number/id in failure output.",
+        "not_a_new_scenario": "Do not start by adding a new checkout flow or a fee/discount/tax matrix; one shared helper assertion should strengthen existing callers."
+      },
       "criticality_review": {
         "calibrated_on": "2026-07-09",
         "business_invariant": "Dashboard/API paid-total reconciliation",
@@ -525,6 +1297,18 @@
           "note": "Generated ticket/product items copy type_id, product_id, product_attribute_id, invoice, price, and payment fields."
         },
         {
+          "type": "frontend",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/shared/checkout/components/steps/add-ons/Addons.web.tsx",
+          "line": 25,
+          "note": "Public checkout add-ons step renders ProductAddons between checkout summary and event add-ons."
+        },
+        {
+          "type": "frontend",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/public/shared/checkout/components/steps/add-ons/product-add-ons/ProductAddons.web.tsx",
+          "line": 173,
+          "note": "Product add-ons render AddonProductCard entries that can add product add-ons to the public basket."
+        },
+        {
           "type": "playwright",
           "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts",
           "line": 284,
@@ -534,7 +1318,7 @@
           "type": "playwright",
           "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts",
           "line": 405,
-          "note": "CheckoutAddOns path completes checkout with addOns supplied."
+          "note": "CheckoutAddOns path completes checkout with addOns supplied and price details from the combined total helper."
         },
         {
           "type": "playwright",
@@ -544,29 +1328,57 @@
         },
         {
           "type": "playwright",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/products/checkout-products.test.ts",
+          "line": 442,
+          "note": "The inspected verification array spreads only addOnsToItemDetails before calling order confirmation verification."
+        },
+        {
+          "type": "playwright",
           "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/user/account/my-orders/MyOrdersPage.ts",
           "line": 78,
           "note": "Order confirmation verifier checks only the itemDetails array it receives."
+        },
+        {
+          "type": "playwright",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/user/account/my-orders/MyOrdersPage.ts",
+          "line": 231,
+          "note": "verifyOrderItems iterates each received item detail and asserts matching invoice items."
+        },
+        {
+          "type": "playwright",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/utils/payment-helpers.ts",
+          "line": 141,
+          "note": "getVerificationTotal already returns checkoutAddOns.combinedTotal for checkout add-ons."
         }
       ],
-      "next_step": "Automate the mixed ticket plus add-on final-state proof later. Start with existing CheckoutAddOns, pass both item details into confirmation verification, and assert the combined paid total.",
+      "next_step": "Automate the mixed ticket plus add-on final-state proof later. Keep the existing CheckoutAddOns flow, pass both the base ticket and add-on product item details into confirmation verification, and assert the existing combined paid total.",
       "qase_context": "Read-only Qase check found partial related cases 360, 388, 466, 935, 4763, and 4817, but no exact case proving one paid event-ticket plus checkout add-on order contains both fulfillment lines and final total.",
       "could_change_ranking": "If another hidden Qase or Playwright case already proves both base ticket and add-on product in one paid transaction, lower this to no-gap; otherwise keep as rank 4 behind duplicate submit, failed-payment, and Dashboard settlement proof.",
       "reader_summary": "Prove a mixed basket actually fulfills both the event ticket and the checkout add-on product after payment.",
-      "recommended_first_test": "Upgrade the existing CheckoutAddOns test branch to pass both base ticket details and add-on product details into order confirmation verification, using the existing combined total helper.",
-      "not_a_matrix": "Do not add another product checkout path first. The value is stronger final-state proof on the existing mixed-basket path.",
+      "recommended_first_test": "Upgrade the existing CheckoutAddOns test branch to preserve the base event ticket details from the basket response, build add-on product details from addOns, pass both expected lines into order confirmation verification, and keep using the existing combined total helper.",
+      "not_a_matrix": "Do not test products, memberships, add-ons, and fee variants first. This is one focused proof that the existing event-ticket plus product-add-on checkout produces both fulfillment lines and the correct combined paid total.",
       "what_to_automate": "Mixed ticket plus checkout add-on fulfillment and total proof.",
-      "qa_handoff": "Build one Playwright proof that a buyer purchasing an event ticket plus checkout add-on gets both fulfillment lines and one combined paid total.",
-      "first_action": "Start with the existing WebPublic CheckoutAddOns path; preserve base ticket details and add-on product details, then pass both into confirmation/order verification.",
+      "qa_handoff": "Build one Playwright proof that a buyer purchasing an event ticket plus checkout add-on gets the ticket line, the add-on product line, and one combined paid total.",
+      "first_action": "Start with the existing WebPublic CheckoutAddOns path. Preserve the base event ticket ItemDetails before building add-on details, then call verifyOrderConfirmationThroughCheckout with both expected lines.",
       "decision_needed": "No product decision needed. Add venue invoice-items API proof only if UI order detail cannot reliably prove both lines.",
-      "default_decision": "Use UI confirmation/order detail plus existing combined total helper first; add API detail support only if needed.",
+      "default_decision": "Use UI confirmation/order detail plus the existing combined total helper first; add venue invoice-items API support only if the UI cannot prove both the ticket line and product add-on line.",
       "acceptance_criteria": [
         "Basket contains one base event ticket and one checkout add-on product.",
         "Payment creates one paid order/invoice for the combined basket.",
         "Confirmation or order detail shows the base ticket line.",
         "Confirmation or order detail shows the add-on product line.",
-        "Combined paid total matches the expected ticket plus add-on total."
+        "Combined paid total matches the expected ticket plus add-on total.",
+        "The test fails if confirmation/order detail only proves the add-on line and silently misses the base ticket line."
       ],
+      "proof_surface_contract": {
+        "entry_path": "Existing WebPublic CheckoutAddOns path in tests/core/checkout/products/checkout-products.test.ts.",
+        "base_ticket_proof": "Capture base event ticket expectation from the CheckoutAddOns addItemToCart response plus event ticket fixture fields. Confirm the correct displayed ticket name/group before passing it into order verification.",
+        "addon_line_proof": "Build add-on product ItemDetails from the addOns array, using variantName/name/productId/quantity.",
+        "order_detail_proof": "Pass both the base event ticket line and add-on product line into verifyOrderConfirmationThroughCheckout so My Orders/order detail must prove both expected lines for the same invoiceData.transaction_id.",
+        "total_proof": "Keep getVerificationTotal(productData, true) as the expected combined paid total source because it returns checkoutAddOns.combinedTotal for add-on checkout.",
+        "api_fallback": "If UI order detail cannot reliably distinguish both lines, use venue invoice-items API filtered by invoice transaction id plus event/ticket_type/product/product_attribute to prove the two final invoice items.",
+        "not_a_matrix": "Do not turn this into a product/add-on/membership/platform matrix. The first proof is one representative mixed basket with ticket line, add-on line, and combined paid total."
+      },
       "criticality_review": {
         "calibrated_on": "2026-07-09",
         "business_invariant": "Mixed basket fulfillment and total integrity",
@@ -586,7 +1398,7 @@
       "confidence": "High",
       "why_now": "Assigned seating has source-backed seat usage, hold-child ownership, and sold-permission state. Existing Playwright assigned-seating coverage proves successful purchases, while generic failed-payment coverage proves a non-seating failure path; inspected coverage did not prove assigned-seat ownership after failed payment and retry.",
       "entry_path": "WebPublic assigned seating event first; Widget and Box Office are adjacent follow-ups",
-      "scenario_mix": "One WebPublic best-available assigned seat, failed Affirm payment, no paid seat ownership, one successful retry, same-seat paid ownership proof.",
+      "scenario_mix": "One WebPublic best-available assigned seat, failed Affirm payment, no paid seat ownership, one successful retry, same-seat paid ownership proof using serialized seat identifiers.",
       "evidence_refs": [
         {
           "type": "backend_doc",
@@ -643,6 +1455,30 @@
           "note": "Assigned seating checkout step gates progress on successful best-available seat selection when enabled."
         },
         {
+          "type": "frontend",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/shared/modules/basket/utils/helpers.ts",
+          "line": 1566,
+          "note": "Basket item groups must carry seat or location permissions matching quantity before persisting complete assigned-seating changes."
+        },
+        {
+          "type": "frontend",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/shared/modules/basket/types/index.ts",
+          "line": 392,
+          "note": "Frontend basket item-group payload supports tt_seat_permissions and tt_location_permissions."
+        },
+        {
+          "type": "playwright",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/assigned-seating/BestAvailableSeatSelection.ts",
+          "line": 54,
+          "note": "Best-available checkout waits for the basket POST response and returns the basket JSON."
+        },
+        {
+          "type": "playwright",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/assigned-seating/SeatingPage.ts",
+          "line": 129,
+          "note": "SeatingPage exposes clickBestAvailableCheckout, which returns the basket response for stable seat capture."
+        },
+        {
           "type": "playwright",
           "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/assigned-seating/events/assigned-seating-purchase-flows.ts",
           "line": 70,
@@ -681,13 +1517,13 @@
         {
           "type": "backend",
           "path": "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/serializers.py",
-          "line": 1219,
+          "line": 1228,
           "note": "UserBasedTicketItemSerializer serializes purchased ticket items for user order proof."
         },
         {
           "type": "backend",
           "path": "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/user_based/serializers.py",
-          "line": 1296,
+          "line": 1305,
           "note": "User ticket item serializer exposes seat/location identifiers for assigned seating items."
         },
         {
@@ -723,7 +1559,7 @@
         "retry success creates exactly one paid invoice/order/ticket set",
         "final order, confirmation, Dashboard transaction, and seat map/API ownership agree on the same seat and buyer"
       ],
-      "next_step": "Automate the assigned-seat failure/retry ownership proof later. Capture best-available seat identifiers, prove no paid ownership after failed Affirm, retry once, and prove exactly one paid owner.",
+      "next_step": "Automate the assigned-seat failure/retry ownership proof later. Capture best-available seat identifiers from the basket response, fail Affirm, prove no paid ownership, retry once, and prove exactly one paid ticket owns the same seat identifiers.",
       "could_change_ranking": "Promote if assigned-seat failure/retry incidents increase or if the seat identity proof helper unlocks multiple assigned-seating money paths. Downgrade if hidden coverage already proves failed-payment no-seat-sale and retry same-seat ownership.",
       "fixture_contract": {
         "selected_seat_capture": "Use existing Playwright captureSeatIdentifiers() against the assigned-seating basket response before payment. It extracts seat identifier, location_identifier, and segment_identifier from basket item group permissions.",
@@ -733,20 +1569,30 @@
         "avoid": "Do not depend only on canvas color/state after payment; use serialized order/ticket item data for stable assertions."
       },
       "reader_summary": "Protect assigned seating from selling or attaching a seat when payment fails, and prove retry owns the expected seat exactly once.",
-      "recommended_first_test": "Use WebPublic best-available assigned seating to capture seat identifiers from the basket response, fail Affirm, prove no paid seat ownership, retry once, and prove one paid ticket owns the same seat identifiers.",
-      "not_a_matrix": "Do not start with manual seat selection, Widget, or Box Office. Best-available is first because it already exposes a basket response for stable seat capture.",
+      "recommended_first_test": "Use WebPublic best-available assigned seating. Capture the selected seat identifiers from the basket response, fail Affirm, assert no paid order/ticket owns that seat, retry once, and assert exactly one paid ticket owns the same seat identifiers.",
+      "not_a_matrix": "Do not start with manual seat selection, Widget, Box Office, location seating, or every payment failure. Best-available WebPublic plus failed Affirm is first because it already exposes a basket response for stable seat capture.",
       "what_to_automate": "Assigned-seat failed-payment and retry ownership proof.",
-      "qa_handoff": "Build one Playwright test where an assigned-seat payment fails, then a retry succeeds, and prove seat ownership exists only after the successful paid order.",
-      "first_action": "Start with WebPublic best-available assigned seating so the test can capture seat identifiers from the basket response without fragile canvas selection.",
+      "qa_handoff": "Build one Playwright proof that a failed assigned-seat payment does not create paid seat ownership, then one successful retry owns that same seat exactly once.",
+      "first_action": "Start with WebPublic best-available assigned seating. Use clickBestAvailableCheckout/captureSeatIdentifiers to save the selected seat identifiers before payment; do not rely on seating-canvas color as the proof.",
       "decision_needed": "No product decision needed for the first proof. Manual seat selection, Widget, and Box Office variants should wait unless they prove different ownership risk.",
-      "default_decision": "Use best-available assigned seating plus failed Affirm first, then retry once and prove the same seat is owned by exactly one paid order.",
+      "default_decision": "Use best-available assigned seating plus failed Affirm first, then retry once and prove the same serialized seat identifiers appear on exactly one paid ticket/order.",
       "acceptance_criteria": [
         "The test captures the selected seat identifiers before payment.",
         "The first payment attempt fails intentionally.",
-        "No paid order/ticket item owns the selected seat after failure.",
+        "No paid order, invoice, or ticket item owns the selected seat after failure.",
         "A retry succeeds for the same checkout context or same selected seat where supported.",
-        "Exactly one paid order/ticket item owns the selected seat after success."
+        "Exactly one paid order/ticket item owns the selected seat after success.",
+        "The final proof uses serialized seat identifiers from API/order data, not canvas color/state alone."
       ],
+      "proof_surface_contract": {
+        "entry_path": "Existing WebPublic best-available assigned-seating checkout path.",
+        "selected_seat_capture": "Capture selected seat identifiers from the basket response before payment using best-available checkout and captureSeatIdentifiers-style parsing: identifier, location_identifier, and segment_identifier.",
+        "failed_payment_proof": "Use failed Affirm as the deterministic failed-payment path, then prove no paid invoice/order/ticket item owns the captured seat identifiers for the failed attempt.",
+        "retry_success_proof": "Retry once with the same checkout context or same selected seat where supported, then prove exactly one paid order/ticket item owns the same serialized seat identifiers.",
+        "primary_proof_surface": "Use API/order data for seat identity and My Orders/confirmation for reviewer-readable order proof. Use Dashboard transaction filtering only for paid transaction identity.",
+        "do_not_use_as_primary_proof": "Do not rely on seating-canvas color/state as the ownership proof.",
+        "not_a_matrix": "Do not start with manual selection, Widget, Box Office, location seating, or every provider failure. Best-available WebPublic plus failed Affirm covers the first seat-ownership invariant."
+      },
       "criticality_review": {
         "calibrated_on": "2026-07-09",
         "business_invariant": "Assigned-seat ownership after failed payment/retry",
@@ -762,7 +1608,7 @@
       "priority": "P0",
       "score": 89,
       "title": "Checkout tracking-link unavailable-item paid outcome",
-      "status": "planning_ready",
+      "status": "planning_ready_proof_refined",
       "confidence": "Medium",
       "why_now": "Checkout links can seed or append basket extras, retry lower quantities when inventory is unavailable, and continue to payment with remaining items; inspected E2E coverage purchases tracking links but does not prove final paid order integrity after unavailable-item pruning.",
       "entry_path": "WebPublic checkout tracking link",
@@ -815,25 +1661,84 @@
           "path": "/private/tmp/qase-checkout-tracking-link-case-details.json",
           "line": 0,
           "note": "Qase 4802 covers checkout-link review unavailable items and existing basket, but stops at continuing checkout when valid items remain."
+        },
+        {
+          "type": "backend",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/analytics/models.py",
+          "line": 584,
+          "note": "TrackingLink is the backend attribution/link model for checkout links."
+        },
+        {
+          "type": "backend",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/analytics/models.py",
+          "line": 617,
+          "note": "TrackingLink.extra stores per-link values used by checkout-link extras."
+        },
+        {
+          "type": "backend",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/analytics/front/views.py",
+          "line": 12,
+          "note": "Tracking link redirect loads the link, stores referred-link session state, and redirects to the long URL."
+        },
+        {
+          "type": "playwright",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/CheckoutLinkPage.ts",
+          "line": 10,
+          "note": "CheckoutLinkPage opens the checkout link and waits for the review page skeleton to finish."
+        },
+        {
+          "type": "playwright",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/shared/components/buttons/ReviewCheckoutButton.ts",
+          "line": 10,
+          "note": "ReviewCheckoutButton clicks the review-page checkout button; PROOF-CHK-007 should inspect unavailable items before this click."
+        },
+        {
+          "type": "playwright",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/flows/checkout-engine.ts",
+          "line": 108,
+          "note": "createCartResultFromEventData supports explicit cart item selections; the future proof should pass pruned remaining items instead of original requested extras."
+        },
+        {
+          "type": "playwright",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/steps/PaymentStep.ts",
+          "line": 437,
+          "note": "PaymentStep reads invoice data after payment for final transaction/order proof."
+        },
+        {
+          "type": "playwright",
+          "path": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/user/account/my-orders/MyOrdersPage.ts",
+          "line": 76,
+          "note": "MyOrdersPage verifies order confirmation through checkout using invoice data and item details."
         }
       ],
-      "next_step": "Automate one checkout-link unavailable-item pruning proof later. Continue only with valid remaining items, then assert final order lines and charged total exclude unavailable quantities.",
+      "next_step": "Automate one checkout-link unavailable-item pruning proof later. Open the checkout link, assert unavailable items are visible on the review page, carry requested/removed/remaining quantities and pruned expected total, complete card payment, then prove the paid order contains only remaining available items.",
       "could_change_ranking": "If existing Playwright coverage already drives Qase 4802 through payment and final order verification, lower to no-gap; otherwise keep behind higher direct P0 duplicate/failure/reconciliation packets.",
-      "reader_summary": "Protect checkout links from charging or fulfilling unavailable items after inventory changes between link creation and payment.",
-      "recommended_first_test": "Use one checkout link with an existing basket and partially unavailable extras; continue only with valid remaining items and prove the final paid order excludes unavailable quantities and charges the correct total.",
+      "reader_summary": "Protect checkout links from charging or fulfilling items that became unavailable after the link was created but before the buyer paid.",
+      "recommended_first_test": "Use one WebPublic checkout link with existing basket identity, two configured extras/items, one unavailable item, one remaining purchasable item, and card payment. Assert review-page pruning first, then final paid order and total reconciliation.",
       "not_a_matrix": "Do not test every checkout-link configuration first. Use one representative link where unavailable-item pruning changes the final payable basket.",
-      "what_to_automate": "Checkout-link unavailable-item pruning paid-outcome proof.",
-      "qa_handoff": "Build one Playwright test where a checkout link includes unavailable extras/items, then prove the buyer is charged only for the valid remaining items.",
-      "first_action": "Start with one checkout-link scenario that has an existing basket, partially unavailable configured extras, and at least one remaining purchasable item.",
-      "decision_needed": "No product decision needed for the first proof. Do not create an unavailable-item matrix unless different pruning behavior is found.",
-      "default_decision": "Use one representative checkout link with partial unavailability and final paid-order reconciliation.",
+      "what_to_automate": "Checkout-link unavailable-item pruning review-to-paid-order proof.",
+      "qa_handoff": "Build one Playwright test that proves a checkout link shows unavailable items before payment and charges/fulfills only the available remaining item after payment.",
+      "first_action": "Extend or wrap fromCheckoutLink so the test can inspect the review page before ReviewCheckoutButton.clickCheckoutButton(), then pass pruned expected item details into the existing confirmation/My Orders verification path.",
+      "decision_needed": "Fixture choice only: pick the safest deterministic way to make one configured checkout-link extra unavailable while another remains purchasable. Do not ask for a product decision before the first proof.",
+      "default_decision": "Use a WebPublic checkout-link fixture with partial unavailability and existing basket identity; rely on confirmation/My Orders proof first and add venue invoice-items API only if UI proof cannot prove the excluded line.",
       "acceptance_criteria": [
-        "Checkout link opens with an existing basket and configured extras/items.",
-        "At least one configured item is unavailable and at least one item remains purchasable.",
-        "Checkout proceeds only with available remaining items.",
-        "Paid order excludes unavailable quantities.",
-        "Final charged total matches only the available remaining items."
+        "Checkout link carries configured extras/items and opens the review page with existing basket identity preserved.",
+        "Review page visibly reports at least one unavailable configured item before checkout continues.",
+        "The test records requested quantity, unavailable/removed quantity, expected remaining quantity, expected item lines, and pruned expected total.",
+        "Checkout proceeds with card payment for only the remaining available item.",
+        "Payment returns invoiceData.transaction_id for the paid order.",
+        "Confirmation/My Orders or API proof shows the paid order excludes unavailable quantities and includes only the expected remaining item lines.",
+        "Final paid total matches the pruned expected total, not the originally requested checkout-link quantity."
       ],
+      "proof_surface_contract": {
+        "entry_path": "Existing WebPublic checkout-link path.",
+        "review_page_proof": "Open the checkout link and pause on the review page before ReviewCheckoutButton.clickCheckoutButton(). Assert unavailable-items-heading/details are visible for the configured unavailable item.",
+        "pruned_expectation_capture": "Record requested quantity, unavailable/removed quantity, remaining quantity, expected remaining item lines, and pruned expected total before payment.",
+        "payment_proof": "Continue from the review page with card payment and keep invoiceData.transaction_id for final paid-order proof.",
+        "final_order_proof": "Use confirmation/My Orders first to prove the final paid order excludes unavailable quantities and includes only the expected remaining lines. Add venue invoice-items API proof only if UI detail cannot prove the excluded line.",
+        "total_proof": "Assert final paid total equals the pruned expected total, not the originally requested checkout-link quantity.",
+        "not_a_matrix": "Do not start with every checkout-link type, platform, customer state, or unavailable-item variant. One deterministic partial-unavailability link is the representative proof."
+      },
       "criticality_review": {
         "calibrated_on": "2026-07-09",
         "business_invariant": "Unavailable-item pruning before paid order",
@@ -851,7 +1756,7 @@
       "title": "Package revenue-realization reporting reconciliation",
       "status": "planning_ready",
       "confidence": "Medium",
-      "why_now": "Package checkout has broad purchase automation, but package revenue realization changes reporting and settlement truth through parent/child stat allocation. Inspected Playwright coverage verifies package purchase, confirmation, and Box Office totals, but not child stat allocation or Dashboard/API reporting reconciliation.",
+      "why_now": "Package checkout has broad purchase automation, but package revenue realization changes reporting and settlement truth through parent/child stat allocation. Inspected Playwright coverage verifies package purchase, confirmation, and Box Office totals, but not child stat allocation or Dashboard/API reporting reconciliation. PACKAGE-CHK-001 keeps this as review-separately lower P0, not part of the default first six unless package reporting/payout confidence is a current priority.",
       "entry_path": "Package checkout, preferably one custom package or preset package with child-based revenue realization",
       "scenario_mix": "One package purchase with revenue realization enabled, card payment, then API/Dashboard reporting proves expected parent/child revenue allocation.",
       "evidence_refs": [
@@ -917,28 +1822,37 @@
         }
       ],
       "qase_context": "Read-only Qase detail file: /private/tmp/qase-package-revenue-case-details.json. Qase 4229 checks mixed parent/child itemized settings and balanced totals. Qase 3879 checks final amount accuracy in checkout, invoice, and processor dashboard for package types. Neither explicitly proves child revenue-realization stat allocation or reporting/payout reconciliation.",
-      "proof_surface": {
-        "primary": "Venue invoice-items API filtered by invoice; route is registered at apps/venues/api/routers.py:185 and viewset filters by invoice query param at apps/financials/api/venue_based/viewsets/viewsets.py:667.",
-        "assertable_fields": [
-          "final_amount_stat",
+  "proof_surface": {
+    "primary": "Venue invoice-items API filtered by invoice; route is registered at apps/venues/api/routers.py:185 and viewset filters by invoice query param at apps/financials/api/venue_based/viewsets/viewsets.py:667.",
+    "assertable_fields": [
+      "final_amount_stat",
           "amount_paid_stat",
           "amount_earned_stat",
           "tax_stat",
           "is_sub_ticket"
-        ],
-        "secondary": "Dashboard transaction detail for transaction identity and paid-total reconciliation only.",
-        "do_not_claim_without_more_source": "Exact percent_allocation_applied_from_package or parent_ticket_invoice_item API proof; inspected VenueBasedInvoiceItemSerializer exposes stat fields and is_sub_ticket, not those linkage/allocation fields."
-      },
-      "next_step": "Automate one package revenue-realization reconciliation proof later. Use a known package fixture, fetch invoice/reporting detail, and assert child/sub-ticket totals reconcile to the paid package.",
-      "could_change_ranking": "If Qase/Playwright details prove child revenue-realization stat allocation and Dashboard/API reconciliation, downgrade to no-gap. Otherwise keep as a lower P0 behind duplicate/failure/total-reconciliation paths because customer charge is likely covered but reporting/payout truth is not.",
-      "reader_summary": "Prove package revenue-realization reporting matches the paid package outcome, especially when revenue is allocated to child ticket stats.",
-      "recommended_first_test": "Use one package checkout with known revenue-realization expectations, fetch venue invoice items by invoice id, and assert child/sub-ticket stat rows reconcile to expected reporting totals.",
-      "not_a_matrix": "Do not replace existing package purchase coverage. This is a reporting/reconciliation proof for one package setup with known allocation behavior.",
+    ],
+    "secondary": "Dashboard transaction detail for transaction identity and paid-total reconciliation only.",
+    "do_not_claim_without_more_source": "Exact percent_allocation_applied_from_package or parent_ticket_invoice_item API proof; inspected VenueBasedInvoiceItemSerializer exposes stat fields and is_sub_ticket, not those linkage/allocation fields."
+  },
+  "proof_surface_contract": {
+    "entry_path": "One package checkout with revenue realization enabled and deterministic child/sub-ticket expectations.",
+    "purchase_proof": "Complete the package checkout and preserve invoice id, transaction id, package identity, expected paid total, and expected child/sub-ticket stat expectations.",
+    "primary_reporting_proof": "Use venue invoice-items API filtered by invoice to identify parent package rows and child/sub-ticket rows, then assert exposed stat fields such as final_amount_stat, amount_paid_stat, amount_earned_stat, tax_stat, and is_sub_ticket reconcile to the expected package allocation.",
+    "secondary_dashboard_proof": "Use Dashboard transaction detail only for transaction identity and paid-total reconciliation, not as the primary child allocation proof.",
+    "source_limit": "Do not assert exact percent_allocation_applied_from_package or parent_ticket_invoice_item linkage unless a later source-backed API/helper exposes those fields directly.",
+    "default_decision": "Do not include this in the first Playwright batch unless package reporting or payout confidence is a current business priority.",
+    "not_a_matrix": "Do not add package permutations. One deterministic revenue-realization package is the representative proof if this candidate is promoted."
+  },
+  "next_step": "Do not put this ahead of ranks 1-6 by default. If package reporting/payout confidence is in scope, automate one package revenue-realization reconciliation proof later using a deterministic package fixture, venue invoice-items API, and child stat expectations.",
+      "could_change_ranking": "If package reporting/payout confidence becomes a current business priority, keep this in the immediate batch after ranks 1-6. If Qase/Playwright details later prove child revenue-realization stat allocation and Dashboard/API reconciliation, downgrade to no-gap. Otherwise keep as lower P0 because customer charge is likely covered but reporting/payout truth is not.",
+      "reader_summary": "Package purchases already have checkout coverage. This candidate is about whether reporting and payout rows correctly reflect child revenue after a package sale.",
+      "recommended_first_test": "Only if package reporting is in scope: use one package checkout with known revenue-realization expectations, fetch venue invoice items by invoice id, and assert child/sub-ticket stat rows reconcile to expected reporting totals.",
+      "not_a_matrix": "Do not add more package purchase permutations. Do not make this part of the first batch unless the team cares about package reporting/payout confidence right now.",
       "what_to_automate": "Package checkout revenue-realization reconciliation proof.",
-      "qa_handoff": "Build one Playwright/API-backed proof that a package purchase reconciles paid package revenue into the expected child/sub-ticket reporting totals.",
-      "first_action": "Start with one package checkout where revenue-realization expectations are known, then fetch venue invoice items or reporting rows for the paid invoice.",
-      "decision_needed": "Package fixture choice is the only open decision: choose the package type with the clearest expected child allocation data.",
-      "default_decision": "Use the simplest stable package fixture with known revenue-realization expectations.",
+      "qa_handoff": "Build this only if package reporting/payout confidence is part of the next automation push. The proof should show a paid package sale reconciles into the expected child/sub-ticket reporting totals.",
+      "first_action": "If kept in scope, first choose or create the simplest package fixture with known child stat expectations, then fetch venue invoice items for the paid invoice after checkout.",
+      "decision_needed": "Business priority and fixture choice: should package reporting/payout be in the immediate batch, and which package fixture has deterministic child allocation expectations?",
+      "default_decision": "Defer behind ranks 1-6 unless package reporting/payout confidence is confirmed as a current priority.",
       "acceptance_criteria": [
         "Package checkout completes and creates one paid invoice/order.",
         "The package parent and child/sub-ticket data can be identified for the invoice.",
@@ -950,8 +1864,8 @@
         "calibrated_on": "2026-07-09",
         "business_invariant": "Package revenue-realization reporting reconciliation",
         "incident_alignment": "Medium-High",
-        "priority_reason": "Matches reporting/payout disagreement incidents, but remains below direct charge/failure/inventory P0s.",
-        "ranking_action": "Keep low P0 while package reporting/revenue realization is treated as business-critical.",
+        "priority_reason": "Matches reporting/payout disagreement incidents, but backend tests cover core allocation math and the risk is less direct than duplicate charge, failed payment, inventory, and final fulfillment failures.",
+        "ranking_action": "Keep review-separately lower P0. Defer behind ranks 1-6 unless package reporting/payout confidence is a current business priority.",
         "jira_csv_reread_required": false
       }
     },
@@ -2835,8 +3749,8 @@
       "Qase writes"
     ],
     "primary_doc": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Automation Phase 2 Planning.md",
-    "next_planning_task": "Run a P0 ranking/assertion-contract review, or refine AUTO-CHK-007/AUTO-CHK-008 only if that could change the current top P0 recommendation. Do not reopen broad CSV analysis or lower-priority discovery unless explicitly requested.",
-    "p0_packet_status": "AUTO-CHK-002, AUTO-CHK-001, AUTO-CHK-003, AUTO-CHK-006, AUTO-CHK-013, AUTO-CHK-007, and AUTO-CHK-008 are calibrated P0 candidates with QA handoff and criticality_review metadata.",
+    "next_planning_task": "Review the shortlist as candidate recommendations, not active implementation. MODE-SYNC-CHK-001 confirms this worker is planning-only: approve/revise ranks 1-6, decide provider path for AUTO-CHK-002, or explicitly promote AUTO-CHK-008 package reporting. Do not do broad exploration before reviewer input.",
+    "p0_packet_status": "Ranks 1-6 are the recommended high-value Playwright next batch; AUTO-CHK-008 is real lower-P0 package reporting coverage but should be deferred unless package reporting/payout confidence is a current priority.",
     "active_scope_status": "P0/highest-risk only: active work is limited to duplicate submit/retry, failed payment no-paid-outcome, Dashboard/API total reconciliation, mixed basket final-state proof, assigned-seat failure/retry ownership, unavailable-item paid outcome, package revenue-realization if treated as P0, and likely-P0 no-gap confirmations.",
     "deferred_scope_status": "P1/lower packets are calibrated backlog context with scores below 80. Do not refine them in this P0 goal unless explicitly requested or new incident evidence changes priority.",
     "fixture_packet_status": "AUTO-CHK-005 has a tightened fixture path: user member lookup for member id, issue-ticket lookup for generated hold link, and regular hold checkout link reuse.",
@@ -2859,8 +3773,10 @@
     "wallet_packet_status": "AUTO-CHK-012 is parked until a wallet-capable browser/device, provider sandbox, or mocked wallet/provider simulator strategy is chosen.",
     "parked_scope_status": "AUTO-CHK-004 gift-card planning is parked until business priority is confirmed; AUTO-CHK-009 Square Terminal planning is parked until a hardware/provider simulator strategy is chosen; AUTO-CHK-012 one-click wallet checkout is parked until a wallet provider/browser strategy exists.",
     "stop_when": "Stop only when every useful branch is Planning Ready, Planning Parked / Needs Decision, no-gap, low-risk duplicate, or unsupported and no defensible read-only planning target remains, or when the user stops the goal. Do not stop because source, fixture, Playwright, app, or Qase writes would be the next step for a planning-ready packet. Do not stop for one parked branch; park it locally and continue another target.",
-    "assigned_seating_packet_status": "AUTO-CHK-013 has PROOF-CHK-006 refined: start with best-available assigned seating for stable basket-response seat capture, return failed-Affirm context, prove no paid seat ownership after failure, then retry once and assert the final paid ticket item owns the same seat identifiers.",
-    "mixed_basket_packet_status": "AUTO-CHK-006 has PROOF-CHK-005 refined: upgrade existing CheckoutAddOns verification to prove base event ticket plus product add-on lines and combined paid total, with venue invoice-items API as optional support only if UI proof is insufficient."
+    "assigned_seating_packet_status": "AUTO-CHK-013 has SEAT-CHK-002 synced: start with best-available assigned seating for stable basket-response seat capture, use failed Affirm, prove no paid seat ownership after failure, retry once, and assert exactly one paid ticket owns the same serialized seat identifiers.",
+    "mixed_basket_packet_status": "AUTO-CHK-006 has MIXED-CHK-002 synced: keep the existing WebPublic CheckoutAddOns path, capture the base ticket expectation from basket response plus fixture fields, build add-on product ItemDetails, pass both lines into order confirmation verification, and assert the existing combined paid total. This is not a product/add-on/membership matrix; venue invoice-items API is optional only if UI proof is insufficient.",
+    "tracking_link_packet_status": "AUTO-CHK-007 has TRACK-CHK-002 synced: pause on checkout-link review before checkout, assert unavailable items, carry pruned quantity/total data, complete card payment, and prove final paid order excludes unavailable quantities.",
+    "review_checkpoint_status": "MODE-SYNC-CHK-001 confirms the review checkpoint is a planning recommendation for future Playwright work, not an implementation run. DECISION-SYNC-CHK-001 syncs the decision queue to the current reviewer gate. BACKLOG-SYNC-CHK-001 synced the automation backlog to the current Worker State. LEVERAGE-CHK-001 confirms ranks 1-6 remain the recommended Playwright batch and should share one future proof approach: preserve CheckoutResult/invoiceData.transaction_id, reuse Dashboard transaction-id filtering and My Orders proof, then add failed-payment context and entry-specific adapters. READY-CHK-001 already confirmed ranks 1-6 are structurally ready. PACKAGE-CHK-001 confirms AUTO-CHK-008 should stay review-separately unless package reporting/payout confidence is a current priority."
   },
   "retrieval_hints": {
     "backend": "/Users/christianvaldez/Documents/Showpass/repos/web-app",
@@ -2928,18 +3844,180 @@
     "loop_optimization": "Use the CSV for local incident bucketing first. Stop the calibration pass when two consecutive business-invariant buckets produce no P0/P1 ranking change, fixture need, or assertion contract. Do not force multi-day exploration when ranking is stable."
   },
   "resume_checkpoint": {
-    "timestamp": "2026-07-09",
-    "summary": "Jira CSV calibration is complete and should not be rerun unless a newer export is provided. Worker State candidates have calibrated P0/P1 scores, QA handoff fields, and criticality_review metadata.",
+    "timestamp": "2026-07-13",
+    "summary": "ARTIFACT-SYNC-CHK-001 synced reviewer-facing current sections with PROMPT-SYNC-CHK-001 and P0-SATURATION-CHK-001. Ranks 1-6 remain unchanged and current best remains AUTO-CHK-002. Each top-six candidate has reviewer-readable what_to_automate, qa_handoff, first_action, decision/default, acceptance criteria, recommended first test, not-a-matrix guidance, and proof_surface_contract. AUTO-CHK-008 also has a proof_surface_contract for later use if package reporting is promoted. The current next action is reviewer-driven: approve/revise ranks 1-6, decide provider path for AUTO-CHK-002, or explicitly promote AUTO-CHK-008 package reporting.",
     "current_best_candidate": "AUTO-CHK-002",
     "active_scope": "P0/highest-risk checkout automation planning only.",
-    "next_recommended_planning_action": "Run a P0 ranking/assertion-contract review, or refine AUTO-CHK-007/AUTO-CHK-008 only if that could change the current top P0 recommendation. Do not reopen broad CSV analysis or lower-priority discovery unless explicitly requested.",
+    "next_recommended_planning_action": "Review 04 Automation/Checkout Playwright Automation Review Checkpoint.md, 04 Automation/Checkout Money Movement Automation Backlog.md, 04 Automation/Checkout Automation Phase 2 Planning.md, and DEC-CHK-046 through DEC-CHK-050 as a candidate recommendation set. P0-SATURATION-CHK-001 confirmed the P0 reviewer set has required handoff fields and proof contracts; PROMPT-SYNC-CHK-001 synced the reusable prompt; ARTIFACT-SYNC-CHK-001 synced the reviewer-facing notes. Do not repeat saturation, handoff, ranking, assertion-contract, CSV, or broad exploration unless reviewer feedback or candidate content changes. If approved, use LEVERAGE-CHK-001 as the future implementation sequence in a separate task. If resumed without reviewer changes, keep the next useful planning reviewer-driven: approve/revise ranks 1-6, decide whether Stripe provider volume changes AUTO-CHK-002, or explicitly promote AUTO-CHK-008 package reporting.",
     "resume_in_same_goal": "Use /goal resume and continue from Mission Control plus Worker State JSON. Start by reading resume_checkpoint and current_best_answer.",
     "fresh_session_prompt": "Open 06 Prompts/Checkout Recursive Automation Prioritization Worker.md and run it. Read Worker State JSON first, especially resume_checkpoint, incident_calibration_policy, and candidates[].criticality_review. Do not reread assets/csv/major-critical.csv unless a newer export exists.",
     "done_context": [
       "Major/Critical CSV learned and summarized into criticality criteria.",
       "Candidate handoff fields exist for all 20 candidates.",
       "P1 scores normalized below 80 to match priority bands.",
-      "Implementation remains out of scope for this planning worker."
+      "Implementation remains out of scope for this planning worker.",
+      "PROOF-CHK-007 recorded for checkout-link unavailable-item pruning.",
+      "REVIEW-CHK-001 created for high-value Playwright automation shortlist review.",
+      "RANK-CHK-001 confirmed ranks 1-6 remain the recommended next Playwright automation batch.",
+      "PROVIDER-CHK-001 found broad Stripe checkout coverage but no inspected Stripe duplicate-submit/replay harness; current best remains AUTO-CHK-002 by automation readiness.",
+      "PACKAGE-CHK-001 confirmed AUTO-CHK-008 is source-backed reporting/payout coverage but should stay review-separately behind ranks 1-6 unless package reporting is a current priority.",
+      "STRIPE-CHK-001 refined AUTO-CHK-002 handoff: duplicate-submit final-state is the risk, Authorize is the ready default harness, and Stripe should be first only if provider volume/business priority overrides the default.",
+      "FAILED-CHK-001 confirmed AUTO-CHK-001 handoff: failed Affirm WebPublic guest is the first failed-payment no-paid-outcome proof; Stripe decline/failure is a later provider-priority fixture unless reviewer explicitly promotes it.",
+      "DASH-CHK-001 confirmed AUTO-CHK-003 handoff: Dashboard settlement reconciliation should be a shared helper assertion against financial-breakdown-row-Settlement amount using existing expected totals, not a new checkout scenario.",
+      "DASH-CHK-002 synced AUTO-CHK-003 proof surfaces: assert Dashboard financial-breakdown-row-Settlement amount from amount_paid/amountPaid against pricingFeesTaxes.valueOnTransactionPage using an existing Box Office caller.",
+      "MIXED-CHK-002 synced AUTO-CHK-006 proof surfaces: use the existing WebPublic CheckoutAddOns flow, pass both base event ticket and add-on product lines into confirmation/order verification, assert the existing combined total, and use venue invoice-items only if UI proof is insufficient.",
+      "SEAT-CHK-002 synced AUTO-CHK-013 proof surfaces: use WebPublic best-available assigned seating, capture serialized seat identifiers from the basket response, fail Affirm, prove no paid ownership, retry once, and prove exactly one paid ticket owns the same seat identifiers.",
+      "TRACK-CHK-002 synced AUTO-CHK-007 proof surfaces: pause on checkout-link review, assert unavailable items, carry pruned expected lines and total, pay remaining items, and prove final order excludes unavailable quantities.",
+      "READY-CHK-001 audited the current top-six batch: ranks 1-6 all have proof_surface_contract, reviewer-readable handoff fields, and acceptance criteria; no ranking change.",
+      "LEVERAGE-CHK-001 identified the shared future implementation sequence for ranks 1-6: CheckoutResult/invoiceData.transaction_id and final-state proof helpers first, failed-payment context and entry-specific adapters second.",
+      "BACKLOG-SYNC-CHK-001 synced the automation backlog with current Worker State: top-six P0 batch, normalized P1 scores, AUTO-CHK-008 review-separately, and LEVERAGE-CHK-001.",
+      "DECISION-SYNC-CHK-001 synced the decision queue with the current reviewer gate: DEC-CHK-043 through DEC-CHK-045, no implementation authorization step, and no broad exploration before reviewer input.",
+      "MODE-SYNC-CHK-001 confirmed the shortlist is a recommendation for future Playwright automation, not work being implemented by this planning worker.",
+      "HANDOFF-AUDIT-CHK-001 audited top-six candidate handoff fields and confirmed the current recommendation is readable for QA review without another broad pass.",
+      "REVIEW-CHECKPOINT-SYNC-CHK-001 synced the human review checkpoint with HANDOFF-AUDIT-CHK-001 so fresh sessions and reviewers see that the handoff audit is already done.",
+      "DECISION-QUEUE-SYNC-CHK-002 synced the decision queue with HANDOFF-AUDIT-CHK-001 and REVIEW-CHECKPOINT-SYNC-CHK-001 so fresh sessions do not resume from the older DECISION-SYNC-CHK-001 gate.",
+      "BACKLOG-REVIEW-SYNC-CHK-002 synced the automation backlog current recommendation with DECISION-QUEUE-SYNC-CHK-002, HANDOFF-AUDIT-CHK-001, and REVIEW-CHECKPOINT-SYNC-CHK-001.",
+      "PHASE2-REVIEW-SYNC-CHK-001 synced Phase 2 Planning with current Worker State, normalized P1 scores below 80, and the latest reviewer gate.",
+      "DECISION-QUEUE-SYNC-CHK-003 synced the Decision Queue, Automation Backlog, and Review Checkpoint with PHASE2-REVIEW-SYNC-CHK-001 so all reviewer instructions name the same review artifacts.",
+      "PHASE2-GATE-SYNC-CHK-002 synced Phase 2 Planning with DECISION-QUEUE-SYNC-CHK-003 so its reviewer gate matches the current review artifacts.",
+      "P0-SATURATION-CHK-001 audited the P0 reviewer set and added AUTO-CHK-008 proof_surface_contract so all P0 review candidates have required handoff fields.",
+      "DUP-CHK-003 confirmed AUTO-CHK-002 proof surfaces: preserve Authorize replay evidence, return invoiceData.transaction_id, assert one Dashboard transaction row, and verify one expected ticket set through confirmation/My Orders or API detail.",
+      "FAILED-CHK-002 synced AUTO-CHK-001 proof surfaces: return FailedCheckoutContext from failed Affirm, keep UI failure recovery, assert no venue invoice/order, and assert no invoice-items/tickets for the failed buyer/event/ticket context.",
+      "PROMPT-SYNC-CHK-001 synced the recursive worker prompt with P0-SATURATION-CHK-001 so fresh sessions do not repeat completed P0 audits.",
+      "ARTIFACT-SYNC-CHK-001 synced reviewer-facing artifacts with PROMPT-SYNC-CHK-001 so current sections share the same reviewer-driven checkpoint."
+    ]
+  },
+  "review_checkpoint": {
+    "timestamp": "2026-07-13",
+    "id": "REVIEW-CHK-001",
+    "type": "review_checkpoint",
+    "path": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Playwright Automation Review Checkpoint.md",
+    "summary": "Created a human review checkpoint for the high-value Playwright automation shortlist. DUP-CHK-003 confirmed AUTO-CHK-002 remains first and should compose existing replay evidence, invoiceData.transaction_id, Dashboard transaction-id filtering, and confirmation/My Orders item proof. STRIPE-CHK-001 confirmed AUTO-CHK-002 remains first by automation readiness unless provider volume/business priority promotes Stripe. FAILED-CHK-002 confirmed AUTO-CHK-001 should start with failed Affirm, return FailedCheckoutContext, and prove no paid invoice/order/items unless Stripe failure is explicitly promoted. DASH-CHK-002 confirmed AUTO-CHK-003 is a shared Dashboard Settlement amount helper assertion, not a new checkout scenario. MIXED-CHK-002 synced AUTO-CHK-006 as one existing CheckoutAddOns verification upgrade that proves both base ticket and add-on product lines plus combined total, not a product/add-on matrix. SEAT-CHK-002 synced AUTO-CHK-013 as one WebPublic best-available assigned-seat failure/retry proof using serialized seat identifiers, not a seating-platform matrix. TRACK-CHK-002 synced AUTO-CHK-007 as one checkout-link unavailable-item pruning proof from review page to paid order. PACKAGE-CHK-001 confirmed AUTO-CHK-008 is real reporting/payout coverage but should stay review-separately unless package reporting is a current priority. Current recommendation is to approve AUTO-CHK-002, AUTO-CHK-001, AUTO-CHK-003, AUTO-CHK-006, AUTO-CHK-013, and AUTO-CHK-007 as the strongest next Playwright batch.",
+    "current_best_candidate": "AUTO-CHK-002",
+    "ranking_change": "none; current best remains AUTO-CHK-002",
+    "status": "awaiting_reviewer_check",
+    "review_goal": "Confirm whether the current high-value Playwright automation list is right before the worker continues deeper packet refinement.",
+    "high_value_playwright_next": [
+      {
+        "rank": 1,
+        "id": "AUTO-CHK-002",
+        "score": 96,
+        "priority": "P0",
+        "title": "Duplicate submit/retry creates one paid outcome",
+        "status": "planning_ready_proof_refined",
+        "what_to_automate": "Duplicate-submit/retry final-state proof: one buyer attempt is submitted or replayed twice, but only one paid transaction/order/ticket set exists.",
+        "qa_handoff": "Build one duplicate-submit proof by composing existing surfaces: preserve replay evidence, return invoiceData.transaction_id, filter Dashboard by that transaction id, and verify confirmation/My Orders show exactly the expected ticket set once.",
+        "first_action": "Default path: use the existing Authorize.net diagnostic-replay-purchase WebPublic guest scenario. Change the runner to return CheckoutResult or invoiceData, preserve the replay evidence attachment, then use invoiceData.transaction_id to assert exactly one Dashboard transaction row and one confirmation/My Orders ticket set. If reviewer says Stripe volume should drive the first proof, build the same deterministic capture/replay shape on WebPublic Stripe System Gateway PaymentIntent card checkout first.",
+        "decision_needed": "Provider choice only: use the ready Authorize replay path by default, or explicitly promote a Stripe duplicate-submit proof if production/provider priority says Stripe should be first.",
+        "review_default": "Keep in next Playwright batch unless reviewer finds stronger business evidence."
+      },
+      {
+        "rank": 2,
+        "id": "AUTO-CHK-001",
+        "score": 94,
+        "priority": "P0",
+        "title": "Failed payment no paid order/tickets/inventory",
+        "status": "planning_ready_proof_refined",
+        "what_to_automate": "Failed-payment no-paid-outcome proof.",
+        "qa_handoff": "Build one failed-payment proof: make payment fail, then prove the failed attempt produced no paid invoice/order, no invoice items or usable tickets, and no permanent inventory ownership.",
+        "first_action": "Start with failed Affirm WebPublic guest. Make payWithAffirmExpectingFailure().result() return FailedCheckoutContext instead of void, carrying buyer email, event id, ticket type id, CartResult item id, requested quantity, and expected total for negative API/Dashboard lookups.",
+        "decision_needed": "No product decision needed for the first proof. Choose Stripe decline/failure first only if reviewer/provider priority explicitly requires a Stripe-specific failed-payment representative.",
+        "review_default": "Keep in next Playwright batch unless reviewer finds stronger business evidence."
+      },
+      {
+        "rank": 3,
+        "id": "AUTO-CHK-003",
+        "score": 92,
+        "priority": "P0",
+        "title": "Dashboard transaction total reconciliation",
+        "status": "planning_ready_proof_refined",
+        "what_to_automate": "Dashboard transaction settlement-total reconciliation assertion.",
+        "qa_handoff": "Upgrade the Dashboard transaction check so completed checkout tests prove the settlement amount matches the expected paid total.",
+        "first_action": "Start by making TransactionPage.verifyTransactionDetails assert financial-breakdown-row-Settlement amount against pricingFeesTaxes.valueOnTransactionPage, then prove it through an existing Box Office discounted checkout caller.",
+        "decision_needed": "No new scenario decision needed for the first proof. This is primarily a shared assertion/helper upgrade.",
+        "review_default": "Keep in next Playwright batch unless reviewer finds stronger business evidence."
+      },
+      {
+        "rank": 4,
+        "id": "AUTO-CHK-006",
+        "score": 91,
+        "priority": "P0",
+        "title": "Mixed ticket plus checkout add-on reconciliation",
+        "status": "planning_ready_proof_refined",
+        "what_to_automate": "Mixed ticket plus checkout add-on fulfillment and total proof.",
+        "qa_handoff": "Build one Playwright proof that a buyer purchasing an event ticket plus checkout add-on gets the ticket line, the add-on product line, and one combined paid total.",
+        "first_action": "Start with the existing WebPublic CheckoutAddOns path. Capture the base ticket expectation from the basket response plus event ticket fixture fields, build add-on product details, then call verifyOrderConfirmationThroughCheckout with both expected lines.",
+        "decision_needed": "No product decision needed. Add venue invoice-items API proof only if UI order detail cannot reliably prove both lines.",
+        "review_default": "Keep in next Playwright batch unless reviewer finds stronger business evidence."
+      },
+      {
+        "rank": 5,
+        "id": "AUTO-CHK-013",
+        "score": 90,
+        "priority": "P0",
+        "title": "Assigned seating payment failure/retry preserves seat ownership",
+        "status": "planning_ready_proof_refined",
+        "what_to_automate": "Assigned-seat failed-payment and retry ownership proof.",
+        "qa_handoff": "Build one Playwright proof that a failed assigned-seat payment does not create paid seat ownership, then one successful retry owns that same seat exactly once.",
+        "first_action": "Start with WebPublic best-available assigned seating. Capture serialized seat identifiers from the basket response before payment, use failed Affirm for the failed attempt, prove no paid owner, then retry once and prove exactly one paid ticket owns the same identifiers.",
+        "decision_needed": "No product decision needed for the first proof. Manual seat selection, Widget, and Box Office variants should wait unless they prove different ownership risk.",
+        "review_default": "Keep in next Playwright batch unless reviewer finds stronger business evidence."
+      },
+      {
+        "rank": 6,
+        "id": "AUTO-CHK-007",
+        "score": 89,
+        "priority": "P0",
+        "title": "Checkout tracking-link unavailable-item paid outcome",
+        "status": "planning_ready_proof_refined",
+        "what_to_automate": "Checkout-link unavailable-item pruning review-to-paid-order proof.",
+        "qa_handoff": "Build one Playwright test that proves a checkout link shows unavailable items before payment and charges/fulfills only the available remaining item after payment.",
+        "first_action": "Extend or wrap fromCheckoutLink so the test can pause on the review page before ReviewCheckoutButton.clickCheckoutButton(), assert unavailable items, carry pruned expected lines and total, then pass those expectations into the existing confirmation/My Orders verification path after card payment.",
+        "decision_needed": "Fixture choice only: pick the safest deterministic way to make one configured checkout-link extra unavailable while another remains purchasable. Do not ask for a product decision before the first proof.",
+        "review_default": "Keep in next Playwright batch unless reviewer finds stronger business evidence."
+      },
+      {
+        "rank": 7,
+        "id": "AUTO-CHK-008",
+        "score": 84,
+        "priority": "P0",
+        "title": "Package revenue-realization reporting reconciliation",
+        "status": "planning_ready",
+        "what_to_automate": "Package checkout revenue-realization reconciliation proof.",
+        "qa_handoff": "Build this only if package reporting/payout confidence is part of the next automation push. The proof should show a paid package sale reconciles into expected child/sub-ticket reporting totals.",
+        "first_action": "If kept in scope, first choose or create the simplest package fixture with known child stat expectations, then fetch venue invoice items for the paid invoice after checkout.",
+        "decision_needed": "Business priority and fixture choice: should package reporting/payout be in the immediate batch, and which package fixture has deterministic child allocation expectations?",
+        "review_default": "Defer behind ranks 1-6 unless package reporting/payout confidence is a current priority."
+      }
+    ],
+    "reviewer_decisions": [
+      {
+        "decision": "Provider path for duplicate-submit proof",
+        "default": "Use existing Authorize.net diagnostic replay harness unless Stripe production volume should drive the first duplicate-submit proof and a deterministic Stripe replay/retry path is chosen.",
+        "affects": [
+          "AUTO-CHK-002",
+          "AUTO-CHK-011"
+        ]
+      },
+      {
+        "decision": "Whether package revenue-realization stays in immediate shortlist",
+        "default": "Defer AUTO-CHK-008 behind ranks 1-6 unless package reporting/payout confidence is a current business priority.",
+        "affects": [
+          "AUTO-CHK-008"
+        ]
+      },
+      {
+        "decision": "Whether ranks 1-6 are enough for the next Playwright batch",
+        "default": "Treat ranks 1-6 as the strongest next batch.",
+        "affects": [
+          "AUTO-CHK-002",
+          "AUTO-CHK-001",
+          "AUTO-CHK-003",
+          "AUTO-CHK-006",
+          "AUTO-CHK-013",
+          "AUTO-CHK-007"
+        ]
+      }
     ]
   }
 }
