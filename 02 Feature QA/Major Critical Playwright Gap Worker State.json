@@ -1,0 +1,241 @@
+{
+  "generated_at": "2026-07-13",
+  "worker_prompt": "06 Prompts/Major Critical Jira To Playwright Gap Exhaustive Worker.md",
+  "primary_question": "What high-value Playwright automation is missing when Major/Critical Jira business incidents are compared against showpass-playwright?",
+  "inputs": {
+    "summary_json": "assets/json/major-critical.summary.json",
+    "breakdown_json": "assets/json/major-critical.breakdown.json",
+    "csv": "assets/csv/major-critical.csv",
+    "playwright_repo": "/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright",
+    "backend_repo": "/Users/christianvaldez/Documents/Showpass/repos/web-app",
+    "frontend_repo": "/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend"
+  },
+  "mode": {
+    "source_repos_read_only": true,
+    "qase_read_only": true,
+    "vault_outputs_only": true,
+    "playwright_tests_written": false,
+    "qase_writes_performed": false
+  },
+  "source_inventory": {
+    "record_count": 1352,
+    "priority_counts": {
+      "Major": 939,
+      "Critical": 413
+    },
+    "qa_relevance_counts": {
+      "high": 429,
+      "medium": 603,
+      "low": 320
+    },
+    "status_counts": {
+      "On Deck": 16,
+      "Complete": 1059,
+      "In Progress": 2,
+      "Code Review": 9,
+      "Cannot Reproduce": 53,
+      "Won't Do": 183,
+      "Duplicate": 30
+    },
+    "issue_type_counts": {
+      "Bug": 1301,
+      "Task": 49,
+      "Story": 1,
+      "Sub-task": 1
+    }
+  },
+  "processed_issue_keys": {
+    "mode": "all issue keys from breakdown JSON were processed without copying the full 1352-key list into this state file",
+    "source_json_path": "assets/json/major-critical.breakdown.json",
+    "source_selector": ".records[].issue_key",
+    "count": 1352,
+    "first_10": [
+      "SPD-2438",
+      "SPD-2437",
+      "SPD-2436",
+      "SPD-2435",
+      "SPD-2434",
+      "SPD-2433",
+      "SPD-2432",
+      "SPD-2431",
+      "SPD-2429",
+      "SPD-2427"
+    ],
+    "last_10": [
+      "SPD-3",
+      "SPD-27",
+      "SPD-20",
+      "SPD-5",
+      "SPD-9",
+      "SPD-14",
+      "SPD-35",
+      "SPD-29",
+      "SPD-19",
+      "SPD-21"
+    ],
+    "resume_command": "jq -r '.records[].issue_key' assets/json/major-critical.breakdown.json",
+    "complete": true
+  },
+  "processed_bucket_ids": [
+    "checkout_payment_order",
+    "pricing_fees_discounts_tax",
+    "inventory_capacity_seats",
+    "reporting_dashboard_payout",
+    "async_provider_background_state",
+    "identity_access_account",
+    "box_office_pos_terminal",
+    "membership_package_waitlist",
+    "event_config_settings",
+    "support_ops_data_script",
+    "hardware_device_printing"
+  ],
+  "processed_pattern_ids": [
+    "payment_final_state",
+    "exchange_refund_void_credit",
+    "gift_cards_user_credits",
+    "pricing_fees_discounts_tax",
+    "assigned_seating_inventory_holds",
+    "membership_season_benefits",
+    "packages_bundles",
+    "waitlist_guestlist_group_sales_transfers",
+    "box_office_pos_payment",
+    "checkout_entry_widget_calendar",
+    "reporting_dashboard_payouts",
+    "identity_permissions_accounts",
+    "async_provider_background_state",
+    "custom_questions_delivery_barcode_checkin",
+    "hardware_device_printing",
+    "support_ops_data_config",
+    "unclassified_low_signal"
+  ],
+  "pattern_counts": {
+    "payment_final_state": {
+      "total": 135,
+      "high": 55,
+      "medium": 74,
+      "low": 6
+    },
+    "exchange_refund_void_credit": {
+      "total": 133,
+      "high": 77,
+      "medium": 48,
+      "low": 8
+    },
+    "gift_cards_user_credits": {
+      "total": 29,
+      "high": 15,
+      "medium": 8,
+      "low": 6
+    },
+    "pricing_fees_discounts_tax": {
+      "total": 161,
+      "high": 71,
+      "medium": 74,
+      "low": 16
+    },
+    "assigned_seating_inventory_holds": {
+      "total": 180,
+      "high": 75,
+      "medium": 91,
+      "low": 14
+    },
+    "membership_season_benefits": {
+      "total": 127,
+      "high": 36,
+      "medium": 52,
+      "low": 39
+    },
+    "packages_bundles": {
+      "total": 27,
+      "high": 12,
+      "medium": 10,
+      "low": 5
+    },
+    "waitlist_guestlist_group_sales_transfers": {
+      "total": 59,
+      "high": 15,
+      "medium": 33,
+      "low": 11
+    },
+    "box_office_pos_payment": {
+      "total": 66,
+      "high": 18,
+      "medium": 32,
+      "low": 16
+    },
+    "checkout_entry_widget_calendar": {
+      "total": 51,
+      "high": 5,
+      "medium": 24,
+      "low": 22
+    },
+    "reporting_dashboard_payouts": {
+      "total": 72,
+      "high": 20,
+      "medium": 40,
+      "low": 12
+    },
+    "identity_permissions_accounts": {
+      "total": 30,
+      "high": 5,
+      "medium": 11,
+      "low": 14
+    },
+    "async_provider_background_state": {
+      "total": 30,
+      "high": 9,
+      "medium": 19,
+      "low": 2
+    },
+    "custom_questions_delivery_barcode_checkin": {
+      "total": 62,
+      "high": 11,
+      "medium": 27,
+      "low": 24
+    },
+    "hardware_device_printing": {
+      "total": 3,
+      "high": 1,
+      "medium": 0,
+      "low": 2
+    },
+    "support_ops_data_config": {
+      "total": 68,
+      "high": 4,
+      "medium": 15,
+      "low": 49
+    },
+    "unclassified_low_signal": {
+      "total": 119,
+      "high": 0,
+      "medium": 45,
+      "low": 74
+    }
+  },
+  "coverage_classification_counts": {
+    "Exact coverage found": 0,
+    "Partial coverage found": 11,
+    "No coverage found in inspected files": 2,
+    "Not a Playwright candidate": 2,
+    "Needs product/provider strategy": 1
+  },
+  "remaining_high_signal_count": 0,
+  "top_missing_automation_ids": [
+    "MC-PW-P0-001",
+    "MC-PW-P0-002",
+    "MC-PW-P0-003",
+    "MC-PW-P0-004",
+    "MC-PW-P0-005",
+    "MC-PW-P1-006",
+    "MC-PW-P1-007",
+    "MC-PW-P1-008",
+    "MC-PW-P1-009",
+    "MC-PW-P1-010"
+  ],
+  "exhaustion_status": {
+    "high_medium_signal_buckets_classified": true,
+    "low_signal_buckets_grouped": true,
+    "source_patterns_exhausted": true,
+    "stopped_because": "analysis exhausted; some future implementation branches need product/provider/reporting fixture or hardware strategy, but no more useful read-only bucketing remained"
+  }
+}
