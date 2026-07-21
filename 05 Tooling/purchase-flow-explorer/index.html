@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Purchase Flow Explorer</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f6f8;
+      --surface: #ffffff;
+      --surface-2: #eef2f4;
+      --text: #172126;
+      --muted: #5e6c73;
+      --line: #d6dde1;
+      --strong-line: #aab6bc;
+      --accent: #087f6d;
+      --accent-soft: #d9f0eb;
+      --accent-2: #b9472d;
+      --accent-2-soft: #f8e5df;
+      --selected: #dce8ed;
+      --focus: #0a6cae;
+      --shadow: 0 1px 2px rgba(23, 33, 38, 0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --bg: #121719;
+        --surface: #1b2225;
+        --surface-2: #242d31;
+        --text: #edf2f4;
+        --muted: #aebbc0;
+        --line: #344147;
+        --strong-line: #607077;
+        --accent: #54c7b2;
+        --accent-soft: #183d38;
+        --accent-2: #ef8b71;
+        --accent-2-soft: #482a24;
+        --selected: #273d46;
+        --focus: #74bff0;
+        --shadow: none;
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button, input, select { font: inherit; letter-spacing: 0; }
+    button, select { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 18px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 20px; font-weight: 650; }
+    h2 { font-size: 16px; font-weight: 650; }
+    h3 { font-size: 14px; font-weight: 650; }
+
+    .header-meta { min-width: 0; color: var(--muted); text-align: right; overflow-wrap: anywhere; }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      padding: 8px 18px 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      border: 0;
+      border-bottom: 3px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 12px 9px;
+      font-weight: 600;
+    }
+
+    .tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+
+    .workspace { min-height: calc(100vh - 100px); }
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .overview { padding: 16px 18px 28px; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(120px, 1fr));
+      border: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    .metric { padding: 12px 14px; border-right: 1px solid var(--line); }
+    .metric:last-child { border-right: 0; }
+    .metric-value { display: block; font-size: 23px; font-weight: 650; }
+    .metric-label { color: var(--muted); }
+
+    .section-band {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    .section-title { padding: 12px 14px; border-bottom: 1px solid var(--line); }
+
+    .flow-map {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(130px, 1fr));
+      gap: 0;
+      padding: 16px;
+    }
+
+    .stage {
+      position: relative;
+      min-height: 92px;
+      padding: 12px 28px 12px 12px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      text-align: left;
+      color: var(--text);
+    }
+
+    .stage:nth-child(n+6) { margin-top: 12px; }
+    .stage:hover { background: var(--accent-soft); }
+    .stage.active { background: var(--accent-soft); border-color: var(--accent); }
+    .stage:not(:nth-child(5n))::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -9px;
+      z-index: 2;
+      width: 16px;
+      height: 16px;
+      border-top: 2px solid var(--strong-line);
+      border-right: 2px solid var(--strong-line);
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    .stage-index { display: block; color: var(--muted); margin-bottom: 4px; }
+    .stage-name { display: block; font-weight: 650; margin-bottom: 8px; }
+    .stage-count { color: var(--muted); }
+
+    .coverage-bars { padding: 14px; display: grid; gap: 10px; }
+    .coverage-row { display: grid; grid-template-columns: minmax(150px, 220px) minmax(0, 1fr) 64px; align-items: center; gap: 12px; }
+    .bar-track { height: 10px; background: var(--surface-2); border: 1px solid var(--line); }
+    .bar-fill { height: 100%; background: var(--accent); }
+    .coverage-value { color: var(--muted); text-align: right; }
+
+    .explorer-grid {
+      display: grid;
+      grid-template-columns: minmax(230px, 290px) minmax(320px, 0.9fr) minmax(380px, 1.3fr);
+      min-height: calc(100vh - 100px);
+    }
+
+    .filters, .results, .detail { min-width: 0; background: var(--surface); }
+    .filters, .results { border-right: 1px solid var(--line); }
+    .pane-head { padding: 13px 14px; border-bottom: 1px solid var(--line); }
+    .pane-body { padding: 12px; }
+
+    label { display: block; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+    input, select {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--strong-line);
+      border-radius: 4px;
+      background: var(--surface);
+      color: var(--text);
+      padding: 7px 9px;
+    }
+
+    .field { margin-bottom: 12px; }
+
+    .type-list { display: grid; gap: 4px; }
+    .type-filter {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      padding: 7px 8px;
+      text-align: left;
+    }
+    .type-filter:hover { background: var(--surface-2); }
+    .type-filter.active { background: var(--selected); border-color: var(--strong-line); }
+    .type-count { color: var(--muted); }
+
+    .result-count { color: var(--muted); margin-top: 3px; }
+    .result-list { display: grid; min-width: 0; }
+    .result-item {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+      color: var(--text);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    .result-item:hover { background: var(--surface-2); }
+    .result-item.active { background: var(--selected); box-shadow: inset 3px 0 0 var(--accent); }
+    .record-id { display: block; font-weight: 650; overflow-wrap: anywhere; }
+    .record-summary { display: -webkit-box; color: var(--muted); overflow: hidden; overflow-wrap: anywhere; word-break: break-word; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-top: 3px; }
+
+    .detail-empty { color: var(--muted); padding: 22px; }
+    .detail-content { padding: 16px; }
+    .detail-path { color: var(--muted); margin: 5px 0 16px; overflow-wrap: anywhere; }
+    .record-lede { max-width: 78ch; margin-bottom: 16px; font-size: 15px; }
+    .detail-grid { display: grid; border-top: 1px solid var(--line); }
+    .detail-row { display: grid; grid-template-columns: minmax(130px, 190px) minmax(0, 1fr); border-bottom: 1px solid var(--line); }
+    .detail-key { padding: 10px 12px 10px 0; color: var(--muted); font-weight: 600; }
+    .detail-value { padding: 10px 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface-2); padding: 1px 3px; border-radius: 3px; }
+
+    .trace-legend { background: var(--surface); border-bottom: 1px solid var(--line); }
+    .trace-legend summary { cursor: pointer; padding: 11px 18px; font-weight: 650; }
+    .legend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1px; padding: 0 18px 14px; }
+    .legend-item { min-width: 0; padding: 8px 10px; background: var(--surface-2); }
+    .legend-code { display: block; color: var(--accent); font-weight: 700; }
+    .legend-note { color: var(--muted); font-size: 13px; }
+
+    .sequence-layout { display: grid; width: 100%; grid-template-columns: clamp(280px, 28vw, 370px) minmax(0, 1fr); min-height: calc(100vh - 160px); }
+    .sequence-picker { min-width: 0; background: var(--surface); border-right: 1px solid var(--line); overflow: hidden; }
+    .sequence-visual { min-width: 0; padding: 18px; }
+    .sequence-path { display: flex; flex-wrap: wrap; align-items: stretch; gap: 20px 28px; padding: 18px 0; }
+    .sequence-step {
+      position: relative;
+      flex: 1 1 190px;
+      max-width: 290px;
+      min-height: 78px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      padding: 11px;
+      box-shadow: var(--shadow);
+      overflow-wrap: anywhere;
+    }
+    .sequence-step:not(:last-child)::after { content: "→"; position: absolute; right: -22px; top: 28px; color: var(--muted); font-size: 20px; }
+    .step-number { color: var(--muted); display: block; margin-bottom: 5px; }
+    .step-code { display: block; font-weight: 650; overflow-wrap: anywhere; }
+    .step-meaning { display: block; color: var(--muted); margin-top: 6px; }
+    .sequence-outcome { border-left: 3px solid var(--accent-2); padding: 10px 12px; background: var(--accent-2-soft); max-width: 980px; }
+
+    .load-more {
+      display: block;
+      width: calc(100% - 24px);
+      margin: 12px;
+      border: 1px solid var(--strong-line);
+      border-radius: 4px;
+      background: var(--surface);
+      color: var(--text);
+      padding: 8px;
+    }
+
+    .error { margin: 20px; padding: 14px; border: 1px solid var(--accent-2); background: var(--accent-2-soft); }
+
+    @media (max-width: 980px) {
+      .flow-map { grid-template-columns: repeat(2, minmax(140px, 1fr)); gap: 8px; }
+      .stage:nth-child(n+6) { margin-top: 0; }
+      .stage::after { display: none; }
+      .explorer-grid { grid-template-columns: 220px minmax(300px, 1fr); }
+      .detail { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+      .sequence-layout { grid-template-columns: minmax(240px, 32vw) minmax(0, 1fr); }
+    }
+
+    @media (max-width: 760px) {
+      .app-header { align-items: flex-start; flex-direction: column; gap: 5px; }
+      .header-meta { text-align: left; }
+      .tabs { overflow-x: auto; padding-left: 8px; }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .metric { border-bottom: 1px solid var(--line); }
+      .flow-map { grid-template-columns: 1fr; }
+      .coverage-row { grid-template-columns: 120px minmax(0, 1fr) 48px; }
+      .explorer-grid, .sequence-layout { display: block; }
+      .filters, .results, .sequence-picker { border-right: 0; border-bottom: 1px solid var(--line); }
+      .sequence-picker .result-list { max-height: 42vh; overflow-y: auto; }
+      .detail-row { grid-template-columns: 1fr; }
+      .detail-key { padding-bottom: 0; }
+      .sequence-step { max-width: none; flex-basis: 100%; }
+      .sequence-step::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Purchase Flow Explorer</h1>
+      <p class="header-meta" id="source-label">Loading source data…</p>
+    </div>
+    <p class="header-meta" id="generated-label"></p>
+  </header>
+
+  <nav class="tabs" aria-label="Explorer views">
+    <button class="tab" type="button" role="tab" aria-selected="true" data-view="overview">Overview</button>
+    <button class="tab" type="button" role="tab" aria-selected="false" data-view="browse">Browse records</button>
+    <button class="tab" type="button" role="tab" aria-selected="false" data-view="sequences">Trace sequences</button>
+  </nav>
+
+  <main class="workspace" id="app">
+    <section class="view active" id="view-overview" aria-label="Coverage overview">
+      <div class="overview">
+        <div class="metrics" id="metrics"></div>
+        <section class="section-band">
+          <div class="section-title"><h2>Canonical purchase journey</h2></div>
+          <div class="flow-map" id="flow-map"></div>
+        </section>
+        <section class="section-band">
+          <div class="section-title"><h2>Mapped records by domain</h2></div>
+          <div class="coverage-bars" id="coverage-bars"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="view" id="view-browse" aria-label="Record browser">
+      <div class="explorer-grid">
+        <aside class="filters">
+          <div class="pane-head"><h2>Filters</h2></div>
+          <div class="pane-body">
+            <div class="field">
+              <label for="record-search">Search all content</label>
+              <input id="record-search" type="search" placeholder="ID, route, rule, source…">
+            </div>
+            <div class="field">
+              <label for="section-filter">Section</label>
+              <select id="section-filter"><option value="">All sections</option></select>
+            </div>
+            <div>
+              <label>Record type</label>
+              <div class="type-list" id="type-list"></div>
+            </div>
+          </div>
+        </aside>
+        <section class="results">
+          <div class="pane-head">
+            <h2>Records</h2>
+            <p class="result-count" id="result-count"></p>
+          </div>
+          <div id="result-list" class="result-list"></div>
+          <button id="load-more" class="load-more" type="button" hidden>Show more</button>
+        </section>
+        <section class="detail" aria-live="polite">
+          <div class="detail-empty" id="detail-empty">Select a record to inspect its complete source-mapped content.</div>
+          <div class="detail-content" id="detail-content" hidden></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="view" id="view-sequences" aria-label="Sequence tracer">
+      <details class="trace-legend" open>
+        <summary>Trace abbreviation key</summary>
+        <div class="legend-grid" id="trace-legend"></div>
+      </details>
+      <div class="sequence-layout">
+        <aside class="sequence-picker">
+          <div class="pane-head"><h2>Sequences</h2></div>
+          <div class="pane-body">
+            <label for="sequence-search">Find a trace</label>
+            <input id="sequence-search" type="search" placeholder="T-001, Stripe, membership…">
+          </div>
+          <div id="sequence-list" class="result-list"></div>
+        </aside>
+        <section class="sequence-visual" id="sequence-visual">
+          <p class="detail-empty">Select a sequence to expand its stages.</p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../02%20Feature%20QA/End-to-End%20Purchase%20Coverage%20Matrix.browser-data.js"></script>
+  <script>
+    let typeLabels = {};
+    const stages = [
+      ["Entry", ["entry", "route", "surface", "discover"]],
+      ["Item", ["item", "ticket", "product", "membership", "gift card"]],
+      ["Configure", ["config", "variant", "seat", "package", "quantity"]],
+      ["Identity", ["identity", "guest", "login", "auth", "customer"]],
+      ["Basket", ["basket", "mutation", "hold", "inventory", "selection"]],
+      ["Checkout", ["checkout", "review", "terms", "delivery", "question"]],
+      ["Payment", ["payment", "tender", "gateway", "stripe", "yuno", "square"]],
+      ["Finalize", ["finalize", "webhook", "purchase service", "invoice"]],
+      ["Outcome", ["outcome", "ticketitem", "member", "credit", "subscriber"]],
+      ["Post-purchase", ["post", "refund", "void", "transfer", "resale", "settlement"]],
+    ];
+    let data;
+    let records = [];
+    let filteredRecords = [];
+    let selectedRecordId = "";
+    let selectedType = "";
+    let visibleLimit = 100;
+
+    const escapeHtml = (value) => String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+    const inlineMarkup = (value) => escapeHtml(value)
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+
+    function summaryFor(record) {
+      return record.summary || record.location.sectionName;
+    }
+
+    function switchView(name) {
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.setAttribute("aria-selected", String(tab.dataset.view === name));
+      });
+      document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === `view-${name}`));
+    }
+
+    function renderOverview() {
+      const metrics = [
+        [data.summary.categoryCounts.entry || 0, "Entry surfaces"],
+        [data.summary.categoryCounts.sequence || 0, "Trace sequences"],
+        [data.summary.categoryCounts.acceptance || 0, "Expected behaviors"],
+        [data.summary.categoryCounts.configuration || 0, "Configurations"],
+        [data.summary.categoryCounts.invalid || 0, "Blocked combinations"],
+      ];
+      document.getElementById("metrics").innerHTML = metrics.map(([value, label]) => `
+        <div class="metric"><span class="metric-value">${value}</span><span class="metric-label">${label}</span></div>
+      `).join("");
+
+      document.getElementById("flow-map").innerHTML = stages.map(([name, terms], index) => {
+        const count = records.filter((record) => terms.some((term) => record.searchText.includes(term))).length;
+        return `<button class="stage" type="button" data-stage="${escapeHtml(name)}" data-query="${escapeHtml(terms[0])}">
+          <span class="stage-index">${String(index + 1).padStart(2, "0")}</span>
+          <span class="stage-name">${escapeHtml(name)}</span>
+          <span class="stage-count">${count} related records</span>
+        </button>`;
+      }).join("");
+
+      const domainCounts = Object.entries(data.summary.categoryCounts)
+        .filter(([type]) => typeLabels[type])
+        .sort((a, b) => b[1] - a[1]);
+      const max = Math.max(...domainCounts.map(([, count]) => count));
+      document.getElementById("coverage-bars").innerHTML = domainCounts.map(([type, count]) => `
+        <div class="coverage-row">
+          <span>${escapeHtml(typeLabels[type])}</span>
+          <div class="bar-track" aria-label="${escapeHtml(typeLabels[type])}: ${count}"><div class="bar-fill" style="width:${(count / max) * 100}%"></div></div>
+          <span class="coverage-value">${count}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderFilters() {
+      const sectionSelect = document.getElementById("section-filter");
+      const sections = [...new Set(records.map((record) => record.location.sectionName))].sort();
+      sectionSelect.insertAdjacentHTML("beforeend", sections.map((section) => `<option value="${escapeHtml(section)}">${escapeHtml(section)}</option>`).join(""));
+
+      const counts = records.reduce((map, record) => {
+        map[record.category] = (map[record.category] || 0) + 1;
+        return map;
+      }, {});
+      document.getElementById("type-list").innerHTML = [
+        `<button type="button" class="type-filter active" data-type=""><span>All records</span><span class="type-count">${records.length}</span></button>`,
+        ...Object.entries(typeLabels).filter(([type]) => counts[type]).map(([type, label]) =>
+          `<button type="button" class="type-filter" data-type="${type}"><span>${escapeHtml(label)}</span><span class="type-count">${counts[type]}</span></button>`
+        ),
+      ].join("");
+    }
+
+    function applyFilters() {
+      const query = document.getElementById("record-search").value.trim().toLowerCase();
+      const section = document.getElementById("section-filter").value;
+      filteredRecords = records.filter((record) =>
+        (!selectedType || record.category === selectedType) &&
+        (!section || record.location.sectionName === section) &&
+        (!query || record.searchText.includes(query))
+      );
+      visibleLimit = 100;
+      renderResults();
+    }
+
+    function renderResults() {
+      const visible = filteredRecords.slice(0, visibleLimit);
+      document.getElementById("result-count").textContent = `${filteredRecords.length.toLocaleString()} matching records`;
+      document.getElementById("result-list").innerHTML = visible.map((record) => `
+        <button type="button" class="result-item ${record.id === selectedRecordId ? "active" : ""}" data-record-id="${escapeHtml(record.id)}">
+          <span class="record-id">${escapeHtml(record.title)}</span>
+          <span class="record-summary">${escapeHtml(summaryFor(record))}</span>
+        </button>
+      `).join("");
+      document.getElementById("load-more").hidden = visible.length >= filteredRecords.length;
+    }
+
+    function showRecord(id) {
+      const record = records.find((item) => item.id === id);
+      if (!record) return;
+      selectedRecordId = id;
+      renderResults();
+      const content = document.getElementById("detail-content");
+      document.getElementById("detail-empty").hidden = true;
+      content.hidden = false;
+      content.innerHTML = `
+        <h2>${escapeHtml(record.title)}</h2>
+        <p class="detail-path">${escapeHtml(record.id)} · ${escapeHtml(record.location.breadcrumb.join(" / "))} · ${escapeHtml(record.categoryLabel)}</p>
+        <p class="record-lede">${inlineMarkup(record.summary)}</p>
+        <div class="detail-grid">
+          <div class="detail-row"><div class="detail-key">Status</div><div class="detail-value">${escapeHtml(record.status.label)}</div></div>
+          ${record.details.map(({ label, value }) => `
+            <div class="detail-row"><div class="detail-key">${escapeHtml(label)}</div><div class="detail-value">${inlineMarkup(value)}</div></div>
+          `).join("")}
+          ${record.evidence.map(({ label, value }) => `
+            <div class="detail-row"><div class="detail-key">${escapeHtml(label)}</div><div class="detail-value">${inlineMarkup(value)}</div></div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function sequenceText(record) {
+      return record.trace?.pathText || "";
+    }
+
+    function renderTraceLegend() {
+      document.getElementById("trace-legend").innerHTML = data.glossary.tracePrefixes.map(({ code, meaning }) => `
+        <div class="legend-item">
+          <span class="legend-code">${escapeHtml(code)}-</span>
+          <span>${escapeHtml(meaning)}</span>
+        </div>
+      `).join("") + data.glossary.commonTerms.map(({ code, meaning }) => `
+        <div class="legend-item"><span class="legend-code">${escapeHtml(code)}</span><span>${escapeHtml(meaning)}</span></div>
+      `).join("") + `
+        <p class="legend-note">Codes remain unchanged so they can be found in the source matrix. Plain-English meanings appear on every expanded trace step.</p>
+      `;
+    }
+
+    function renderSequenceList() {
+      const query = document.getElementById("sequence-search").value.trim().toLowerCase();
+      const sequences = records.filter((record) => record.category === "sequence" && (!query || record.searchText.includes(query)));
+      document.getElementById("sequence-list").innerHTML = sequences.slice(0, 254).map((record) => `
+        <button type="button" class="result-item" data-sequence-id="${escapeHtml(record.id)}">
+          <span class="record-id">${escapeHtml(record.title)}</span>
+          <span class="record-summary">${escapeHtml(record.summary)}</span>
+        </button>
+      `).join("");
+    }
+
+    function showSequence(id) {
+      const record = records.find((item) => item.id === id);
+      if (!record) return;
+      document.querySelectorAll("[data-sequence-id]").forEach((button) => button.classList.toggle("active", button.dataset.sequenceId === id));
+      const steps = record.trace.steps;
+      const outcome = record.trace.expectedOutcome;
+      const status = record.trace.verification;
+      document.getElementById("sequence-visual").innerHTML = `
+        <h2>${escapeHtml(record.id)}</h2>
+        <p class="detail-path">${escapeHtml(status)}</p>
+        <div class="sequence-path">
+          ${steps.map((step) => `<div class="sequence-step"><span class="step-number">Step ${step.number}</span><span class="step-code">${inlineMarkup(step.codeOrAction)}</span><span class="step-meaning">${escapeHtml(step.meaning)}</span></div>`).join("")}
+        </div>
+        <div class="sequence-outcome"><strong>Expected outcome</strong><br>${inlineMarkup(outcome)}</div>
+      `;
+    }
+
+    function bindEvents() {
+      document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => switchView(tab.dataset.view)));
+      document.getElementById("record-search").addEventListener("input", applyFilters);
+      document.getElementById("section-filter").addEventListener("change", applyFilters);
+      document.getElementById("type-list").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-type]");
+        if (!button) return;
+        selectedType = button.dataset.type;
+        document.querySelectorAll(".type-filter").forEach((item) => item.classList.toggle("active", item === button));
+        applyFilters();
+      });
+      document.getElementById("result-list").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-record-id]");
+        if (button) showRecord(button.dataset.recordId);
+      });
+      document.getElementById("load-more").addEventListener("click", () => {
+        visibleLimit += 100;
+        renderResults();
+      });
+      document.getElementById("flow-map").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-query]");
+        if (!button) return;
+        switchView("browse");
+        document.getElementById("record-search").value = button.dataset.query;
+        applyFilters();
+      });
+      document.getElementById("sequence-search").addEventListener("input", renderSequenceList);
+      document.getElementById("sequence-list").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-sequence-id]");
+        if (button) showSequence(button.dataset.sequenceId);
+      });
+    }
+
+    function initialize() {
+      try {
+        if (!window.PURCHASE_FLOW_DATA) throw new Error("Generated browser data is missing. Run the build-purchase-flow-data script.");
+        data = window.PURCHASE_FLOW_DATA;
+        typeLabels = Object.fromEntries(data.glossary.categories.map((category) => [category.id, category.label]));
+        records = data.records.map((record) => ({
+          ...record,
+          searchText: JSON.stringify(record).toLowerCase(),
+        }));
+        filteredRecords = records;
+        document.getElementById("source-label").textContent = `${data.document.sourceMarkdown} · ${data.summary.sourceLines.toLocaleString()} source lines`;
+        document.getElementById("generated-label").textContent = `Generated ${new Date(data.document.generatedAt).toLocaleString()}`;
+        renderOverview();
+        renderFilters();
+        renderResults();
+        renderTraceLegend();
+        renderSequenceList();
+        bindEvents();
+      } catch (error) {
+        document.getElementById("app").innerHTML = `<div class="error"><strong>Unable to load purchase-flow data.</strong><br>${escapeHtml(error.message)}</div>`;
+      }
+    }
+
+    initialize();
+  </script>
+</body>
+</html>
