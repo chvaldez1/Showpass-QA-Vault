@@ -10,6 +10,20 @@ All tests must reflect real user behavior within the Showpass ecosystem, includi
 
 Do not infer intent, business value, or user psychology beyond what is directly observable in the platform.
 
+## Existing Case Enhancement Rules
+
+When enhancing an existing Qase case, preservation is the default:
+
+- Preserve the case's existing purpose and user flow.
+- Preserve supported Platform and View combinations unless verified behavior differs.
+- Preserve the behavioral coverage represented by meaningful parameters. Simplify their structure only when no coverage or clarity is lost.
+- Preserve useful validation, removal, persistence, and end-to-end assertions already covered by the case.
+- Add the missing regression behavior without silently replacing the original scenario.
+- Do not narrow a shared case only because a bug was reported through one reproduction path.
+- Do not repurpose an existing case unless the user explicitly requests or approves the change.
+
+Before revising the case, compare the proposed version against the current title, description, Preconditions, Postconditions, tags, parameters, and steps. Explicitly identify any coverage that would be removed or narrowed and obtain approval before making that change.
+
 ## User Perspective Rules
 
 - Write tests strictly from a user's perspective:
@@ -84,6 +98,9 @@ Use Qase single parameters to eliminate duplicate test cases. If the input lists
 - Do not use backticks, brackets, or extra formatting around parameter names or values.
 - Keep Platform and View in the Description table by default. Do not add Platform or View as Qase parameters unless the user explicitly asks for Qase grouped parameters.
 - Keep unique flow variables, such as LoginAction, AuthEntryPoint, PaymentMethod, or RecipientAuthState, as single Qase parameters.
+- Parameterize behavioral differences, not every piece of test context.
+- Prefer one clear parameter when its values fully describe the setup under test. Add another parameter only when it independently changes the flow or expected result.
+- Use reusable setup names instead of tying a parameter to the first reported field, platform, or reproduction path.
 - Before creating separate cases for the same behavior across product areas, check whether the area can be a parameter. For example, protected-page login enforcement for account, dashboard, and Box Office should usually be one case with a `ProtectedArea` or `ProtectedPage` parameter, unless the flow or expected result is materially different.
 - If a parameterized case needs area-specific permission checks, keep those checks in the Expected Result or Preconditions instead of splitting cases only by area.
 
@@ -123,6 +140,15 @@ Each test case description must include a Markdown table listing the supported P
 ```
 
 Only include combinations relevant to the behavior under test.
+
+### Reported Surface Versus Behavior Scope
+
+Context named in a bug report identifies a known reproduction path; it does not automatically limit the regression's expected behavior.
+
+- Keep an existing cross-platform case cross-platform when the same user-visible behavior is expected everywhere.
+- Narrow coverage only when source behavior, the product specification, or different observable results establish a platform or view difference.
+- When source behavior is shared, retain the shared coverage and keep reproduction details in test data or regression notes.
+- If platform scope is uncertain, preserve the current supported combinations and flag the uncertainty instead of removing coverage.
 
 ## Duplicate Case Rules
 

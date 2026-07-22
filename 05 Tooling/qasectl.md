@@ -26,9 +26,22 @@ Use this with [[06 Prompts/Showpass QA Test Case Generator]]:
 5. Write the gap analysis to the requested output file, or create a suitably named note under `03 Test Cases/`.
 6. Do not push to Qase until the output is reviewed and signed off.
 
+## Exact-ID Review Workflow
+
+Use this instead of keyword or bulk search when the user provides exact Qase case IDs and asks to review or enhance those cases.
+
+1. Treat the named case IDs as the complete working scope.
+2. Read only those Qase cases, the linked bug or specification, and the relevant source behavior.
+3. Compare the named cases directly with the verified behavior.
+4. Do not run a targeted or bulk Qase search unless the user asks for gap or duplicate analysis, or a new case is being considered.
+5. Prefer enhancing a suitable named case over proposing another case when the regression fits its existing purpose.
+6. If the named cases cannot cover the behavior without becoming unclear or overloaded, explain why before searching for or proposing another case.
+
 ## Read-Only Bulk Search Workflow
 
 Use this before gap analysis when searching by feature, keyword, route, tag, or broad area. Prefer one bulk read plus local filtering instead of many small Qase requests. This reduces repeated permission prompts and makes the search reproducible.
+
+Do not use this workflow for a review limited to exact case IDs. A duplicate search is required only when gap analysis or a possible new case is in scope.
 
 1. Load credentials from the vault `.env`; do not echo tokens.
 2. Try a targeted Qase search first when the keyword is narrow.
@@ -119,6 +132,42 @@ The confirmation must state the exact scope that will be written and wait for an
 
 If the user confirms a bulk operation, dry-run every affected case and summarize the local draft label, real Qase case ID if updating, title, suite, tags, parameters, and step count before applying.
 
+## Existing Case Change Classification
+
+Classify requested work before drafting an update:
+
+- `Enhance` - preserve the case's purpose, supported platforms and views, meaningful parameters, and useful assertions while adding missing coverage.
+- `Refactor` - improve structure or wording without changing coverage scope.
+- `Repurpose` - change the case's responsibility, supported surfaces, or primary scenario.
+
+Default to `Enhance` for requests to improve, strengthen, or add regression coverage to an existing case. Do not refactor or repurpose a case unless the user explicitly requests it or approves the proposed scope change.
+
+The surface where a bug was reported is evidence for reproduction, not automatic evidence that the behavior is surface-specific. Preserve existing platform and view coverage unless verified source behavior, different expected results, or the user establishes a narrower scope.
+
+Before drafting an existing-case update, capture its preservation baseline:
+
+- title and purpose
+- supported Platform and View combinations
+- behavioral coverage represented by parameters
+- existing scenarios and useful assertions
+- suite, tags, and step count
+
+Identify and justify every proposed removal, replacement, or narrowing against that baseline. An unjustified loss of coverage must block the dry run.
+
+## Pre-Dry-Run Checklist
+
+Before running an update dry-run, confirm:
+
+- [ ] Only the requested Qase case IDs are in scope.
+- [ ] The change is classified as Enhance, Refactor, or Repurpose.
+- [ ] Existing platform and view coverage is preserved unless a verified difference justifies a change.
+- [ ] Existing parameterized coverage is preserved; any structural simplification keeps the same behavior clear.
+- [ ] Existing useful assertions remain covered.
+- [ ] No new case is proposed unless the named cases cannot hold the behavior clearly.
+- [ ] Every removed or narrowed behavior is documented and explicitly approved.
+- [ ] Parameters represent behavior-changing setup, not redundant execution context.
+- [ ] The smallest clear parameter set is used; independent parameters are added only when they change the flow or expected result.
+
 1. Confirm scope before writing: suite ID, whether cases are creates or updates, existing Qase case IDs only for updates, and exact field types to update.
 2. Read and apply [[05 Tooling/Qase Test Case Writing Rules]] for any test case content changes.
 3. Before creating more than one case, explicitly check whether the cases are duplicates that should be one parameterized case. If the behavior and expected result are the same across account, dashboard, Box Office, checkout entry points, platform, view, provider, or permission variants, prefer one case with a clear parameter.
@@ -136,14 +185,14 @@ If the user confirms a bulk operation, dry-run every affected case and summarize
    - print a count or compact diff for long fields like `steps`
 8. Review dry-run output against the confirmed request. If the change is broad, ambiguous, or destructive, pause for confirmation again.
 9. Run the apply mode only after the dry run is clean and the confirmed scope still matches the request exactly.
-10. Re-read Qase after applying and verify the requested text or field state is correct. When using `--batch-plan --apply`, use the returned `verified` payloads as the apply-time verification unless deeper field inspection is needed.
+10. Re-read Qase after applying and verify the requested text or field state is correct. An HTTP success response is not proof that Qase stored every field. Compare the readback with the intended payload, especially parameters, tags, and step count. When using `--batch-plan --apply`, use the returned `verified` payloads as the apply-time verification unless deeper field inspection is needed.
 11. Delete temporary scripts unless they are intentionally useful for reuse.
 
 Prefer `05 Tooling/scripts/create-or-update-qase-case.mjs` over fragile inline shell JSON for Qase writes. The script parses `.env`, constructs JSON payloads with structured objects, avoids shell interpolation for request bodies, dry-runs by default, and verifies cases by ID.
 
 Local draft labels such as `TC-1` are not Qase case IDs. For new cases, do not pass `--update`; Qase assigns the new case ID during apply. Use `--update <case-id>` only when modifying an existing Qase case that already has a real Qase ID.
 
-Parameter caveat: the reusable script sends Markdown `Parameters` as Qase `params`, which Qase stores as separate single parameters. Keep Platform and View in the Description table by default, and use Markdown `Parameters` only for single flow variables such as `LoginAction` or `PaymentMethod`. If the user explicitly asks for Qase grouped parameters, use an explicit `parameters` payload with `type: "group"` and verify the readback contains `.result.parameters[].type == "group"`. As of the 2026-07-06 SPT-4964 check, Qase API PATCH preserved a true Platform/View group but did not preserve a mixed payload containing both a group and a separate single parameter; add or confirm mixed grouped-plus-single parameters in the Qase UI when needed.
+Parameter caveat: the reusable script sends Markdown `Parameters` as Qase `params`, which Qase stores as separate single parameters. Keep execution context in the Description table by default, and use Markdown `Parameters` for setup values that change the behavior being verified. Use the smallest parameter set that remains clear. If grouped parameters are explicitly required, use an explicit `parameters` payload with `type: "group"` and verify the readback contains the intended group. Treat parameter-structure changes as high-risk writes: dry-run them, apply the smallest safe change, and confirm the stored structure and values from Qase before continuing.
 
 For copyable examples, see [[05 Tooling/Create Or Update Qase Case Examples]].
 

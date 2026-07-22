@@ -17,8 +17,10 @@ function usage() {
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-id <id> --case-file <path> --case-number <n> --apply
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-id <id> --case-file <path> --case-number <n> --update <case-id> --dry-run
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-id <id> --case-file <path> --case-number <n> --update <case-id> --apply
+  node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-id <id> --case-file <path> --case-number <n> --update <case-id> --only-fields <field,...> --dry-run
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --batch-plan <path> --dry-run
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --batch-plan <path> --apply
+  node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-id <id> --case-file <path> --case-number <n> --update <case-id> --parameters-file <path> --dry-run
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --verify <case-id>
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --delete <case-id> --apply
   node "05 Tooling/scripts/create-or-update-qase-case.mjs" --suite-info <suite-id>
@@ -27,10 +29,12 @@ Notes:
   --case-number maps to a local markdown label such as "TC-1:" or "### Test Case 1:".
   Local labels are not Qase case IDs. Qase assigns a new ID on create.
   --update must only be used with an existing Qase case ID.
+  --only-fields limits a single-case update to the named payload fields and preserves all other live Qase fields.
   --dry-run is the default for create payloads.
   --apply is required before creating or updating a Qase case.
   --delete requires --apply and must only be used after explicit user confirmation.
   --batch-plan runs multiple create/update operations in one process, including apply-time verification.
+  --parameters-file sends an explicit Qase parameters payload, including true grouped parameters.
   Markdown Parameters are sent as Qase single params. Keep Platform/View in the description table unless a grouped-param workflow is explicitly requested.
   .env must provide QASE_TESTOPS_API_TOKEN or QASE_API_TOKEN, plus QASE_PROJECT_CODE.`);
 }
@@ -126,25 +130,24 @@ function getBlockAfterLabel(section, label) {
   return lines.join("\n").trim();
 }
 
+function getLongTextField(section, label) {
+  return getBoldField(section, label, false) || getBlockAfterLabel(section, label);
+}
+
 function getDescription(section) {
   const description = getBoldField(section, "Description");
   const lines = section.split(/\r?\n/);
   const descriptionIndex = lines.findIndex((line) =>
     line.startsWith("**Description:**")
   );
-  const tableLines = [];
+  const additionalLines = [];
   for (let index = descriptionIndex + 1; index < lines.length; index += 1) {
     const line = lines[index];
-    if (!line.trim()) continue;
-    if (line.trim().startsWith("|")) {
-      tableLines.push(line);
-      continue;
-    }
-    if (tableLines.length > 0) break;
+    if (/^\*\*[^*]+:\*\*/.test(line) || /^### /.test(line)) break;
+    additionalLines.push(line);
   }
-  return tableLines.length > 0
-    ? `${description}\n\n${tableLines.join("\n")}`
-    : description;
+  const additional = additionalLines.join("\n").trim();
+  return additional ? `${description}\n\n${additional}` : description;
 }
 
 function parseTags(section) {
@@ -218,25 +221,46 @@ function parseSteps(section) {
   return rows;
 }
 
-function buildPayload({ caseFile, caseNumber, suiteId }) {
+function readExplicitParameters(parametersFile) {
+  if (!parametersFile) return undefined;
+
+  const parsed = JSON.parse(fs.readFileSync(parametersFile, "utf8"));
+  const parameters = Array.isArray(parsed) ? parsed : [parsed];
+
+  for (const parameter of parameters) {
+    if (parameter.type !== "group" || !Array.isArray(parameter.items) || parameter.items.length === 0) {
+      throw new Error(`Explicit parameters files support grouped parameters only: ${parametersFile}`);
+    }
+    const rowCounts = parameter.items.map((item) => item.values?.length ?? 0);
+    if (rowCounts.some((count) => count === 0 || count !== rowCounts[0])) {
+      throw new Error(`Grouped parameter row counts do not match: ${parametersFile}`);
+    }
+  }
+
+  return parameters;
+}
+
+function buildPayload({ caseFile, caseNumber, suiteId, parametersFile }) {
   const markdown = fs.readFileSync(caseFile, "utf8");
   const section = extractCase(markdown, caseNumber);
   const priorityText = getBoldField(section, "Priority", false).toLowerCase();
   const priority = priorityText ? PRIORITY[priorityText] : undefined;
   if (priorityText && !priority) throw new Error(`Unsupported priority: ${priorityText}`);
+  const explicitParameters = readExplicitParameters(parametersFile);
 
   return {
     title: getTitle(section),
     description: getDescription(section),
-    preconditions: getBoldField(section, "Preconditions", false),
-    postconditions: getBoldField(section, "Postconditions", false),
+    preconditions: getLongTextField(section, "Preconditions"),
+    postconditions: getLongTextField(section, "Postconditions"),
     priority,
     type: DEFAULT_TYPE,
     behavior: DEFAULT_BEHAVIOR,
     layer: DEFAULT_LAYER,
     suite_id: Number(suiteId),
     tags: parseTags(section),
-    params: formatParamsForQase(parseParams(section)),
+    params: explicitParameters ? undefined : formatParamsForQase(parseParams(section)),
+    parameters: explicitParameters,
     steps: parseSteps(section),
   };
 }
@@ -257,6 +281,7 @@ function readBatchPlan(planPath) {
       caseNumber: operation.caseNumber ?? operation.case_number,
       suiteId: operation.suiteId ?? operation.suite_id ?? plan.suiteId ?? plan.suite_id,
       caseId: operation.caseId ?? operation.case_id ?? operation.update,
+      parametersFile: operation.parametersFile ?? operation.parameters_file ?? plan.parametersFile ?? plan.parameters_file,
     };
 
     if (!["create", "update"].includes(normalized.action)) {
@@ -287,6 +312,7 @@ function summarizePayload(payload, mode) {
     layer: payload.layer,
     tags: payload.tags,
     params: payload.params,
+    parameters: summarizeExplicitParameters(payload.parameters),
     step_count: payload.steps.length,
     steps: payload.steps.map((step, index) => ({
       position: index + 1,
@@ -295,6 +321,45 @@ function summarizePayload(payload, mode) {
       expected_result: step.expected_result,
     })),
   };
+}
+
+function summarizeExplicitParameters(parameters) {
+  return parameters?.map((parameter) => ({
+    type: parameter.type,
+    item: parameter.item
+      ? {
+          title: parameter.item.title,
+          value_count: parameter.item.values?.length ?? 0,
+          values: parameter.item.values ?? [],
+        }
+      : undefined,
+    items: parameter.items?.map((item) => ({
+      title: item.title,
+      row_count: item.values?.length ?? 0,
+      values: [...new Set(item.values ?? [])],
+    })),
+  }));
+}
+
+function assertParametersPersisted(payload, result) {
+  if (payload.parameters) {
+    const expected = summarizeExplicitParameters(payload.parameters);
+    const actual = summarizeExplicitParameters(result.parameters);
+    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+      throw new Error(
+        `Qase parameter verification failed: expected ${JSON.stringify(expected)}, received ${JSON.stringify(actual)}`
+      );
+    }
+    return;
+  }
+
+  const expected = payload.params ?? [];
+  const actual = result.params ?? [];
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    throw new Error(
+      `Qase parameter verification failed: expected ${JSON.stringify(expected)}, received ${JSON.stringify(actual)}`
+    );
+  }
 }
 
 function summarizeCase(result) {
@@ -308,6 +373,7 @@ function summarizeCase(result) {
     layer: result.layer,
     tags: (result.tags ?? []).map((tag) => tag.title),
     params: result.params,
+    parameters: summarizeExplicitParameters(result.parameters),
     step_count: result.steps?.length ?? 0,
   };
 }
@@ -324,13 +390,65 @@ function summarizeUpdate({ existing, payload, mode, caseId }) {
       priority: payload.priority !== undefined && existing.priority !== payload.priority,
       tags: JSON.stringify((existing.tags ?? []).map((tag) => tag.title)) !==
         JSON.stringify(payload.tags),
-      params: JSON.stringify(existing.params ?? null) !== JSON.stringify(payload.params ?? null),
+      params: payload.parameters
+        ? JSON.stringify(existing.parameters ?? null) !== JSON.stringify(payload.parameters)
+        : JSON.stringify(existing.params ?? null) !== JSON.stringify(payload.params ?? null),
       steps_count: (existing.steps?.length ?? 0) !== payload.steps.length,
       description: existing.description !== payload.description,
       preconditions: existing.preconditions !== payload.preconditions,
       postconditions: existing.postconditions !== payload.postconditions,
     },
   };
+}
+
+function selectUpdateFields(payload, fieldsText) {
+  if (!fieldsText) return payload;
+
+  const allowedFields = new Set([
+    "title", "description", "preconditions", "postconditions", "priority",
+    "type", "behavior", "layer", "suite_id", "tags", "params", "parameters", "steps",
+  ]);
+  const fields = fieldsText.split(",").map((field) => field.trim()).filter(Boolean);
+  if (fields.length === 0) throw new Error("--only-fields requires at least one field");
+
+  const selected = {};
+  for (const field of fields) {
+    if (!allowedFields.has(field)) throw new Error(`Unsupported --only-fields value: ${field}`);
+    if (!(field in payload)) throw new Error(`Selected field is not present in payload: ${field}`);
+    selected[field] = payload[field];
+  }
+  return selected;
+}
+
+function normalizeExistingField(existing, field) {
+  if (field === "tags") return (existing.tags ?? []).map((tag) => tag.title);
+  return existing[field];
+}
+
+function summarizeSelectedUpdate({ existing, payload, caseId }) {
+  const fields = Object.keys(payload);
+  const before = Object.fromEntries(fields.map((field) => [field, normalizeExistingField(existing, field)]));
+  return {
+    mode: "dry-run-update",
+    update_case_id: Number(caseId),
+    selected_fields: fields,
+    before,
+    after: payload,
+    changed_fields: Object.fromEntries(
+      fields.map((field) => [field, JSON.stringify(before[field]) !== JSON.stringify(payload[field])])
+    ),
+  };
+}
+
+function assertSelectedFieldsPersisted(payload, result) {
+  for (const [field, expected] of Object.entries(payload)) {
+    const actual = normalizeExistingField(result, field);
+    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+      throw new Error(
+        `Qase field verification failed for ${field}: expected ${JSON.stringify(expected)}, received ${JSON.stringify(actual)}`
+      );
+    }
+  }
 }
 
 async function qaseRequest(path, options = {}) {
@@ -367,6 +485,7 @@ async function dryRunBatchOperation(operation) {
     caseFile: operation.caseFile,
     caseNumber: operation.caseNumber,
     suiteId: operation.suiteId,
+    parametersFile: operation.parametersFile,
   });
 
   if (operation.action === "update") {
@@ -398,6 +517,7 @@ async function applyBatchOperation(operation) {
     caseFile: operation.caseFile,
     caseNumber: operation.caseNumber,
     suiteId: operation.suiteId,
+    parametersFile: operation.parametersFile,
   });
 
   if (operation.action === "update") {
@@ -411,6 +531,7 @@ async function applyBatchOperation(operation) {
     const { body: verifiedBody } = await qaseRequest(
       `/case/{project}/${operation.caseId}`
     );
+    assertParametersPersisted(payload, verifiedBody.result);
 
     return {
       label: operation.label,
@@ -431,6 +552,7 @@ async function applyBatchOperation(operation) {
   const { body: verifiedBody } = await qaseRequest(
     `/case/{project}/${createdCaseId}`
   );
+  assertParametersPersisted(payload, verifiedBody.result);
 
   return {
     label: operation.label,
@@ -548,11 +670,16 @@ async function main() {
     return;
   }
 
-  const payload = buildPayload({
+  const fullPayload = buildPayload({
     caseFile: args["case-file"],
     caseNumber: args["case-number"],
     suiteId: args["suite-id"],
+    parametersFile: args["parameters-file"],
   });
+  if (args["only-fields"] && !args.update) {
+    throw new Error("--only-fields is supported only with --update");
+  }
+  const payload = selectUpdateFields(fullPayload, args["only-fields"]);
 
   const mode = args.apply ? "apply" : "dry-run";
 
@@ -564,12 +691,18 @@ async function main() {
     if (!args.apply) {
       console.log(
         JSON.stringify(
-          summarizeUpdate({
-            existing: existingBody.result,
-            payload,
-            mode: "dry-run-update",
-            caseId: args.update,
-          }),
+          args["only-fields"]
+            ? summarizeSelectedUpdate({
+                existing: existingBody.result,
+                payload,
+                caseId: args.update,
+              })
+            : summarizeUpdate({
+                existing: existingBody.result,
+                payload,
+                mode: "dry-run-update",
+                caseId: args.update,
+              }),
           null,
           2
         )
@@ -585,6 +718,9 @@ async function main() {
     const { body: verifiedBody } = await qaseRequest(
       `/case/{project}/${args.update}`
     );
+    if (args["only-fields"]) {
+      assertSelectedFieldsPersisted(payload, verifiedBody.result);
+    }
 
     console.log(
       JSON.stringify(
