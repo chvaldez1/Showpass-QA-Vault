@@ -59,12 +59,45 @@ Step guidelines:
 - Use Preconditions for setup, configuration, or required system state.
 - Use Postconditions for follow-up validation, cleanup, or downstream effects.
 
+### Preconditions And Postconditions Formatting
+
+- Use an asterisk (`*`) Markdown bulleted list whenever Preconditions or Postconditions contain more than one requirement or result.
+- Put one setup requirement, permission, fixture, cleanup action, or final-state assertion in each bullet.
+- Keep a single sentence on the field label line only when the field contains one short condition.
+- Do not combine several conditions into one paragraph; Qase fields must remain easy to scan during execution.
+
+```markdown
+**Preconditions:**
+
+* Memberships are enabled for the venue.
+* The employee can manage memberships.
+* The customer has a renewable membership with an assigned seat.
+
+**Postconditions:**
+
+* One renewal order exists for the customer.
+* The member retains the selected seat.
+```
+
 ## Plain-Language Wording
 
 - Use common Showpass product words that a venue employee, organizer, or customer would recognize.
 - Prefer direct phrases such as `selected items`, `full invoice amount`, `replacement invoice`, `delivery`, `payment type`, `payout`, and `settlement`.
 - Avoid dense QA or implementation wording in titles, descriptions, steps, and expected results, such as `scoping`, `artifacts`, `metadata`, `modifiers`, `handlers`, `ancestry`, `financial root`, or `external-payment` when a simpler phrase is accurate.
 - If a backend term is needed for accuracy, pair it with the user-visible concept and keep it short.
+
+### Beginner Readability Gate
+
+Write every manual case so a person with little or no Showpass knowledge can execute it without guessing.
+
+- Define product-specific terms in a short glossary when they cannot be replaced with common words.
+- Start the first step with the product area or screen the actor must open.
+- Name the visible control, item, or choice the actor selects.
+- When proof lives on another surface, say where to find it. Example: after a Mobile POS sale, open Web Dashboard Transactions for the same venue.
+- Prefer concrete reconciliation language such as `one charge, one transaction, one order, and one ticket`.
+- Do not use internal fields, stored statuses, webhook names, API names, or implementation flags in manual actions unless the actor must supply that value.
+- Keep technical evidence in Sources Reviewed, Source-Backed Behavior, Risk Areas, Test Case Notes, or Suggested Automated Coverage.
+- If a new Showpass employee would need undocumented product knowledge to complete a step, the case is not ready.
 
 ## Title Naming Rules
 

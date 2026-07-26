@@ -52,6 +52,69 @@ Every generated test-case note should include a short `Testing Intent` section b
 
 If the testing intent cannot be stated clearly, stop and add `Open Questions` instead of creating a broad case list.
 
+## Branch / PR Scope Gate
+
+Use this gate whenever the user supplies a PR, names a branch, says the changes are already checked out, or asks for coverage of code changes.
+
+1. Confirm the active repository branch and the intended base branch.
+2. Inspect the branch comparison before searching the broad feature area.
+3. Describe the changed user behavior in plain language. Do not use the feature name as a substitute for understanding the diff.
+4. Trace changed backend endpoints, services, models, webhooks, background tasks, and shared frontend code to every client that consumes them.
+5. Include affected clients even when their files are unchanged on the branch. State whether each client is directly changed or indirectly affected through shared behavior.
+6. Keep entry points and outcome states separate:
+   - Entry points answer **where does the actor start?**
+   - Outcomes answer **how can the workflow finish or recover?**
+7. Create an entry-point coverage table for multi-surface work:
+
+| Entry Point | Actor Flow | Why It Is Affected | Required Outcomes |
+| --- | --- | --- | --- |
+| Example: Electron Box Office | Employee sells from the installed desktop app | Uses the changed shared payment API | Clean success, cancel, retry, failure |
+
+8. Create an outcome matrix when payment, checkout, async state, or recovery is involved. At minimum, consider:
+   - clean success without a prior failure
+   - user cancellation
+   - provider/device cancellation when different
+   - failure or timeout
+   - retry through the same path
+   - recovery through another supported path
+   - duplicate or delayed final updates
+   - cancel/success or other realistic final-state races
+9. Include a clean successful flow as a dedicated proof target and case or explicit existing-case reference. A successful retry does not replace baseline success coverage.
+10. Do not force all outcomes onto all platforms. Verify which controls and recovery choices each client actually exposes, and mark unsupported combinations as not applicable.
+
+Do not use this gate to override the Jira-card no-diff rule. For Jira-card generation, inspect a branch comparison only when the user explicitly asks for diff-based coverage.
+
+## State-Distinct Entry Point Audit
+
+Use this audit whenever a workflow can be reached from more than one visible action, route, modal, client, or handoff. An entry point is the complete actor path and the state carried into the shared workflow, not only the final route or component.
+
+Ask:
+
+> Can the actor reach this action another way that leaves the application in a different state?
+
+If yes, treat it as a separate candidate entry point until source evidence proves the behavior is equivalent.
+
+1. Find every route and component that exposes the action.
+2. Trace every visible actor path into each caller. Do not stop when multiple paths converge on the same modal, hook, service, or shared component.
+3. Record the state at the moment the shared workflow begins:
+   - entity already selected or added vs only viewed
+   - modal kept open vs closed and reopened
+   - empty basket vs existing items
+   - direct navigation vs redirect, deep link, or cross-page handoff
+   - client-only state vs state already persisted to the backend
+   - permission, feature-flag, venue, customer, or role differences
+4. Treat paths with materially different starting state as separate entry-point values even when their later steps and expected result are identical.
+5. Keep entry-point variants separate from outcome variants. Entry points describe how the actor arrives; outcomes describe how the workflow completes, fails, cancels, retries, or recovers.
+6. For one shared behavior, prefer one Qase single parameter such as `EntryPoint` or a specific name such as `ManageRenewalEntryPoint`. Encode dependent setup in the entry-point value or its Description mapping instead of creating invalid independent-parameter combinations.
+7. Put the complete path-to-parameter mapping and starting-state requirements in the Qase Description. Keep Steps focused on the shared actor actions and observable proof after the parameterized path is followed.
+8. Before enhancing an existing broad Qase case, finish this audit. Create a focused regression case when the defect depends on state-distinct paths that would overload or change the existing case's responsibility.
+
+Add an entry-point table when two or more state-distinct paths are in scope:
+
+| Entry Point | Actor Path | Starting State | Supported Surface |
+| --- | --- | --- | --- |
+| Example: ViewWithoutAdding | Search customer → View info → start action | Customer is viewed but not attached; modal remains open | Web Box Office |
+
 After `Testing Intent`, add a compact `Proof Target Map`:
 
 | Proof Target | Why It Matters | Covered By |
@@ -179,6 +242,18 @@ Constraints:
 
 Write manual test cases so a QA user can execute them without translating implementation language.
 
+Apply this beginner-readability check before finalizing the note:
+
+- Assume the reader is new to Showpass.
+- Add a short plain-language glossary when product-specific terms are required.
+- Name the starting screen or route in the first step.
+- Use visible control names where source confirms them.
+- Explain where to verify a result when the selling device does not expose the proof surface, such as opening Web Dashboard Transactions after a Mobile POS sale.
+- Use one observable sentence per Expected Result whenever possible.
+- Prefer `one charge, one transaction, one order, and one ticket` over internal payment-state or basket-field wording.
+- Move checkout IDs, stored statuses, flags, webhook names, and implementation fields to Sources Reviewed, Source-Backed Behavior, Risk Areas, or automation notes unless they are required test data.
+- Read every case once as if the reader has never used the product. If a step requires unstated Showpass knowledge, add the missing navigation, setup, or visible result.
+
 - Start from the `Testing Intent` section. Test cases should trace back to the business invariant and failure mode.
 - Order cases by execution workflow, not by backend class or implementation detail.
 - Prefer an execution order such as discount entry paths and purchase handoff, basket recalculation with fees and tender, item identity and split boundaries, post-transaction financial workflows, and rollback.
@@ -217,9 +292,12 @@ Do not label the output as a gap analysis unless the user explicitly asks to com
 4. Create a small Proof Target Map with the specific outcomes the cases must prove.
 5. Inspect backend behavior first when backend source is provided or the feature affects APIs, validation, permissions, checkout, payments, credits, refunds, settlement, reports, or other source-of-truth logic.
 6. Inspect frontend behavior when the user flow, route, UI state, or entry path needs frontend confirmation.
-7. Identify all meaningful entry paths, setup choices, state transitions, permissions, feature flags, and downstream surfaces.
-8. Remove low-value permutations. Keep only cases that prove a distinct invariant, actor impact, state transition, permission boundary, financial outcome, fulfillment outcome, or reporting outcome.
-9. Write the output under `03 Test Cases/` with a `*-test-cases.md` or `*-coverage-plan.md` filename.
+7. For branch or PR work, complete the Branch / PR Scope Gate and distinguish directly changed clients from unchanged clients that consume the changed shared behavior.
+8. Complete the State-Distinct Entry Point Audit, then identify the remaining setup choices, state transitions, permissions, feature flags, outcome states, and downstream surfaces.
+9. Add a clean successful path before recovery and edge cases when the changed workflow can complete successfully.
+10. Remove low-value permutations. Keep only cases that prove a distinct invariant, actor impact, state transition, permission boundary, financial outcome, fulfillment outcome, reporting outcome, or materially different client recovery path.
+11. Apply the beginner-readability check to the full note and every manual case.
+12. Write the output under `03 Test Cases/` with a `*-test-cases.md` or `*-coverage-plan.md` filename. Reuse the active note for the same request, Jira ticket, feature, or Qase work item; do not create a parallel draft when the approach changes.
 
 The output should separate:
 
@@ -229,7 +307,8 @@ The output should separate:
 - Sources reviewed
 - Assumptions and unknowns
 - Source-backed behavior
-- Entry paths
+- Entry-point coverage, including directly changed and indirectly affected clients when applicable
+- Outcome coverage, including clean success and supported recovery states
 - Risk areas
 - Coverage decisions: why these cases were included and what was intentionally excluded
 - State-space / setup matrix
@@ -276,7 +355,7 @@ Use this flow only when the goal is to compare existing Qase knowledge against t
 2. Inspect backend behavior as the source of truth.
 3. Inspect frontend code to see how users follow that backend behavior.
 4. Compare Qase coverage against source behavior.
-5. Write the output under `03 Test Cases/`. If the user gave only a filename, place that filename in `03 Test Cases/`; if no output file is specified, create a new suitably named note there. If the requested path is a `*Template.md` file, create a feature-specific gap-analysis note instead unless the user explicitly says to overwrite the template.
+5. Write the output under `03 Test Cases/`. Reuse the active note for the same request, Jira ticket, feature, or Qase work item and consolidate revisions there instead of creating parallel gap-analysis and final-case drafts. If the user gave only a filename, place that filename in `03 Test Cases/`; if no output file is specified and no active note exists, create a new suitably named note there. If the requested path is a `*Template.md` file, create a feature-specific gap-analysis note instead unless the user explicitly says to overwrite the template.
 
 The output should separate:
 

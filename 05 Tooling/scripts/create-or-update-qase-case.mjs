@@ -108,7 +108,10 @@ function getTitle(section) {
 }
 
 function getBoldField(section, label, required = true) {
-  const regex = new RegExp(`^\\*\\*${label}:\\*\\*\\s*(.*)$`, "m");
+  // Keep optional spacing on the label line only. Using `\\s*` here also
+  // consumed the following newline, which collapsed multiline fields such as
+  // Preconditions and Postconditions to their first bullet.
+  const regex = new RegExp(`^\\*\\*${label}:\\*\\*[ \\t]*(.*)$`, "m");
   const match = section.match(regex);
   if (!match && required) throw new Error(`Missing field: ${label}`);
   return match?.[1]?.trim() ?? "";
@@ -458,6 +461,7 @@ async function qaseRequest(path, options = {}) {
     ...options,
     headers: {
       Token: token,
+      "Cache-Control": "no-cache",
       ...(options.body ? { "Content-Type": "application/json" } : {}),
       ...(options.headers ?? {}),
     },
