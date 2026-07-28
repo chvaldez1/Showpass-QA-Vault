@@ -1823,5 +1823,5 @@ Frontend anchors:
 ## Related QA Notes
 
 - [[02 Feature QA/Checkout Critical Path Gap Analysis]]
-- [[03 Test Cases/Checkout Money Movement Test Drafts]]
+- [[03 Test Cases/Checkout/Checkout Money Movement Test Drafts]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]

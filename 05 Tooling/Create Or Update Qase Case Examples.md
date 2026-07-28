@@ -13,7 +13,7 @@ Dry run first:
 ```bash
 node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
   --suite-id 144 \
-  --case-file "03 Test Cases/invoice-breakdown-qase-test-cases.md" \
+  --case-file "03 Test Cases/Transactions/invoice-breakdown-qase-test-cases.md" \
   --case-number 5 \
   --dry-run
 ```
@@ -23,7 +23,7 @@ Create after the dry run is reviewed. Do not pass `--update` for a new case:
 ```bash
 node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
   --suite-id 144 \
-  --case-file "03 Test Cases/invoice-breakdown-qase-test-cases.md" \
+  --case-file "03 Test Cases/Transactions/invoice-breakdown-qase-test-cases.md" \
   --case-number 5 \
   --apply
 ```
@@ -42,7 +42,7 @@ Example plan:
 
 ```json
 {
-  "caseFile": "03 Test Cases/itemized-partial-apply-to-each-split-test-cases.md",
+  "caseFile": "03 Test Cases/Discounts/itemized-partial-apply-to-each-split-test-cases.md",
   "suiteId": 1023,
   "operations": [
     {
@@ -83,7 +83,7 @@ Dry run the update first. This reads the current Qase case and prints a before/a
 ```bash
 node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
   --suite-id 144 \
-  --case-file "03 Test Cases/invoice-breakdown-qase-test-cases.md" \
+  --case-file "03 Test Cases/Transactions/invoice-breakdown-qase-test-cases.md" \
   --case-number 5 \
   --update 4817 \
   --dry-run
@@ -94,7 +94,7 @@ Apply the update after the dry run is reviewed:
 ```bash
 node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
   --suite-id 144 \
-  --case-file "03 Test Cases/invoice-breakdown-qase-test-cases.md" \
+  --case-file "03 Test Cases/Transactions/invoice-breakdown-qase-test-cases.md" \
   --case-number 5 \
   --update 4817 \
   --apply

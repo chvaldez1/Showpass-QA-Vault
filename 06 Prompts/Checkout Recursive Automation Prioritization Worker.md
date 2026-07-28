@@ -10,7 +10,7 @@ Related notes:
 - [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
 - [[02 Feature QA/Checkout Critical Path Gap Analysis]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
-- [[03 Test Cases/Checkout Money Movement Test Drafts]]
+- [[03 Test Cases/Checkout/Checkout Money Movement Test Drafts]]
 - [[02 Feature QA/Checkout Automation Decision Queue]]
 
 ```text
@@ -66,7 +66,7 @@ Output notes:
 - Findings: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Critical Path Gap Analysis.md
 - Automation backlog: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Money Movement Automation Backlog.md
 - Phase 2 planning: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Automation Phase 2 Planning.md
-- Test drafts only when useful: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Checkout Money Movement Test Drafts.md
+- Test drafts only when useful: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Checkout/Checkout Money Movement Test Drafts.md
 - Decision queue: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Decision Queue.md
 
 Source repos:

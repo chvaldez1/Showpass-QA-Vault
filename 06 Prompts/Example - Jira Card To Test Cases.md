@@ -33,7 +33,7 @@ Source code:
 
 Output:
 Write the generated cases to:
-03 Test Cases/SPW-12345-<feature-name>-test-cases.md
+03 Test Cases/<feature>/SPW-12345-<feature-name>-test-cases.md
 
 Include:
 - Jira Intake Summary

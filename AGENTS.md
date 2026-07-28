@@ -2,6 +2,12 @@
 
 Use this vault as a QA-first workspace for test creation, QA analysis, and automation planning.
 
+## Canonical QA Standard
+
+Read and apply [[00 Start Here/World-Class Software Quality Standard]] for QA scope, testing intent, proof targets, state-space modeling, coverage accounting, evidence, data safety, finding classification, human verification, readiness gates, and release decisions.
+
+Workflow notes may add task-specific instructions, but they must not redefine or weaken the canonical standard.
+
 ## Source Of Truth
 
 - Backend first: `/Users/christianvaldez/Documents/Showpass/repos/web-app`
@@ -50,11 +56,27 @@ Agents should keep work aligned with this folder contract:
 - Reference repo paths instead of copying large code snippets.
 - Prefer checklists, short workflows, and focused QA notes.
 - Capture behavior, risks, test cases, and automation candidates.
+- Account for every declared in-scope control, state, validation, mutation, side effect, and cleanup path as covered, manual-only, deferred, not applicable, or blocked with evidence.
 - Update notes only when they make QA work easier to repeat.
 - When appending or revising notes, preserve existing user edits, links, IDs, headings, and surrounding content unless the user explicitly asks to remove or rewrite them.
 - Keep notes short enough for both humans and AI agents to scan quickly.
 - Maintain one active output note per user request, Jira ticket, feature, or Qase work item. Before creating another file for the same scope, update the existing canonical note. If the approach changes, consolidate useful evidence and final content into one chosen note instead of leaving parallel drafts.
 - Treat files named `*Template.md` as reusable scaffolds, not generated-output targets. If a prompt points at a template path for generated QA output, create a feature-specific note in the same folder unless the user explicitly says to overwrite or edit the template itself.
+
+## No-Guessing Communication Rule
+
+Never make the user infer what the agent wants them to verify, decide, approve, or do next.
+
+When user action or judgment is requested:
+
+- Lead with **I need you to check**, **I need you to decide**, or **I need your approval**, whichever accurately describes the request.
+- Give a prioritized numbered list. For every item, state the starting location, exact action, expected or decision-relevant result, and exactly what the user should report back.
+- Label every requested action as **no data change**, **changes test data**, or **potentially destructive**.
+- Separate requested checks into **Check now**, **Optional**, and **Do not check** when all three categories are relevant.
+- State which findings are already confirmed, which are inconclusive, and which were not executed. Do not present an observation or unsubmitted client-side risk as a confirmed end-to-end defect.
+- Explicitly say what the user does not need to inspect and why.
+- State whether the request blocks the next step and what the agent will do after receiving the answer.
+- Avoid vague handoffs such as “review the findings,” “let me know what you think,” or “confirm the behavior” without a concrete checklist and response format.
 
 ## Qase Workflow Rules
 

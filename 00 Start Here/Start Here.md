@@ -1,6 +1,10 @@
 # Start Here
 
-This vault keeps Showpass QA automation notes organized without duplicating repository content.
+This vault is the local source of truth for Showpass QA standards, test design, browser execution, Qase workflows, and automation planning. Application and Playwright repositories remain the source of truth for product behavior and implementation patterns.
+
+## Quality Standard
+
+Read [[00 Start Here/World-Class Software Quality Standard]] before creating QA coverage, executing browser tests, planning automation, triaging a defect, or making a release recommendation.
 
 ## Main Folders
 
@@ -8,17 +12,19 @@ This vault keeps Showpass QA automation notes organized without duplicating repo
 - [[01 Repositories/Frontend - showpass-frontend|Frontend - showpass-frontend]]
 - [[01 Repositories/QA Automation - showpass-playwright|QA Automation - showpass-playwright]]
 - [[02 Feature QA/Feature Note Template|Feature QA]]
-- [[03 Test Cases/Test Case Template|Test Cases]]
+- [[03 Test Cases/Test Cases by Feature|Test Cases]]
 - [[04 Automation/Automation Candidate Template|Automation]]
 - [[05 Tooling/qasectl|Tooling]]
 - [[06 Prompts/Showpass QA Test Case Generator|Prompts]]
 
 ## Basic Workflow
 
-1. Inspect backend behavior as first source of truth.
-2. Confirm how the frontend follows backend schemas, APIs, and user behavior.
-3. Identify QA risks and knowledge gaps between QA and code.
-4. Write focused test cases.
-5. Promote stable coverage into automation.
+1. Declare the scope, testing intent, proof targets, and data-safety boundaries.
+2. Inspect backend behavior as first product source of truth.
+3. Confirm how the frontend exposes the behavior and its state-distinct entry paths.
+4. Build the coverage contract and account for controls, states, validation, mutations, outcomes, and cleanup.
+5. Write or execute focused tests and maintain the coverage ledger.
+6. Promote stable high-value coverage into automation.
+7. Make one evidence-backed release recommendation.
 
-Flow: Backend behavior -> Frontend follows -> QA risks and knowledge gaps -> Test cases -> Automation.
+Flow: Quality standard → Backend behavior → Frontend entry paths → Coverage contract → Test execution → Automation → Release decision.

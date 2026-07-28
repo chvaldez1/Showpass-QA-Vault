@@ -8,7 +8,7 @@ Related notes:
 - [[06 Prompts/Checkout Money Movement Exploration Goal]]
 - [[02 Feature QA/Checkout Money Movement Risk Scoring]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
-- [[03 Test Cases/Checkout Money Movement Test Drafts]]
+- [[03 Test Cases/Checkout/Checkout Money Movement Test Drafts]]
 
 ## Scope
 
@@ -1348,4 +1348,4 @@ Fill this during exploration when existing Playwright fixtures or factories do n
 
 - Start with P0 override paths from [[02 Feature QA/Checkout Money Movement Risk Scoring#P0 Overrides]].
 - Prefer extending existing checkout/payment fixtures when they already cover setup reliably.
-- Convert only source-backed findings into [[04 Automation/Checkout Money Movement Automation Backlog]] or [[03 Test Cases/Checkout Money Movement Test Drafts]].
+- Convert only source-backed findings into [[04 Automation/Checkout Money Movement Automation Backlog]] or [[03 Test Cases/Checkout/Checkout Money Movement Test Drafts]].

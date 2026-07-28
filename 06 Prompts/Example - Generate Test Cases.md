@@ -29,7 +29,7 @@ Source code:
 
 Output:
 - Write the generated cases to:
-  03 Test Cases/<feature-or-scenario>-test-cases.md
+  03 Test Cases/<feature>/<feature-or-scenario>-test-cases.md
 - Include Sources Reviewed, Assumptions and Unknowns, Source-backed Behavior, Risk Areas, State-space / setup matrix if useful, Recommended Test Data, Qase-ready Manual Test Cases, Minimum Execution Set, Suggested Automated Coverage, and Open Questions.
 
 Constraints:

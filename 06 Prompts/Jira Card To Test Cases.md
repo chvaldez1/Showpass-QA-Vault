@@ -27,8 +27,8 @@ Source code:
 - Do not run git diff, branch comparison, or changed-file discovery unless explicitly asked for diff-based coverage. Inspect relevant source files directly from the Jira context, branch name, route, API, or feature terms.
 
 Output:
-- Write Qase-ready cases under `03 Test Cases/`.
-- Use a filename based on the Jira key and feature, such as `03 Test Cases/SPW-12345-feature-name-test-cases.md`.
+- Write Qase-ready cases under the matching `03 Test Cases/<feature>/` folder.
+- Use a filename based on the Jira key and feature, such as `03 Test Cases/Ticketing/SPW-12345-feature-name-test-cases.md`.
 - Include Jira Intake Summary, Sources Reviewed, Assumptions and Unknowns, Source-backed Behavior, Risk Areas, State-space / setup matrix when useful, Recommended Test Data, Qase-ready Manual Test Cases, Minimum Execution Set, Suggested Automated Coverage, and Open Questions.
 
 Constraints:

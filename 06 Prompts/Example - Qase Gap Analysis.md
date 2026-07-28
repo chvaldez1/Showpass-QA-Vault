@@ -29,7 +29,7 @@ Source code:
 
 Output:
 - Write the gap analysis to:
-  03 Test Cases/<feature-or-scenario>-qase-gap-analysis.md
+  03 Test Cases/<feature>/<feature-or-scenario>-qase-gap-analysis.md
 - Include existing Qase coverage, source-backed behavior, coverage gaps, risk areas, suggested Qase-ready cases, automation candidates, and open questions.
 
 Constraints:

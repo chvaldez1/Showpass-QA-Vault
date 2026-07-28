@@ -1,29 +1,28 @@
+---
+title: Showpass QA Test Case Generator
+tags:
+  - qa/prompt
+  - test-design
+  - qase
+---
+
 # Showpass QA Test Case Generator
 
-This note points to the canonical agent workflow file. The full workflow is not stored in this vault.
+Use this workflow for Qase-ready manual coverage, regression planning, PR QA plans, Jira-derived coverage, and Playwright-friendly scenarios.
 
-## Canonical QA Workflow
+## Canonical Relationship
 
-Start with the vault repo notes:
-- [[01 Repositories/QA Automation - showpass-playwright]]
+Read [[00 Start Here/World-Class Software Quality Standard]] first. It owns the cross-cutting rules for scope, proof targets, state-space, coverage accounting, evidence, complex controls, mutation lifecycle, data safety, findings, readiness, and release decisions.
+
+This note owns the test-design workflow and Showpass-specific Qase preparation. It no longer depends on a separate canonical workflow outside the vault.
+
+Start with:
+
 - [[01 Repositories/Backend - web-app]]
 - [[01 Repositories/Frontend - showpass-frontend]]
+- [[01 Repositories/QA Automation - showpass-playwright]]
 - [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
-
-Repo:
-`/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`
-
-Workflow file inside repo:
-`docs/agent-workflows/showpass-qa-test-case-generator.md`
-
-Full path:
-`/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/showpass-qa-test-case-generator.md`
-
-Use this workflow when the goal is Qase-ready manual QA coverage, regression coverage, or Playwright-friendly scenarios for a PR or frontend change.
-
-Do not duplicate the workflow content here. Read the canonical QA workflow before generating test cases.
-
-This vault note is the required Showpass overlay. If the canonical workflow is more general, this note decides how to classify criticality, scope cases, and explain what is being tested.
+- [[05 Tooling/Qase Test Case Writing Rules]] when Qase-ready formatting is requested
 
 ## Testing Intent Gate
 
@@ -162,28 +161,30 @@ Example prompts:
 
 ## Vault Output Target
 
-Always write generated test cases under:
-`03 Test Cases/`
+Always write generated test cases in the matching feature folder under:
+`03 Test Cases/<feature>/`
 
-If the user specifies only a filename, treat it as relative to `03 Test Cases/`.
+If the user specifies only a filename, classify the request by its primary product behavior or business invariant and treat the filename as relative to the matching feature folder. Reuse an existing feature folder whenever one fits.
 
 Example:
-`employees-qa-test-cases.md` means `03 Test Cases/employees-qa-test-cases.md`.
+`employees-qa-test-cases.md` means `03 Test Cases/Employees/employees-qa-test-cases.md`.
 
-Template files are protected reusable scaffolds. If the requested output path is named `*Template.md`, such as `03 Test Cases/Test Case Template.md`, do not overwrite it for generated cases or gap analysis unless the user explicitly says to overwrite or edit the template itself. Instead, create a feature-specific note in the same folder, using a filename such as:
-`03 Test Cases/<feature-or-scenario>-test-cases.md`
+Template files are protected reusable scaffolds. If the requested output path is named `*Template.md`, such as `03 Test Cases/Test Case Template.md`, do not overwrite it for generated cases or gap analysis unless the user explicitly says to overwrite or edit the template itself. Instead, create a feature-specific note in the matching feature folder, using a filename such as:
+`03 Test Cases/<feature>/<feature-or-scenario>-test-cases.md`
 or
-`03 Test Cases/<feature-or-scenario>-qase-gap-analysis.md`
+`03 Test Cases/<feature>/<feature-or-scenario>-qase-gap-analysis.md`
 
 If the user specifies a path outside `03 Test Cases/`, keep the test case output under `03 Test Cases/` unless they explicitly say the file must be outside that folder.
 
-If the user does not specify an output file, create a new note under:
-`03 Test Cases/`
+If the user does not specify an output file, create a new note under the matching feature folder:
+`03 Test Cases/<feature>/`
 
 Use the best suitable filename for the feature or scenario, such as:
-`03 Test Cases/<feature-or-scenario>-test-cases.md`
+`03 Test Cases/<feature>/<feature-or-scenario>-test-cases.md`
 
-Use the canonical workflow's preferred style for source review, risk analysis, and coverage grouping. For Qase-ready cases, use [[05 Tooling/Qase Test Case Writing Rules]] instead of GIVEN / WHEN / THEN formatting.
+Use [[03 Test Cases/Test Cases by Feature]] as the current folder index and filing guide.
+
+Use [[00 Start Here/World-Class Software Quality Standard]] for source review, risk analysis, coverage accounting, evidence, and readiness. For Qase-ready cases, use [[05 Tooling/Qase Test Case Writing Rules]] instead of GIVEN / WHEN / THEN formatting.
 
 When producing Qase-ready cases or Qase update recommendations, also read and apply [[05 Tooling/Qase Test Case Writing Rules]] for the Showpass Qase standard on user perspective, observable behavior, role-specific language, plain common product wording, 1-3 best approved tags, platform/view parameterization, concise one-sentence expected results, descriptions, and Qase step structure.
 
@@ -195,7 +196,7 @@ Use this flow when the user says to generate tests from a Jira card, pastes a Ji
 2. Fetch the Jira card with `05 Tooling/scripts/jira-read-issue.mjs`, using the pasted issue key or URL.
 3. Treat Jira as intake context only. Extract the problem statement, requested behavior, acceptance criteria, affected role or surface, comments, known edge cases, and unresolved questions.
 4. Save the raw Jira API response under `/private/tmp` only when repeat local inspection is useful.
-5. Continue through the canonical QA workflow and this vault note before writing test cases.
+5. Continue through [[00 Start Here/World-Class Software Quality Standard]] and this generator workflow before writing test cases.
 6. Verify behavior against backend source first when the Jira card touches APIs, validation, permissions, checkout, payments, credits, refunds, settlement, reports, or other source-of-truth logic.
 7. Verify frontend behavior for routes, UI state, forms, copy, entry paths, permissions, and visible outcomes.
 8. Classify the card by business invariant before writing cases. If it is mainly a one-off script, import, config, printer/device, or demo request, generate only narrow verification cases unless source review shows recurring product behavior.
@@ -229,7 +230,7 @@ Source code:
 
 Output:
 Write Qase-ready cases to:
-03 Test Cases/<jira-key-or-feature>-test-cases.md
+03 Test Cases/<feature>/<jira-key-or-feature>-test-cases.md
 
 Constraints:
 - Do not query or update Qase unless I explicitly ask for a gap analysis.
@@ -297,21 +298,24 @@ Do not label the output as a gap analysis unless the user explicitly asks to com
 9. Add a clean successful path before recovery and edge cases when the changed workflow can complete successfully.
 10. Remove low-value permutations. Keep only cases that prove a distinct invariant, actor impact, state transition, permission boundary, financial outcome, fulfillment outcome, reporting outcome, or materially different client recovery path.
 11. Apply the beginner-readability check to the full note and every manual case.
-12. Write the output under `03 Test Cases/` with a `*-test-cases.md` or `*-coverage-plan.md` filename. Reuse the active note for the same request, Jira ticket, feature, or Qase work item; do not create a parallel draft when the approach changes.
+12. Write the output under the matching `03 Test Cases/<feature>/` folder with a `*-test-cases.md` or `*-coverage-plan.md` filename. Reuse the active note for the same request, Jira ticket, feature, or Qase work item; do not create a parallel draft when the approach changes.
 
 The output should separate:
 
 - Testing Intent
 - Proof Target Map
+- Declared scope and out-of-scope decisions
 - Summary of new behavior
 - Sources reviewed
 - Assumptions and unknowns
 - Source-backed behavior
+- Product-surface and complex-control inventory
 - Entry-point coverage, including directly changed and indirectly affected clients when applicable
 - Outcome coverage, including clean success and supported recovery states
 - Risk areas
 - Coverage decisions: why these cases were included and what was intentionally excluded
 - State-space / setup matrix
+- Coverage ledger with every in-scope item marked covered, manual-only, deferred, not applicable, or blocked
 - Recommended test data
 - Manual test cases ordered by execution workflow, using `TC-*` labels and Qase-ready structure when the user asks for Qase-ready output
 - Minimum execution set
@@ -341,7 +345,7 @@ Keep output concise. This is a new feature, so do not query or update Qase.
 
 Example output target:
 
-`03 Test Cases/itemized-partial-apply-to-each-split-test-cases.md`
+`03 Test Cases/Discounts/itemized-partial-apply-to-each-split-test-cases.md`
 
 Example title:
 
@@ -355,14 +359,18 @@ Use this flow only when the goal is to compare existing Qase knowledge against t
 2. Inspect backend behavior as the source of truth.
 3. Inspect frontend code to see how users follow that backend behavior.
 4. Compare Qase coverage against source behavior.
-5. Write the output under `03 Test Cases/`. Reuse the active note for the same request, Jira ticket, feature, or Qase work item and consolidate revisions there instead of creating parallel gap-analysis and final-case drafts. If the user gave only a filename, place that filename in `03 Test Cases/`; if no output file is specified and no active note exists, create a new suitably named note there. If the requested path is a `*Template.md` file, create a feature-specific gap-analysis note instead unless the user explicitly says to overwrite the template.
+5. Write the output under the matching `03 Test Cases/<feature>/` folder. Reuse the active note for the same request, Jira ticket, feature, or Qase work item and consolidate revisions there instead of creating parallel gap-analysis and final-case drafts. If the user gave only a filename, place that filename in the matching feature folder; if no output file is specified and no active note exists, create a new suitably named note there. If the requested path is a `*Template.md` file, create a feature-specific gap-analysis note instead unless the user explicitly says to overwrite the template.
 
 The output should separate:
 
 - Testing Intent
+- Proof Target Map
+- Declared scope and out-of-scope decisions
 - Existing Qase coverage
 - Source-backed behavior found in code
+- Product-surface and complex-control inventory
 - Coverage gaps
+- Coverage ledger
 - Risk areas
 - Suggested new or updated Qase-ready cases
 - Open questions that block confident coverage
@@ -387,4 +395,4 @@ When a user does approve Qase updates, follow [[05 Tooling/qasectl#Qase Update W
 
 ## Agent Reminder
 
-Read the canonical workflow first, then apply this vault overlay. Before writing cases, complete the Testing Intent gate and Proof Target Map so the output states the criticality bucket, business invariant, actor impact, failure mode, observable proof, scope, non-goals, and confidence. Every generated case should map back to one proof target. If the input is a Jira card, read [[05 Tooling/jiractl]], fetch the card, summarize Jira intake briefly, classify the business invariant, then verify behavior against source before generating cases. For Jira-card test generation, do not run git diff or branch comparison unless the user explicitly asks for diff-based coverage. For simple generation, PR coverage, new-feature coverage, or regression coverage, use the Test Case Generator Flow and do not query Qase. For gap analysis, read Qase first, inspect source code second, then write findings under `03 Test Cases/`. Bare filenames from the user should be resolved inside `03 Test Cases/`. Never overwrite a `*Template.md` file with generated output unless the user explicitly asks to edit or overwrite that template. Keep vault notes short and reference source paths instead of copying workflow content. Write cases from the perspective of the real Showpass actor, such as customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user. Do not use `the tester` phrasing in generated Qase cases. Preserve user edits when revising an existing note. Prefer plain product wording over abstract QA or implementation terms unless the technical term is required for accuracy.
+Read [[00 Start Here/World-Class Software Quality Standard]] first, then apply this test-design workflow. Before writing cases, complete the Testing Intent gate and Proof Target Map so the output states the criticality bucket, business invariant, actor impact, failure mode, observable proof, scope, non-goals, and confidence. Every generated case should map back to one proof target and every declared in-scope item must be accounted for in the coverage ledger or equivalent artifact. If the input is a Jira card, read [[05 Tooling/jiractl]], fetch the card, summarize Jira intake briefly, classify the business invariant, then verify behavior against source before generating cases. For Jira-card test generation, do not run git diff or branch comparison unless the user explicitly asks for diff-based coverage. For simple generation, PR coverage, new-feature coverage, or regression coverage, use the Test Case Generator Flow and do not query Qase. For gap analysis, read Qase first, inspect source code second, then write findings under the matching `03 Test Cases/<feature>/` folder. Bare filenames from the user should be resolved inside the matching feature folder. Never overwrite a `*Template.md` file with generated output unless the user explicitly asks to edit or overwrite that template. Keep vault notes short and reference source paths instead of copying repository implementation. Write cases from the perspective of the real Showpass actor, such as customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user. Do not use `the tester` phrasing in generated Qase cases. Preserve user edits when revising an existing note. Prefer plain product wording over abstract QA or implementation terms unless the technical term is required for accuracy.

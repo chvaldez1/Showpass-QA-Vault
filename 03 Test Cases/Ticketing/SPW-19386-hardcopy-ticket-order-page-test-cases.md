@@ -103,7 +103,7 @@ TC-1: Dashboard - Hardcopy Ticket Orders - Verify a shipped hardcopy ticket orde
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Open the dashboard hardcopy ticket order page for the venue. | `/dashboard/events/order-hardcopy-tickets/` | The Hardcopy Ticket Order Form is visible with event, ticket type, ticket text, quantity, pickup, shipping, preview, and submit controls. |
+| Open the dashboard hardcopy ticket order page for the venue. | `/manage/events/order-hardcopy/` | The Hardcopy Ticket Order Form is visible with event, ticket type, ticket text, quantity, pickup, shipping, preview, and submit controls. |
 | Search for and select an upcoming standard event. | Event with no assigned seating | The event is selected and the first line text is populated from the event name. |
 | Select a standard ticket type for the event. | Ticket type with active sales and inventory | The ticket type is selected, the second line text is populated from the ticket type name, and the price text is populated from the ticket price. |
 | Enter valid printed ticket text and quantity. | Quantity `25`, starting offset `1` | The entered values remain visible and no validation error is shown. |
@@ -330,6 +330,23 @@ TC-9: Dashboard - Hardcopy Ticket Orders - Verify venue permissions are enforced
 | Attempt to preview or submit a hardcopy ticket order directly. | Valid event and ticket type payload | The request is rejected and no hardcopy ticket order is created. |
 | Sign in as a venue employee with event management access. | Authorized employee | The same valid event and ticket type can be previewed or submitted. |
 
+## Qase Sync
+
+> [!success] Created and verified
+> TC-1 through TC-9 were created in Qase suite `1034` (`Hard Copy`) on 2026-07-27. The apply operation read back every case and verified its suite, tags, parameters, and step count.
+
+| Local Draft | Qase Case ID | Step Count |
+| --- | ---: | ---: |
+| TC-1 | 4987 | 7 |
+| TC-2 | 4988 | 6 |
+| TC-3 | 4989 | 6 |
+| TC-4 | 4990 | 4 |
+| TC-5 | 4991 | 4 |
+| TC-6 | 4992 | 5 |
+| TC-7 | 4993 | 5 |
+| TC-8 | 4994 | 5 |
+| TC-9 | 4995 | 4 |
+
 ## Minimum Execution Set
 
 - TC-1: shipped order submission.
@@ -351,6 +368,6 @@ TC-9: Dashboard - Hardcopy Ticket Orders - Verify venue permissions are enforced
 ## Open Questions
 
 - Jira card content and acceptance criteria were not available because Jira returned 404 with the configured token.
-- Confirm whether the migrated page is expected to keep the existing route exactly or expose a new React route.
+- Browser execution confirmed the migrated React route is `/manage/events/order-hardcopy/`; the legacy `/dashboard/events/order-hardcopy-tickets/` handoff remains separate companion work.
 - Confirm whether mobile view must be supported for this dashboard-only hardcopy ticket workflow.
 - Confirm whether the displayed hardcopy price notice should remain `$0.25 per ticket, plus GST and shipping`.

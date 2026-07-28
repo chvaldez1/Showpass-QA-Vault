@@ -23,7 +23,7 @@ Use this with [[06 Prompts/Showpass QA Test Case Generator]]:
 2. Inspect backend source truth in `/Users/christianvaldez/Documents/Showpass/repos/web-app`.
 3. Inspect frontend behavior in `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`.
 4. Apply [[05 Tooling/Qase Test Case Writing Rules]] to any suggested new or updated cases.
-5. Write the gap analysis to the requested output file, or create a suitably named note under `03 Test Cases/`.
+5. Write the gap analysis to the requested output file, or create a suitably named note under the matching `03 Test Cases/<feature>/` folder.
 6. Do not push to Qase until the output is reviewed and signed off.
 
 ## Exact-ID Review Workflow
@@ -128,7 +128,7 @@ Ask for confirmation when any of these are true:
 
 The confirmation must state the exact scope that will be written and wait for an explicit yes before any apply command. Example:
 
-`Confirm scope: create only TC-1 from 03 Test Cases/itemized-partial-apply-to-each-split-test-cases.md in suite 998. Do not create TC-2 through TC-14. Proceed?`
+`Confirm scope: create only TC-1 from 03 Test Cases/Discounts/itemized-partial-apply-to-each-split-test-cases.md in suite 998. Do not create TC-2 through TC-14. Proceed?`
 
 If the user confirms a bulk operation, dry-run every affected case and summarize the local draft label, real Qase case ID if updating, title, suite, tags, parameters, and step count before applying.
 
@@ -202,14 +202,14 @@ Reusable command pattern:
 # Dry run a local TC-labeled case from a vault markdown file
 node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
   --suite-id 144 \
-  --case-file "03 Test Cases/invoice-breakdown-qase-test-cases.md" \
+  --case-file "03 Test Cases/Transactions/invoice-breakdown-qase-test-cases.md" \
   --case-number 5 \
   --dry-run
 
 # Create the case after the dry run is reviewed. Do not pass --update for new cases.
 node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
   --suite-id 144 \
-  --case-file "03 Test Cases/invoice-breakdown-qase-test-cases.md" \
+  --case-file "03 Test Cases/Transactions/invoice-breakdown-qase-test-cases.md" \
   --case-number 5 \
   --apply
 
@@ -219,7 +219,7 @@ node "05 Tooling/scripts/create-or-update-qase-case.mjs" --verify 4817
 # Dry run an update to an existing Qase case
 node "05 Tooling/scripts/create-or-update-qase-case.mjs" \
   --suite-id 144 \
-  --case-file "03 Test Cases/invoice-breakdown-qase-test-cases.md" \
+  --case-file "03 Test Cases/Transactions/invoice-breakdown-qase-test-cases.md" \
   --case-number 5 \
   --update 4817 \
   --dry-run

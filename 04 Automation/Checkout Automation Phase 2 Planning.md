@@ -261,7 +261,7 @@ Use this checklist for later implementation outside this worker.
 
 **Later implementation target:** upgrade `verifyTransactionDetails` so the existing `verifyTransaction` caller can prove Dashboard settlement amount equals the checkout expected total.
 
-**Related test draft:** [[03 Test Cases/Checkout Money Movement Test Drafts#TC-CHK-002 Dashboard - Transaction Detail - Settlement Reconciliation - Verify Paid Total]]
+**Related test draft:** [[03 Test Cases/Checkout/Checkout Money Movement Test Drafts#TC-CHK-002 Dashboard - Transaction Detail - Settlement Reconciliation - Verify Paid Total]]
 
 | Readiness Item | Decision |
 | --- | --- |

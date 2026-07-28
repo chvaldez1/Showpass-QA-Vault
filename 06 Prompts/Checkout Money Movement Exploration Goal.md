@@ -7,7 +7,7 @@ Related notes:
 - [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
 - [[02 Feature QA/Checkout Critical Path Gap Analysis]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
-- [[03 Test Cases/Checkout Money Movement Test Drafts]]
+- [[03 Test Cases/Checkout/Checkout Money Movement Test Drafts]]
 
 ```text
 Explore checkout money-movement coverage as an open-ended QA goal.
