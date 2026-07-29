@@ -46,6 +46,9 @@ Use one feature folder for each test plan, Qase draft, gap analysis, or executio
 - **Ticketing**
   - [[03 Test Cases/Ticketing/SPW-19386-hardcopy-ticket-order-page-test-cases|SPW-19386 Hardcopy Ticket Order Page Test Cases]]
   - [[03 Test Cases/Ticketing/SPW-19386-hardcopy-ticket-order-page-browser-run-2026-07-27|SPW-19386 Hardcopy Ticket Order Page Browser Run]]
+- **Tracking Links**
+  - [[03 Test Cases/Tracking Links/event-scoped-tracking-links-qase-gap-analysis|Event-Scoped Tracking Links Qase Gap Analysis]]
+  - [[03 Test Cases/Tracking Links/event-scoped-tracking-links-beta-browser-run-2026-07-29|Event-Scoped Tracking Links Beta Browser Run 2026-07-29]]
 - **Transactions**
   - [[03 Test Cases/Transactions/invoice-breakdown-qase-test-cases|Invoice Breakdown Qase Test Cases]]
 

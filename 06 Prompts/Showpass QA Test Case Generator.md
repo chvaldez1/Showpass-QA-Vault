@@ -254,6 +254,14 @@ Apply this beginner-readability check before finalizing the note:
 - Prefer `one charge, one transaction, one order, and one ticket` over internal payment-state or basket-field wording.
 - Move checkout IDs, stored statuses, flags, webhook names, and implementation fields to Sources Reviewed, Source-Backed Behavior, Risk Areas, or automation notes unless they are required test data.
 - Read every case once as if the reader has never used the product. If a step requires unstated Showpass knowledge, add the missing navigation, setup, or visible result.
+- Treat the canonical output note as the complete reviewer handoff. Do not require a QA employee to open source code, a PR, or a separate execution narrative to understand a case or finding.
+- For every multi-action case or defect reproduction, use `Step Action | Data | Expected Result` with one visible action and decision per row.
+- Give exact routes or named product areas, visible control labels, and current fixture names or clear fixture-creation instructions.
+- Put actual defect behavior in a separate Actual Result field, not inside an expected-result sentence.
+- Keep automation-only terms such as locator, DOM, hidden input, sentinel, isolated clipboard, mocked response, and programmatic click out of manual procedures.
+- Place screenshots beside the behavior they prove. If browser execution produced evidence, embed it in the active gap-analysis or test-case note rather than making the reviewer discover it in another file.
+- If an action depends on browser permission, operating-system state, timing, or test-tool behavior, do not call it Confirmed until a normal user path independently reproduces it.
+- Include a final data-state instruction: no change, cleanup steps, or the exact Preserve-for-review artifact and cleanup condition.
 
 - Start from the `Testing Intent` section. Test cases should trace back to the business invariant and failure mode.
 - Order cases by execution workflow, not by backend class or implementation detail.
@@ -373,6 +381,7 @@ The output should separate:
 - Coverage ledger
 - Risk areas
 - Suggested new or updated Qase-ready cases
+- Browser findings with beginner-executable reproduction tables and evidence when browser execution has occurred
 - Open questions that block confident coverage
 
 Do not push changes to Qase during read/gap analysis. Treat Qase updates as a separate sign-off step.

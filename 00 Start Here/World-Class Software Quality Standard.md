@@ -282,6 +282,14 @@ In-memory UI state is not persistence proof. Reopen, reload, switch away and bac
 - Prefer customer- and employee-visible proof over internal implementation fields.
 - Keep source and implementation details in behavior, risk, or evidence sections rather than manual steps.
 - Do not use vague instructions such as “verify it works,” “test the field,” or “confirm behavior.”
+- Assume the QA employee has access to the documented fixture but no prior knowledge of the feature.
+- Start with an exact product location: a route, dashboard area, public page, or named screen.
+- Name every visible control exactly as it appears and explain where test values come from.
+- Use a `Step Action | Data | Expected Result` table for test cases and defect reproductions that contain more than one action.
+- Keep one observable action and one observable result per row. Split a row when the person must make two decisions.
+- Do not use browser-automation language such as locator, DOM, hidden checkbox, isolated clipboard, sentinel, request interception, or programmatic click in manual instructions.
+- End with any cleanup, reset, or preserved-fixture instruction so the next QA employee does not have to infer the required final state.
+- Before calling an artifact review-ready, read every manual flow from top to bottom and confirm a QA employee can execute it without opening source code or a separate narrative note.
 
 ## 7. Complex Controls Must Be Decomposed
 
@@ -363,6 +371,15 @@ Every finding must include:
 - Evidence
 - Cleanup/reset
 - Release classification
+
+Write the reproduction as an independently executable QA procedure:
+
+- Preconditions state the role, environment, exact starting page, and named fixture.
+- Numbered actions are represented in a `Step Action | Data | Expected Result` table.
+- The Actual Result is separate from the expected-results column and identifies the first step where behavior diverges.
+- Evidence is placed immediately beside the claim it proves. Embed visible screenshots in the canonical review note; link non-visual evidence such as CSVs or console output.
+- If the result depends on browser permissions, operating-system state, timing, or an automation-only interface, label it Inconclusive until a normal user interaction independently reproduces it.
+- If the original fixture was deleted or changed, provide a current preserved fixture or state exactly what a QA employee must create before attempting the reproduction.
 
 Use these confidence labels:
 

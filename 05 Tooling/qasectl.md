@@ -176,6 +176,7 @@ Before running an update dry-run, confirm:
 6. Prefer the reusable script at `05 Tooling/scripts/create-or-update-qase-case.mjs` for case creation, updates, and verification.
    - For one case, use the single-case command.
    - For more than one approved write, use `--batch-plan` so dry-run, apply, and apply-time verification happen through one script process.
+   - A batch update may set `onlyFields` to a comma-separated field list. Use it when enhancing selected fields while preserving unrelated live Qase metadata such as type, behavior, layer, or priority.
 7. Dry run before any write:
    - print each local draft label, such as `TC-1`
    - for creates, confirm no Qase case ID is supplied and Qase will assign the new ID

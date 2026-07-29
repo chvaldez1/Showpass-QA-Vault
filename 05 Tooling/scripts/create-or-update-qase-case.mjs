@@ -285,6 +285,7 @@ function readBatchPlan(planPath) {
       suiteId: operation.suiteId ?? operation.suite_id ?? plan.suiteId ?? plan.suite_id,
       caseId: operation.caseId ?? operation.case_id ?? operation.update,
       parametersFile: operation.parametersFile ?? operation.parameters_file ?? plan.parametersFile ?? plan.parameters_file,
+      onlyFields: operation.onlyFields ?? operation.only_fields,
     };
 
     if (!["create", "update"].includes(normalized.action)) {
@@ -298,6 +299,9 @@ function readBatchPlan(planPath) {
     }
     if (normalized.action === "create" && normalized.caseId) {
       throw new Error(`Create operation ${normalized.label} must not include caseId`);
+    }
+    if (normalized.action === "create" && normalized.onlyFields) {
+      throw new Error(`Create operation ${normalized.label} cannot use onlyFields`);
     }
 
     return normalized;
@@ -425,6 +429,13 @@ function selectUpdateFields(payload, fieldsText) {
 
 function normalizeExistingField(existing, field) {
   if (field === "tags") return (existing.tags ?? []).map((tag) => tag.title);
+  if (field === "steps") {
+    return (existing.steps ?? []).map((step) => ({
+      action: step.action,
+      data: step.data ?? "",
+      expected_result: step.expected_result,
+    }));
+  }
   return existing[field];
 }
 
@@ -485,17 +496,31 @@ async function qaseRequest(path, options = {}) {
 }
 
 async function dryRunBatchOperation(operation) {
-  const payload = buildPayload({
+  const fullPayload = buildPayload({
     caseFile: operation.caseFile,
     caseNumber: operation.caseNumber,
     suiteId: operation.suiteId,
     parametersFile: operation.parametersFile,
   });
+  const payload = operation.onlyFields
+    ? selectUpdateFields(fullPayload, operation.onlyFields)
+    : fullPayload;
 
   if (operation.action === "update") {
     const { body: existingBody } = await qaseRequest(
       `/case/{project}/${operation.caseId}`
     );
+    if (operation.onlyFields) {
+      return {
+        label: operation.label,
+        action: operation.action,
+        ...summarizeSelectedUpdate({
+          existing: existingBody.result,
+          payload,
+          caseId: operation.caseId,
+        }),
+      };
+    }
     return {
       label: operation.label,
       action: operation.action,
@@ -517,12 +542,15 @@ async function dryRunBatchOperation(operation) {
 }
 
 async function applyBatchOperation(operation) {
-  const payload = buildPayload({
+  const fullPayload = buildPayload({
     caseFile: operation.caseFile,
     caseNumber: operation.caseNumber,
     suiteId: operation.suiteId,
     parametersFile: operation.parametersFile,
   });
+  const payload = operation.onlyFields
+    ? selectUpdateFields(fullPayload, operation.onlyFields)
+    : fullPayload;
 
   if (operation.action === "update") {
     const { body: beforeBody } = await qaseRequest(
@@ -535,7 +563,11 @@ async function applyBatchOperation(operation) {
     const { body: verifiedBody } = await qaseRequest(
       `/case/{project}/${operation.caseId}`
     );
-    assertParametersPersisted(payload, verifiedBody.result);
+    if (operation.onlyFields) {
+      assertSelectedFieldsPersisted(payload, verifiedBody.result);
+    } else {
+      assertParametersPersisted(payload, verifiedBody.result);
+    }
 
     return {
       label: operation.label,
@@ -543,6 +575,9 @@ async function applyBatchOperation(operation) {
       ok: true,
       http_status: status,
       updated_case_id: Number(operation.caseId),
+      selected_fields: operation.onlyFields
+        ? Object.keys(payload)
+        : undefined,
       before: summarizeCase(beforeBody.result),
       verified: summarizeCase(verifiedBody.result),
     };

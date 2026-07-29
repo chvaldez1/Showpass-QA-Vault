@@ -98,6 +98,21 @@ Write every manual case so a person with little or no Showpass knowledge can exe
 - Do not use internal fields, stored statuses, webhook names, API names, or implementation flags in manual actions unless the actor must supply that value.
 - Keep technical evidence in Sources Reviewed, Source-Backed Behavior, Risk Areas, Test Case Notes, or Suggested Automated Coverage.
 - If a new Showpass employee would need undocumented product knowledge to complete a step, the case is not ready.
+- Start with the exact route or named product area and identify the visible fixture the employee should use.
+- Use one action and one decision per step row. Split combined instructions such as “filter, reload, and verify” into separate rows.
+- Name controls exactly as they appear in the interface and say where any ID, slug, link, order, event, or customer value comes from.
+- Do not use automation-only terms such as locator, DOM, hidden input, sentinel, isolated clipboard, programmatic click, or request interception in manual steps.
+- End with a clear final-state instruction: no data changed, restore the original value, delete only the named disposable record, or preserve the named artifact for review.
+
+### Executable Defect Reproduction
+
+When a Qase-ready note includes a defect or regression reproduction, use the same execution quality as a test case:
+
+- Preconditions identify the environment, Showpass role, route or screen, and current fixture.
+- Use a `Step Action | Data | Expected Result` table.
+- Put Actual Result, Impact, Data Safety, and Cleanup after the table.
+- Embed or link evidence immediately under the result it proves.
+- If browser permission, operating-system state, timing, or a test tool could explain the observation, classify it as Inconclusive until a normal user interaction reproduces it.
 
 ## Title Naming Rules
 

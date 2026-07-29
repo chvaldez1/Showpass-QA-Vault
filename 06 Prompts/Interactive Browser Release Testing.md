@@ -72,6 +72,7 @@ Overrides:
 - Target URL: <URL>
 - Existing run note: <path>
 - Test-data boundary: <override>
+- Evidence retention: <cleanup-required or preserve-for-review>
 - Release goal: <override>
 ```
 
@@ -123,7 +124,7 @@ Browser and authentication:
 Run-note rule:
 1. Maintain exactly one canonical execution note for this run under the matching `03 Test Cases/<feature>/` folder.
 2. If a run note already exists for the same scope, update it instead of creating another file.
-3. Record the environment, target, browser, authenticated role, test source, start time, current state, Testing Intent, Proof Target Map, coverage ledger, and release recommendation.
+3. Record the environment, target, browser, authenticated role, test source, start time, current state, Testing Intent, Proof Target Map, coverage ledger, evidence-retention class, screenshot index, and release recommendation.
 4. Log findings as they are discovered, but continue testing unless:
    - the required page becomes inaccessible;
    - continuing would risk unrecoverable or user-owned data;
@@ -134,9 +135,34 @@ Data-safety rules:
 1. Treat pre-existing records, assignments, quantities, permissions, and configuration as user-owned.
 2. Do not delete, overwrite, or clean up user-owned data.
 3. Prefer selection-only, navigation-only, or unsaved input checks.
-4. When persistence is required, use clearly disposable test data and record every change.
-5. Clean up only data created by this run, and only when cleanup is safe and explicitly within scope.
-6. If the live state differs from the documented setup, record the difference and preserve it.
+4. Before creating persistent test data, classify it as either:
+   - **Cleanup-required**: temporary data whose review value ends after evidence is captured; or
+   - **Preserve-for-review**: a clearly named artifact the user must be able to inspect in the product after the run.
+5. When the user asks to review the work, asks for screenshots, questions confidence, or otherwise needs independently inspectable proof, classify the critical-path result as Preserve-for-review unless the user explicitly says to clean it up.
+6. Never delete a Preserve-for-review artifact during the same run. Record its exact identifier, route, creation time, owner, state, and intended cleanup condition. Leave the browser on a neutral page where the user can inspect it.
+7. Delete Cleanup-required data only when cleanup is safe, explicitly within scope, and the artifact is not needed for user review. Capture proof before deletion and prove the final state afterward.
+8. If retention intent is ambiguous after a persistent mutation exists, preserve the artifact and ask for cleanup approval instead of deleting it.
+9. If the live state differs from the documented setup, record the difference and preserve it.
+
+Reviewable evidence and screenshots:
+1. A Markdown statement is an evidence index, not a substitute for independently reviewable proof.
+2. Capture screenshots for:
+   - every Critical or Major clean-success proof target;
+   - every persistent mutation after success and again after a fresh reload or reopen;
+   - every confirmed visible defect;
+   - every safe error, unavailable, or access-denied state that affects the release decision;
+   - the final preserved review state or verified cleanup state.
+3. For a critical mutation, capture at minimum:
+   - the starting context before submission;
+   - the visible success result with the unique test identifier;
+   - the persisted result after a fresh reload or reopen;
+   - the downstream or cross-route result when applicable.
+4. Save screenshots under `03 Test Cases/<feature>/evidence/<run-slug>/` with deterministic, descriptive filenames. Do not place durable evidence only in a temporary directory or the Downloads folder.
+5. Embed every screenshot in the canonical run note with an Obsidian image embed and a caption stating the route, action, expected result, observed result, and capture time.
+6. Link the screenshot files directly in the final response so the user can review them without trusting the narrative alone.
+7. Screenshots must show enough page context to identify the route or workflow and the key result. Do not crop away information needed to judge the claim.
+8. Do not capture or expose passwords, tokens, payment credentials, personal data not required by the proof target, or unrelated user-owned information.
+9. Screenshots supplement rather than replace CSV parsing, fresh persistence checks, downstream verification, console evidence, or source-backed reasoning.
 
 Execution order:
 1. Prove a clean successful path independently of retry or recovery coverage.
@@ -163,7 +189,7 @@ Coverage-ledger rule:
    - Blocked.
 3. Visibility does not count as interaction coverage.
 4. Every Manual-only, Deferred, Not applicable, or Blocked row needs a reason and the evidence or fixture required to change it.
-5. A mutation is not complete until success, persistence or downstream evidence, and cleanup or isolation are accounted for.
+5. A mutation is not complete until success, persistence or downstream evidence, and cleanup, safe isolation, or explicit Preserve-for-review retention are accounted for.
 
 Deep interaction audit:
 
@@ -234,6 +260,18 @@ For every finding, record:
 - whether the user classified it as blocking or non-blocking.
 - the proof target, coverage-ledger row, entry path, and state-space values affected.
 
+Write every finding so a QA employee who has not seen the feature can reproduce it without reading the browser log or source code:
+1. Name the environment, role, exact starting route or screen, and a current fixture.
+2. Define any product term needed to recognize the fixture or control.
+3. Use a `Step Action | Data | Expected Result` table with one visible action per row.
+4. Name controls exactly as displayed in the product.
+5. Put the Actual Result after the table and identify the first step where it differs.
+6. Add impact, data-safety classification, and cleanup or preserved-fixture instructions.
+7. Embed the relevant screenshot immediately under the finding. If a screenshot cannot prove the result, state why and name the independent proof required.
+8. Do not expose automation mechanics such as locators, DOM state, hidden inputs, sentinels, isolated clipboards, programmatic clicks, or request interception in the manual reproduction.
+9. If browser permissions, operating-system state, timing, or the automation interface could explain the result, classify it as Inconclusive until it is repeated through normal user interaction.
+10. Use a currently available Preserve-for-review artifact where safe. Never give a reviewer steps that depend silently on deleted test data.
+
 Do not overclaim:
 - A client-side enabled button is not an end-to-end defect unless submission was safely attempted.
 - A result involving incompatible item types does not prove same-type additive selection is broken.
@@ -262,13 +300,30 @@ Release decision:
    - Decision blocked by named missing evidence.
 5. State the specific findings driving that recommendation and the blocked coverage that remains.
 6. Do not call execution complete until every planned and discovered in-scope coverage-ledger row has an explicit status.
-7. Do not call a mutation covered unless persistence/downstream proof and cleanup are accounted for.
+7. Do not call a mutation covered unless persistence/downstream proof and cleanup, safe isolation, or explicit Preserve-for-review retention are accounted for.
+
+Reviewer-report deduplication:
+1. When the user asks for a concise test report, use one canonical reviewer-facing note with only:
+   - Result;
+   - Confirmed Bugs;
+   - Testing Proof;
+   - Preserved Review Data, when applicable;
+   - Not Executed.
+2. Record each confirmed bug once. Put its reproduction, actual result, impact, and screenshots in that single section.
+3. Record each screenshot or evidence file once. Do not repeat it in a separate evidence index, product-surface inventory, finding summary, and coverage ledger.
+4. Testing Proof must pair every claimed pass with its screenshot, downloaded file, persisted record, downstream result, or named human verification.
+5. Do not list an observation as a bug after human verification disproves it. If traceability matters, record one short closed-observation sentence in Result instead of retaining a second reproduction section.
+6. Use the Testing Proof and Not Executed tables as the coverage accounting when separate proof-target, product-inventory, and ledger sections would repeat the same facts.
+7. Keep planning detail, source analysis, Qase case drafts, and the chronological browser log out of the reviewer report unless the user explicitly requests them.
+8. If a detailed execution note already exists, consolidate the reviewer-relevant evidence into the canonical report and replace the duplicate note with a short link to the canonical report.
 
 Final response:
 - Lead with the release recommendation.
 - Summarize confirmed findings, non-blocking findings, and blocked coverage separately.
-- State exactly what data was changed and what was preserved.
+- State exactly what data was changed, what was cleaned up, and what was deliberately preserved for review.
 - Link the single canonical run note.
+- Link each critical-path and finding screenshot directly.
+- Keep the canonical review note self-contained: put each current finding, its executable reproduction, and its evidence in that note. A detailed execution log may supplement it but must not be required to understand or reproduce a finding.
 - State the accounted-for coverage summary and every remaining Manual-only, Deferred, Not applicable, or Blocked category.
 - Do not ask me to “review the findings” generally. If another action is required, give one explicit next action.
 ```
@@ -277,4 +332,5 @@ Final response:
 
 - For a map-heavy workflow, provide a fixture that contains at least two compatible regions of each important item type so additive selection can be tested without crossing incompatible inventory.
 - For destructive permission or inventory tests, prefer a disposable benefit or resource rather than removing all permissions from shared test data.
+- When a persisted result is the object the user needs to review, preserve it until the user explicitly approves cleanup; do not treat same-run deletion as evidence quality.
 - Keep the browser open on a neutral state with no unsaved changes when handing control back.
