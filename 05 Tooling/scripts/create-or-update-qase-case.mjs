@@ -81,7 +81,7 @@ function requireQaseEnv() {
 
 function extractCase(markdown, caseNumber) {
   const heading = new RegExp(
-    `^(?:### Test Case ${caseNumber}: .*|TC-${caseNumber}: .*)$`,
+    `^(?:### Test Case ${caseNumber}: .*|### TC-${caseNumber}: .*|TC-${caseNumber}: .*)$`,
     "m"
   );
   const match = markdown.match(heading);
@@ -92,7 +92,7 @@ function extractCase(markdown, caseNumber) {
   const rest = markdown.slice(match.index);
   const nextCase = rest
     .slice(match[0].length)
-    .search(/^(?:### Test Case \d+:|TC-\d+:)/m);
+    .search(/^(?:### Test Case \d+:|### TC-\d+:|TC-\d+:)/m);
   return nextCase === -1
     ? rest.trim()
     : rest.slice(0, match[0].length + nextCase).trim();
@@ -102,7 +102,7 @@ function getTitle(section) {
   const explicitTitle = getBoldField(section, "Title", false);
   if (explicitTitle) return explicitTitle;
 
-  const headingMatch = section.match(/^(?:### Test Case \d+:|TC-\d+:)\s*(.*)$/m);
+  const headingMatch = section.match(/^(?:### Test Case \d+:|### TC-\d+:|TC-\d+:)\s*(.*)$/m);
   if (!headingMatch?.[1]) throw new Error("Missing field: Title");
   return headingMatch[1].trim();
 }

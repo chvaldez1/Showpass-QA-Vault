@@ -37,6 +37,7 @@ The QA folders use product-facing names instead of mirroring the code tree one-t
 | Frontend source examples | QA feature folder |
 | --- | --- |
 | `auth`, `login`, `resend-confirmation` | `Authentication` |
+| `admins/admin-actions` | `Admin Actions` |
 | `assigned-seating`, `assigned-seating-builder`, `assigned-seating-assigner` | `Assigned Seating` |
 | `configured-fees`, `custom-fees`, `internal-fees` | `Fees` |
 | `custom-forms`, `form-engine` | `Custom Questions` |

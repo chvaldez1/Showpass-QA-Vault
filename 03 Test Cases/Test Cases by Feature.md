@@ -13,6 +13,8 @@ Use one feature folder for each test plan, Qase draft, gap analysis, or executio
 
 ## Feature Index
 
+- **Admin Actions**
+  - [[03 Test Cases/Admin Actions/admin-actions-test-cases|Admin Actions Qase Test Cases]]
 - **Authentication**
   - [[03 Test Cases/Authentication/login-test|Login Entry Point Test Cases]]
 - **Checkout**
