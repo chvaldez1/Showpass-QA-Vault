@@ -164,6 +164,7 @@ DeliveryMethod: Email, Print, WillCall
 Supported platforms:
 
 - Electron
+- Dashboard
 - WebPublic
 - Widget
 - WebBoxOffice
@@ -180,6 +181,7 @@ Each test case description must include a Markdown table listing the supported P
 | Platform            | View    |
 | ------------------- | ------- |
 | Electron            | Desktop |
+| Dashboard           | Desktop |
 | WebPublic           | Desktop |
 | Widget              | Desktop |
 | WebBoxOffice        | Desktop |
