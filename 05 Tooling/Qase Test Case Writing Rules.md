@@ -168,6 +168,7 @@ Supported platforms:
 - WebPublic
 - Widget
 - WebBoxOffice
+- MobileBoxOffice
 - React Native Public
 
 Supported views:
@@ -186,6 +187,7 @@ Each test case description must include a Markdown table listing the supported P
 | Widget              | Desktop |
 | WebBoxOffice        | Desktop |
 | Widget              | Mobile  |
+| MobileBoxOffice     | Mobile  |
 | React Native Public | Mobile  |
 ```
 
