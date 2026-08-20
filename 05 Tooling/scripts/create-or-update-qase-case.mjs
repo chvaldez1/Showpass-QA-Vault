@@ -92,7 +92,7 @@ function extractCase(markdown, caseNumber) {
   const rest = markdown.slice(match.index);
   const nextCase = rest
     .slice(match[0].length)
-    .search(/^(?:### Test Case \d+:|### TC-\d+:|TC-\d+:)/m);
+    .search(/^(?:## |### Test Case \d+:|### TC-\d+:|TC-\d+:)/m);
   return nextCase === -1
     ? rest.trim()
     : rest.slice(0, match[0].length + nextCase).trim();

@@ -51,6 +51,7 @@ Use one feature folder for each test plan, Qase draft, gap analysis, or executio
   - [[03 Test Cases/Tracking Links/event-scoped-tracking-links-beta-browser-run-2026-07-29|Event-Scoped Tracking Links Beta Browser Run 2026-07-29]]
 - **Transactions**
   - [[03 Test Cases/Transactions/invoice-breakdown-qase-test-cases|Invoice Breakdown Qase Test Cases]]
+  - [[03 Test Cases/Transactions/intellitix-integration-test-cases|Intellitix Integration Test Cases]]
 
 ## Additional Frontend-Aligned Feature Folders
 
