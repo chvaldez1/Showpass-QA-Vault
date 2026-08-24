@@ -30,6 +30,10 @@ Use one feature folder for each test plan, Qase draft, gap analysis, or executio
   - [[03 Test Cases/Employees/employees-qa-test-cases|Employee Test Cases]]
 - **Events**
   - [[03 Test Cases/Events/edit-event-test-cases|Edit Event Test Cases]]
+  - [[03 Test Cases/Events/event-management-existing-qase-gap-analysis|Event Management Existing Qase Gap Analysis]]
+  - [[03 Test Cases/Events/event-management-new-qase-gap-analysis|Event Management New Qase Gap Analysis Cases]]
+- [[03 Test Cases/Events/event-management-qa-assignment-matrix|Event Management QA Assignment Matrix]]
+- [[03 Test Cases/Events/event-management-csv-to-qase-test-case-map|Event Management CSV to Qase Test Case Map]]
 - **Exchanges**
   - [[03 Test Cases/Exchanges/cash-other-exchanges|Cash and Other Exchange Qase Test Cases]]
 - **Group Sales and Transfers**
