@@ -189,6 +189,8 @@ Before running an update dry-run, confirm:
 10. Re-read Qase after applying and verify the requested text or field state is correct. An HTTP success response is not proof that Qase stored every field. Compare the readback with the intended payload, especially parameters, tags, and step count. When using `--batch-plan --apply`, use the returned `verified` payloads as the apply-time verification unless deeper field inspection is needed.
 11. Delete temporary scripts unless they are intentionally useful for reuse.
 
+The reusable script normalizes Qase's harmless response formatting during selected-field verification: surrounding whitespace on top-level text fields, tag ordering, and omitted versus empty parameter collections. When a selected `params` or `parameters` field is absent from the local case, the script sends an empty collection so an explicitly approved parameter removal is applied and verified instead of being silently omitted from the PATCH request.
+
 Prefer `05 Tooling/scripts/create-or-update-qase-case.mjs` over fragile inline shell JSON for Qase writes. The script parses `.env`, constructs JSON payloads with structured objects, avoids shell interpolation for request bodies, dry-runs by default, and verifies cases by ID.
 
 Local draft labels such as `TC-1` are not Qase case IDs. For new cases, do not pass `--update`; Qase assigns the new case ID during apply. Use `--update <case-id>` only when modifying an existing Qase case that already has a real Qase ID.

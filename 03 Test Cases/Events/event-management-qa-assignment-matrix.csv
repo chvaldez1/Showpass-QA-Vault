@@ -22,31 +22,31 @@ Unassigned,Event category metadata,Google categories and helper entities
 Unassigned,Donations,"Supported currencies, unsupported currencies, and attraction events"
 Unassigned,Online and livestream events,"Valid setup, missing room data, and restricted active-room edits"
 Unassigned,Financial Settings and internal fees,Presence only: confirm the section and internal-fee controls are available
-Unassigned,Assigned Seating,Presence only: confirm the page is reachable for an eligible event and venue
+Unassigned,Map Editor / Assigned Seating,Presence only: confirm the page is reachable for an eligible event and venue
 Unassigned,/dashboard/events/create-event/ wizard,Do not assign until the route is confirmed as supported
 Unassigned,Edit - Basic Info,Event identity and descriptive content save and persist; covered broadly by SPT-764 and SPT-4874
 Unassigned,Edit - Location & Info,Location selection and event location details save and persist; covered broadly by SPT-764 and SPT-4874
 Unassigned,Edit - Event Date & Time,"Single and recurring schedules, doors time, validation, and persistence; SPT-4874 and SPT-4876"
-Unassigned,Edit - Accommodations,"Conditional section add/edit/remove and public output; refactor and move SPT-1784 under Events, retain SPT-359 in Core"
+Unassigned,Edit - Accommodations,"Conditional section add/edit/remove and public output; SPT-1784 moved to Create / Edit Events (84), retain SPT-359 in Core"
 Unassigned,Edit - Legal Policies & Important Info,Policy and important-information persistence; SPT-4878 covers terms acceptance only
-Unassigned,Edit - Custom Display Fields,Add formatted/plain field; save; verify integrated-page-only output; remove; New TC-8
-Unassigned,Advanced Options - Event Password,"Add password and message, save, reopen, and remove; Dashboard configuration gap; New TC-9"
-Unassigned,Advanced Options - Exchanges and Customer List,Save an event exchange cutoff and customer-list assignment when enabled; New TC-9
-Unassigned,Advanced Options - Third-Party Ticket Page,Save URL and redirect source; reopen and restore; New TC-9
-Unassigned,Advanced Options - Event Reports and Email Controls,"Report recipients, post-event email status, and reminder email persistence when enabled; New TC-9"
-Unassigned,Advanced Options - Thermal Tickets and Workday,Thermal title/message limits and conditional Workday configuration persistence; New TC-9
-Unassigned,Manage - Email Customization,"Existing coverage is scattered in suite 749; move event-only SPT-3618, SPT-4150, and SPT-4151 under Events; split event variants from hybrid SPT-3619 and SPT-4087 first"
-Unassigned,Manage - Branding,"Existing SPT-4124–4128, SPT-4335, and SPT-4742 are in suite 744; re-parent Branding under Events"
+Unassigned,Edit - Custom Display Fields,Add formatted/plain field; save; verify integrated-page-only output; remove; Created SPT-5077
+Unassigned,Advanced Options - Event Password,"Add password and message, save, reopen, and remove; Dashboard configuration coverage in SPT-5078"
+Unassigned,Advanced Options - Exchanges and Customer List,Save an event exchange cutoff and customer-list assignment when enabled; Created SPT-5078
+Unassigned,Advanced Options - Third-Party Ticket Page,Save URL and redirect source; reopen and restore; Created SPT-5078
+Unassigned,Advanced Options - Event Reports and Email Controls,"Report recipients, post-event email status, and reminder email persistence when enabled; Created SPT-5078"
+Unassigned,Advanced Options - Thermal Tickets and Workday,Thermal title/message limits and conditional Workday configuration persistence; Created SPT-5078
+Unassigned,Manage - Email Customization,"SPT-3618, SPT-4150, and SPT-4151 are in Email Customization (1051) under suite 80; suite 749 retains venue/shared coverage"
+Unassigned,Manage - Branding,"SPT-4126 and SPT-4128 are in Branding (1050) under suite 80; suite 744 retains venue/shared coverage"
 Unassigned,Manage - Waitlist,Conditional page presence and selected-event context; SPT-4384 covers ticket-type setup
-Unassigned,Manage - Attraction Configuration,"Existing SPT-3524–3529, SPT-4090, and SPT-4829 are already under Events"
+Unassigned,Manage - Attraction Configuration,"Existing SPT-3524–3529, SPT-4090, and SPT-4829 are correctly placed in suite 674 under suite 80"
 Unassigned,Manage - Live Stream,Conditional page presence for eligible non-recurring event; SPT-4877 covers configuration
-Unassigned,Manage - Edit Sellers,"Employee and affiliate seller permissions, limits, payment access, persistence, and cleanup; New TC-10"
-Unassigned,Manage - Email Guests,Existing SPT-5012–5018 are already under Events
+Unassigned,Manage - Edit Sellers,"Employee and affiliate seller permissions, limits, payment access, persistence, and cleanup; Created SPT-5079"
+Unassigned,Manage - Email Guests,Existing SPT-5012–5018 are correctly placed in suite 1035 under suite 80
 Unassigned,Manage - Transactions,Open the Transactions handoff filtered to the selected event; keep deep cases in Transactions
 Unassigned,Manage - Check In,Open Check In for the selected non-draft event; keep deep scan cases in Check In
-Unassigned,Manage - Publish Approval,Conditional request-publish entry and state; move/re-parent suite 949 under Events
-Unassigned,Promote - Facebook Integration,Complete-address visibility and selected-event route; move SPT-4902 under Events
-Unassigned,Promote - Tracking Links,"Selected-event route and access; move event-owned SPT-4239, SPT-4242, SPT-5010, and SPT-5011 under Events"
-Unassigned,Reports - Stats & Info,"Single and recurring layouts, known totals, filters, charts, rows, and report control; New TC-11"
+Unassigned,Manage - Publish Approval,Conditional request-publish entry and state; leave suite 949 unchanged because Workflow Approval is outside this feature-parity move
+Unassigned,Promote - Facebook Integration,Complete-address visibility and selected-event route; SPT-4902 is directly in Create Events (80)
+Unassigned,Promote - Tracking Links,"SPT-4239, SPT-4242, SPT-5010, and SPT-5011 are in Tracking Links (1052) under suite 80; suite 183 retains global coverage"
+Unassigned,Reports - Stats & Info,"Single and recurring layouts, known totals, filters, charts, rows, and report control; Created SPT-5080"
 Unassigned,View Event,Open the selected event public slug in a new tab and preserve Dashboard state
 Unassigned,Manage All Events,Return to the event list without opening another event; SPT-784 covers the list generally

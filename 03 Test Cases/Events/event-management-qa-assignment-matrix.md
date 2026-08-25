@@ -17,13 +17,13 @@ The CSV now accounts for every source-backed destination visible in the event-ma
 
 Related analysis:
 
-- [[03 Test Cases/Events/event-management-existing-qase-gap-analysis|Existing Qase coverage, suite placement, and gap analysis]]
-- [[03 Test Cases/Events/event-management-new-qase-gap-analysis|Suggested Qase-ready cases]]
+- [[03 Test Cases/Events/event-management-qase-test-cases|Qase cases, coverage, and gap analysis]]
 - [[03 Test Cases/Events/event-management-csv-to-qase-test-case-map|CSV to existing and new Qase test case map]]
 
 ## Assignment Guidance
 
 1. Assign the high-risk overview, lifecycle, permissions, Custom Display Fields, Edit Sellers, and Stats & Info rows first.
-2. Existing Branding, Email Customization, Tracking Links, Facebook Integration, Workflow Approval, Email Guests, and Attraction Configuration rows are coverage review or suite-move work—not automatically new-case work.
+2. Branding, Email Customization, Tracking Links, Facebook Integration, Email Guests, and Attraction Configuration are now correctly placed for this event-management scope.
 3. Keep Transactions and Check In execution to the selected-event handoff; their deep feature suites remain separate.
-4. Stop Financial Settings and Assigned Seating after page or section presence is proven.
+4. Stop Financial Settings and Map Editor / Assigned Seating after page or section presence is proven.
+5. Leave Workflow Approval suite 949 unchanged because it is outside this feature-parity move.

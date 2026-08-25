@@ -285,7 +285,10 @@ function readBatchPlan(planPath) {
       suiteId: operation.suiteId ?? operation.suite_id ?? plan.suiteId ?? plan.suite_id,
       caseId: operation.caseId ?? operation.case_id ?? operation.update,
       parametersFile: operation.parametersFile ?? operation.parameters_file ?? plan.parametersFile ?? plan.parameters_file,
-      onlyFields: operation.onlyFields ?? operation.only_fields,
+      onlyFields:
+        operation.onlyFields ??
+        operation.only_fields ??
+        (action === "update" ? plan.onlyFields ?? plan.only_fields : undefined),
     };
 
     if (!["create", "update"].includes(normalized.action)) {
@@ -422,13 +425,36 @@ function selectUpdateFields(payload, fieldsText) {
   for (const field of fields) {
     if (!allowedFields.has(field)) throw new Error(`Unsupported --only-fields value: ${field}`);
     if (!(field in payload)) throw new Error(`Selected field is not present in payload: ${field}`);
-    selected[field] = payload[field];
+    selected[field] =
+      ["params", "parameters"].includes(field) && payload[field] === undefined
+        ? []
+        : payload[field];
   }
   return selected;
 }
 
+function normalizeComparableField(field, value) {
+  if (
+    ["title", "description", "preconditions", "postconditions"].includes(field)
+  ) {
+    return typeof value === "string" ? value.trim() : value;
+  }
+  if (field === "tags") return [...(value ?? [])].sort();
+  if (["params", "parameters"].includes(field)) {
+    if (value == null) return [];
+    if (Array.isArray(value) && value.length === 0) return [];
+    if (typeof value === "object" && Object.keys(value).length === 0) return [];
+  }
+  return value;
+}
+
 function normalizeExistingField(existing, field) {
-  if (field === "tags") return (existing.tags ?? []).map((tag) => tag.title);
+  if (field === "tags") {
+    return normalizeComparableField(
+      field,
+      (existing.tags ?? []).map((tag) => tag.title)
+    );
+  }
   if (field === "steps") {
     return (existing.steps ?? []).map((step) => ({
       action: step.action,
@@ -436,7 +462,7 @@ function normalizeExistingField(existing, field) {
       expected_result: step.expected_result,
     }));
   }
-  return existing[field];
+  return normalizeComparableField(field, existing[field]);
 }
 
 function summarizeSelectedUpdate({ existing, payload, caseId }) {
@@ -449,7 +475,11 @@ function summarizeSelectedUpdate({ existing, payload, caseId }) {
     before,
     after: payload,
     changed_fields: Object.fromEntries(
-      fields.map((field) => [field, JSON.stringify(before[field]) !== JSON.stringify(payload[field])])
+      fields.map((field) => [
+        field,
+        JSON.stringify(before[field]) !==
+          JSON.stringify(normalizeComparableField(field, payload[field])),
+      ])
     ),
   };
 }
@@ -457,9 +487,10 @@ function summarizeSelectedUpdate({ existing, payload, caseId }) {
 function assertSelectedFieldsPersisted(payload, result) {
   for (const [field, expected] of Object.entries(payload)) {
     const actual = normalizeExistingField(result, field);
-    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    const comparableExpected = normalizeComparableField(field, expected);
+    if (JSON.stringify(actual) !== JSON.stringify(comparableExpected)) {
       throw new Error(
-        `Qase field verification failed for ${field}: expected ${JSON.stringify(expected)}, received ${JSON.stringify(actual)}`
+        `Qase field verification failed for ${field}: expected ${JSON.stringify(comparableExpected)}, received ${JSON.stringify(actual)}`
       );
     }
   }

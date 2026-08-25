@@ -37,6 +37,20 @@ Test notes must be executable by someone with little or no Showpass knowledge:
 - Prefer customer- and employee-visible proof such as one charge, one transaction, one order, and one set of tickets over internal field names.
 - Keep implementation details in source-backed behavior or risk sections, not in manual steps.
 
+## Manual Test Case Readability And Route Stability
+
+Write every manual test case for a regular person who may have little Showpass knowledge.
+
+- Use the words visible in the product. Prefer `open Manage Events`, `select Edit`, and `the saved value is still shown` over terms such as `source-backed navigation`, `state-aware surface`, `route parity`, `mapped destination`, `fixture`, `persistence boundary`, or `handoff`.
+- Titles, Descriptions, Preconditions, Steps, Data, and Expected Results must use plain language. Technical terms may remain in source notes, risk analysis, or automation notes when they are needed for accuracy.
+- Define a Showpass-specific term the first time it is needed and cannot be replaced with common wording.
+- Put the current route in the Description or Sources Reviewed when it helps trace source behavior. Do not put a hard-coded route, Angular hash URL, slug pattern, or framework-specific path in a manual Step or Data cell unless the route itself is the behavior under test or no visible product navigation exists.
+- Prefer visible navigation such as `Dashboard → Events → Manage Events → Edit`. Treat legacy Angular routes as temporary because they may change during the Next.js migration.
+- A route migration must not require rewriting user-focused steps when the visible workflow and expected behavior remain the same.
+- Before drafting separate cases, check whether the cases use the same actions and prove the same result. If they do, create one case with a clear parameter. Single-event and recurring-event versions should normally be parameter values when only the displayed table or setup changes.
+- Combine entry-point and permission variations only when one short scenario table and one step set remain easy to follow. Split the case when conditional steps would make execution confusing.
+- Label an uncreated local case as `TC-*`. Use `SPT-*` only for a case that already has that Qase ID.
+
 ## Vault Handshake
 
 Agents should keep work aligned with this folder contract:
