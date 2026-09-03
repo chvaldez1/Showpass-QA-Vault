@@ -218,26 +218,35 @@ EventType: SingleEvent, RecurringParent
 
 ## Create / Edit Events (84)
 
-### SPT-764: Dashboard - Events - Create and publish a single event
+### SPT-764: Dashboard - Events - Create and publish a single-day event
 
 **Description:**
 
-Validates that an organizer can create and publish a single event using either a sellable public ticket type or the **Free Event - Tickets Not Required** option. The case confirms that essential event details survive a fresh Dashboard read and that the public event page shows the correct ticket experience. It protects against incomplete publication, lost event details, missing ticket availability, and free events incorrectly asking customers to obtain tickets.
+Validates that an organizer can create and publish a single-day event with its name, images, description, category, tags, location, timezone, start time, **Event Doors Open** time, end time, and ticket requirement. The case uses either a sellable public ticket type or **Free Event - Tickets Not Required**, then confirms the created values survive a fresh Dashboard read and appear correctly to customers.
+
+This case is create-focused. SPT-5077 owns changes made after an event already exists.
+
+Sources reviewed:
+
+* `apps/main/templates/tickets/events/partials/__create-form.html`
+* `apps/tickets/api/venue_based/serializers/serializers.py`
+* `apps/tickets/models/event_management/event.py`
 
 | Platform | View |
 | --- | --- |
 | Dashboard | Desktop |
+| Dashboard | Mobile |
 | WebPublic | Desktop |
-| Widget | Desktop |
+| WebPublic | Mobile |
 
 **Preconditions:**
 
 * The organizer is signed in to the Dashboard and can manage events for the selected venue.
 * The selected venue has no active event-approval workflow, so the **Publish** button is available.
 * The selected venue has at least one saved event location.
-* Use a unique disposable event name and future start and end times.
+* Valid banner and square image files are available. Each file is smaller than 3 MB.
+* Use a unique disposable event name and three future times on the same day: Doors Open, Event Starts, and Event Ends.
 * The disposable event must not receive orders or ticket sales.
-* A public event-listing Widget is configured only when the optional Widget step is executed.
 
 **Postconditions:**
 
@@ -249,23 +258,23 @@ Validates that an organizer can create and publish a single event using either a
 **Parameters:**
 
 TicketRequirement: TicketsRequired, FreeEventTicketsNotRequired
+View: Desktop, Mobile
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| From the Dashboard Events area, select **Create Event**. | Selected venue | The Create Event form opens for the selected venue. |
+| In the selected `View`, open the Dashboard Events area and select **Create Event**. | Selected venue; `View` | The Create Event form opens for the selected venue and its controls are usable in the selected view. |
 | Select **Show Advanced Settings**. | None | The full event form shows sections including Basic Info, Location & Info, Event Date & Time, and Ticket Types. |
-| In **Basic Info**, enter the disposable event name and description, then select one category. | Name: `QA Single Event <unique suffix>`<br>Description: `Disposable event for SPT-764`<br>Category: one available general category | The name, description, and category remain visible with no validation message. |
-| In **Location & Info**, select the saved location and confirm the venue's timezone. | Existing venue location | The selected location and timezone appear in the form. |
-| In **Event Date & Time**, set a future start and a later end. | Start: at least two days in the future<br>End: two hours after the start | The form displays the selected future start and end in the venue's timezone. |
+| In **Basic Info**, complete the event identity and customer-facing content. | Event Name: `QA Single-Day Event <unique suffix>`<br>Banner Image: valid 1200 x 600 image smaller than 3 MB<br>Square Image: valid 1080 x 1080 image smaller than 3 MB<br>Description: `Single-day creation check <unique suffix>`<br>Category: one available general category<br>Tags: `qa-single-day`, `qa-<unique suffix>` | The name, both image previews, description, category, and both tags remain visible with no validation message. |
+| In **Location & Info**, select the saved physical location and confirm the event timezone. | Location: existing saved location<br>Online Event: Off<br>Timezone: venue timezone | The selected location and timezone appear in the form, and the event is not marked as online. |
+| In **Event Date & Time**, configure one occurrence on one future day. | Repeat Event: None<br>Event Doors Open: 6:00 PM<br>Event Starts: 7:00 PM on the same day<br>Event Ends: 9:00 PM on the same day<br>Use a date at least two days in the future | The form shows one occurrence in the event timezone. Doors Open is before Event Starts, and Event Starts is before Event Ends. |
 | In **Ticket Types**, configure the selected `TicketRequirement`. | `TicketsRequired`: select **Tickets Required** and set Ticket Name `General Admission`, Inventory `25`, Price `25.00`, and public visibility.<br>`FreeEventTicketsNotRequired`: select **Free Event - Tickets Not Required**. | `TicketsRequired`: the completed public ticket row remains visible.<br>`FreeEventTicketsNotRequired`: ticket-entry fields are hidden because customers do not need tickets. |
 | Select **Publish** once. | None | The form shows a successful save message and redirects to management for the newly created event without a validation error. |
 | Select **Manage All Events**, then find the event by its unique name. | Disposable event name | The published event appears once with the expected name and event time. |
-| Open the event's **Edit** page from Manage Events. | Disposable event | A fresh form load shows the saved name, description, category, location, timezone, start, end, and selected ticket requirement. |
-| Open **View Event** for the disposable event. | None | The public event page opens for the same event and shows its name, date, time, and location. |
+| Open the event's **Edit** page from Manage Events and inspect the saved values without changing them. | Disposable event | A fresh form load shows the saved name, both images, description, category, tags, location, timezone, Doors Open, start, end, and selected ticket requirement. |
+| Open **View Event** for the disposable event in the selected `View`. | `View` | The public event page opens for the same event and shows its name, banner image, description, date, 7:00 PM start time, 6:00 PM **Doors Open** time, and location without a broken mobile layout. |
 | Verify the public ticket experience for the selected `TicketRequirement`. | `TicketsRequired`: review the ticket area.<br>`FreeEventTicketsNotRequired`: review the free-event message. | `TicketsRequired`: **General Admission**, its price, and a ticket-purchase action are available.<br>`FreeEventTicketsNotRequired`: the page identifies a **Free Event** and states that tickets are not required. |
-| If the venue has a configured public event-listing Widget, find the disposable event there. | Optional Widget fixture | The Widget shows the same event and does not contradict the public page's ticket-required or free-event experience. |
 | Return to the disposable event's **Edit** page. | Disposable event | The correct event is open and the **Delete Event** control is available. |
-| Select **Delete Event** and confirm deletion. | Delete only `QA Single Event <unique suffix>` | The event is deleted without affecting any other event. |
+| Select **Delete Event** and confirm deletion. | Delete only `QA Single-Day Event <unique suffix>` | The event is deleted without affecting any other event. |
 | Return to **Manage All Events** and search for the disposable event name. | Disposable event name | The deleted event no longer appears in the event list. |
 
 ### SPT-775: Dashboard - Events - Generate and validate an event's public link
@@ -681,42 +690,65 @@ Scenario: ManageEventsEdit, EditSellersEditEvent
 | Save the event. | None | The event saves once and returns to the page shown in the Description. |
 | Reopen the event from the same starting point. | Selected Scenario | The changed subtitle is still shown. |
 
-### SPT-5077: Dashboard - Edit Event - Configure Custom Display Fields
+### SPT-5077: Dashboard - Edit Event - Save changes in every event section
 
 **Description:**
 
-Checks that an organizer can add custom information for an integrated event page, save it, and remove it. These fields should not appear on the standard Showpass event page.
+Validates that an organizer can edit a published single-day event, save the changes, reopen the event, and see the saved values. Each run covers one event section selected through `EditScenario` and confirms the related customer-facing result when one exists.
+
+Recurring-event behavior remains in its dedicated cases. Financial Settings and Workday Integration are presence checks only; detailed ticket pricing, waitlist, fees, donations, and order-form behavior also remains in their dedicated cases.
 
 Current Angular reference: /dashboard/events/{slug}/manage/#/edit. This is reference information only and is not required in the steps.
 
-| Platform | View |
-| --- | --- |
+| Platform  | View    |
+| --------- | ------- |
 | Dashboard | Desktop |
+| Dashboard | Mobile  |
 
 **Preconditions:**
 
-* An organizer can manage a published event that is not a recurring child.
-* The venue has Custom Display Fields enabled.
-* An integrated test event page is available.
-* The event has no field named QA Contact.
+- An organizer can manage a published, single-day event that is not a recurring child and has no orders or ticket sales.
+- Record every original value before changing it.
+- Use a venue and organizer that expose the fields required by the selected `EditScenario`.
+- Two saved physical locations and two valid timezones are available for Location & Info.
+- Valid replacement banner and square images are available; each file is smaller than 3 MB.
+- The required artists, comedians, shows, teams, accommodation partners, charity, customer list, and feature flags are available for their matching scenarios.
+- For `CustomDisplayFields`, Custom Display Fields is enabled, an integrated test page is available, and no field named **QA Contact** exists.
+- For `AdvancedOptions`, no disposable QA password or report receiver from a previous run remains.
 
 **Postconditions:**
 
-* Remove the QA Contact field.
-* Reopen Edit and confirm that the field remains removed.
+- Restore every original event value changed by the selected scenario.
+- Remove disposable ticket types, questions, custom display fields, passwords, report receivers, tags, and other records created by the run.
+- Reopen Edit and confirm the event matches its original setup.
 
 **Tags:** dashboard, events, edit-event
 
+**Parameters:**
+
+EditScenario: BasicInfoGeneral, BasicInfoGoogleThings, BasicInfoMusic, BasicInfoComedy, BasicInfoArts, BasicInfoSports, LocationPhysical, LocationOnline, EventDateAndTime, Accommodations, TicketTypes, EventTicketSettings, LegalPoliciesAndImportantInfo, OrderFormAndMessaging, CustomDisplayFields, CharitableDonations, FinancialSettingsPresence, AdvancedOptions
+
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| In Manage Events, select Edit for the test event and open Custom Display Fields. | Test event | The section explains that these fields are for integrated event pages and not the Showpass event page. |
-| Select Add Field. | None | An empty Display Title and Value row appears. |
-| Enter the title and value. | Display Title: QA Contact; Value: qa-{unique-suffix}@example.com | The values are accepted. |
-| Turn on Use basic text formatter. | None | The Value box changes to the formatted editor without losing the entered value. |
-| Save the event. | None | The event saves successfully. |
-| Leave Edit, reopen it, and return to Custom Display Fields. | Same event | The title, value, and formatter choice are still shown. |
-| Open the integrated event page and the standard Showpass event page. | Same event | The field appears on the integrated page and does not appear on the standard Showpass event page. |
-| Delete the field and save the event. | QA Contact | The field is removed and remains absent after reopening Edit. |
+| In **Manage Events**, select **Edit** for the published single-day test event. Execute only the step matching the selected `EditScenario`. For that step, record the original values, make the listed changes, save once, leave and reopen Edit, verify the saved result, restore the originals, save again, and reopen for a final cleanup check. | **EditScenario:** selected parameter value<br>**Event:** published single-day event with no sales<br>**Unique data:** unique suffix | The correct event opens. Only the matching scenario step is executed, and the other scenario steps are not applicable to this run. |
+| For `BasicInfoGeneral`, open **Basic Info** and perform the scenario procedure. | **Event Name:** append `Edited`<br>**Sub-title:** `QA subtitle <suffix>`<br>**Desired event link:** `qa-edited-<suffix>`<br>**Banner Image:** valid replacement smaller than 3 MB<br>**Square Image:** valid replacement smaller than 3 MB<br>**Description:** `Edited description <suffix>`<br>**Categories:** select up to three<br>**Tags:** `qa-edit`, `qa-<suffix>`<br>**Visibility:** another allowed value<br>**Display on Calendar Widget:** opposite of original | Every changed value persists after reopening. The public page or Dashboard follows the selected visibility, shows the saved customer-facing details, and the new public link opens the same event. Original values and link are restored during cleanup. |
+| For `BasicInfoGoogleThings`, open **Basic Info** and perform the scenario procedure. | **Google things to do categories:** another available selection<br>**Guided Tour:** opposite of original | Both selections persist after reopening and return to their original values during cleanup. |
+| For `BasicInfoMusic`, open **Basic Info** and perform the scenario procedure. | **Category:** Music<br>**Headliner(s):** another available artist<br>**Supporting Artist(s):** another available artist<br>**Genres:** another available genre | The artists and genres persist in their correct roles after reopening and return to their original values during cleanup. |
+| For `BasicInfoComedy`, open **Basic Info** and perform the scenario procedure. | **Category:** Comedy<br>**Headliner(s):** another available comedian<br>**Supporting Comedian(s):** another available comedian<br>**Add Comedian:** use only if the required comedian is unavailable | The comedians persist in their correct roles after reopening. Any disposable comedian created by the run is removed when supported, and the original event values are restored. |
+| For `BasicInfoArts`, open **Basic Info** and perform the scenario procedure. | **Category:** Arts or Theatre<br>**Name:** another available show<br>**Add Show:** use only if the required show is unavailable | The show persists after reopening. Any disposable show created by the run is removed when supported, and the original event values are restored. |
+| For `BasicInfoSports`, open **Basic Info** and perform the scenario procedure. | **Category:** Sports<br>**Home team:** another available team<br>**Away team:** a different available team<br>**Add Team:** use only if a required team is unavailable | Both teams persist in the correct home and away positions. Any disposable team is removed when supported, and the original event values are restored. |
+| For `LocationPhysical`, open **Location & Info** and perform the scenario procedure. | **Location:** another saved physical location<br>**Online Event:** Off<br>**Timezone:** another valid timezone | Location, online status, and timezone persist. The intended local event times remain correct, and the original location and timezone are restored. |
+| For `LocationOnline`, open **Location & Info** and perform the scenario procedure. | **Online Event:** On<br>**Timezone:** another valid timezone | Online Event and timezone persist without retaining a conflicting physical location. The original physical location, online status, and timezone are restored. |
+| For `EventDateAndTime`, open **Event Date & Time** and perform the scenario procedure. | **Event Doors Open:** 6:30 PM<br>**Event Starts:** 7:30 PM on the same future day<br>**Event Ends:** 9:30 PM on the same day<br>**Repeat Event:** None<br>**Display date and time as To Be Determined:** On<br>**Hide event end time on downloaded tickets:** On | Doors Open is before Event Starts, and Event Starts is before Event Ends. All values persist; the public page displays To Be Determined and the event remains single-day. Original times and display choices are restored. |
+| For `Accommodations`, open **Accommodations** and perform the scenario procedure. | **Event detail page accommodation partner:** another available partner<br>**Post-purchase email accommodation partner:** another available partner | Both partner selections persist after reopening and return to their original values during cleanup. |
+| For `TicketTypes`, open **Ticket Types** and perform the scenario procedure. | **Ticket Name:** `QA Admission <suffix>`<br>**Inventory:** `30`<br>**Price:** `20.00`<br>**Visibility:** Public<br>**Waitlist:** opposite of original when enabled<br>**Ticket Type:** add one disposable ticket type<br>**Scope:** do not test price tiers, fee calculations, or detailed waitlist behavior | Every ticket-type value persists exactly once and the public ticket area follows the saved visibility. The disposable ticket type is removed and the original ticket types are restored. |
+| For `EventTicketSettings`, open **Ticket Types** and perform the scenario procedure. | **Sale Starts On Time:** change when available<br>**Ticket Requirements:** Free Event <--> Paid Event<br>**Total Event Inventory:** valid limit when available<br>**Enable Event Inventory Threshold Displays:** opposite of original when available<br>**Show Remaining Tickets:** another valid amount when available<br>**Default End Sale Time:** another available choice<br>**No Ticket Types Message:** `QA no tickets message <suffix>`<br>**Ticket PDF Terms & Conditions:** `QA ticket terms <suffix>`<br>**Ticket PDF Custom Message:** `QA ticket message <suffix>` | Every event-level ticket setting persists. The public ticket area follows the saved ticket requirement, inventory display, sale timing, and customer-facing messages. All original event-level ticket settings are restored. |
+| For `LegalPoliciesAndImportantInfo`, open **Legal Policies & Important Info** and perform the scenario procedure. | **Refund Policy:** `QA refund policy <suffix>`<br>**Require customers to accept terms & conditions before purchasing:** On<br>**Custom terms URL:** valid QA URL<br>**Important Info & Restrictions:** add `QA restriction <suffix>` | All values persist. Checkout requires terms acceptance, the saved terms URL opens, and the original policies and restrictions are restored. |
+| For `OrderFormAndMessaging`, open **Order Form** and perform the scenario procedure. | **Display & Email Message:** `QA order message <suffix>`<br>**Collection Method:** Enhanced<br>**Ticket Button Verbiage:** another available value<br>**Require guest information for each ticket:** opposite of original<br>**Require guest information for staff box office and POS sales:** opposite of original<br>**Sync Custom Questions & Info to Customer Profile:** opposite of original when allowed<br>**Enhanced fields:** toggle First Name, Last Name, Email, Phone Number, Home Address, Company Name, Job Title, Student ID Number, Birthday, and License Plate<br>**Custom Question:** add one disposable question | All available choices persist. Checkout shows the selected button wording, collection fields, and custom question; the supported post-purchase surface shows the message. The disposable question is removed and original settings are restored. |
+| For `CustomDisplayFields`, open **Custom Display Fields** and perform the scenario procedure. | **Field action:** select Add Field<br>**Display Title:** `QA Contact`<br>**Value:** `qa-<suffix>@example.com`<br>**Use basic text formatter:** On | Title, value, and formatter persist. QA Contact appears on the integrated event page but not the standard Showpass page. The field is removed and remains absent after cleanup. |
+| For `CharitableDonations`, open **Charitable Donations** and perform the scenario procedure. | **Charity:** available QA charity<br>**Suggested Donation Amount:** another available amount<br>**Display Verbiage:** `QA donation <suffix>`<br>**Purchase:** do not complete a donation payment | All three values persist and appear in checkout. The original donation configuration is restored without purchasing. |
+| For `FinancialSettingsPresence`, open **Financial Settings**. Do not change fee values. | **Organizer:** authorized with Manage Financials<br>**Data change:** none | **Edit Service Fee Settings** is present and opens. Organizer and internal fee values remain unchanged. |
+| For `AdvancedOptions`, open **Advanced Options** and perform the scenario procedure. | **Password:** add a disposable event password<br>**Password-page message:** `QA password message <suffix>`<br>**Exchange cutoff:** another valid value when enabled<br>**Add to list:** another available list<br>**Third-Party Ticket Page URL:** valid QA URL<br>**Redirect choice:** another available choice<br>**Event-report receiver:** add one disposable email<br>**Post-Event Email status:** another available choice<br>**Thermal Ticket Title Line Text:** `QA Title <suffix>`<br>**Thermal Message:** `QA thermal message <suffix>`<br>**Workday Configure Integration:** confirm presence when enabled<br>**Send reminder emails:** opposite of original when enabled | Every changed value persists and appears in its intended Dashboard or customer surface. Workday is presence-only. The password, receiver email, and list selection are removed, and all original values are restored. |
 
 ### SPT-780: Dashboard - Events - Configure charitable donations
 

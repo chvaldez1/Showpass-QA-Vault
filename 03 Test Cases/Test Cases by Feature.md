@@ -55,6 +55,7 @@ Use one feature folder for each test plan, Qase draft, gap analysis, or executio
 - **Transactions**
   - [[03 Test Cases/Transactions/invoice-breakdown-qase-test-cases|Invoice Breakdown Qase Test Cases]]
   - [[03 Test Cases/Transactions/intellitix-integration-test-cases|Intellitix Integration Test Cases]]
+  - [[03 Test Cases/Transactions/SPW-20252-transaction-selection-totals-permission-test-cases|SPW-20252 Transaction Selection Totals Permission Test Cases]]
 
 ## Additional Frontend-Aligned Feature Folders
 

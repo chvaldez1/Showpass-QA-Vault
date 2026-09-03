@@ -59,10 +59,36 @@ Step guidelines:
 - Use Preconditions for setup, configuration, or required system state.
 - Use Postconditions for follow-up validation, cleanup, or downstream effects.
 
+### Concrete Test Data Language
+
+Manual-facing fields must tell a QA exactly which record to use, what state it must be in, and what to do with it afterward.
+
+- Do not use shorthand such as `disposable event`, `disposable record`, `fixture`, or `test object` in Titles, Descriptions, Preconditions, Steps, Data, Expected Results, or Postconditions.
+- Do not leave vague instructions such as `use a valid value`, `select another available choice`, or `when available` without an exact value or a clear selection rule.
+- Name the record and its required state. Example: `Use a QA-only published single-day event with one public General Admission ticket and no orders or sales.`
+- State why destructive changes are safe when relevant. Example: `Use an event with no orders or sales because changing Ticket Requirements may remove or hide its ticket types.`
+- Give an exact value whenever the product permits it. When values depend on the venue, give a selection rule and require the QA to record the chosen value. Example: `Select a saved physical location different from the current location and record its name before saving.`
+- Put cleanup in plain language. Example: `Delete the QA-only event created for this case after confirming it has no orders or sales.`
+- A new Showpass QA must be able to identify the required test data without asking what a shorthand term means.
+
+Avoid:
+
+```markdown
+* Use a disposable event fixture.
+| Change the timezone. | Another valid timezone | The value persists. |
+```
+
+Prefer:
+
+```markdown
+* Use a QA-only published single-day event with no orders or sales. Record its current timezone.
+| Change the event timezone. | Select a timezone different from the recorded timezone and record the selected name. | The selected timezone is still shown after reopening the event. |
+```
+
 ### Preconditions And Postconditions Formatting
 
 - Use an asterisk (`*`) Markdown bulleted list whenever Preconditions or Postconditions contain more than one requirement or result.
-- Put one setup requirement, permission, fixture, cleanup action, or final-state assertion in each bullet.
+- Put one setup requirement, permission, test-data condition, cleanup action, or final-state assertion in each bullet.
 - Keep a single sentence on the field label line only when the field contains one short condition.
 - Do not combine several conditions into one paragraph; Qase fields must remain easy to scan during execution.
 
@@ -98,17 +124,17 @@ Write every manual case so a person with little or no Showpass knowledge can exe
 - Do not use internal fields, stored statuses, webhook names, API names, or implementation flags in manual actions unless the actor must supply that value.
 - Keep technical evidence in Sources Reviewed, Source-Backed Behavior, Risk Areas, Test Case Notes, or Suggested Automated Coverage.
 - If a new Showpass employee would need undocumented product knowledge to complete a step, the case is not ready.
-- Start with the exact route or named product area and identify the visible fixture the employee should use.
+- Start with the exact route or named product area and identify the exact visible record or setup the employee should use.
 - Use one action and one decision per step row. Split combined instructions such as “filter, reload, and verify” into separate rows.
 - Name controls exactly as they appear in the interface and say where any ID, slug, link, order, event, or customer value comes from.
 - Do not use automation-only terms such as locator, DOM, hidden input, sentinel, isolated clipboard, programmatic click, or request interception in manual steps.
-- End with a clear final-state instruction: no data changed, restore the original value, delete only the named disposable record, or preserve the named artifact for review.
+- End with a clear final-state instruction: no data changed, restore the original value, delete only the named QA record after confirming it is safe to delete, or preserve the named artifact for review.
 
 ### Executable Defect Reproduction
 
 When a Qase-ready note includes a defect or regression reproduction, use the same execution quality as a test case:
 
-- Preconditions identify the environment, Showpass role, route or screen, and current fixture.
+- Preconditions identify the environment, Showpass role, route or screen, and exact test record or setup.
 - Use a `Step Action | Data | Expected Result` table.
 - Put Actual Result, Impact, Data Safety, and Cleanup after the table.
 - Embed or link evidence immediately under the result it proves.

@@ -81,7 +81,7 @@ function requireQaseEnv() {
 
 function extractCase(markdown, caseNumber) {
   const heading = new RegExp(
-    `^(?:### Test Case ${caseNumber}: .*|### TC-${caseNumber}: .*|TC-${caseNumber}: .*)$`,
+    `^(?:### Test Case ${caseNumber}: .*|### TC-${caseNumber}: .*|TC-${caseNumber}: .*|### SPT-${caseNumber}: .*)$`,
     "m"
   );
   const match = markdown.match(heading);
@@ -92,7 +92,7 @@ function extractCase(markdown, caseNumber) {
   const rest = markdown.slice(match.index);
   const nextCase = rest
     .slice(match[0].length)
-    .search(/^(?:## |### Test Case \d+:|### TC-\d+:|TC-\d+:)/m);
+    .search(/^(?:## |### Test Case \d+:|### TC-\d+:|TC-\d+:|### SPT-\d+:)/m);
   return nextCase === -1
     ? rest.trim()
     : rest.slice(0, match[0].length + nextCase).trim();
@@ -102,7 +102,7 @@ function getTitle(section) {
   const explicitTitle = getBoldField(section, "Title", false);
   if (explicitTitle) return explicitTitle;
 
-  const headingMatch = section.match(/^(?:### Test Case \d+:|### TC-\d+:|TC-\d+:)\s*(.*)$/m);
+  const headingMatch = section.match(/^(?:### Test Case \d+:|### TC-\d+:|TC-\d+:|### SPT-\d+:)\s*(.*)$/m);
   if (!headingMatch?.[1]) throw new Error("Missing field: Title");
   return headingMatch[1].trim();
 }
@@ -230,17 +230,32 @@ function readExplicitParameters(parametersFile) {
   const parsed = JSON.parse(fs.readFileSync(parametersFile, "utf8"));
   const parameters = Array.isArray(parsed) ? parsed : [parsed];
 
-  for (const parameter of parameters) {
-    if (parameter.type !== "group" || !Array.isArray(parameter.items) || parameter.items.length === 0) {
-      throw new Error(`Explicit parameters files support grouped parameters only: ${parametersFile}`);
+  return parameters.map((parameter) => {
+    const singleParameter = parameter.item ??
+      (parameter.title ? { title: parameter.title, values: parameter.values } : undefined);
+    if (parameter.type === "single" || singleParameter) {
+      if (
+        !singleParameter?.title ||
+        !Array.isArray(singleParameter.values) ||
+        singleParameter.values.length === 0
+      ) {
+        throw new Error(`Invalid single parameter in: ${parametersFile}`);
+      }
+      return singleParameter;
+    }
+    if (
+      (parameter.type && parameter.type !== "group") ||
+      !Array.isArray(parameter.items) ||
+      parameter.items.length === 0
+    ) {
+      throw new Error(`Invalid explicit parameter in: ${parametersFile}`);
     }
     const rowCounts = parameter.items.map((item) => item.values?.length ?? 0);
     if (rowCounts.some((count) => count === 0 || count !== rowCounts[0])) {
       throw new Error(`Grouped parameter row counts do not match: ${parametersFile}`);
     }
-  }
-
-  return parameters;
+    return { items: parameter.items };
+  });
 }
 
 function buildPayload({ caseFile, caseNumber, suiteId, parametersFile }) {
@@ -335,12 +350,12 @@ function summarizePayload(payload, mode) {
 
 function summarizeExplicitParameters(parameters) {
   return parameters?.map((parameter) => ({
-    type: parameter.type,
-    item: parameter.item
+    type: parameter.type ?? (parameter.items ? "group" : "single"),
+    item: parameter.item || parameter.title
       ? {
-          title: parameter.item.title,
-          value_count: parameter.item.values?.length ?? 0,
-          values: parameter.item.values ?? [],
+          title: parameter.item?.title ?? parameter.title,
+          value_count: (parameter.item?.values ?? parameter.values)?.length ?? 0,
+          values: parameter.item?.values ?? parameter.values ?? [],
         }
       : undefined,
     items: parameter.items?.map((item) => ({
@@ -440,7 +455,10 @@ function normalizeComparableField(field, value) {
     return typeof value === "string" ? value.trim() : value;
   }
   if (field === "tags") return [...(value ?? [])].sort();
-  if (["params", "parameters"].includes(field)) {
+  if (field === "parameters") {
+    return summarizeExplicitParameters(value) ?? [];
+  }
+  if (field === "params") {
     if (value == null) return [];
     if (Array.isArray(value) && value.length === 0) return [];
     if (typeof value === "object" && Object.keys(value).length === 0) return [];

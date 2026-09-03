@@ -114,6 +114,12 @@ When a future agent needs approval for network access, ask for the bulk scan or 
 
 Use this when the user explicitly approves updating Qase cases.
 
+## Exact-Case Test Run Workflow
+
+When the user asks to create a manual Qase run from specific cases, use [[05 Tooling/Qase Test Run Workflow]] and `05 Tooling/scripts/create-qase-test-run.mjs`.
+
+Do not use `qasectl testops run create` for an exact-case run because the installed command does not accept case IDs. The reusable script defaults to dry-run, creates only with `--apply`, forces `include_all_cases: false`, and verifies the unique case IDs after creation.
+
 ## Ambiguous Or Bulk Request Guard
 
 Before running any Qase write command, stop and ask one targeted confirmation question when the request is ambiguous or broader than one clearly named case.
