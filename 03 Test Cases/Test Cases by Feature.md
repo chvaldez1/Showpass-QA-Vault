@@ -47,6 +47,7 @@ Use one feature folder for each test plan, Qase draft, gap analysis, or executio
 - **Ticket Credits**
   - [[03 Test Cases/Ticket Credits/SPD-2383-ticket-credit-flex-pass-per-event-limit|SPD-2383 Ticket Credit Flex Pass Per-Event Limit]]
 - **Ticketing**
+  - [[03 Test Cases/Ticketing/SPD-2607 - Recurring Ticket Wallet Customization|SPD-2607 Recurring Ticket Wallet Customization]]
   - [[03 Test Cases/Ticketing/SPW-19386-hardcopy-ticket-order-page-test-cases|SPW-19386 Hardcopy Ticket Order Page Test Cases]]
   - [[03 Test Cases/Ticketing/SPW-19386-hardcopy-ticket-order-page-browser-run-2026-07-27|SPW-19386 Hardcopy Ticket Order Page Browser Run]]
 - **Tracking Links**

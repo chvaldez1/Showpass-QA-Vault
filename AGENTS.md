@@ -16,6 +16,14 @@ Workflow notes may add task-specific instructions, but they must not redefine or
 
 Backend code is the first source of truth for behavior, schemas, APIs, permissions, and validation. Frontend code follows that behavior and shows how users reach it. The Playwright repo shows durable automation patterns.
 
+## Pasted Links And Browser Use
+
+- A pasted link is context, not an instruction to open the page, inspect a live session, or start browser testing.
+- Continue tracing local backend and frontend code by default. Use the URL's route, model, or record identifier to understand the user's question and locate the relevant code.
+- Open or inspect a linked page only when the user explicitly asks for browser inspection, navigation, or live testing within that scope. A question such as “should I change it here?” with a URL does not authorize browser use.
+- Do not replace code tracing with browser inspection or automatically fall back to a browser when source evidence is incomplete. State the specific evidence gap instead.
+- Distinguish source-backed behavior from live record state; a URL alone does not establish the record's saved values or deployed behavior.
+
 ## Branch And PR QA Rules
 
 When the user supplies a branch or PR, treat the exact branch diff as the starting scope. Do not generate coverage from the broad feature name alone.
@@ -50,6 +58,9 @@ Write every manual test case for a regular person who may have little Showpass k
 - Before drafting separate cases, check whether the cases use the same actions and prove the same result. If they do, create one case with a clear parameter. Single-event and recurring-event versions should normally be parameter values when only the displayed table or setup changes.
 - Combine entry-point and permission variations only when one short scenario table and one step set remain easy to follow. Split the case when conditional steps would make execution confusing.
 - Label an uncreated local case as `TC-*`. Use `SPT-*` only for a case that already has that Qase ID.
+- Apply [[05 Tooling/Qase Test Case Writing Rules]] for every Qase-ready draft, including its prerequisite, standalone-field, form-coverage, source-verification, and Copy-to-Qase review rules. Each case must be executable on its own by a product-team member.
+- Explain setup concisely with exact required employee permissions, actual flags, and supported admin record preparation. Do not add generic QA-environment requirements, invented QA venue names, or specific record IDs unless the behavior or a concrete safety requirement depends on them.
+- Keep local `TC-*` labels out of Qase titles and execution fields. Keep Jira traceability and cross-case commentary outside case descriptions; never make a case depend on `Setup A` or another case.
 
 ## Vault Handshake
 

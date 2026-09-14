@@ -61,14 +61,17 @@ Step guidelines:
 
 ### Concrete Test Data Language
 
-Manual-facing fields must tell a QA exactly which record to use, what state it must be in, and what to do with it afterward.
+Manual-facing fields must tell the employee or customer how to select or prepare a suitable record, what state it must be in, and what to do with it afterward. Cases must be reusable across organizations.
 
 - Do not use shorthand such as `disposable event`, `disposable record`, `fixture`, or `test object` in Titles, Descriptions, Preconditions, Steps, Data, Expected Results, or Postconditions.
 - Do not leave vague instructions such as `use a valid value`, `select another available choice`, or `when available` without an exact value or a clear selection rule.
-- Name the record and its required state. Example: `Use a QA-only published single-day event with one public General Admission ticket and no orders or sales.`
+- Describe the required record state and give a selection rule. Example: `Select a published single-day event with one public General Admission ticket and no orders or sales.`
+- Do not add `Use a QA environment`, `QA-only venue`, an invented QA organization, or a ticket-specific record name as boilerplate. Specify an environment or isolation requirement only when the behavior or a concrete data-safety risk requires it; explain that reason briefly. This does not authorize changes to shared or live data.
+- Do not embed specific venue IDs, account IDs, customer emails, or pasted record URLs in reusable case fields. Use the selected organization's record and explain how to find it. Keep incident-specific values in execution evidence unless the specific value is itself under test.
+- Exact input values such as quantities, prices, and boundary dates are useful; arbitrary identity values are not prerequisites. Give example record names only when they make creation and later selection easier, without implying those names must already exist.
 - State why destructive changes are safe when relevant. Example: `Use an event with no orders or sales because changing Ticket Requirements may remove or hide its ticket types.`
 - Give an exact value whenever the product permits it. When values depend on the venue, give a selection rule and require the QA to record the chosen value. Example: `Select a saved physical location different from the current location and record its name before saving.`
-- Put cleanup in plain language. Example: `Delete the QA-only event created for this case after confirming it has no orders or sales.`
+- Put cleanup in plain language. Example: `Remove only the event created for this case after confirming it has no orders or sales.` Do not add deletion as routine cleanup when restoring values or retaining a clearly identified record is sufficient.
 - A new Showpass QA must be able to identify the required test data without asking what a shorthand term means.
 
 Avoid:
@@ -81,7 +84,7 @@ Avoid:
 Prefer:
 
 ```markdown
-* Use a QA-only published single-day event with no orders or sales. Record its current timezone.
+* Select a published single-day event with no orders or sales. Record its current timezone.
 | Change the event timezone. | Select a timezone different from the recorded timezone and record the selected name. | The selected timezone is still shown after reopening the event. |
 ```
 
@@ -105,6 +108,53 @@ Prefer:
 * The member retains the selected seat.
 ```
 
+### Short, Actionable Prerequisites
+
+Default to the minimum prerequisites needed to execute the case. When the user asks how to configure the feature, explain **how to make it available** in concise setup notes.
+
+- Apply an essential-only check to every prerequisite: would omitting this prevent execution, change the expected result, or create a concrete data-safety risk? If not, remove it. Source details do not automatically belong in prerequisites.
+- Use the workflow and tool the user identifies. State the input needed to start that workflow; do not carry over venue website links, event restrictions, or admin requirements from an earlier assumed entry point unless they are still necessary.
+- For widget checks using the user-provided widget tool, a suitable prerequisite is: `Have the organization slug to enter in the [widget tool](https://spwidgettool.netlify.app/).` Put opening the tool and entering the slug in Steps. Add event or account conditions separately only when the tested behavior requires them.
+
+- Start with the exact employee permissions needed by that case. List permissions as requirements, not vague instructions to sign in as an organizer. Separate an administrator who prepares configuration from the employee whose behavior is tested.
+- Include only necessary modules, plan restrictions, flags, configuration, and record states. Do not require unrelated Dashboard navigation flags or local development commands for an employee already using the page.
+- For a required flag, keep the prerequisite to its exact key, required on/off state, and scope (venue, user, or global). Put admin navigation, inclusion/exclusion precedence, global rollout settings, and configuration permissions in setup/source notes unless configuration is part of the requested workflow. Distinguish a feature flag from an ordinary saved setting, an item switch, an employee permission, and a legacy setting with a similar name. Do not invent a flag when none exists.
+- Replace `the venue has a configuration` with a short find-or-create instruction: `Admin → [configuration model]: search for the organization; reuse its record, or Add → select the organization → enter the required values → Save.` Verify that admin creation is supported before prescribing it. Do not mandate a bulk backfill if a supported single-record admin setup exists.
+- Identify the correct record: a configuration may be a separate admin model rather than a checkbox on the Venue edit page. When that distinction matters, say which page to use and which similarly named setting is not required.
+- Keep prerequisites short, usually one concise bullet per permission, required gate, or preparation action. Give exact initial values only where the case depends on them. Avoid repeating the full feature explanation or resetting every field for every case.
+- Put source investigation, deployment commands, migration details, rollout analysis, and unresolved behavior in source/setup notes outside Qase fields unless an action is genuinely necessary to execute that case.
+- Record original values before changes; use one clear restoration instruction in Postconditions instead of repeating cleanup in several places.
+
+### Standalone Qase Fields
+
+- Each case must be usable by a product-team member when copied into Qase by itself. Do not say `Setup A`, `complete the setup above`, `run TC-1 first`, or `TC-2 covers this` in Description, Preconditions, Steps, Data, Expected Results, or Postconditions.
+- A Description states the starting condition, employee/customer action, and visible behavior being verified. Use plain prose such as `Given an organization with a refund policy, verify an employee can save its enablement and outcome and see both retained after reopening.` This does not change the required Qase step-table format.
+- Keep Jira titles, issue keys, commit references, other draft-case labels, and commentary about how the suite is organized in the note's traceability or coverage sections, not in the product-behavior Description.
+- `TC-*` labels identify local drafts only. They may prefix Markdown headings and appear in coverage maps, but are not part of the Qase Title. Use `SPT-*` only for an existing Qase case.
+- Include any scenario mapping, expected field table, and setup needed by a parameter inside that case's Description or Preconditions. Do not leave assembly work for the person importing the cases.
+
+### Form Coverage And Case Purpose
+
+- Make the base form case explicit: list expected fields, dropdown choices, conditional visibility, and the Save control, then prove a meaningful edit survives reopening. `The page loads` is only an entry check.
+- Distinguish existing configuration, a new record's default values, disabled configuration, missing configuration, and missing permission. These are different starting conditions; do not silently combine them.
+- Configuration creation is setup when the case tests editing. A first-time defaults case must use an untouched new record; an edit/save case must not unnecessarily require one.
+- Keep separate cases for materially different outcomes such as invalid input, discarded changes, or organization isolation. Do not expand a configuration ticket into customer money-movement assertions without source-backed runtime support.
+- Treat supplied PR verification steps as acceptance input. Account for language, legacy entry points, persistence, disabled warnings, and unchanged staff controls when specified. Parameterize equivalent flows; separate genuinely different entry paths and identify unresolved requirements rather than dropping them.
+- For translations, provide a supported language-selection action and verify translated controls, errors, warnings, and saved behavior. For legacy embeds, trace the wrapper, routing flag, permissions, and save/reopen path.
+
+### Verify Expectations Before Stating Them
+
+- Read backend and frontend behavior together for setup and negative cases. A policy enabled in admin does not necessarily expose navigation; a missing record does not necessarily deny page access.
+- Trace the actual missing-record response through the frontend, including empty arrays/objects, null, errors, and cached data. An error branch or a test mocked with `undefined` does not prove what happens for an API response of `[]`.
+- Distinguish source-backed intent, a source-backed implementation mismatch, and a live reproduced defect. Do not confidently promise an error screen, hidden form, or permission denial based only on one component branch.
+- Pasted URLs and screenshots provide context; do not open links or use a live browser unless authorized. A screenshot of an enabled checkbox does not prove the value was saved or the corresponding frontend was deployed.
+
+### Copy-to-Qase Review Gate
+
+Before delivering, read each case without the surrounding note. Can a product-team member tell **what must exist, how to prepare it, what to do, and what should happen**? Remove shared-setup references, unnecessary environment/identity constraints, draft-to-draft commentary, and duplicate cleanup. Check that every stated field, flag, permission, route, and outcome has evidence or an explicit unresolved status outside the case. A Qase-ready label must mean the case fields are already complete.
+
+When the user corrects the workflow or simplifies setup, review the entire case: Description, parameter mapping, Preconditions, Steps, Data, Expected Results, and Postconditions, plus surrounding test-data and execution notes. Remove stale assumptions everywhere, update numbered stopping points, and preserve the requested behavioral coverage. Updating only the entry step or mentioning the correction in a final reply is not enough.
+
 ## Plain-Language Wording
 
 - Use common Showpass product words that a venue employee, organizer, or customer would recognize.
@@ -124,11 +174,11 @@ Write every manual case so a person with little or no Showpass knowledge can exe
 - Do not use internal fields, stored statuses, webhook names, API names, or implementation flags in manual actions unless the actor must supply that value.
 - Keep technical evidence in Sources Reviewed, Source-Backed Behavior, Risk Areas, Test Case Notes, or Suggested Automated Coverage.
 - If a new Showpass employee would need undocumented product knowledge to complete a step, the case is not ready.
-- Start with the exact route or named product area and identify the exact visible record or setup the employee should use.
+- Start with the named product area and explain how to select or prepare the record. Use an exact route only when the route itself is under test or no visible navigation exists.
 - Use one action and one decision per step row. Split combined instructions such as “filter, reload, and verify” into separate rows.
 - Name controls exactly as they appear in the interface and say where any ID, slug, link, order, event, or customer value comes from.
 - Do not use automation-only terms such as locator, DOM, hidden input, sentinel, isolated clipboard, programmatic click, or request interception in manual steps.
-- End with a clear final-state instruction: no data changed, restore the original value, delete only the named QA record after confirming it is safe to delete, or preserve the named artifact for review.
+- End with a clear final-state instruction: no data changed, restore the original value, delete only a record created for this case after confirming it is safe to delete, or preserve the evidence for review.
 
 ### Executable Defect Reproduction
 
@@ -153,13 +203,13 @@ Use this title shape for Qase cases:
 - Keep the description readable and specific. Prefer `Verify partial discounts stay correct after basket changes` over vague wording like `Verify discount behavior`.
 - Do not stack too many areas into the feature segment. If the case touches several areas, choose the area where the main user action happens and put the rest in the description or tags.
 
-Examples:
+Examples of Qase Title values (local Markdown headings may separately prefix these with `TC-*`):
 
 ```markdown
-TC-1: Core - Discounts - Verify partial discount totals across checkout entry points
-TC-2: Box Office - Discounts - Verify partial discounts on in-person payment types
-TC-3: Public Checkout - Holds - Verify held discounted tickets keep the same total at purchase
-TC-4: Box Office - Group Sales - Verify partial discounts during a group sale
+Core - Discounts - Verify partial discount totals across checkout entry points
+Box Office - Discounts - Verify partial discounts on in-person payment types
+Public Checkout - Holds - Verify held discounted tickets keep the same total at purchase
+Box Office - Group Sales - Verify partial discounts during a group sale
 ```
 
 ## Parameterization Rules

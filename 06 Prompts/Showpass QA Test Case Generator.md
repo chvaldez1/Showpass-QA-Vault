@@ -24,6 +24,8 @@ Start with:
 - [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
 - [[05 Tooling/Qase Test Case Writing Rules]] when Qase-ready formatting is requested
 
+For Qase-ready output, apply that note's **Short, Actionable Prerequisites**, **Standalone Qase Fields**, **Form Coverage And Case Purpose**, and **Verify Expectations Before Stating Them** sections before drafting. Finish with its **Copy-to-Qase Review Gate**. Each case must explain its own setup and expected behavior without requiring the surrounding note.
+
 ## Testing Intent Gate
 
 Before writing test cases, answer: **what are we testing and why does it matter?**
@@ -241,13 +243,13 @@ Constraints:
 
 ## Test Case Voice And Grouping
 
-Write manual test cases so a QA user can execute them without translating implementation language.
+Write manual test cases so any product-team member can execute them without translating implementation language.
 
 Apply this beginner-readability check before finalizing the note:
 
 - Assume the reader is new to Showpass.
 - Add a short plain-language glossary when product-specific terms are required.
-- Name the starting screen or route in the first step.
+- Name the starting product screen in the first step. Use a route only when the route itself is under test or no visible navigation exists.
 - Use visible control names where source confirms them.
 - Explain where to verify a result when the selling device does not expose the proof surface, such as opening Web Dashboard Transactions after a Mobile POS sale.
 - Use one observable sentence per Expected Result whenever possible.
@@ -256,7 +258,9 @@ Apply this beginner-readability check before finalizing the note:
 - Read every case once as if the reader has never used the product. If a step requires unstated Showpass knowledge, add the missing navigation, setup, or visible result.
 - Treat the canonical output note as the complete reviewer handoff. Do not require a QA employee to open source code, a PR, or a separate execution narrative to understand a case or finding.
 - For every multi-action case or defect reproduction, use `Step Action | Data | Expected Result` with one visible action and decision per row.
-- Give exact routes or named product areas, visible control labels, and current fixture names or clear fixture-creation instructions.
+- Give named product areas, visible control labels, and clear record-selection or creation instructions. Do not require invented QA venue names, specific account IDs, or a generic `QA environment`; include an isolation requirement only when a concrete risk requires it.
+- Keep prerequisites concise but actionable: exact employee permissions, required flags with their scope and setup location, and supported admin find-or-create steps with required values. Distinguish ordinary settings from feature flags and verify which actually controls page access.
+- For a base form case, list the expected fields, choices, conditional controls, and save/reopen result. Account for supplied PR verification details and distinguish fresh defaults, existing settings, disabled settings, missing configuration, and denied permissions.
 - Put actual defect behavior in a separate Actual Result field, not inside an expected-result sentence.
 - Keep automation-only terms such as locator, DOM, hidden input, sentinel, isolated clipboard, mocked response, and programmatic click out of manual procedures.
 - Place screenshots beside the behavior they prove. If browser execution produced evidence, embed it in the active gap-analysis or test-case note rather than making the reviewer discover it in another file.
@@ -266,7 +270,7 @@ Apply this beginner-readability check before finalizing the note:
 - Start from the `Testing Intent` section. Test cases should trace back to the business invariant and failure mode.
 - Order cases by execution workflow, not by backend class or implementation detail.
 - Prefer an execution order such as discount entry paths and purchase handoff, basket recalculation with fees and tender, item identity and split boundaries, post-transaction financial workflows, and rollback.
-- Do not use Markdown numbered lists for test case titles because they are hard to copy and paste. Label each test case as `TC-1: Title`, `TC-2: Title`, and so on.
+- Do not use Markdown numbered lists for test case titles. Use `TC-1: Title`, `TC-2: Title`, and so on only as local Markdown headings; the Qase Title excludes the `TC-*` label. Keep Jira titles, issue keys, and cross-case commentary outside the Description and other execution fields. Never require `Setup A` or another case to understand or run a case.
 - Use the title format from [[05 Tooling/Qase Test Case Writing Rules#Title Naming Rules]]: `Core - [Feature] - [Description]`.
 - Use `Core` only when the same behavior can be tested across more than one platform or entry point. For one-surface cases, start with the surface or app area, such as `Box Office`, `Public Checkout`, `Widget`, or `Dashboard`.
 - Use `[Feature]` for the main app area or workflow the case mostly touches. Use `[Description]` for a short one-line behavior statement that someone can understand without reading the steps.
@@ -305,7 +309,7 @@ Do not label the output as a gap analysis unless the user explicitly asks to com
 8. Complete the State-Distinct Entry Point Audit, then identify the remaining setup choices, state transitions, permissions, feature flags, outcome states, and downstream surfaces.
 9. Add a clean successful path before recovery and edge cases when the changed workflow can complete successfully.
 10. Remove low-value permutations. Keep only cases that prove a distinct invariant, actor impact, state transition, permission boundary, financial outcome, fulfillment outcome, reporting outcome, or materially different client recovery path.
-11. Apply the beginner-readability check to the full note and every manual case.
+11. Apply the beginner-readability check to the full note and the writing rules' Copy-to-Qase Review Gate to each case in isolation.
 12. Write the output under the matching `03 Test Cases/<feature>/` folder with a `*-test-cases.md` or `*-coverage-plan.md` filename. Reuse the active note for the same request, Jira ticket, feature, or Qase work item; do not create a parallel draft when the approach changes.
 
 The output should separate:
