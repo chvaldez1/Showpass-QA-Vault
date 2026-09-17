@@ -14,7 +14,22 @@ tags:
 > [!important] What this ticket can prove
 > These commits provide **saved organization policy settings and ticket/product refund switches**. They do not establish that a customer can complete a refund using those settings. Configuration cases need no purchases, barcode delivery, shipping, or check-in setup. TC-12 additionally uses an existing paid order to compare employee refund controls without refunding it. Actual eligibility enforcement belongs to SPW-19668; shipping/fee rules to SPW-19669; delayed-barcode behavior to SPW-19670.
 >
-> Local Qase-ready drafts only. No Qase reads, gap analysis, writes, browser execution, branch comparison, or diff was performed. All cases are unexecuted. Test-data names below are proposed records, not records confirmed to exist.
+> Initially drafted without Qase access. On 2026-09-16, six approved cases were created in Qase suite 1091 and their saved fields verified; see Qase publication below. No gap analysis, browser execution, branch comparison, or diff was performed. All cases are unexecuted. Test-data names below are proposed records, not records confirmed to exist.
+
+## Qase publication
+
+Created 2026-09-16 in SPT suite 1091 after user approval. Readback matched all titles, descriptions, prerequisites, postconditions, tags, parameters, and steps. Local labels are retained for the coverage map; they are not part of Qase titles.
+
+| Local draft | Qase case |
+| --- | --- |
+| TC-1 | [SPT-5250](https://app.qase.io/case/SPT-5250) |
+| TC-2 | [SPT-5251](https://app.qase.io/case/SPT-5251) |
+| TC-3 | [SPT-5252](https://app.qase.io/case/SPT-5252) |
+| TC-5 | [SPT-5253](https://app.qase.io/case/SPT-5253) |
+| TC-7 | [SPT-5254](https://app.qase.io/case/SPT-5254) |
+| TC-10 | [SPT-5255](https://app.qase.io/case/SPT-5255) |
+
+TC-4, TC-6, TC-8, TC-9, TC-11, and TC-12 remain local only. Publication does not mean the cases have been executed.
 
 ## Testing Intent
 
@@ -245,7 +260,7 @@ Each case states what must already exist, what the employee changes, and what mu
 | Dashboard | Desktop |
 
 
-**Expected form fields:**
+Expected form fields:
 
 | Section | Field or control | Expected display |
 | --- | --- | --- |
@@ -265,7 +280,7 @@ For No cutoff or Manually closed, no date/time, duration, or Unit inputs appear.
 
 **Tags:** dashboard, refunds
 
-Parameters:
+**Parameters:**
 Language: English, French
 
 **Preconditions:**
@@ -322,14 +337,13 @@ In French runs, English labels below identify the equivalent French controls; En
 
 **Tags:** dashboard, refunds
 
-Parameters:
+**Parameters:**
 Language: English, French
 CutoffScenario: AbsoluteDateTime, EventHours, EventDays, ItemHours, ItemDays, NoCutoff, ManuallyClosed
 
 **Preconditions:**
 
 * Select the run’s language: narrow Dashboard until the profile button opens Main menu → choose English or French → widen the browser. In French, use the translated controls; saving, errors, and warnings must also appear in French.
-
 * Employee permission: **Manage Organization Info**.
 * The organization has a refund policy. In Admin → Venue customer refund policy, search for the organization. Reuse its existing record; if none exists, select Add → select the organization in Venue → leave defaults → Save.
 * Record the original settings before changing them. In Customer refunds, turn Enable customer refund policy on and Save before preparing the starting cutoff. No customer refund is submitted.
@@ -351,7 +365,6 @@ In French runs, English labels below identify the equivalent French controls; En
 **Postconditions:**
 
 * Restore the original interface language after the run.
-
 * Restore the settings recorded before preparation, select Save, and reopen to confirm. Keep any policy created for this case with Is enabled off.
 * Restore the computer timezone if changed.
 
@@ -373,14 +386,13 @@ In French runs, English labels below identify the equivalent French controls; En
 
 **Tags:** dashboard, refunds, edge-case
 
-Parameters:
+**Parameters:**
 Language: English, French
 InvalidCutoff: MissingDateTime, MissingValue, MissingUnit, ZeroValue, NegativeValue
 
 **Preconditions:**
 
 * Select the run’s language: narrow Dashboard until the profile button opens Main menu → choose English or French → widen the browser. In French, use the translated controls; saving, errors, and warnings must also appear in French.
-
 * Employee permission: **Manage Organization Info**.
 * The organization has a refund policy. In Admin → Venue customer refund policy, search for the organization. Reuse its existing record; if none exists, select Add → select the organization in Venue → leave defaults → Save.
 * Record the original settings before changing them. No purchases or customer refunds are needed.
@@ -403,7 +415,6 @@ In French runs, English labels below identify the equivalent French controls; En
 **Postconditions:**
 
 * Restore the original interface language after the run.
-
 * Restore the settings recorded before preparation, select Save, and reopen to confirm. Keep any policy created for this case with Is enabled off.
 * If the number field changes an entered value before saving, record both the typed and displayed values; assess the value actually submitted.
 
@@ -472,14 +483,13 @@ In French runs, English labels below identify the equivalent French controls; En
 
 **Tags:** dashboard, refunds
 
-Parameters:
+**Parameters:**
 Language: English, French
 ItemType: TicketType, Product
 
 **Preconditions:**
 
 * Select the run’s language: narrow Dashboard until the profile button opens Main menu → choose English or French → widen the browser. In French, use the translated controls; saving, errors, and warnings must also appear in French.
-
 * Employee permissions: **Manage Organization Info**, plus **Manage Events** for TicketType or **Manage Marketplace** for Product.
 * The organization has a refund policy. In Admin → Venue customer refund policy, search for the organization. Reuse its existing record; if none exists, select Add → select the organization in Venue → leave defaults → Save.
 * Record the original settings before changing them. No purchases or customer refunds are needed.
@@ -516,7 +526,6 @@ In French runs, English labels below identify the equivalent French controls; En
 **Postconditions:**
 
 * Restore the original interface language after the run.
-
 * Restore the settings recorded before preparation, select Save, and reopen to confirm. Keep any policy created for this case with Is enabled off.
 * Restore the original item name and switch, save, and reopen. Keep created items without sales and the event unpublished.
 
@@ -673,7 +682,7 @@ OriginalRefundChoice: Enabled, Disabled
 
 **Tags:** dashboard, refunds
 
-Parameters:
+**Parameters:**
 Language: English, French
 
 **Preconditions:**

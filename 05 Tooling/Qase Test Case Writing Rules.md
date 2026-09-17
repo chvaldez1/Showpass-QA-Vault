@@ -162,6 +162,17 @@ When the user corrects the workflow or simplifies setup, review the entire case:
 - Avoid dense QA or implementation wording in titles, descriptions, steps, and expected results, such as `scoping`, `artifacts`, `metadata`, `modifiers`, `handlers`, `ancestry`, `financial root`, or `external-payment` when a simpler phrase is accurate.
 - If a backend term is needed for accuracy, pair it with the user-visible concept and keep it short.
 
+### In-Person Sales And Payments
+
+- For in-person selling through Box Office or POS, use `in-person sale` or `in-person checkout` instead of `staff sale`, `staff purchase`, or `staff checkout` in titles, descriptions, scenario labels, and steps.
+- Name the actual entry point: Web Box Office, Showpass desktop app, Mobile Box Office, or POS. `Staff` alone does not tell the reader where the sale happens.
+- Use `in-person payment` when the payment itself is being tested, and name the payment method separately, such as `Cash`. A sale is the workflow; Cash is the payment method.
+- Keep the actor explicit where needed: `Box Office employee` or `organizer`. Preserve exact permission names and visible product labels.
+- Do not label every employee action as an in-person payment. Event editing, refunds, holds, and remote sales should use their actual workflow names.
+- Apply wording changes consistently across the case's title, description, parameter names and tables, steps, expected results, and local coverage references without changing its supported platforms or behavior.
+
+Example: `Box Office - Assigned Seating - Complete an in-person cash sale of a publicly sold-out ticket`.
+
 ### Beginner Readability Gate
 
 Write every manual case so a person with little or no Showpass knowledge can execute it without guessing.
