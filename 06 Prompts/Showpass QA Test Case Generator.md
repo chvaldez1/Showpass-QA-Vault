@@ -158,7 +158,7 @@ Default to test-case generation unless the user explicitly asks to compare again
 
 Example prompts:
 - New cases without Qase comparison: [[06 Prompts/Example - Generate Test Cases]]
-- Jira-card test cases: [[06 Prompts/Example - Jira Card To Test Cases]]
+- Jira-card test cases: [[06 Prompts/Jira Card To Test Cases]]
 - Existing Qase coverage comparison: [[06 Prompts/Example - Qase Gap Analysis]]
 
 ## Vault Output Target

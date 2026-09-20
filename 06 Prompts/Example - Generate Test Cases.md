@@ -4,7 +4,7 @@ Use this when you want an agent to create new source-backed manual test cases wi
 
 Related workflow: [[06 Prompts/Showpass QA Test Case Generator]]
 
-For Jira-card intake, use [[06 Prompts/Example - Jira Card To Test Cases]].
+For Jira-card intake, use [[06 Prompts/Jira Card To Test Cases]].
 For existing Qase coverage comparison, use [[06 Prompts/Example - Qase Gap Analysis]].
 
 ```text

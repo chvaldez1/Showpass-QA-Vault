@@ -21,6 +21,10 @@ Frontend code follows backend schemas, APIs, permissions, and validation while s
 - Compare UI validation with backend validation.
 - Note selectors or page structure only when useful for automation.
 
+## Mobile App Automation
+
+The React Native app lives in `packages/mobile`. Follow [[09 Appium/Appium]] for local-first Safari, WebView, and app automation, or [[09 Appium/Showpass Mobile App]] for the beta build types and source-backed setup. Shared tooling and GitHub Actions instructions are maintained there.
+
 ## Feature-Aligned Test Case Folders
 
 The canonical test-case folder index is [[03 Test Cases/Test Cases by Feature]].

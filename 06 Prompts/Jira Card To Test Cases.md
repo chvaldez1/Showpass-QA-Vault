@@ -32,11 +32,14 @@ Output:
 - Include Jira Intake Summary, Sources Reviewed, Assumptions and Unknowns, Source-backed Behavior, Risk Areas, State-space / setup matrix when useful, Recommended Test Data, Qase-ready Manual Test Cases, Minimum Execution Set, Suggested Automated Coverage, and Open Questions.
 
 Constraints:
-- Do not query or update Qase unless explicitly asked for a Qase gap analysis.
+- Do not query Qase unless explicitly asked for a Qase gap analysis.
+- Do not update Qase.
 - Do not run git diff or branch comparison unless explicitly asked for diff-based coverage.
 - Use [[05 Tooling/Qase Test Case Writing Rules]].
+- Use `TC-*` labels for local test-case drafts.
 - Keep cases executable by a Showpass customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user.
 - Do not write `the tester`.
+- Reference source paths instead of copying large code snippets.
 
 Do not treat Jira as source of truth for implementation behavior. After reading Jira, verify behavior against backend source first, then frontend and Playwright patterns as needed.
 ```
