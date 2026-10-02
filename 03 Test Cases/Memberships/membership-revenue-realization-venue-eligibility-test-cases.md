@@ -681,3 +681,170 @@ Run SPT-5083 / ChildStandard and SPT-5085 / GlobalRolloutOff as the rollback and
 5. What should happen to saved opted-in groups and active members if the venue capability is turned off after purchases exist?
 6. Should the organizer see a warning or explicit result when a saved opt-in is cleared because the venue is ineligible, instead of receiving a successful save with a changed value?
 7. Is the first-batch-only rule an intentional permanent product contract for all paid ticket batches, and how should organizers correct an event omitted from the first batch after allocations lock?
+
+
+## 2026-09-30 — Suite 1054 membership advance coverage review
+
+**Intent:** Determine whether the existing revenue-realization cases prove that membership advances pay the organizer once, regardless of whether realization occurs before or after the advance. This review is distinct from the earlier venue-eligibility scope and SPT-940's advanced-sale void scenario.
+
+**Verdict:** Useful basic realization coverage, but insufficient for membership advances. No case in suite 1054 creates a membership advance and reconciles it with later settlement. This is a confirmed case-content gap within this suite, not a reproduced financial defect or a claim that no other Qase suite has advance coverage.
+
+### Qase evidence
+
+Read-only Qase review on 2026-09-30: suite 1054, **Revenue Realization**, under suite 89; no child suites; nine cases, SPT-5083 through SPT-5091. Reviewed full descriptions, prerequisites, parameters, steps, expected results, and cleanup from one suite-scoped paginated read. Raw response: `/private/tmp/qase-membership-advance-suite1054.json`. No browser inspection, financial mutations, test execution, or Qase writes occurred.
+
+| Cases | Existing proof | Advance assessment |
+| --- | --- | --- |
+| SPT-5083, SPT-5085, SPT-5086, SPT-5087 | Setup eligibility, saved setting, changing renewal frequency, active-member protection | Configuration coverage; not advance creation |
+| SPT-5084 | First paid batch, three tickets, event allocation, one customer charge, eventual payout | Closest base case, but no advance creation or prior-advance deduction |
+| SPT-5088 | Later paid and separately purchased hold-link batches do not reallocate original revenue | Protects allocation duplication, not repeated payout |
+| SPT-5089 | Full refund and realized revenue/payout effects | No already-advanced setup; cannot prove post-advance refund accounting |
+| SPT-5090 | Same-value generated-ticket exchange | Different workflow; no advance proof |
+| SPT-5091 | Package behavior remains separate from membership realization | Control case; no advance proof |
+
+### Missing proof targets
+
+| Target | Required result | Coverage status |
+| --- | --- | --- |
+| Realize → advance → settle | Create a membership-only advance after ticket realization; carry every allocation/offset pair onto that advance; later settlement does not pay the same eligible value again | Deferred: absent from nine reviewed manual cases; backend integration test exists, execution unverified |
+| Advance → realize → settle | Advance the original membership first; generate/realize benefit tickets later; event allocation does not create another organizer payout | Deferred: absent from reviewed manual cases; backend integration test exists, execution unverified |
+| Repeat processing / new eligible revenue | Existing pairs keep their links and are not paid twice; only new complete pairs receive new balanced offsets | Deferred backend verification; source tests exist |
+| Unsafe mixed or corrupt records | Membership plus its event realization selected together, one-sided advance links, already-settled pending rows, or incomplete/unbalanced pairs fail without partial changes | Deferred backend verification; do not manufacture corrupt live financial data for manual QA |
+| Renewal source | A membership renewal carries its related realization pairs correctly | Deferred backend verification; source test exists |
+
+Use one controlled membership with an Issue tickets benefit and multiple events. For the clean example, an eligible organizer payout value of $120 advanced at 100% means $120 paid early and $0 additional settlement for that same value. This is eligible organizer money, not automatically the customer's charge; fees, taxes, other revenue, cutoff date, and thresholds must be accounted for. Keep membership and event advances separate for the primary success run.
+
+### Source-backed findings
+
+Current backend checkout reviewed at `a2ca49759da75d63492095f5ff8f52e73e480adb`; this general advance review is not restricted to the earlier void commit and involves no diff or branch comparison.
+
+Backend root: `/Users/christianvaldez/Documents/Showpass/repos/web-app`.
+
+- `apps/financials/services/payout_service/advance/advance_payout_service.py`: AdvanceService selects original membership/renewal sources and calls MembershipRealizationAdvanceService after source linkage.
+- `apps/financials/services/payout_service/advance/advance_selector.py`: membership selection excludes realization descendants; targets subtract attributed prior advances and obey percentage, cutoff, include/exclude scope, and thresholds.
+- `apps/financials/services/payout_service/advance/membership_realization_advance_service.py`: source and descendant locks; one balanced negation per adjustment; balanced offsets linked to the original advance invoice; existing links preserved; same-run source/event overlap and unsafe partial/settled pairs rejected.
+- `apps/financials/tests/services/revenue_realization/test_membership_revenue_realization_service.py`: `test_advance_member_then_realize_revenue_and_settle__3_events`, `test_realize_revenue_then_advance_member_and_settle__3_events`, and `test_realize_revenue_then_advance_member__negation_filter_disabled` explicitly reconcile subsequent settlement without double payment.
+- `apps/financials/tests/services/payout_service/advance/test_membership_realization_advance_service.py`: repeat/idempotency, new pair only, partial/settled rejection, overlapping selection, pair-level balance, missing negation, and renewal source tests. These tests were read, not run.
+
+Frontend root: `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`.
+
+- `packages/core/src/app-contexts/dashboard/features/admins/admin-actions/ui/pages/AdvanceImports.web.tsx`: admin advance-import workflow has upload, validated preview/selection, processing, and completion states; CSV supports Advance Memberships and membership-group include/exclude lists. An organizer viewing Payouts is not the actor creating the advance.
+- The advance import is financial mutation; a future manual draft needs an authorized admin/finance actor, an isolated controlled sale, exact CSV values/cutoff/thresholds, and saved advance plus settlement evidence. No real payout should be generated as part of a read-only review.
+
+### Case quality limitations
+
+- SPT-5084's payout step waits for a payout to become available; it neither initiates an advance nor identifies advance-versus-settlement amounts.
+- SPT-5084 refers to Recommended Test Data and preserves records for local TC labels. SPT-5088, SPT-5089, and SPT-5091 require TC-2 or its results. These dependencies make the live cases incomplete when executed on their own.
+- “Approved event revenue report” and “matching reconciliation” do not name the report, filters, or columns to compare. Those checks need concrete instructions.
+- Several cases require package mode/multi-layer setup even though effective membership realization eligibility is independent of package mode; keep that setup for deliberate package-configuration coverage rather than general advance prerequisites.
+
+### Recommendation
+
+Keep SPT-5084 focused on first-batch realization and strengthen its standalone data/report instructions. Add focused advance lifecycle coverage to suite 1054 for both orders, using a single AdvanceOrder parameter only if the two preparation sequences remain easy to follow; otherwise use two short cases. Do not expand SPT-940's void case into advance creation. Keep corruption, locks, replay, and renewal linkage in backend regressions with attached execution evidence.
+
+No new cases have been drafted or created by this review. Exact advance-import permission/CSV preparation and concrete payout-report proof still need tracing before calling a future manual advance case Qase-ready. No release-readiness claim follows from the presence of source tests.
+
+
+## 2026-09-30 — New membership advance lifecycle case
+
+Testing intent: prove Finance can advance seasonal membership revenue before or after its allocation to benefit events while the customer is charged once and the organizer receives the eligible revenue once. This is money/payout and reporting coverage, not live execution evidence.
+
+### Sources reviewed for the new case
+
+Backend root: `/Users/christianvaldez/Documents/Showpass/repos/web-app`.
+
+* `apps/financials/services/advance_import/fields.py`, `importer.py`, `persister.py`: exact CSV schema, fraction-based advance percentage, organization/group selection, preview validation and persistence.
+* `apps/financials/api/admin/viewsets/import_jobs.py`, `apps/main/api/import_job_workflow.py`, `apps/core/api/viewsets/audiences.py`, `apps/core/api/permissions.py`: advance imports require Showpass admin access (`IsAdminUser`, staff account); ordinary membership management permission does not grant this access.
+* `apps/financials/services/payout_service/advance/advance_payout_service.py`, `advance_selector.py`, `membership_realization_advance_service.py`: membership-only selection and balanced realization/negation advance offsets.
+* `apps/financials/services/payout_service/settlement/settlement_selector.py`, `apps/financials/services/settlements/venue_settlement_generation.py`, `apps/financials/tasks/settlements.py`: subsequent payout generation is scheduled; **Mark Invoices Paid** and **Custom settlements** are not controls for running ordinary settlement.
+* `apps/financials/api/venue_based/viewsets/invoices.py`, `apps/financials/queries/invoice/projections.py`: payout details and the financial summary of the linked source items.
+* `apps/financials/tests/services/revenue_realization/test_membership_revenue_realization_service.py`: integration examples for both sequence orders followed by settlement. Reviewed, not run.
+
+Frontend root: `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`.
+
+* `packages/core/src/app-contexts/dashboard/features/admins/admin-actions/constants/admin-actions-config.ts`, `ui/pages/AdvanceImports.web.tsx`: **Create advances**, **Download Template**, **Upload CSV file**, preview and asynchronous completion.
+* `packages/core/src/app-contexts/dashboard/shared/import-workflow/ui/components/ImportUploadForm.web.tsx`, `ImportPreviewStep.web.tsx`: **Preview**, row selection and **Confirm Import**.
+* `packages/core/src/app-contexts/dashboard/features/memberships/ui/components/ticket-manager/`: paid batch creation and sending.
+* `packages/core/src/app-contexts/dashboard/features/financials/constants/financials-config.ts`, `packages/core/src/app-contexts/dashboard/features/reports/payouts/ui/pages/ReportsPayoutsDetailView.web.tsx`, `ui/components/PayoutOverview/PayoutOverview.web.tsx`, `PayoutBreakdown/PayoutBreakdown.web.tsx`: Finance permissions, **Payout Total**, **Payout ID**, **Payout Summary**.
+
+### Source-backed behavior, risks, and execution boundaries
+
+* Both sequence orders retain the original sale value and balance event allocations against membership negations. Advance creation must not treat the allocations as additional eligible sales.
+* A 100% advance is entered as `1.00`. For CAD $120.00 of fee-free eligible proceeds, the advance magnitude is CAD $120.00 and later settlement adds CAD $0.00. Payout invoices may display outgoing money using a negative sign.
+* The highest risks are missing allocation links, selecting membership and event revenue together, and paying the same proceeds again after event payout eligibility.
+* This case uses one isolated membership group because advance selection is group-based, not customer-based. Each parameter run requires a separate group and purchase so an earlier advance cannot change the next run.
+* Minimum execution set: both `AdvanceOrder` values. Manual execution is pending; no financial operations or browser checks were performed during case creation.
+* Suggested automation: retain both source integration sequences and add durable assertions for original financial values, all paired advance links, total advance, and zero additional settlement. Corrupt-pair rejection, duplicate overlaps, refunds, partial advances, fees, taxes and renewal sources remain deferred from this focused manual case.
+* Assumptions and unknowns: the deployed environment provides the reviewed admin import and payout pages. Finance must supply the next scheduled settlement run after all three events become payout eligible; until that run completes, the final payout assertion remains pending. An absent payout alone does not prove successful settlement.
+* Detailed per-event CAD $40.00 allocation and internal paired links are source-backed setup expectations, with automated verification recommended; the advance detail summary queries settlement links and is not a reliable manual view of advance links. The manual case proves ticket delivery, unchanged advance/original amounts, and no duplicate proceeds after settlement.
+* Open question for execution planning: what calendar time will the selected organization's eligible settlement run finish? This does not block creating the case.
+
+### TC-1: Dashboard - Memberships - Advance revenue before or after event allocation without paying it twice
+
+**Title:** Dashboard - Memberships - Advance revenue before or after event allocation without paying it twice
+
+**Description:** Verify Finance can create a full advance, meaning an organizer payout before the normal payout date, for a seasonal membership before or after its revenue is allocated to generated event tickets. The original purchase amount must stay correct, and sending the event tickets must not cause the later payout to pay the same revenue again.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+
+Prepare one new seasonal membership group for each parameter run. Enable **Revenue realization** and add an **Issue Tickets** benefit. Sell one CAD $120.00 membership with CAD $120.00 eligible organizer proceeds: no fees, tax, discount, credits or payment plan. The group must contain only this sale and have no previous advance, payout, refund or generated ticket batch. Prepare three future events in the same organization, with one available ticket per event for that member; their first paid batch allocates CAD $40.00 to each event. Record the organization and membership group IDs from their admin records for the advance file.
+
+| AdvanceOrder | Order of actions |
+| --- | --- |
+| BeforeRealization | Create the advance first, then create and send the first paid ticket batch. |
+| AfterRealization | Create and send the first paid ticket batch first, then create the advance. |
+
+In **Download Template**, keep every header unchanged and add exactly one data row:
+
+| CSV field | Value |
+| --- | --- |
+| Cutoff Date | The day after the membership purchase, in MM/DD/YYYY, earlier than all three event end dates |
+| Venue ID | The recorded organization ID |
+| Advance Percentage | 1.00 |
+| Minimum Amount | 0.00 |
+| Maximum Amount | 120.00 |
+| Advance Events | False |
+| Event IDs to Include | Empty |
+| Event IDs to Exclude | Empty |
+| Advance Products | False |
+| Product IDs to Include | Empty |
+| Product IDs to Exclude | Empty |
+| Advance Memberships | True |
+| Membership Group IDs to Include | The recorded membership group ID |
+| Membership Group IDs to Exclude | Empty |
+
+**Preconditions:**
+
+* A Showpass finance administrator has admin access; the organization employee has **Manage Memberships**, **Manage Reports** and **Manage Financials** permissions.
+* Prepare the membership purchase and three events described in this case in an organization where no real bank transfer will be triggered by the test advance.
+* Finance has recorded a scheduled payout run after all three events become payout eligible; retain the records until that run finishes.
+
+**Postconditions:**
+
+* Retain the sale, advance, ticket batch and later payout records with their transaction IDs as execution evidence.
+* Do not refund or void the purchase until Finance has reviewed the completed payout check.
+
+**Tags:** memberships, payouts, admin-actions
+
+**Parameters:**
+AdvanceOrder: BeforeRealization, AfterRealization
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Financials → Transactions and find the customer's membership purchase. Record its transaction ID and amount. | The prepared CAD $120.00 purchase | One completed membership sale shows CAD $120.00. |
+| Open Dashboard → Memberships, select the membership, then open Membership Benefits → Issue Tickets → Open ticket manager. | The prepared membership | No ticket batch has been sent for this membership. |
+| For AfterRealization, select Create ticket batch, add the three events under Items in ticket batch, select Send tickets that are paid for, save, then select Send now and confirm. For BeforeRealization, leave the ticket manager unchanged. | AdvanceOrder; one ticket per event | AfterRealization has one sent paid batch; BeforeRealization has no sent batch. |
+| As the finance administrator, open Dashboard → Admin → Admin actions → Create advances, then select Download Template. | — | The advance CSV template downloads. |
+| Fill one row using the CSV values in this case, select Upload CSV file, and select Preview. | The completed membership-only advance CSV | One valid row identifies the selected organization and membership group without validation errors. |
+| Select only that row and select Confirm Import. Wait for processing to finish. | One selected row | Advance import complete appears with one advance processed and no failed row. |
+| As the organization employee, open Dashboard → Financials → Payouts and open the new advance. Record its Payout ID and Payout Total. | Advance created by the import | The advance represents CAD $120.00 of outgoing organizer proceeds, with no additional advance for the same sale. |
+| For BeforeRealization, return to the membership ticket manager, create the first batch with the three events, select Send tickets that are paid for, save, then select Send now and confirm. For AfterRealization, open the existing batch under Sent. | AdvanceOrder; one ticket per event | Exactly one paid batch is sent and the member receives one ticket for each event. |
+| Reopen the advance under Financials → Payouts and review Payout Total. | Recorded Payout ID; the membership and three events | The advance remains CAD $120.00 after the tickets are sent. |
+| Reopen the original purchase under Financials → Transactions. | Recorded sale transaction ID | The purchase remains CAD $120.00 with no extra customer charge, refund or void. |
+| After Finance confirms the recorded scheduled payout run completed successfully for all three eligible events, reopen Financials → Payouts and review the membership and event payouts from that run. | The recorded scheduled payout run and the three events | Additional organizer proceeds for this purchase total CAD $0.00; the advance and later payouts together total CAD $120.00. |
+
+### Qase creation and saved-field verification
+
+Created [SPT-5298](https://app.qase.io/case/SPT-5298) in suite **1054 — Revenue Realization** on 2026-09-30 at the user's explicit request. Local draft: **TC-1** in the new advance lifecycle section. Dry-run reviewed before apply; a fresh Qase read matched the title, full standalone Description, three Preconditions, Postconditions, tags, both `AdvanceOrder` values and all 11 steps. Existing cases were unchanged. Manual execution and scheduled payout verification remain pending.

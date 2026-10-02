@@ -11,8 +11,8 @@ tags:
 
 # Customer Refund Policy Configuration Test Cases
 
-> [!important] What this ticket can prove
-> These commits provide **saved organization policy settings and ticket/product refund switches**. They do not establish that a customer can complete a refund using those settings. Configuration cases need no purchases, barcode delivery, shipping, or check-in setup. TC-12 additionally uses an existing paid order to compare employee refund controls without refunding it. Actual eligibility enforcement belongs to SPW-19668; shipping/fee rules to SPW-19669; delayed-barcode behavior to SPW-19670.
+> [!important] Start here
+> This card checks the **Customer refunds** form for an organization and the **Allow customer-initiated refunds** choice on ticket types and products. It checks what can be saved and reopened. It does not ask a customer to return a purchase. Only TC-12 needs a paid order, and that case closes the employee Refund dialog without submitting it. Customer return behavior has its own cases under SPW-19668 and SPW-19671.
 >
 > Initially drafted without Qase access. On 2026-09-16, six approved cases were created in Qase suite 1091 and their saved fields verified; see Qase publication below. No gap analysis, browser execution, branch comparison, or diff was performed. All cases are unexecuted. Test-data names below are proposed records, not records confirmed to exist.
 
@@ -30,6 +30,8 @@ Created 2026-09-16 in SPT suite 1091 after user approval. Readback matched all t
 | TC-10 | [SPT-5255](https://app.qase.io/case/SPT-5255) |
 
 TC-4, TC-6, TC-8, TC-9, TC-11, and TC-12 remain local only. Publication does not mean the cases have been executed.
+
+On 2026-09-24, the six published cases above were rewritten in plainer product language and updated in place. Qase readback verified the saved wording and steps; suite, tags, parameters, and other case metadata stayed the same. SPT-5254 gained one direct-link permission check. No case was created or deleted.
 
 ## Testing Intent
 
@@ -178,7 +180,7 @@ For an enabled configuration, the administrator can check **Is enabled** and sel
 
 ### Product creation
 
-1. In A, open **Dashboard → Build → Products → All products** and select **Create product**.
+1. In Dashboard, open **Build → Products → All products** and select **Create product**.
 2. Enter **Product Name: Refund Policy Product**; choose the recorded category; enter **Variant Name: Standard** and **Price: 5.00**.
 3. Select **Create product**. The saved product opens on Basic info.
 4. Open **Fulfillment**. Under **Customer refunds**, verify **Allow customer-initiated refunds** is off. Record the existing Delivery, Transfers, and Purchase confirmation choices; do not change them for these cases.
@@ -249,11 +251,11 @@ The PR adds first-time defaults, English/French checks, disabling the policy whi
 
 ## Qase-ready Manual Test Cases
 
-Each case states what must already exist, what the employee changes, and what must remain saved. Admin policy creation is preparation, not the behavior being tested. “Organization” is the Dashboard term for the venue selected in admin. Record names below are reusable examples; substitute the actual names consistently.
+In these cases, **organization** is the Dashboard name for the venue selected in Showpass Admin. The **customer refund policy** holds the organization's rules. A ticket type or product also has its own **Allow customer-initiated refunds** switch. The **cutoff** is when customers must stop requesting refunds. The cases check saved settings; they do not submit customer refunds.
 
-### TC-1: Dashboard - Refunds - Display the policy fields and save enablement and customer outcome
+### TC-1: Dashboard - Refunds - Review and save the organization's customer refund settings
 
-**Description:** Given an organization with a refund policy, verify the form displays the fields below and the organization’s saved values. Then change policy enablement and Customer outcome, save, and verify both choices remain after reopening. No customer refund is submitted.
+**Description:** Open Customer refunds for an organization with a saved policy. Check that the fields below show its current choices. Turn the policy on, allow automatic customer refunds, and save. Then turn the policy off again. Each saved choice must still be shown after reloading.
 
 | Platform | View |
 | --- | --- |
@@ -276,7 +278,9 @@ Expected form fields:
 | Eligibility restrictions | Orders with mixed eligibility | Refund eligible items independently; Require the whole remaining order; Block when any remaining item is ineligible. |
 | Page footer | Save | Saves the policy form. |
 
-For No cutoff or Manually closed, no date/time, duration, or Unit inputs appear. The existing saved cutoff determines which conditional fields appear.
+For **No cutoff** or **Manually closed**, the date, number, and unit fields are hidden. For the other cutoff choices, only the fields needed for that choice appear.
+
+**Time before cutoff reference** is the number of hours or days before the event or ticket/session starts. **Orders with mixed eligibility** means an order that contains both returnable and nonreturnable purchases.
 
 **Tags:** dashboard, refunds
 
@@ -285,13 +289,13 @@ Language: English, French
 
 **Preconditions:**
 
-* Select the run’s language: narrow Dashboard until the profile button opens Main menu → choose English or French → widen the browser. In French, use the translated controls; saving, errors, and warnings must also appear in French.
+* Choose the case's English or French language in Dashboard. On a narrow screen, open the profile button → Main menu → choose the language; then widen the screen again. Check that labels, messages, and errors appear in the chosen language.
 * Employee permission: **Manage Organization Info**.
-* The organization has a refund policy. In Admin → Venue customer refund policy, search for the organization. Reuse its existing record; if none exists, select Add → select the organization in Venue → leave defaults → Save.
-* Record the original settings before changing them. No purchases or customer refunds are needed.
-* Before starting, open Customer refunds, turn Enable customer refund policy off, choose Customers cannot initiate refunds for Customer outcome, and Save. Other policy settings can remain as they are.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
+* Record the current policy choices so you can restore them afterward. No order is needed.
+* Before starting, open Customer refunds, turn **Enable customer refund policy** off, choose **Customers cannot initiate refunds**, and Save. Leave the other choices as they are.
 
-In French runs, English labels below identify the equivalent French controls; English-only success/error/warning text is a translation failure.
+In a French run, use the French equivalents of the English control names below. Confirm that messages and errors also appear in French.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
@@ -314,12 +318,12 @@ In French runs, English labels below identify the equivalent French controls; En
 
 **Postconditions:**
 
-* Restore the original interface language after the run.
-* Restore the settings recorded before preparation, select Save, and reopen to confirm. Keep any policy created for this case with Is enabled off.
+* Change Dashboard back to its original language.
+* Restore the recorded policy choices, save, and reload to confirm. If you created a policy for this case, leave it saved and off.
 
-### TC-2: Dashboard - Refunds - Replace a saved refund cutoff
+### TC-2: Dashboard - Refunds - Change when customer refunds close
 
-**Description:** Given a policy with a saved cutoff, change it to another cutoff type and verify the new choice is retained without bringing back the old date or duration. Run one table row at a time.
+**Description:** A cutoff sets the last time a customer may request a refund. For each row below, save the starting choice, change it to the new choice, and reload. The new choice must stay saved, and details from the old choice must not return.
 
 | Platform | View |
 | --- | --- |
@@ -343,34 +347,34 @@ CutoffScenario: AbsoluteDateTime, EventHours, EventDays, ItemHours, ItemDays, No
 
 **Preconditions:**
 
-* Select the run’s language: narrow Dashboard until the profile button opens Main menu → choose English or French → widen the browser. In French, use the translated controls; saving, errors, and warnings must also appear in French.
+* Choose the case's English or French language in Dashboard. On a narrow screen, open the profile button → Main menu → choose the language; then widen the screen again. Check that labels, messages, and errors appear in the chosen language.
 * Employee permission: **Manage Organization Info**.
-* The organization has a refund policy. In Admin → Venue customer refund policy, search for the organization. Reuse its existing record; if none exists, select Add → select the organization in Venue → leave defaults → Save.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
 * Record the original settings before changing them. In Customer refunds, turn Enable customer refund policy on and Save before preparing the starting cutoff. No customer refund is submitted.
 * In Customer refunds, save the Starting cutoff from the selected row. For any absolute cutoff, use today + 14 days at 12:30 in the displayed organization timezone and record the date.
-* For AbsoluteDateTime, use a browser timezone different from the organization timezone; record both.
+* For the AbsoluteDateTime row, use a computer timezone different from the organization's timezone and record both timezones. The saved cutoff must still show the organization's time.
 
-In French runs, English labels below identify the equivalent French controls; English-only success/error/warning text is a translation failure.
+In a French run, use the French equivalents of the English control names below. Confirm that messages and errors also appear in French.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Open Dashboard → Organization → Organization settings → Customer refunds. | Selected CutoffScenario | The Starting cutoff from the selected row is shown. |
+| Open Dashboard → Organization → Organization settings → Customer refunds. | Chosen row from the cutoff table | The cutoff saved during setup is shown. |
 | Select Cutoff type. | New cutoff from the selected row | Only the fields needed for the new cutoff appear. |
 | Enter the new cutoff details, if fields are displayed. | New details from the selected row | The date/time or duration matches the row; No cutoff and Manually closed show no extra fields. |
 | Select Save. |  | Customer refund policy saved appears. |
-| Reload the page. |  | The new cutoff and details are retained, including the same displayed organization-local time for an absolute cutoff. |
-| Select the previous Cutoff type without saving. | Starting cutoff from the selected row | The old date or duration cleared by the change does not return. |
+| Reload the page. |  | The new cutoff and details remain saved. An absolute date shows the same time in the organization's timezone. |
+| Select the old Cutoff type without saving. | Starting cutoff from the chosen row | Its previous date or number does not reappear. |
 | Reload without saving. |  | The new saved cutoff is shown again. |
 
 **Postconditions:**
 
-* Restore the original interface language after the run.
-* Restore the settings recorded before preparation, select Save, and reopen to confirm. Keep any policy created for this case with Is enabled off.
+* Change Dashboard back to its original language.
+* Restore the recorded policy choices, save, and reload to confirm. If you created a policy for this case, leave it saved and off.
 * Restore the computer timezone if changed.
 
-### TC-3: Dashboard - Refunds - Keep the saved cutoff when a new cutoff is incomplete or invalid
+### TC-3: Dashboard - Refunds - Reject a refund cutoff with missing or invalid details
 
-**Description:** Given a policy saved with No cutoff, verify missing details or a value below 1 cannot replace it. Then correct the details and verify the new cutoff saves.
+**Description:** Start with **No cutoff** saved. Try to save each incomplete or invalid choice below. The page must keep **No cutoff** until the missing or invalid value is corrected; the corrected choice must then stay saved after reloading.
 
 | Platform | View |
 | --- | --- |
@@ -392,13 +396,13 @@ InvalidCutoff: MissingDateTime, MissingValue, MissingUnit, ZeroValue, NegativeVa
 
 **Preconditions:**
 
-* Select the run’s language: narrow Dashboard until the profile button opens Main menu → choose English or French → widen the browser. In French, use the translated controls; saving, errors, and warnings must also appear in French.
+* Choose the case's English or French language in Dashboard. On a narrow screen, open the profile button → Main menu → choose the language; then widen the screen again. Check that labels, messages, and errors appear in the chosen language.
 * Employee permission: **Manage Organization Info**.
-* The organization has a refund policy. In Admin → Venue customer refund policy, search for the organization. Reuse its existing record; if none exists, select Add → select the organization in Venue → leave defaults → Save.
-* Record the original settings before changing them. No purchases or customer refunds are needed.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
+* Record the current policy choices so you can restore them afterward. No order is needed.
 * In Customer refunds, set Cutoff type to No cutoff, select Save, and reload. Choose one InvalidCutoff row.
 
-In French runs, English labels below identify the equivalent French controls; English-only success/error/warning text is a translation failure.
+In a French run, use the French equivalents of the English control names below. Confirm that messages and errors also appear in French.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
@@ -414,13 +418,13 @@ In French runs, English labels below identify the equivalent French controls; En
 
 **Postconditions:**
 
-* Restore the original interface language after the run.
-* Restore the settings recorded before preparation, select Save, and reopen to confirm. Keep any policy created for this case with Is enabled off.
-* If the number field changes an entered value before saving, record both the typed and displayed values; assess the value actually submitted.
+* Change Dashboard back to its original language.
+* Restore the recorded policy choices, save, and reload to confirm. If you created a policy for this case, leave it saved and off.
+* If the number field changes what you typed, record both the typed number and the displayed number.
 
-### TC-4: Dashboard - Refunds - Save one refund restriction without changing the others
+### TC-4: Dashboard - Refunds - Save one customer refund rule without changing the others
 
-**Description:** Given an organization with a refund policy, change one delivery, shipping, check-in, or mixed-order setting and verify only that setting changes. No delivered, shipped, or checked-in orders are needed.
+**Description:** Change one rule for barcode delivery, shipping, check-in, or orders containing both returnable and nonreturnable items. After saving and reloading, that choice must stay saved and the other rules must remain as they were. No order is needed.
 
 | Platform | View |
 | --- | --- |
@@ -436,24 +440,24 @@ In French runs, English labels below identify the equivalent French controls; En
 
 **Tags:** dashboard, refunds
 
-Parameters:
+**Parameters:**
 Language: English, French
 PolicyChoice: BarcodeAllow, ShippingAllow, ScanAllow, EligibleItemsOnly, WholeRemainingOrder
 
 **Preconditions:**
 
-* Select the run’s language: narrow Dashboard until the profile button opens Main menu → choose English or French → widen the browser. In French, use the translated controls; saving, errors, and warnings must also appear in French.
+* Choose the case's English or French language in Dashboard. On a narrow screen, open the profile button → Main menu → choose the language; then widen the screen again. Check that labels, messages, and errors appear in the chosen language.
 
 * Employee permission: **Manage Organization Info**.
-* The organization has a refund policy. In Admin → Venue customer refund policy, search for the organization. Reuse its existing record; if none exists, select Add → select the organization in Venue → leave defaults → Save.
-* Record the original settings before changing them. No purchases or customer refunds are needed.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
+* Record the current policy choices so you can restore them afterward. No order is needed.
 * Choose one PolicyChoice row. In Customer refunds, save that field to its Starting choice and record all displayed settings.
 
-In French runs, English labels below identify the equivalent French controls; English-only success/error/warning text is a translation failure.
+In a French run, use the French equivalents of the English control names below. Confirm that messages and errors also appear in French.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Open Dashboard → Organization → Organization settings → Customer refunds. | Selected PolicyChoice | The selected field shows its Starting choice. |
+| Open Dashboard → Organization → Organization settings → Customer refunds. | Chosen row from the settings table | The selected field shows its Starting choice. |
 | Change the field listed in the selected row. | New choice | The field shows the new choice. |
 | Select Save. |  | Customer refund policy saved appears. |
 | Reload the page. |  | The new choice remains saved. |
@@ -464,13 +468,13 @@ In French runs, English labels below identify the equivalent French controls; En
 
 **Postconditions:**
 
-* Restore the original interface language after the run.
+* Change Dashboard back to its original language.
 
-* Restore the settings recorded before preparation, select Save, and reopen to confirm. Keep any policy created for this case with Is enabled off.
+* Restore the recorded policy choices, save, and reload to confirm. If you created a policy for this case, leave it saved and off.
 
-### TC-5: Dashboard - Refunds - Save a ticket or product refund switch independently of the policy
+### TC-5: Dashboard - Refunds - Keep a ticket or product refund choice when the organization policy changes
 
-**Description:** Given a disabled organization policy, verify an employee can save an item’s refund switch on, keep it through a name change, and later turn it off. Disabling the organization policy must retain that saved item choice. Enabling the organization policy must update the item’s status message without changing its switch. Run TicketType and Product separately.
+**Description:** With the organization policy off, turn on **Allow customer-initiated refunds** for a ticket type or product and save it. Check that the choice survives a name change and stays on when the organization policy is turned on and then off again. The message beside the item switch must reflect whether the organization policy is on or off.
 
 | Platform | View |
 | --- | --- |
@@ -489,16 +493,16 @@ ItemType: TicketType, Product
 
 **Preconditions:**
 
-* Select the run’s language: narrow Dashboard until the profile button opens Main menu → choose English or French → widen the browser. In French, use the translated controls; saving, errors, and warnings must also appear in French.
+* Choose the case's English or French language in Dashboard. On a narrow screen, open the profile button → Main menu → choose the language; then widen the screen again. Check that labels, messages, and errors appear in the chosen language.
 * Employee permissions: **Manage Organization Info**, plus **Manage Events** for TicketType or **Manage Marketplace** for Product.
-* The organization has a refund policy. In Admin → Venue customer refund policy, search for the organization. Reuse its existing record; if none exists, select Add → select the organization in Venue → leave defaults → Save.
-* Record the original settings before changing them. No purchases or customer refunds are needed.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
+* Record the current policy choices so you can restore them afterward. No order is needed.
 * In Customer refunds, save Enable customer refund policy off and Customer outcome as Customers cannot initiate refunds.
 * TicketType: For tickets, enable the Events module. Use an unpublished, nonrecurring event with a saved timezone, future dates, and no sales. In its Tickets page, add **Refund Ticket**, price **10.00**, inventory **10**, then Save; an existing ticket with these conditions can be reused. Also add **Control Ticket**, price **12.00**, inventory **10**, with its refund switch off.
 * Product: For products, the organization must be on a non-Basic plan. Open Build → Products → All products → Create product: name **Refund Policy Product**, first saved category alphabetically, variant **Standard**, price **5.00** → Create product. Use a product with no purchases.
 * In the selected item’s Customer refunds section, record its switch and save Allow customer-initiated refunds off. Record the name, price, and inventory; for products also record category, Delivery, Transfers, and Purchase confirmation choices.
 
-In French runs, English labels below identify the equivalent French controls; English-only success/error/warning text is a translation failure.
+In a French run, use the French equivalents of the English control names below. Confirm that messages and errors also appear in French.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
@@ -525,13 +529,13 @@ In French runs, English labels below identify the equivalent French controls; En
 
 **Postconditions:**
 
-* Restore the original interface language after the run.
-* Restore the settings recorded before preparation, select Save, and reopen to confirm. Keep any policy created for this case with Is enabled off.
+* Change Dashboard back to its original language.
+* Restore the recorded policy choices, save, and reload to confirm. If you created a policy for this case, leave it saved and off.
 * Restore the original item name and switch, save, and reopen. Keep created items without sales and the event unpublished.
 
-### TC-6: Dashboard - Refunds - Discard a refund switch change without saving
+### TC-6: Dashboard - Refunds - Discard an unsaved refund setting
 
-**Description:** Given a refund switch saved off, turn it on and reload without saving. The switch must return to off. Run the case separately for the organization policy, ticket type, and product.
+**Description:** Start with a saved refund setting turned off. Turn it on but reload the page without saving. The setting must return to off. Repeat for the organization policy, a ticket type, and a product.
 
 | Platform | View |
 | --- | --- |
@@ -545,31 +549,31 @@ In French runs, English labels below identify the equivalent French controls; En
 
 **Tags:** dashboard, refunds
 
-Parameters:
+**Parameters:**
 SettingPage: OrganizationPolicy, TicketType, Product
 
 **Preconditions:**
 
 * Employee permission: **Manage Organization Info** for OrganizationPolicy, **Manage Events** for TicketType, or **Manage Marketplace** for Product.
-* The organization has a refund policy. In Admin → Venue customer refund policy, search for the organization. Reuse its existing record; if none exists, select Add → select the organization in Venue → leave defaults → Save.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
 * TicketType: For tickets, enable the Events module. Use an unpublished, nonrecurring event with a saved timezone, future dates, and no sales. In its Tickets page, add **Refund Ticket**, price **10.00**, inventory **10**, then Save; an existing ticket with these conditions can be reused.
 * Product: For products, the organization must be on a non-Basic plan. Open Build → Products → All products → Create product: name **Refund Policy Product**, first saved category alphabetically, variant **Standard**, price **5.00** → Create product. Use a product with no purchases.
 * Prepare only the selected SettingPage. Open its screen from the table, record the original switch value, set the switch off, select Save, and reload.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Open the selected screen from Dashboard. | Screen in the SettingPage table | The named switch is off. |
+| Open the chosen screen from Dashboard. | Screen in the table above | The named switch is off. |
 | Turn on the switch without selecting Save. | Switch in the selected row | The unsaved switch is on. |
 | Reload the page; accept the browser’s leave confirmation if it appears. |  | The switch returns to its saved off value. |
 
 **Postconditions:**
 
-* Restore the settings recorded before preparation, select Save, and reopen to confirm. Keep any policy created for this case with Is enabled off.
+* Restore the recorded policy choices, save, and reload to confirm. If you created a policy for this case, leave it saved and off.
 * Keep created items without purchases and the event unpublished.
 
-### TC-7: Dashboard - Refunds - Allow item editing without granting organization policy editing
+### TC-7: Dashboard - Refunds - Let an employee edit tickets without access to organization refund settings
 
-**Description:** Given an employee who can manage tickets and products but cannot manage organization information, verify they can see the policy status and save a ticket’s refund switch. They must not gain access to edit the organization policy.
+**Description:** An employee who can edit tickets and products but lacks **Manage Organization Info** can see whether the organization policy is on or off and save a ticket's refund switch. They cannot open the organization's Customer refunds settings to edit that policy.
 
 | Platform | View |
 | --- | --- |
@@ -579,32 +583,34 @@ SettingPage: OrganizationPolicy, TicketType, Product
 
 **Preconditions:**
 
-* Employee permissions: **Manage Events** and **Manage Marketplace**, with no **Manage Organization Info** or unrestricted access. A separate organizer with all three permissions prepares the records and checks the policy afterward.
-* The organization has a refund policy. In Admin → Venue customer refund policy, search for the organization. Reuse its existing record; if none exists, select Add → select the organization in Venue → leave defaults → Save.
+* The employee being checked has **Manage Events** and **Manage Marketplace**, but does not have **Manage Organization Info** or full administrator access. A separate employee with **Manage Organization Info** prepares the policy and checks it afterward.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
 * For tickets, enable the Events module. Use an unpublished, nonrecurring event with a saved timezone, future dates, and no sales. In its Tickets page, add **Refund Ticket**, price **10.00**, inventory **10**, then Save; an existing ticket with these conditions can be reused.
 * For products, the organization must be on a non-Basic plan. Open Build → Products → All products → Create product: name **Refund Policy Product**, first saved category alphabetically, variant **Standard**, price **5.00** → Create product. Use a product with no purchases.
-* The organizer records original settings, saves the policy’s Is enabled off, and saves both items’ Allow customer-initiated refunds switches off. Allow the restricted employee access to the prepared event.
+* The employee preparing the records notes the original values, turns **Enable customer refund policy** off, and saves **Allow customer-initiated refunds** off on both items. Give the restricted employee access to the prepared event.
+* The employee preparing the records copies the Customer refunds page link for this organization so the restricted employee can try opening it directly.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Sign in to Dashboard as the employee without Manage Organization Info. |  | The employee can access the prepared event and product. |
 | Inspect the Organization navigation. |  | Organization settings does not provide access to edit Customer refunds. |
+| Open the Customer refunds link copied during setup. | Same organization | The employee cannot open the policy form or save changes to it. |
 | Open Dashboard → Build → Events → All events → Edit the prepared event → Tickets → Edit Refund Ticket → Basic info. |  | The ticket switch is off and the message says the organization policy is disabled. |
 | Turn on Allow customer-initiated refunds. |  | The ticket switch is editable and turns on. |
 | Select Save. |  | Ticket type basic info updated successfully appears. |
 | Reload the page. |  | The ticket switch remains on. |
 | Open Dashboard → Build → Products → All products → Refund Policy Product → Fulfillment. |  | The product page also shows the disabled organization-policy message. |
-| Sign in as the organizer who prepared the records. |  | The organizer can access Organization settings. |
+| Sign in as the employee who prepared the records. |  | This employee can access Organization settings. |
 | Open Dashboard → Organization → Organization settings → Customer refunds. |  | The organization policy matches the settings recorded before the employee’s edits. |
 
 **Postconditions:**
 
-* Restore the settings recorded before preparation, select Save, and reopen to confirm. Keep any policy created for this case with Is enabled off.
-* As the organizer, restore the item switches, save, and reopen. Keep created items without sales and the event unpublished.
+* Restore the recorded policy choices, save, and reload to confirm. If you created a policy for this case, leave it saved and off.
+* As the employee who prepared the records, restore the item switches, save, and reopen. Keep created items without sales and the event unpublished.
 
-### TC-8: Dashboard - Refunds - Keep refund policy changes within the selected organization
+### TC-8: Dashboard - Refunds - Keep customer refund settings separate for two organizations
 
-**Description:** Given two organizations with different saved cutoffs, switch between them and change the first organization’s cutoff. The second organization must keep its own settings.
+**Description:** Give two organizations different saved refund deadlines. Change the first organization's deadline, then return to the second organization. Its settings must remain unchanged.
 
 | Platform | View |
 | --- | --- |
@@ -633,11 +639,11 @@ SettingPage: OrganizationPolicy, TicketType, Product
 
 **Postconditions:**
 
-* Restore the settings recorded before preparation, select Save, and reopen to confirm. Keep any policy created for this case with Is enabled off. Repeat for both organizations.
+* Restore the recorded policy choices, save, and reload to confirm. If you created a policy for this case, leave it saved and off. Repeat for both organizations.
 
-### TC-9: Dashboard - Refunds - Copy a ticket’s refund switch without linking the two tickets
+### TC-9: Dashboard - Refunds - Copy a ticket type without linking its refund choice to the original
 
-**Description:** Given a saved ticket type with customer refunds on or off, copy it and verify the copy starts with the same choice. Changing the copy must not change the original ticket.
+**Description:** Copy a ticket type whose **Allow customer-initiated refunds** setting is saved on or off. The copy must start with the same setting. Changing the copy must leave the original ticket type unchanged.
 
 | Platform | View |
 | --- | --- |
@@ -645,13 +651,13 @@ SettingPage: OrganizationPolicy, TicketType, Product
 
 **Tags:** dashboard, refunds, tickets
 
-Parameters:
+**Parameters:**
 OriginalRefundChoice: Enabled, Disabled
 
 **Preconditions:**
 
 * Employee permission: **Manage Events** and access to the prepared event.
-* The organization has a refund policy. In Admin → Venue customer refund policy, search for the organization. Reuse its existing record; if none exists, select Add → select the organization in Venue → leave defaults → Save.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
 * For tickets, enable the Events module. Use an unpublished, nonrecurring event with a saved timezone, future dates, and no sales. In its Tickets page, add **Refund Ticket**, price **10.00**, inventory **10**, then Save; an existing ticket with these conditions can be reused.
 * Admin → Feature Flags: enable **`enable_ticket_type_copy`** for the selected venue. No recurring-copy flag is needed for this nonrecurring event. Record any flag settings changed.
 * In Refund Ticket → Basic info → Customer refunds, record the original switch. Save Allow customer-initiated refunds on for Enabled or off for Disabled, then reload. Record existing ticket names before copying.
@@ -668,13 +674,13 @@ OriginalRefundChoice: Enabled, Disabled
 
 **Postconditions:**
 
-* Restore the settings recorded before preparation, select Save, and reopen to confirm. Keep any policy created for this case with Is enabled off.
+* Restore the recorded policy choices, save, and reload to confirm. If you created a policy for this case, leave it saved and off.
 * Restore the original ticket’s switch and any feature-flag values changed during preparation.
 * Keep the copy in the unpublished event without sales and record its name. Remove only that copy after review if it still has no sales.
 
-### TC-10: Dashboard - Refunds - Show disabled defaults for a new policy and new items
+### TC-10: Dashboard - Refunds - Check the starting refund settings for a new organization, ticket, and product
 
-**Description:** Given a newly created policy and newly created ticket/product, verify no customer refund setting is enabled by default.
+**Description:** Open the customer refund settings for an organization whose policy has not been edited, then open a newly created ticket type and product. The policy and both item switches must start off, with the saved choices shown in the steps below.
 
 | Platform | View |
 | --- | --- |
@@ -688,7 +694,7 @@ Language: English, French
 **Preconditions:**
 
 * Employee permissions: **Manage Organization Info**, **Manage Events**, and **Manage Marketplace**; Events module enabled and organization on a non-Basic plan.
-* Choose an organization whose policy has never been edited. If it has no policy, Admin → Venue customer refund policy → Add → select Venue → leave every other field untouched → Save. Do not reset or delete an existing edited policy to simulate defaults.
+* Ask a Showpass administrator for an organization whose customer refund policy was just created and has not been edited. In Showpass Admin → Venue customer refund policies, search for that organization; if it has no record, select Add → choose the organization in Venue → leave all other fields untouched → Save. Do not reset an edited policy to imitate defaults.
 * Create a ticket named **Default Refund Ticket**, price **10.00**, inventory **10**, in an unpublished, nonrecurring event with future dates, a timezone, and no sales. Save without editing its customer-refund switch.
 * Build → Products → All products → Create product: **Default Refund Product**, first saved category alphabetically, variant **Standard**, price **5.00** → Create product. Do not edit its refund switch or purchase it.
 * Select Language using Dashboard’s Main menu: narrow the browser, open the profile menu, select English or French, then widen it. Record the original language.
@@ -708,9 +714,9 @@ Language: English, French
 * No policy or item settings were changed during the checks. Keep the event unpublished and the items without sales.
 * Restore the original language; retain the new policy disabled.
 
-### TC-11: Dashboard - Refunds - Edit the policy inside legacy Organization Info
+### TC-11: Dashboard - Refunds - Save customer refund settings from the older Organization Info page
 
-**Description:** Given the old Organization Info screen, open its Customer refunds tab and save the embedded policy. The same saved value must appear in the modern Dashboard page. Current legacy entry address: `/dashboard/venues/edit/` on the same site; this is the entry being tested.
+**Description:** Open the older Organization Info page and use its Customer refunds tab to save a refund deadline. Open the newer Customer refunds page for the same organization and confirm the deadline matches. The older page is at `/dashboard/venues/edit/` on the same site when its menu link is unavailable.
 
 | Platform | View |
 | --- | --- |
@@ -721,30 +727,30 @@ Language: English, French
 **Preconditions:**
 
 * Employee permission: **Manage Organization Info**.
-* Admin → Venue customer refund policy: search the organization. Reuse its record, or Add → select Venue → leave defaults → Save.
-* Admin → Feature Flags: **enable_organization_settings_nextjs_embed** must be off for the selected venue so Organization Info displays the legacy tabs. Record any flag change for restoration. No separate customer-refunds flag is needed.
-* Open the legacy Dashboard → Settings → Organization Info. Record the current policy cutoff; the Customer refunds tab must be visible. If the current menu only opens modern settings, use the legacy Organization Info address on the same site, documented in this case’s Description.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save.
+* In Showpass Admin → Feature Flags, turn **enable_organization_settings_nextjs_embed** off for this organization so the older Organization Info tabs appear. Record its original value for restoration.
+* Open Dashboard → Settings → Organization Info and record the saved refund deadline. If that menu opens the newer settings page, use the older page address in this case's Description.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Open legacy Dashboard → Settings → Organization Info. |  | The legacy settings tabs appear. |
-| Select Customer refunds. |  | The modern refund form appears inside the tab without a second full Dashboard header or sidebar. |
+| Open Dashboard → Settings → Organization Info on the older page. |  | The older settings tabs appear. |
+| Select Customer refunds. |  | The refund form appears inside the tab without a second full Dashboard header or sidebar. |
 | Select Cutoff type. | Before event start | The duration and unit fields appear inside the tab. |
 | Enter Time before cutoff reference. | 48 | 48 is shown. |
 | Select Unit. | Hours | Hours is selected. |
 | Scroll to Save inside Customer refunds. |  | The form and Save control are reachable without clipping. |
 | Select Save. |  | Customer refund policy saved appears. |
 | Reload Organization Info and select Customer refunds again. |  | Before event start, 48 Hours is retained. |
-| Open modern Dashboard → Organization → Organization settings → Customer refunds for the same organization. |  | The same 48 Hours cutoff appears. |
+| Open the newer Dashboard → Organization → Organization settings → Customer refunds page for the same organization. |  | The same 48 Hours deadline appears. |
 
 **Postconditions:**
 
 * Restore the original cutoff, save, and reload. Restore only feature-flag values changed for this case.
 * Retain any policy created during setup with Is enabled off.
 
-### TC-12: Dashboard - Refunds - Keep employee refund controls available after customer refund settings change
+### TC-12: Dashboard - Refunds - Keep the employee Refund action available after customer settings change
 
-**Description:** Given an order an employee can refund, verify changing the customer refund policy and item switch does not remove or alter the employee’s refund options. Open and close the refund dialog; do not submit a refund.
+**Description:** Open an employee's Refund action for a paid order and record its choices and amount. Change the organization's customer refund settings and the ticket or product's **Allow customer-initiated refunds** setting. The employee's Refund action must still show the same choices and amount. Do not submit a refund.
 
 | Platform | View |
 | --- | --- |
@@ -752,7 +758,7 @@ Language: English, French
 
 **Tags:** dashboard, refunds
 
-Parameters:
+**Parameters:**
 ItemType: TicketType, Product
 
 **Preconditions:**
