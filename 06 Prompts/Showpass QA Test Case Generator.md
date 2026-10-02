@@ -194,8 +194,8 @@ When producing Qase-ready cases or Qase update recommendations, also read and ap
 
 Use this flow when the user says to generate tests from a Jira card, pastes a Jira issue key, or pastes an Atlassian card link.
 
-1. Read [[05 Tooling/jiractl]].
-2. Fetch the Jira card with `05 Tooling/scripts/jira-read-issue.mjs`, using the pasted issue key or URL.
+1. Discover the connected Atlassian Rovo plugin's Jira tools and follow the Jira Access rules in `AGENTS.md`.
+2. Fetch the Jira card through the plugin using the pasted issue key or URL, including its description, status, priority, and comments.
 3. Treat Jira as intake context only. Extract the problem statement, requested behavior, acceptance criteria, affected role or surface, comments, known edge cases, and unresolved questions.
 4. Save the raw Jira API response under `/private/tmp` only when repeat local inspection is useful.
 5. Continue through [[00 Start Here/World-Class Software Quality Standard]] and this generator workflow before writing test cases.
@@ -217,7 +217,7 @@ Generate Qase-ready manual test cases from this Jira card:
 https://showpass.atlassian.net/browse/SPW-12345
 
 Jira:
-- Use [[05 Tooling/jiractl]] to read the card.
+- Use the connected Atlassian Rovo plugin to read the card, following the Jira Access rules in AGENTS.md.
 - Treat Jira as intake only, not source of truth.
 
 Source code:
@@ -408,4 +408,4 @@ When a user does approve Qase updates, follow [[05 Tooling/qasectl#Qase Update W
 
 ## Agent Reminder
 
-Read [[00 Start Here/World-Class Software Quality Standard]] first, then apply this test-design workflow. Before writing cases, complete the Testing Intent gate and Proof Target Map so the output states the criticality bucket, business invariant, actor impact, failure mode, observable proof, scope, non-goals, and confidence. Every generated case should map back to one proof target and every declared in-scope item must be accounted for in the coverage ledger or equivalent artifact. If the input is a Jira card, read [[05 Tooling/jiractl]], fetch the card, summarize Jira intake briefly, classify the business invariant, then verify behavior against source before generating cases. For Jira-card test generation, do not run git diff or branch comparison unless the user explicitly asks for diff-based coverage. For simple generation, PR coverage, new-feature coverage, or regression coverage, use the Test Case Generator Flow and do not query Qase. For gap analysis, read Qase first, inspect source code second, then write findings under the matching `03 Test Cases/<feature>/` folder. Bare filenames from the user should be resolved inside the matching feature folder. Never overwrite a `*Template.md` file with generated output unless the user explicitly asks to edit or overwrite that template. Keep vault notes short and reference source paths instead of copying repository implementation. Write cases from the perspective of the real Showpass actor, such as customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user. Do not use `the tester` phrasing in generated Qase cases. Preserve user edits when revising an existing note. Prefer plain product wording over abstract QA or implementation terms unless the technical term is required for accuracy.
+Read [[00 Start Here/World-Class Software Quality Standard]] first, then apply this test-design workflow. Before writing cases, complete the Testing Intent gate and Proof Target Map so the output states the criticality bucket, business invariant, actor impact, failure mode, observable proof, scope, non-goals, and confidence. Every generated case should map back to one proof target and every declared in-scope item must be accounted for in the coverage ledger or equivalent artifact. If the input is a Jira card, fetch the card through the connected Atlassian Rovo plugin following the Jira Access rules in AGENTS.md, summarize Jira intake briefly, classify the business invariant, then verify behavior against source before generating cases. For Jira-card test generation, do not run git diff or branch comparison unless the user explicitly asks for diff-based coverage. For simple generation, PR coverage, new-feature coverage, or regression coverage, use the Test Case Generator Flow and do not query Qase. For gap analysis, read Qase first, inspect source code second, then write findings under the matching `03 Test Cases/<feature>/` folder. Bare filenames from the user should be resolved inside the matching feature folder. Never overwrite a `*Template.md` file with generated output unless the user explicitly asks to edit or overwrite that template. Keep vault notes short and reference source paths instead of copying repository implementation. Write cases from the perspective of the real Showpass actor, such as customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user. Do not use `the tester` phrasing in generated Qase cases. Preserve user edits when revising an existing note. Prefer plain product wording over abstract QA or implementation terms unless the technical term is required for accuracy.

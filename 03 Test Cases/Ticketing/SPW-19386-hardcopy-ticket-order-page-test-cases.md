@@ -12,7 +12,7 @@ tags:
 ## Jira Intake Summary
 
 - Jira card: `https://showpass.atlassian.net/browse/SPW-19386`
-- Jira read status: `05 Tooling/scripts/jira-read-issue.mjs` returned 404 with the configured token, so the card text was not available.
+- Jira read status at the original review: the local Jira API read returned 404 with the configured token, so the card text was not available. This historical result does not establish the current Atlassian plugin's access.
 - Available task context: feature parity task for `SPW-19386`, identified as hardcopy ticket order page migration.
 - Intake interpretation: validate the existing Web App hardcopy ticket order behavior so a migrated page can be tested for parity.
 

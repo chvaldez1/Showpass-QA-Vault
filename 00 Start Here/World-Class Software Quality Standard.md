@@ -76,7 +76,7 @@ Local workflow bindings:
 - Interactive browser and release execution: [[06 Prompts/Interactive Browser Release Testing]]
 - Qase writing format: [[05 Tooling/Qase Test Case Writing Rules]]
 - Qase reads and writes: [[05 Tooling/qasectl]]
-- Jira intake: [[05 Tooling/jiractl]]
+- Jira intake: Atlassian Rovo plugin, following the Jira Access rules in `AGENTS.md`.
 
 The Playwright repository's `manual-qa-principles.md` and `showpass-qa-test-case-generator.md` informed this standard. They remain useful engineering references, but this vault note is the canonical quality policy.
 

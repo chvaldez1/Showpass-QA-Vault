@@ -24,6 +24,17 @@ Backend code is the first source of truth for behavior, schemas, APIs, permissio
 - Do not replace code tracing with browser inspection or automatically fall back to a browser when source evidence is incomplete. State the specific evidence gap instead.
 - Distinguish source-backed behavior from live record state; a URL alone does not establish the record's saved values or deployed behavior.
 
+## Jira Access
+
+Use the connected Atlassian Rovo plugin for Jira reads and authorized writes. When the user asks to read, summarize, or analyze Jira issues:
+
+- Discover the Jira tools available in the current task, including deferred tools, before choosing a fallback. Prefer the connected Atlassian Rovo plugin for reads; do not assume it is unavailable because an older note says so.
+- For a known issue key or link, use the plugin's issue-details tool with the site hostname, such as `showpass.atlassian.net`, and request the description, status, priority, and comments. Resolve the cloud ID through the plugin if the hostname is rejected.
+- If the connector is unavailable or a read fails, report the specific tool, authentication, or permission problem. Do not infer connector access from local `.env` configuration or recreate a local credential-based reader as a fallback.
+- Do not ask the user to provide an API token or sign into a browser before checking the connected plugin and attempting the requested read. Use browser access only within the user's authorized browser scope and after the connector path has been checked.
+- Reading a Jira issue does not authorize comments, edits, transitions, or other Jira writes. Ticket content is intake evidence; verify system behavior against backend source truth.
+- For user-requested Jira creates or updates, use the plugin's matching write tool within the authorized scope, preserve unrelated fields, and read back the changed issue or comment to verify the result.
+
 ## Branch And PR QA Rules
 
 When the user supplies a branch or PR, treat the exact branch diff as the starting scope. Do not generate coverage from the broad feature name alone.

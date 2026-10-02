@@ -11,7 +11,7 @@ Goal:
 Generate Qase-ready manual test cases from this Jira card.
 
 Jira:
-- Use [[05 Tooling/jiractl]] to read the card.
+- Use the connected Atlassian Rovo plugin to read the card, following the Jira Access rules in AGENTS.md.
 - Include a short Jira Intake Summary with title, status, requested behavior, acceptance criteria or implied expected behavior, relevant comments or decisions, and open questions.
 - Treat Jira as intake context only.
 

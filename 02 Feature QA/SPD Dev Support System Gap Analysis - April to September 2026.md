@@ -23,6 +23,7 @@ evidence_level: full-history-summary-coding-plus-2026-jira-intake-backend-fronte
 - Backend source of truth: `/Users/christianvaldez/Documents/Showpass/repos/web-app`
 - Frontend user-path evidence: `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`
 - Existing browser automation evidence: `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`
+- Supplemental lessons reviewed October 1, 2026: `SPD-2761` (September 29) and `SPD-2770` (October 1). These later cards are not included in the export counts or historical theme totals above.
 - Related note: [[Checkout Criticality From Jira Major Critical Export]]
 - Governing standard: [[00 Start Here/World-Class Software Quality Standard]]
 
@@ -664,6 +665,57 @@ The Critical bucket contains 19 S0, 32 S1, 44 S2, 12 S3, and 3 tickets with no s
 3. Email, SMS, analytics, and integration failures expose actionable state and safe retry.
 4. Financial displays match source-of-truth values even when the underlying ledger is correct.
 5. Recurring scripts and data repairs become permissioned, previewable, reversible self-service actions.
+
+## Lessons Learned — September 29 and October 1, 2026
+
+These lessons extend Gap 4 (financial agreement), Gap 6 (client and device handoffs), and Gap 9 (package lifecycle). They are prevention actions derived from Jira intake and the source references below; no new purchases or hardware checks were executed for this update.
+
+### 1. Be especially cautious with fees, including internal and absorbed fees
+
+**Incident:** [SPD-2761 — Fees on product packages not calculating properly](https://showpass.atlassian.net/browse/SPD-2761), Critical, Complete when read October 1. The report says merchandise included through a package's sub-product relationship did not collect fees per eligible item as expected, losing Showpass revenue. A similar incident had occurred earlier in the year. A customer could still buy successfully, so ordinary checkout success would not expose the missing fees.
+
+**Lesson:** prove both the customer's bill and where the money goes. Internal fees are Showpass fee amounts defined by rate cards. Absorbed fees are borne by the organizer instead of added to the customer's bill; absorption must not silently remove the fee from the financial calculation. Confirm the applicable business rule for each fee rather than assuming every package child should be charged. Customer-visible fee lines alone cannot prove this: the frontend intentionally omits absorbed fees from those lines.
+
+**What QA should improve:**
+
+- Before testing, record the actual fee configuration and calculate an independent expected subtotal, fee, tax, customer total, Showpass earnings, and organizer earnings. Include fixed and percentage fees, processing fees, and taxes on fees where configured. Do not derive the expected number from the checkout response being tested.
+- Compare a normal ticket, a ticket package, and a ticket-plus-merchandise package. Exercise included/excluded products and more than one package quantity. State which parent or child items attract each fee so missing multiplication or double charging is visible.
+- Repeat the relevant cases with customer-paid, absorbed, and mixed fee configurations. An unchanged customer total in an absorbed case is only one part of the proof; the expected fee and organizer deduction must still appear in the saved financial records.
+- Test no discount, fixed discount, percentage discount, and a fully discounted purchase where supported. Record whether each rate applies before or after the discount, and whether processing includes other fees. Cover legacy and itemized calculation modes when both remain applicable, using the actual saved mode rather than the ticket's name.
+- In isolated test data, complete representative purchases and reopen Transactions. Reconcile the charge, invoice fee breakdown, and organizer/Showpass amounts; then test the permitted refund or void and check the resulting financial records. If settlement or reporting cannot be exercised, keep that proof gap explicit.
+- After changing fees, compare a fresh basket with an already-open basket using the intended price-lock behavior. Test the supported pricing refresh rather than assuming saved settings immediately change every cached price.
+
+**Automation action:** extend the existing Playwright product-package purchase scenario (`SPT-3760`) with independently calculated expected values and representative absorbed/internal-fee variants. Check checkout and the saved transaction after purchase. Use backend tests for the broader fee matrix and financial allocation; browser checks should prove representative customer journeys, not reproduce the entire fee engine.
+
+**Existing evidence limit:** the card records 18 passing beta pricing scenarios, including absorbed fees and discounts. Those checks stopped before purchase. They do not establish beta payment, fulfillment, realized revenue, refund, settlement, or pricing-reset coverage. Internal/absorbed-fee caution is a wider prevention lesson, not a claim that absorption was the confirmed cause of SPD-2761.
+
+**Source anchors:** `web-app/docs/systems/financial_invoices_rate_cards_and_settlements.md` (fee applicability, absorption, invoice and settlement meanings); `showpass-frontend/packages/core/src/shared/modules/basket/services/useBasket.ts:759` and `showpass-frontend/packages/core/src/shared/modules/basket/fees/helpers.ts:83` (customer fee presentation); `showpass-playwright/tests/core/packages/product-package-config.ts` and `product-package.runner.ts` (existing product-package scenario across public checkout, widget, and Box Office).
+
+### 2. Treat payment hardware and mobile OS compatibility as part of QA scope
+
+**Incident:** [SPD-2770 — Showpass POS crashing after enabling in-app payment processing](https://showpass.atlassian.net/browse/SPD-2770), Critical, In Progress when read October 1. The report identifies Showpass 3.7.1 build 137 on iPadOS 27.0 and the trigger **POS → Settings → Square → Use In-App Payment Processing**. It says repeated crashes continue after disconnecting the Square Stand. The business risk is losing the ability to take payments at the venue, rather than simply missing a deadline.
+
+**Lesson:** an app opening normally is insufficient proof that its payment integration works. Enabling a payment setting, reconnecting hardware, or upgrading the OS can introduce a different failure state. Lack of a dedicated mobile QA person does not remove that scope; it means the team needs a small, assigned compatibility check and visible untested combinations.
+
+**What QA should improve:**
+
+- For mobile/POS releases, payment-library changes, and OS upgrades, name a person responsible for the physical-device check. Record device model, OS version, app version/build, environment, and reader/stand model. Prioritize combinations used at upcoming onsales and venue operations, including the OS implicated in an incident and a known supported comparison version.
+- Start with in-app processing disabled, enable it through POS Settings, and confirm the app remains usable. Disconnect and reconnect the reader/stand, send the app to the background and return, then close and reopen it with the setting still enabled. Include recovery through the product's supported controls; a fresh install is not proof that existing users can recover.
+- Complete a permitted test payment on the actual device and verify one charge, one transaction, and the expected tickets or products. Exercise cancellation and reconnection around an interrupted payment; inspect the saved payment result before retrying so recovery cannot duplicate a charge.
+- Keep web Box Office, Square Terminal, and the iPad's in-app reader integration as separate evidence. A web sale or Terminal check does not exercise the iPad's native reader library. Extend the same compatibility habit to receipt printers and scanners when their workflows are affected.
+- When the required device or OS is unavailable, record the exact untested combination and arrange coverage with a developer or someone who has the hardware. Give it an owner and retain the gap in the release decision.
+
+**Automation action:** retain Playwright coverage for browser payment/order behavior, but classify this native crash as physical-device manual coverage until an appropriate mobile test exists. Mobile automation can cover enabling the setting and reopening the app; actual reader/stand compatibility still needs device evidence. Browser viewport emulation cannot prove native library or hardware compatibility.
+
+**Evidence limit:** the Jira description includes an AI interpretation of a crash log, but the current card returns no attached log or comments. The native root cause, the stated OS version, and the claim that all upgraded iPads are affected have not been independently verified. Record the reported combination without treating that interpretation as a confirmed diagnosis.
+
+**Source anchors:** `showpass-frontend/packages/mobile/src/native-modules/ios/square-reader/index.tsx` and `packages/mobile/src/util/pos/square.tsx` identify the native reader integration. Existing device guidance: [[09 Appium/Showpass Mobile App]]. Related payment-state coverage: [[03 Test Cases/Payments/square-test-cases]], which addresses Square Terminal behavior and is not proof of this in-app reader path.
+
+### Prevention habit for both lessons
+
+- Promote an escaped bug into a reusable regression scenario with exact setup, expected business result, evidence, and a named owner. A Complete Jira status alone does not prove that the regression is protected.
+- Treat financial loss and inability to take payments as business-critical even when the checkout looks normal or the failing platform is not the main QA platform.
+- Preserve the incident's configuration and lifecycle: package relationships and fee settings for SPD-2761; saved payment setting, app build, OS, and connected/disconnected hardware for SPD-2770.
 
 ## Confidence
 

@@ -96,7 +96,6 @@ We are testing whether Box Office employees can keep their existing Transactions
 - [[01 Repositories/Frontend - showpass-frontend]]
 - [[01 Repositories/QA Automation - showpass-playwright]]
 - [[05 Tooling/Qase Test Case Writing Rules]]
-- [[05 Tooling/jiractl]]
 - [[06 Prompts/Showpass QA Test Case Generator]]
 
 ### Backend
