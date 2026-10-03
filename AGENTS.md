@@ -8,6 +8,8 @@ Read and apply [[00 Start Here/World-Class Software Quality Standard]] for QA sc
 
 Workflow notes may add task-specific instructions, but they must not redefine or weaken the canonical standard.
 
+Use [[00 Start Here/Showpass QA Handbook/00 Index|Showpass QA Master Handbook]] for hands-on Showpass system testing: actual Organizer/Customer/Attendee/Member/Venue Employee terminology, Venue/client/configuration setup, and connected create → purchase → fulfillment/admission → Refund/Void/Exchange → Inventory/financial walkthroughs. Add its senior-QA integration passes, automation-layer selection, physical-device coverage, and release-confidence guidance. It applies the canonical standard; it does not replace it. Bind recipes to the exact change, current source, supported clients, and actual configuration before drafting or executing tests.
+
 ## Source Of Truth
 
 - Backend first: `/Users/christianvaldez/Documents/Showpass/repos/web-app`

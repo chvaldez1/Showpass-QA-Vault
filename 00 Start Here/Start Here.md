@@ -6,6 +6,8 @@ This vault is the local source of truth for Showpass QA standards, test design, 
 
 Read [[00 Start Here/World-Class Software Quality Standard]] before creating QA coverage, executing browser tests, planning automation, triaging a defect, or making a release recommendation.
 
+Use [[00 Start Here/Showpass QA Handbook/00 Index|Showpass QA Master Handbook]] for hands-on Showpass testing: choose the Venue and configuration, create the offering as Organizer, purchase as Customer, verify Attendee/Member fulfillment, and follow Venue Employee post-purchase actions through Inventory and money. Add its senior-QA integration passes and right-layer automation/device checks to catch risks early.
+
 ## Main Folders
 
 - [[01 Repositories/Backend - web-app|Backend - web-app]]

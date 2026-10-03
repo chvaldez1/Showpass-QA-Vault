@@ -2,7 +2,7 @@
 title: Customer Self-Refund Acceptance Test Cases
 jira: SPW-19671
 status: source-reviewed-not-executed
-date: 2026-09-24
+date: 2026-10-02
 tags:
   - qa/test-cases
   - refunds
@@ -12,7 +12,7 @@ tags:
 # Customer Self-Refund Acceptance Test Cases
 
 > [!important] Scope
-> This card proves successful and failed customer return execution, final order/ticket state, credit, and transaction results. Venue configuration belongs to [[SPW-19667-customer-refund-policy-test-cases]]; eligibility-only cases belong to [[SPW-19668-customer-refund-eligibility-test-cases]]. The Jira acceptance list also depends on unmerged amount and delayed-barcode work recorded in separate notes. These local cases are unexecuted and have not been sent to Qase.
+> This card proves successful and failed customer return execution, final order/ticket state, credit, and transaction results. Venue configuration belongs to [[SPW-19667-customer-refund-policy-test-cases]]; eligibility-only cases belong to [[SPW-19668-customer-refund-eligibility-test-cases]]. The Jira acceptance list also needs the now source-present amount and delayed-barcode scenarios in separate notes. These local cases are unexecuted and have not been sent to Qase.
 
 ## Testing Intent
 
@@ -20,7 +20,7 @@ We are testing whether an order owner can complete one allowed return while the 
 
 ## Jira Intake Summary
 
-[SPW-19671](https://showpass.atlassian.net/browse/SPW-19671) requests Fan Expo end-to-end acceptance: selected-venue enablement, customer preview/confirmation, valid final payment and ticket states, mixed-order partial returns, blocked scenarios, and failure recovery. Local code supports the current venue-policy flow and existing return math; the new shipping/fee choices and delayed-barcode control still lack local source.
+[SPW-19671](https://showpass.atlassian.net/browse/SPW-19671) requests Fan Expo end-to-end acceptance: selected-venue enablement, customer preview/confirmation, valid final payment and ticket states, mixed-order partial returns, blocked scenarios, and failure recovery. Current local source supports the venue-policy flow and now includes shipping/fee choices and the delayed-barcode control. Deployment and end-to-end results are not yet verified.
 
 ## Proof Targets
 
@@ -40,6 +40,7 @@ We are testing whether an order owner can complete one allowed return while the 
 ## Source-backed Behavior
 
 * My Orders loads return eligibility separately. The customer sees item selection, a return amount, Confirm Return, a required reason, Return Order, and Return Successful; Done refreshes the order.
+* These four cases keep configurable amount rules off to prove the basic completed-return path. Shipping/fee-specific values are checked in SPW-19669 using new compatible orders.
 * Preview and execution use the existing invoice refund calculation. The venue's existing **Automated return medium** determines original payment versus credit; this is separate from the new policy. The return service locks the invoice and rechecks eligibility before refunding.
 * A partial return sends only the selected item IDs. Returned tickets change state and a refund/credit history is recorded. A stale item selection returns updated eligibility; repeat selection of a refunded ticket is blocked.
 * A later refunder failure can occur after an earlier refunder completed. Manual provider-failure simulation is deferred until a controlled setup and final-state proof exist.
@@ -76,6 +77,8 @@ We are testing whether an order owner can complete one allowed return while the 
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
+* An employee with **Manage Organization Info** saves **Enable configurable refund amounts = off** before this order is purchased; this case uses the basic customer-return amount path.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** sets **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**, then saves.
 * An employee with **Manage Events** sets **Allow customer-initiated refunds = on** in a future event ticket type's **Basic info**. The customer buys exactly one paid ticket with a refundable card payment; record its transaction ID and receipt. Keep it unscanned and untransferred.
 * In Admin → Venue, an authorized administrator sets **Automated return medium = Organizer Credit** and **Automated return refund type = Full refund excluding Showpass fees**. Record the previous values and the customer's starting **Account → Credits → Organizer Credits** balance.
@@ -109,6 +112,8 @@ We are testing whether an order owner can complete one allowed return while the 
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
+* An employee with **Manage Organization Info** saves **Enable configurable refund amounts = off** before this order is purchased; this case uses the basic customer-return amount path.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**; record prior settings.
 * An employee with **Manage Events** prepares two paid ticket types for the same future event. Save **Allow customer-initiated refunds = on** for one and **off** for the other. The customer buys one of each in a single refundable card order; record the transaction and both ticket prices.
 * In Admin → Venue, an authorized administrator sets **Automated return medium = Organizer Credit** and records the customer's initial Organizer Credits balance plus the original Venue values.
@@ -141,6 +146,8 @@ We are testing whether an order owner can complete one allowed return while the 
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
+* An employee with **Manage Organization Info** saves **Enable configurable refund amounts = off** before this order is purchased; this case uses the basic customer-return amount path.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**; record prior settings.
 * An employee with **Manage Events** enables **Allow customer-initiated refunds** for a future event ticket type. The customer buys one paid, unscanned ticket with a refundable card payment. The customer and employee can use separate sessions for the same organization.
 
@@ -171,6 +178,8 @@ We are testing whether an order owner can complete one allowed return while the 
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
+* An employee with **Manage Organization Info** saves **Enable configurable refund amounts = off** before this order is purchased; this case uses the basic customer-return amount path.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**; record prior settings.
 * An employee with **Manage Events** enables **Allow customer-initiated refunds** on one future event ticket type. The customer buys one paid, unscanned ticket with a refundable card payment. In Admin → Venue, an authorized administrator sets **Automated return medium = Organizer Credit** and records previous settings.
 * Record the customer's initial **Account → Credits → Organizer Credits** balance and the transaction ID. This case completes a real return of its own order.
@@ -199,8 +208,8 @@ We are testing whether an order owner can complete one allowed return while the 
 | Partial return and untouched companion item | Manual-only | TC-2; separate order from TC-1. |
 | Stale rule and duplicate request | Manual-only plus API automation | TC-3–TC-4; check fresh order and credit state. |
 | Provider failure and partial completion | Deferred | Needs controlled provider failure, final refund-history read, and recovery expectation. A client toast alone is insufficient. |
-| Selected-venue rollout | Manual-only through existing policy | Policy is per organization. The separate delayed-barcode field is not available locally. |
-| Shipping/fee-specific totals and original-payment settlement | Blocked by local source/fixture | See [[SPW-19669-customer-refund-amount-rules-test-cases]]; this note compares existing preview to organizer credit only. |
+| Selected-venue rollout | Manual-only | Target `enable_venue_policy_customer_self_refunds` to the selected organization; compare an organization outside rollout. |
+| Shipping/fee-specific totals and original-payment settlement | Separate execution needed | See [[SPW-19669-customer-refund-amount-rules-test-cases]]; these four cases compare the basic preview to organizer credit only. |
 | Barcode and inventory after refund | Deferred | TC-1 checks the returned ticket status in My Orders, not a Check in scan. Scan rejection and inventory restock need a separate executable setup and source trace. |
 
 ## Minimum Execution Set
@@ -213,7 +222,7 @@ Test preview/execution amount parity, one credit/refund history per successful r
 
 ## Assumptions and Unknowns
 
-* The current local return calculation is the existing invoice calculation; future shipping/fee rules and delayed-barcode opt-in are not available in local source.
+* Current source now has shipping/fee amount rules and the delayed-barcode opt-in. These cases use the basic amount path; run the separate cards for the new choices.
 * The examples use organizer credit because its result is visible in the customer account. A return to the original payment method requires a separate controlled provider/settlement check if rollout uses that destination.
 * Live payment, credit, ticket, inventory, and deployed-version behavior were not executed.
 
@@ -222,4 +231,4 @@ Test preview/execution amount parity, one credit/refund history per successful r
 1. Is Fan Expo's customer return destination Organizer Credit or original payment for acceptance?
 2. Which provider and transaction surface will supply authoritative settlement proof?
 3. Which ticket inventory configuration makes a returned seat or ticket available again, and is that required for this card?
-4. Which unmerged implementations provide the remaining shipping/fee and delayed-barcode scenarios?
+4. Which deployed build and prepared orders will be used for the now source-present shipping/fee and delayed-barcode scenarios?

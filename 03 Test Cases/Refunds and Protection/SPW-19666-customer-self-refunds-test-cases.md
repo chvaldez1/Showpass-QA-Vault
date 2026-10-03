@@ -1,23 +1,26 @@
 ---
-title: Customer Refund Policy Feature Coverage Index
+title: Customer Refunds - Start Here
 jira: SPW-19666
 status: source-reviewed-not-executed
-date: 2026-09-24
+date: 2026-10-02
 tags:
-  - qa/test-cases
+  - qa/runbook
   - refunds
 ---
 
-# Customer Refund Policy Feature Coverage Index
+# Customer refunds — start here
 
-[SPW-19666](https://showpass.atlassian.net/browse/SPW-19666) coordinates the Fan Expo customer refund subtasks. Use each card's note for its own setup, source evidence, and standalone Qase-ready cases.
+This is the working order for [SPW-19495](https://showpass.atlassian.net/browse/SPW-19495) and its [SPW-19666](https://showpass.atlassian.net/browse/SPW-19666) customer-refund subtasks. Start with [[SPW-19495-acceptance-criteria|all acceptance criteria]] to see what must pass, what needs a special setup, and what remains a source or execution question. **Organization** in Dashboard and **venue** in Admin mean the same business here.
 
-| Jira card | Scope | Local note | Current result |
+| Order | Who does it | Guide | Jira card and detailed cases |
 | --- | --- | --- | --- |
-| SPW-19667 | Save organization refund settings and ticket/product choices | [[SPW-19667-customer-refund-policy-test-cases]] | Six existing Qase cases updated for clarity; six more remain local. |
-| SPW-19668 | Show which purchases customers can select in Return order | [[SPW-19668-customer-refund-eligibility-test-cases]] | Eight unexecuted local cases. |
-| SPW-19669 | Decide how shipping and fees affect the refund amount | [[SPW-19669-customer-refund-amount-rules-test-cases]] | No runnable cases yet; the new choices are absent from local code. |
-| SPW-19670 | Let customers return released delayed-barcode tickets | [[SPW-19670-delayed-barcode-self-refund-test-cases]] | No runnable cases yet; the new Venue setting is absent from local code. |
-| SPW-19671 | Complete a return and check credit, tickets, and orders | [[SPW-19671-customer-self-refund-acceptance-test-cases]] | Four unexecuted local cases. |
+| 1. Prepare the organization | Organizer/Venue Employee plus an Admin for rollout and missing policy record | [[00 Organizer and Venue - How to Test]] | [[SPW-19667-customer-refund-policy-test-cases|SPW-19667]]: form, cutoffs, ticket/product switches, employee access, French and older settings page. |
+| 2. Buy orders and inspect return choices | Customer | [[00 Customer - How to Test]] | [[SPW-19668-customer-refund-eligibility-test-cases|SPW-19668]]: allowed, blocked, mixed-order, cutoff and ownership behavior. |
+| 3. Check amounts on new compatible orders | Organizer configures; Customer returns; permitted Employee checks Transactions | Same Organizer and Customer guides | [[SPW-19669-customer-refund-amount-rules-test-cases|SPW-19669]]: shipping, fees, preview/final amount. |
+| 4. Check delayed barcode delivery | Admin configures Venue; Customer checks My Orders | Customer guide | [[SPW-19670-delayed-barcode-self-refund-test-cases|SPW-19670]]: before/after release, opt-in and blockers. |
+| 5. Complete customer acceptance | Customer plus permitted Employee for financial/admission evidence | Customer guide | [[SPW-19671-customer-self-refund-acceptance-test-cases|SPW-19671]]: successful and failed returns, final state and no duplicate. |
+| Separate employee path | Venue Employee and role administrator | [[00 Staff Refund Permissions - How to Test]] | [SPW-19326](https://showpass.atlassian.net/browse/SPW-19326): five employee refund-type permissions; separate from customer self-returns. |
 
-The subtasks define one venue-level policy with an on/off switch on each sellable item. The customer cases in 19668 and 19671 use current local backend and frontend behavior. The amount and delayed-barcode notes record Jira requirements separately because their proposed controls were absent in the checked-out code on 2026-09-24. No Qase read/write, browser run, branch comparison, or diff was performed for this split.
+The folders below separate **Organizer and Venue**, **Customer**, and **Staff Refunds**. Each Jira card keeps one canonical detail note and its local `TC-*` labels. Six SPW-19667 cases have existing Qase IDs SPT-5250–5255; other local cases have not been published just because they appear here.
+
+**Current source note (2026-10-02):** the earlier “not merged” notices for SPW-19669 and SPW-19670 were based on the 2026-09-24 checkout. The current local backend/frontend now contain the amount controls and delayed-barcode field. That is source evidence, not proof of deployment or execution. The exact customer-policy rollout flag is `enable_venue_policy_customer_self_refunds`, targeted by organization. See each guide for the other settings and permissions. No Qase, live browser, or branch/diff work was done for this reorganization.

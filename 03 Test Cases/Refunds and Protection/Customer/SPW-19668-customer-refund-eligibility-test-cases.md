@@ -2,7 +2,7 @@
 title: Customer Refund Eligibility Test Cases
 jira: SPW-19668
 status: source-reviewed-not-executed
-date: 2026-09-24
+date: 2026-10-02
 tags:
   - qa/test-cases
   - refunds
@@ -46,6 +46,7 @@ We are testing whether My Orders offers only the customer-return selections allo
 * Absolute and relative cutoffs block at or after the cutoff instant; item/session timing uses a ticket-type custom start when present, otherwise the event start. Manually closed blocks.
 * Mixed-order rules provide independent selection, require the whole remaining order, or block when any remaining item is ineligible. Already refunded items do not count as remaining. The backend also checks owner, paid/payment status, barcode activation, fulfillment, and scan status.
 * The preview and return endpoints re-evaluate the same selection. A direct request cannot safely substitute a foreign, duplicate, or omitted selection; those API-only permutations belong in automated coverage.
+* Current source adds configurable amount rules that support ticket returns only. TC-1's Product and TC-6's FulfilledProduct runs keep amount rules off so they measure item eligibility; amount-rule product blocking is recorded under SPW-19669.
 
 ## State-space / Setup Matrix
 
@@ -88,6 +89,8 @@ ItemType: TicketType, Product
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
+* An employee with **Manage Organization Info** saves **Enable configurable refund amounts = off** before this order is purchased; this case uses the basic customer-return amount path.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**.
 * For TicketType, an employee with **Manage Events** saves **Allow customer-initiated refunds = off** on the purchased ticket type. For Product, an employee with **Manage Marketplace** creates or selects a priced product on a non-Basic organization, sets **Availability → Checkout add-ons → Add to event checkout process** for the event, and saves its **Fulfillment → Allow customer-initiated refunds = off**. Keep the accompanying ticket's switch off so only the product can become selectable.
 * The customer buys the order described by ItemType with a refundable card payment. Record its transaction and the original item switch; do not refund the order.
@@ -118,6 +121,7 @@ ItemType: TicketType, Product
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on** and **Customer outcome = Customers cannot initiate refunds**; record prior values.
 * An employee with **Manage Events** saves **Allow customer-initiated refunds = on** for a future event ticket type. The customer buys one paid, unscanned ticket with a refundable card payment and records the transaction.
 
@@ -154,6 +158,7 @@ CutoffScenario: Absolute, EventStart, ItemStart, ManuallyClosed
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, and the **Cutoff type** from the chosen row; record its original settings.
 * An employee with **Manage Events** prepares the future event and ticket timing from the row, turns **Allow customer-initiated refunds = on** in ticket Basic info, and saves. The customer buys one paid ticket with a refundable card payment before the cutoff is applied; record the order.
 * Use an unscanned, untransferred ticket and keep barcode delivery, fulfillment, and check-in restrictions from independently blocking it.
@@ -183,6 +188,7 @@ CutoffScenario: Absolute, EventStart, ItemStart, ManuallyClosed
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Require the whole remaining order**; record prior settings.
 * An employee with **Manage Events** turns on **Allow customer-initiated refunds** for two ticket types. The customer buys one paid ticket of each type in the same refundable card order; both remain unscanned and unreturned.
 
@@ -209,6 +215,7 @@ CutoffScenario: Absolute, EventStart, ItemStart, ManuallyClosed
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Block when any remaining item is ineligible**; record prior settings.
 * An employee with **Manage Events** turns on **Allow customer-initiated refunds** for one ticket type and off for another. The customer buys one paid ticket of each type in one refundable card order; record the transaction.
 
@@ -249,6 +256,8 @@ RestrictedState: DeliveredBarcode, FulfilledProduct, CheckedInTicket
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
+* An employee with **Manage Organization Info** saves **Enable configurable refund amounts = off** before this order is purchased; this case uses the basic customer-return amount path.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**; record prior settings.
 * An employee with **Manage Events** or **Manage Marketplace** enables **Allow customer-initiated refunds** on the purchased ticket/product. Prepare a paid, refundable-card order and the selected restriction state using the table; keep all other restrictions set to **Allow customer refunds**.
 * Before the customer check, save the selected policy field as **Block customer refunds**. Record the order, item status, and previous policy values. For a fulfilled product, keep the accompanying ticket's refund switch off so the product is the only candidate after the policy changes.
@@ -266,9 +275,9 @@ RestrictedState: DeliveredBarcode, FulfilledProduct, CheckedInTicket
 
 * Restore policy and item switches. Preserve the checked-in or fulfilled test item if reversing that state would change operational history; do not submit a refund.
 
-### TC-7: My Orders - Refunds - Keep existing customer returns working when the new policy is off
+### TC-7: My Orders - Refunds - Keep existing customer returns working outside the new rollout
 
-**Description:** An organization already allows customer returns through its older **Enable automated returns** Venue setting. With the new **Enable customer refund policy** setting off, the customer must still see the return option for a qualifying ticket.
+**Description:** An organization already allows customer returns through its older **Enable automated returns** Venue setting. When that organization is outside the new customer-policy rollout, the buyer still sees the return option for a qualifying ticket.
 
 | Platform | View |
 | --- | --- |
@@ -278,20 +287,20 @@ RestrictedState: DeliveredBarcode, FulfilledProduct, CheckedInTicket
 
 **Preconditions:**
 
-* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = off**; record the previous value.
+* In Showpass Admin → Feature Flags, confirm the organization is outside `enable_venue_policy_customer_self_refunds`; record its original targeting. No Customer refunds page or policy record is needed for this legacy path.
 * In Showpass Admin → Venue, an authorized administrator sets **Enable automated returns = on**, **Automated return window = 0**, and **Automated return medium = Organizer Credit**; record the original values. These older Venue settings are separate from the new Customer refunds page.
 * An employee with **Manage Events** prepares a paid ticket type with delayed barcode delivery whose barcode has not yet been released, leaves **Allow customer-initiated refunds = off**, and sells one ticket to the customer with a refundable card payment.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Sign in as the buyer and open Account → My Orders. | Purchased order | The paid order appears. |
-| Open Return order. |  | The ticket can be selected even though the new organization policy and ticket setting are off. |
+| Open Return order. |  | The ticket can be selected through the older automated-return settings even though the organization is outside the new rollout and the ticket switch is off. |
 | Review the refund preview. |  | A refund amount greater than zero is shown. |
 | Select Cancel. |  | No refund is submitted. |
 
 **Postconditions:**
 
-* Restore the original policy, Venue settings, and item switch. Leave the order unrefunded.
+* Restore the original rollout targeting, Venue settings, and item switch. Leave the order unrefunded.
 
 ### TC-8: My Orders - Refunds - Keep another customer from opening or returning an order
 
@@ -305,6 +314,7 @@ RestrictedState: DeliveredBarcode, FulfilledProduct, CheckedInTicket
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, and **Cutoff type = No cutoff**; record prior settings.
 * An employee with **Manage Events** enables **Allow customer-initiated refunds** for a future event ticket type. Customer A buys one paid ticket with a refundable card payment. Customer B has a separate Showpass account and no ownership of or transfer access to the order.
 * Customer A opens the order in Account → My Orders and copies its order-detail link. Record the transaction and both account identities for execution evidence, without placing IDs in this case.
@@ -327,10 +337,10 @@ RestrictedState: DeliveredBarcode, FulfilledProduct, CheckedInTicket
 | Customer item/policy/cutoff/mixed/restriction selection | Manual-only | TC-1–TC-6; execute on the deployed code before marking passed. |
 | Legacy compatibility and order ownership | Manual-only | TC-7–TC-8. |
 | Direct API bypass, foreign or duplicate item IDs, invalid payment and invoice states | API/backend verification | Current validator and API tests cover examples; run and extend them before release. |
-| Package parent/child selection | Deferred to focused automated/API and manual setup | The service checks descendants and blocks independent child selection; a realistic package order needs a separate fixture. |
+| Package parent/child selection | Deferred to focused automated/API and manual setup | The service checks included items and blocks independent child selection; a real paid package order needs separate preparation. |
 | Specific customer-facing blocked-reason wording | Product-expectation question | Distinct backend codes currently map to generic item copy in My Orders. |
 | Request/approval mode | Not applicable to current model | Only automatic and blocked outcomes exist. |
-| Venue shipping/fee amount rules; separate delayed-barcode opt-in | Blocked by local source | Tracked in [[SPW-19669-customer-refund-amount-rules-test-cases]] and [[SPW-19670-delayed-barcode-self-refund-test-cases]]. |
+| Venue shipping/fee amount rules; separate delayed-barcode opt-in | Separate executable scope | Current source now contains both. Follow [[SPW-19669-customer-refund-amount-rules-test-cases]] and [[SPW-19670-delayed-barcode-self-refund-test-cases]]. |
 
 ## Minimum Execution Set
 
@@ -344,7 +354,7 @@ Cover exact cutoff boundaries and timezones; all item and mixed-order variants; 
 
 * The local checkout contains eligibility code, but its deployed revision and test records were not verified. All cases are drafts.
 * The item message is generic even when the backend reason code is specific. Do not infer a more detailed customer explanation from Jira.
-* The separate delayed-barcode venue field and venue shipping/fee policy fields were not present locally; their behavior is not asserted here.
+* Current local source now contains the delayed-barcode Venue field and shipping/fee amount choices. Their scenarios are in separate card notes; deployment has not been verified live.
 
 ## Open Questions
 

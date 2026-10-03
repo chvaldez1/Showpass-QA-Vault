@@ -2,7 +2,7 @@
 title: Customer Refund Policy Configuration Test Cases
 jira: SPW-19667
 status: source-reviewed-not-executed
-date: 2026-09-09
+date: 2026-10-02
 tags:
   - qa/test-cases
   - refunds
@@ -32,6 +32,8 @@ Created 2026-09-16 in SPT suite 1091 after user approval. Readback matched all t
 TC-4, TC-6, TC-8, TC-9, TC-11, and TC-12 remain local only. Publication does not mean the cases have been executed.
 
 On 2026-09-24, the six published cases above were rewritten in plainer product language and updated in place. Qase readback verified the saved wording and steps; suite, tags, parameters, and other case metadata stayed the same. SPT-5254 gained one direct-link permission check. No case was created or deleted.
+
+Current-source review on 2026-10-02 found a new organization-targeted rollout flag and Refund amounts section. The local case prerequisites and TC-1 field list below now reflect those controls. **SPT-5250–SPT-5255 in Qase were not updated in this turn**; compare their saved fields with this local draft before the next Qase publication.
 
 ## Testing Intent
 
@@ -72,6 +74,8 @@ The user-provided PR verification list is the acceptance input for this revision
 
 Snapshot reads used `git show <commit>:<known-path>` and content searches at the supplied revisions; no changed-file discovery was used. Paths below are relative to these repositories:
 
+The 2026-10-02 current-source check also reviewed backend `apps/venues/utils.py`, `apps/venues/api/venue_based/viewsets/refunds.py`, `apps/venues/models/venue_management/customer_refund_policy.py`, and frontend `packages/core/src/app-contexts/dashboard/features/organization/constants/organization-config.ts` plus `settings/customer-refunds/constants/customer-refund-policy-form-fields.ts`. These newer files establish the rollout gate and Refund amounts fields described below; they do not prove deployment or execution.
+
 * **B:** `/Users/christianvaldez/Documents/Showpass/repos/web-app`, commit `f256abdedc4d6151887ac7f780c4a38a4d063696`.
 * **F:** `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`, commit `11d42e80a07e0c06578a324c923e1d0af3ccad05`.
 * **A:** `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`, current local source, automation pattern only.
@@ -87,7 +91,7 @@ Snapshot reads used `git show <commit>:<known-path>` and content searches at the
 | B7 | `apps/venues/constants/constants.py` | Permission labels and required authentication for Manage Organization Info. |
 | F1 | `packages/core/src/app-contexts/dashboard/features/organization/settings/customer-refunds/` → `constants/customer-refund-policy-form-fields.ts`, `utils/customer-refund-policy-utils.ts`, `ui/pages/CustomerRefundPolicyPage.web.tsx` | Visible labels, conditional inputs, clearing hidden cutoff values, save and loading/error states; venue timezone. |
 | F2 | Same feature → `ui/components/CustomerRefundPolicyStatusNote.web.tsx`, `data/services/useVenueBasedCustomerRefundPolicyService.ts` | Shared item status text, venue-scoped query, query invalidation after save. |
-| F3 | `packages/core/src/app-contexts/dashboard/features/organization/constants/organization-config.ts`; `packages/core/src/app-contexts/dashboard/constants/dashboard-routes/organization.ts` | Organization → Organization settings → Customer refunds; current route `/manage/organization/settings/customer-refunds`; no dedicated feature flag on this route. |
+| F3 | `packages/core/src/app-contexts/dashboard/features/organization/constants/organization-config.ts`; `packages/core/src/app-contexts/dashboard/constants/dashboard-routes/organization.ts` | Organization → Organization settings → Customer refunds; current route `/manage/organization/settings/customer-refunds`. Current source now gates this entry and API with `enable_venue_policy_customer_self_refunds` for the selected organization. |
 | F4 | `packages/core/src/app-contexts/dashboard/features/events/ticket-types/basic-info/` → `form-fields.ts`, `utils.ts`, `Page.web.tsx`; `list/EventTicketTypesTable.web.tsx`, `list/EventTicketTypesPageSections.web.tsx` | Basic info toggle, whole-event save contract, add/edit/copy controls. |
 | F5 | `packages/core/src/app-contexts/dashboard/features/products/` → `ui/components/form/ProductFulfillmentSection.web.tsx`, `ProductForm.web.tsx`, `useProductFormFields.tsx`; `ui/pages/ProductCreatePage.web.tsx`; `utils/product-form-utils.ts`, `utils/product-record-utils.ts`; `constants/products-detail-config.ts` | Starter creation fields, Fulfillment toggle, defaults and section-specific saving, marketplace permission. |
 | A1 | `pages/dashboard/organization/emails/EmailCustomizationPage.ts` | Reusable navigation/page-object and save-response assertion patterns, not existing refund-policy coverage. |
@@ -117,11 +121,12 @@ Standards: [[00 Start Here/World-Class Software Quality Standard]], [[06 Prompts
 * **Enable customer refund policy** and **Customer outcome** are separate settings. The form allows configuration while the policy is disabled. Enabling the policy alone does not change the outcome choice or item switches.
 * The five cutoff choices are No cutoff, Absolute date and time, Before event start, Before item or session start, and Manually closed. Relative cutoffs require a positive whole-number value and Hours or Days. Absolute cutoffs require a date/time; the form displays the organization timezone. Switching type clears irrelevant fields and the save builder sends them empty.
 * Barcode delivery, fulfillment/shipping, check-in/scan, and mixed-order settings are independently stored configuration. Selecting Allow does not prove a processed refund.
+* Current source adds **Refund amounts**: an enable switch, four shipping choices, and two selectable customer-paid fee classes. The form preserves shipping/fee choices while the amount switch is off. Customer amount behavior is covered under SPW-19669.
 * Ticket and product participation starts off. Item switches remain editable while the policy is off; the status note explains that the setting takes effect only after enabling the policy. Enabled status describes the master switch, even when the outcome is blocking or the cutoff is manually closed.
 * Ticket Basic info saves through the event contract, so checking a second ticket type is necessary. Product Fulfillment writes the product switch; it is not a separate switch for each product variant.
 * Policy reads are available to venue employees, but writes require **Manage Organization Info**. The policy page itself is permission-gated. Item editors can read the policy status without having permission to manage the organization policy.
 * Policy creation/deletion is not offered through the organizer API. Reads do not create missing policies. New-venue provisioning, administrator creation, and the existing-venue bulk backfill can create the record.
-* No runtime consumers of the new item flag were found beyond configuration/copy paths in the reviewed backend snapshot. The existing customer return serializer still uses the legacy enablement check. Do not use the new controls as a substitute for setting up an actual customer refund flow.
+* This note originally reviewed configuration at the supplied 2026-09 commits. Current source now applies the policy and item switch to customer eligibility behind `enable_venue_policy_customer_self_refunds`; completed returns are covered by SPW-19668–SPW-19671. Saving the form alone still does not prove a refund.
 
 ## Prerequisites and Recommended Test Data
 
@@ -137,8 +142,8 @@ Standards: [[00 Start Here/World-Class Software Quality Standard]], [[06 Prompts
 
 | Capability                              | Required setup                                                                                                                           | Where / who                                                                                                                    |
 | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Display the customer refund policy page | No dedicated refund feature flag; Manage Organization Info permission; create a missing policy through administration as described below | Dashboard → Organization → Organization settings → Customer refunds. An employee who manages roles grants the permission.      |
-| Dashboard menu entry                    | `use_manage_page` active for the organization                                                                                            | Showpass administrator → Feature Flags. This controls the Dashboard navigation entry, not the refund API.                      |
+| Display the customer refund policy page | `enable_venue_policy_customer_self_refunds` on for selected organization; Manage Organization Info permission; create a missing policy through administration as described below | Dashboard → Organization → Organization settings → Customer refunds. |
+| Customer-policy rollout                 | `enable_venue_policy_customer_self_refunds` active for the selected organization                                                          | Showpass Admin → Feature Flags. This gates the policy API and customer-policy behavior.                                        |
 | Edit a ticket type's refund switch      | Events module enabled; Manage Events permission                                                                                          | Dashboard → Build → Events → All events → select the event → Tickets → Edit ticket type → Basic info. No separate refund flag. |
 | Edit a product's refund switch          | Manage Marketplace permission; organization not on Basic pricing tier                                                                    | Dashboard → Build → Products → All products → select the product → Fulfillment. No shipping flag required.                     |
 | Copy a ticket type, TC-9 only           | `enable_ticket_type_copy` active for the organization                                                                                    | Showpass administrator → Feature Flags.                                                                                        |
@@ -276,6 +281,9 @@ Expected form fields:
 | Eligibility restrictions | After fulfillment or shipping | Block customer refunds; Allow customer refunds. |
 | Eligibility restrictions | After check-in or scan | Block customer refunds; Allow customer refunds. |
 | Eligibility restrictions | Orders with mixed eligibility | Refund eligible items independently; Require the whole remaining order; Block when any remaining item is ineligible. |
+| Refund amounts | Enable configurable refund amounts | On/off switch. |
+| Refund amounts | Shipping refund rule | Never refund shipping; Refund after all shipped items sharing the charge are refunded; Refund shipping proportionally; Refund shipping for unshipped items only. Shown when amount rules are on. |
+| Refund amounts | Refundable customer-paid fees | Multi-select: Showpass fee; Payment processing fee. Empty means neither fee class is refundable. Shown when amount rules are on. |
 | Page footer | Save | Saves the policy form. |
 
 For **No cutoff** or **Manually closed**, the date, number, and unit fields are hidden. For the other cutoff choices, only the fields needed for that choice appear.
@@ -289,6 +297,7 @@ Language: English, French
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * Choose the case's English or French language in Dashboard. On a narrow screen, open the profile button → Main menu → choose the language; then widen the screen again. Check that labels, messages, and errors appear in the chosen language.
 * Employee permission: **Manage Organization Info**.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
@@ -299,7 +308,7 @@ In a French run, use the French equivalents of the English control names below. 
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Open Dashboard → Organization → Organization settings → Customer refunds. | | Customer refund policy, Refund cutoff, and Eligibility restrictions sections appear, with Save at the bottom. |
+| Open Dashboard → Organization → Organization settings → Customer refunds. | | Customer refund policy, Refund cutoff, Eligibility restrictions, and Refund amounts sections appear, with Save at the bottom. |
 | Inspect Customer refund policy. | | Enable customer refund policy is off and Customer outcome is Customers cannot initiate refunds. |
 | Inspect Refund cutoff. | Saved cutoff recorded before execution | Cutoff type and its applicable date/time or duration fields show the saved values listed for that field type above. |
 | Inspect Eligibility restrictions. | Recorded policy values | All four restriction fields are visible and show the organization’s saved selections. |
@@ -347,6 +356,7 @@ CutoffScenario: AbsoluteDateTime, EventHours, EventDays, ItemHours, ItemDays, No
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * Choose the case's English or French language in Dashboard. On a narrow screen, open the profile button → Main menu → choose the language; then widen the screen again. Check that labels, messages, and errors appear in the chosen language.
 * Employee permission: **Manage Organization Info**.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
@@ -396,6 +406,7 @@ InvalidCutoff: MissingDateTime, MissingValue, MissingUnit, ZeroValue, NegativeVa
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * Choose the case's English or French language in Dashboard. On a narrow screen, open the profile button → Main menu → choose the language; then widen the screen again. Check that labels, messages, and errors appear in the chosen language.
 * Employee permission: **Manage Organization Info**.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
@@ -446,6 +457,7 @@ PolicyChoice: BarcodeAllow, ShippingAllow, ScanAllow, EligibleItemsOnly, WholeRe
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * Choose the case's English or French language in Dashboard. On a narrow screen, open the profile button → Main menu → choose the language; then widen the screen again. Check that labels, messages, and errors appear in the chosen language.
 
 * Employee permission: **Manage Organization Info**.
@@ -493,6 +505,7 @@ ItemType: TicketType, Product
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * Choose the case's English or French language in Dashboard. On a narrow screen, open the profile button → Main menu → choose the language; then widen the screen again. Check that labels, messages, and errors appear in the chosen language.
 * Employee permissions: **Manage Organization Info**, plus **Manage Events** for TicketType or **Manage Marketplace** for Product.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
@@ -554,6 +567,7 @@ SettingPage: OrganizationPolicy, TicketType, Product
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * Employee permission: **Manage Organization Info** for OrganizationPolicy, **Manage Events** for TicketType, or **Manage Marketplace** for Product.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
 * TicketType: For tickets, enable the Events module. Use an unpublished, nonrecurring event with a saved timezone, future dates, and no sales. In its Tickets page, add **Refund Ticket**, price **10.00**, inventory **10**, then Save; an existing ticket with these conditions can be reused.
@@ -583,6 +597,7 @@ SettingPage: OrganizationPolicy, TicketType, Product
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * The employee being checked has **Manage Events** and **Manage Marketplace**, but does not have **Manage Organization Info** or full administrator access. A separate employee with **Manage Organization Info** prepares the policy and checks it afterward.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
 * For tickets, enable the Events module. Use an unpublished, nonrecurring event with a saved timezone, future dates, and no sales. In its Tickets page, add **Refund Ticket**, price **10.00**, inventory **10**, then Save; an existing ticket with these conditions can be reused.
@@ -620,6 +635,7 @@ SettingPage: OrganizationPolicy, TicketType, Product
 
 **Preconditions:**
 
+* Both organizations are included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * Employee permission: **Manage Organization Info** in both organizations. Record their names as the first and second organization for this run.
 * Admin → Venue customer refund policy: find each organization’s existing record. If missing, Add → select that organization in Venue → leave defaults → Save.
 * Record both policies’ original settings. In Dashboard Customer refunds, save Before event start → 48 Hours for the first organization and No cutoff for the second. Reload each.
@@ -656,6 +672,7 @@ OriginalRefundChoice: Enabled, Disabled
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * Employee permission: **Manage Events** and access to the prepared event.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. This is a separate record from the Venue page.
 * For tickets, enable the Events module. Use an unpublished, nonrecurring event with a saved timezone, future dates, and no sales. In its Tickets page, add **Refund Ticket**, price **10.00**, inventory **10**, then Save; an existing ticket with these conditions can be reused.
@@ -693,6 +710,7 @@ Language: English, French
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * Employee permissions: **Manage Organization Info**, **Manage Events**, and **Manage Marketplace**; Events module enabled and organization on a non-Basic plan.
 * Ask a Showpass administrator for an organization whose customer refund policy was just created and has not been edited. In Showpass Admin → Venue customer refund policies, search for that organization; if it has no record, select Add → choose the organization in Venue → leave all other fields untouched → Save. Do not reset an edited policy to imitate defaults.
 * Create a ticket named **Default Refund Ticket**, price **10.00**, inventory **10**, in an unpublished, nonrecurring event with future dates, a timezone, and no sales. Save without editing its customer-refund switch.
@@ -706,6 +724,7 @@ Language: English, French
 | Inspect Cutoff type. |  | No cutoff is selected and date/duration inputs are absent. |
 | Inspect the delivery, fulfillment, and check-in settings. |  | All three show Block customer refunds. |
 | Inspect Orders with mixed eligibility. |  | Block when any remaining item is ineligible is selected. |
+| Inspect Refund amounts. | | Enable configurable refund amounts is off; when turned on for inspection, Shipping refund rule defaults to Never refund shipping and no fee class is selected. Turn it off again without saving. |
 | Open the event → Tickets → Edit Default Refund Ticket → Basic info. |  | Allow customer-initiated refunds is off and the disabled-policy warning appears in the selected language. |
 | Open Build → Products → All products → Default Refund Product → Fulfillment. |  | Allow customer-initiated refunds is off and the disabled-policy warning appears in the selected language. |
 
@@ -726,6 +745,7 @@ Language: English, French
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * Employee permission: **Manage Organization Info**.
 * In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save.
 * In Showpass Admin → Feature Flags, turn **enable_organization_settings_nextjs_embed** off for this organization so the older Organization Info tabs appear. Record its original value for restoration.
@@ -763,6 +783,7 @@ ItemType: TicketType, Product
 
 **Preconditions:**
 
+* The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * Employee permissions: **Manage Organization Info**, item-editing permission (**Manage Events** or **Manage Marketplace**), and the existing permissions needed to open the selected transaction’s Refund action.
 * Admin → Venue customer refund policy: search the organization. Reuse its record, or Add → select Venue → leave defaults → Save.
 * Use an existing paid, unrefunded card order containing one ticket for TicketType or one product for Product. Record its transaction identifier from Transactions, the item name, and its event/product editor. Do not use orders with pending refunds or activity by another employee.
@@ -880,7 +901,7 @@ TC-1 tests saved changes. TC-10 now covers first-time policy and item defaults f
 * The organizer can use the migrated Dashboard pages; a legacy page that lacks the new switch does not establish that the configuration is absent from the backend.
 * Exact organizations, credentials, category, event, product, and account permissions have not been verified. Proposed names must be created/provided before execution.
 * Event creation, account provisioning, and category creation are environment setup dependencies; only the relevant ticket/product configuration paths were traced in detail.
-* There is no dedicated customer-refunds flag on the reviewed organization route. Dashboard navigation, Events module, product pricing-tier, and ticket-copy gates are listed under Required flags, modules, and permissions.
+* The supplied 2026-09 commits had no dedicated customer-refunds gate. Current source adds `enable_venue_policy_customer_self_refunds` for the selected organization. The cases now include it; existing SPT-5250–5255 wording in Qase has not been updated in this turn.
 * No business maximum for relative cutoff duration, runtime boundary inclusivity, blocked-reason contract, or recurring-session eligibility rule is established by this configuration work.
 * No actual defect is confirmed. All behavior claims are source-backed; all manual results remain not executed.
 
