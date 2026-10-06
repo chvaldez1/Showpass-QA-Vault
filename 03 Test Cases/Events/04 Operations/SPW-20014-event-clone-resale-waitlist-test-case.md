@@ -37,8 +37,8 @@ We are testing whether an organizer can clone an event that uses resale and wait
 
 | Proof Target | Why It Matters | Covered By |
 | --- | --- | --- |
-| Every destination resale and waitlist value is off or undefined after a fresh read. | Prevents cross-event ownership and fulfillment errors. | TC-1; backend automated coverage |
-| The source event remains configured after cloning. | Prevents the clone operation from mutating live source behavior. | TC-1; backend automated coverage |
+| Every destination resale and waitlist value is off or undefined after a fresh read. | Prevents cross-event ownership and fulfillment errors. | SPT-5154; backend automated coverage |
+| The source event remains configured after cloning. | Prevents the clone operation from mutating live source behavior. | SPT-5154; backend automated coverage |
 | An invalid destination resale submission cannot be created. | Prevents customers from reselling against the wrong event. | Backend/API automated coverage; the off-or-undefined destination state removes the customer resale entry point. |
 
 ## Jira Intake Summary
@@ -49,7 +49,7 @@ SPW-20014 reports that Churchill's 2026 ticket types inherited active resale set
 
 - Jira description and acceptance criteria pasted by the user; live Jira fetch was not executed because the vault `.env` lacks Jira credentials.
 - Backend:
-  - `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/venue_based/serializers/serializers.py` — `VenueBasedEventSerializer._disable_clone_resale_and_waitlist`
+  - `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/venue_based/serializers/events.py` — `VenueBasedEventSerializer._disable_clone_resale_and_waitlist`
   - `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/tests/test_api_venue_based_event_clone.py` — `test_create_clone__disables_resale_and_waitlist_configuration`
 - Frontend:
   - `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/event-clone/constants/event-clone-contract.ts`
@@ -79,7 +79,7 @@ SPW-20014 reports that Churchill's 2026 ticket types inherited active resale set
 | --- | --- | --- |
 | Actor | Organizer with event-management access | Owns the Dashboard clone workflow. |
 | Entry point | Dashboard Events card menu → **Clone** | Source-confirmed full-event clone path. |
-| Source ticket state | Original resale ticket pair plus a separate waitlisted ticket type | Covers the complete acceptance-criteria fixture in one clone. |
+| Source ticket state | Original resale ticket pair plus a separate waitlisted ticket type | Covers the complete acceptance-criteria test setup in one clone. |
 | Destination state | New draft event | Source-confirmed clone result. |
 | Outcome | Clean successful clone | Proves the off-or-undefined destination state independently of error or recovery behavior. |
 
@@ -87,9 +87,9 @@ SPW-20014 reports that Churchill's 2026 ticket types inherited active resale set
 
 | Item | Type | Risk | Coverage | Evidence | Gap / Decision |
 | --- | --- | --- | --- | --- | --- |
-| Destination resale off or undefined | Persisted ticket setup | Cross-event resale | Manual: TC-1; automated persistence | Backend serializer and regression test | None |
-| Destination waitlist off or undefined | Persisted ticket setup | Cross-event waitlist | Manual: TC-1; automated persistence | Backend serializer and regression test | None |
-| Source setup unchanged | Mutation isolation | Live source regression | Manual: TC-1; automated persistence | Backend regression test | None |
+| Destination resale off or undefined | Persisted ticket setup | Cross-event resale | Manual: SPT-5154; automated persistence | Backend serializer and regression test | None |
+| Destination waitlist off or undefined | Persisted ticket setup | Cross-event waitlist | Manual: SPT-5154; automated persistence | Backend serializer and regression test | None |
+| Source setup unchanged | Mutation isolation | Live source regression | Manual: SPT-5154; automated persistence | Backend regression test | None |
 | Invalid resale submission rejected | API validation/downstream effect | Wrong-event resale | Automated: validation/downstream effect | Off-or-undefined destination relationship and backend regression | No safe manual submission path should exist. |
 | Explicit copy and remap | Alternate clone mode | Unsafe mapping | Not applicable | No reviewed UI or source implementation offers this choice. | Add focused coverage if Product introduces it. |
 | Existing-data audit/cleanup | Operational maintenance | Stale production relationships | Deferred | Jira acceptance criterion only | Requires the approved audit artifact or cleanup procedure. |
@@ -105,7 +105,7 @@ SPW-20014 reports that Churchill's 2026 ticket types inherited active resale set
 
 ## Qase-Ready Manual Test Case
 
-TC-1: Dashboard - Event Cloning - Verify resale and waitlist settings are not copied
+### SPT-5154: Dashboard - Event Cloning - Verify resale and waitlist settings are not copied
 
 **Description:** Verify that an organizer can clone an event containing a resale ticket pair and a waitlisted ticket type. On the destination event, each resale and waitlist value must be off or undefined, while the source event remains unchanged.
 
@@ -154,7 +154,7 @@ TC-1: Dashboard - Event Cloning - Verify resale and waitlist settings are not co
 
 ## Minimum Execution Set
 
-- TC-1 on Dashboard Desktop using the complete three-ticket source fixture.
+- SPT-5154 on Dashboard Desktop using the complete three-ticket source test setup.
 
 ## Suggested Automated Coverage
 
@@ -164,13 +164,13 @@ TC-1: Dashboard - Event Cloning - Verify resale and waitlist settings are not co
 
 ## Open Questions
 
-- Which approved operational artifact will identify and clean up existing cross-event resale relationships? This does not block TC-1 or the one-case Qase draft, but it remains an unverified acceptance criterion outside this manual case.
+- Which approved operational artifact will identify and clean up existing cross-event resale relationships? This does not block SPT-5154 or the one-case Qase draft, but it remains an unverified acceptance criterion outside this manual case.
 
 ## Qase Target
 
-- Action: Create one new case after explicit approval
+- Action: Existing case; local reference only. No Qase write in this refactor
 - Project: SPT
 - Suite: 84
-- Local draft label: TC-1
+- Existing case: [SPT-5154](https://app.qase.io/case/SPT-5154)
 - Tags: dashboard, resale, waitlists
 - Step count: 15

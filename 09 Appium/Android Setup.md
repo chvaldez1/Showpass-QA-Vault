@@ -107,7 +107,7 @@ Replace the example serial if yours differs. Expected output is `1`. Every Andro
 
 ## 4. Check the Appium driver
 
-From `showpass-appium`:
+From `appium-pof`:
 
 ```sh
 npx appium driver doctor uiautomator2

@@ -19,13 +19,13 @@ Quit any existing automated Safari session. In Terminal:
 /usr/bin/safaridriver --enable
 ```
 
-Enter your Mac administrator password if requested. If permission is denied, repeat this one setup command with `sudo`. Safari's **Develop → Allow Remote Automation** setting should then be enabled. If Develop is hidden, enable web developer features under Safari's Advanced settings.
+Enter your Mac administrator password if requested. The terminal will not show characters while you type it. If permission is denied, repeat this one setup command with `sudo`. In Safari, also check **Develop → Allow Remote Automation**. If Develop is hidden, turn on **Show features for web developers** in **Safari → Settings → Advanced** first. A Mac can still reject the Appium session with “You must enable Allow remote automation” until that Safari menu setting is on.
 
 This is a one-time setting on your Mac. Do not start `safaridriver` manually; the Appium Safari driver starts it when the test runs.
 
 ## 2. Run the desktop test
 
-From `showpass-appium`:
+From `appium-pof`:
 
 ```bash
 export TARGET=desktop-safari
@@ -50,7 +50,7 @@ xcrun simctl list runtimes
 xcrun simctl list devices available
 ```
 
-If your Xcode app has a different name, use its actual path. The selected Xcode must support the installed iOS runtime. The reviewed Mac already has Xcode 26.6; the steps above identify its available simulators without assuming an iPhone name.
+If your Xcode app has a different name, use its actual path. The selected Xcode must support the installed iOS runtime. The Mac inspected on 2026-10-03 has Xcode 27.0; use the inventory commands to identify your currently selected Xcode and available simulators.
 
 From the test project, check XCUITest prerequisites:
 
@@ -58,7 +58,7 @@ From the test project, check XCUITest prerequisites:
 npx appium driver doctor xcuitest
 ```
 
-Resolve **required** failures before continuing. Optional utilities for video or image comparison are not needed for these starter tests. The pinned XCUITest version supports the newer iOS 26.4+ WebDriverAgent requirements.
+Resolve **required** failures before continuing. Optional utilities for video or image comparison are not needed for these starter tests. The project pins its XCUITest driver in `package-lock.json`; use the doctor result for the Xcode/runtime actually installed.
 
 ## 4. Create and start a dedicated simulator
 
@@ -80,7 +80,7 @@ A **UDID** uniquely identifies the device. Use the ID instead of a guessed devic
 
 ## 5. Run the iPhone Safari test
 
-From the same terminal in `showpass-appium`:
+From the same terminal in `appium-pof`:
 
 ```bash
 export TARGET=ios-safari

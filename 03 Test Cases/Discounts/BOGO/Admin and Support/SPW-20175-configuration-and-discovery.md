@@ -1,0 +1,68 @@
+---
+title: "SPW-20175 \u2014 V1 internal configuration and discovery"
+date: 2026-10-04
+tags:
+  - qa/bogo
+status: Local draft; all cases unexecuted
+---
+
+# SPW-20175 — V1 internal configuration and discovery
+
+[[03 Test Cases/Discounts/BOGO/00 Start Here|Start Here]] · [[03 Test Cases/Discounts/BOGO/01 Acceptance Criteria|Acceptance map]]
+
+## Sources Reviewed
+
+- [Jira SPW-20175](https://showpass.atlassian.net/browse/SPW-20175) — [Fan Expo P2] BOGO Backend: Add internal configuration and automatic discovery; status BETA QA; description, comments, parent, subtasks and links read. Priority: Medium.
+- Product Planning: revised technical plan, Product Requirements, Solution Design, Discounts & BOGO and client handoff read through the Coda connector. Document conflicts/phases are retained in the acceptance map.
+- [discounts.py](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/financials/admin/discounts.py>)
+- [buy_get_discount_cache.py](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/venues/services/pricing/buy_get_discount_cache.py>)
+- [auto_discount.py](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/services/financials/auto_discount.py>)
+- [test_buy_get_discount_cache_service.py](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/venues/tests/test_buy_get_discount_cache_service.py>)
+- [test_buy_get_discount_cache_updates.py](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/venues/tests/test_buy_get_discount_cache_updates.py>)
+- [test_buy_get_discount_cache_concurrency.py](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/venues/tests/test_buy_get_discount_cache_concurrency.py>)
+
+## Testing Intent
+
+We are testing whether the relevant actor can complete this card’s V1 workflow while quantities, permissions and saved money remain correct; this matters because an incorrect offer can overcharge, over-discount or leave inconsistent tickets, and we will prove it through saved configuration, basket, order and lifecycle evidence appropriate to this slice.
+
+| Field | Scope |
+| --- | --- |
+| Criticality / invariant | Money, inventory, financial math and permission safety; selected quantities and saved values stay correct |
+| Actor impact / failure | Customers, Organizers and Operations; incorrect rewards, charges, ownership or access |
+| Observable proof / surfaces | Named actor workflow and owning-layer checks below; fresh saved configuration/order/adjustment read |
+| Source of truth / scope | Backend first; frontend for visible paths; exact card requirements mapped separately |
+| Out of scope / confidence | No live execution, diffs or external writes; High source confidence, draft manual/revision confidence limited by named gaps |
+
+## Source-backed Behavior
+
+Only complete public/nondeleted same-event ticket graphs are cached. All BOGOs are discovered separately from the regular-auto cap. Gates include BOGO/multi-auto switches, Venue automatic/multiple controls, Standard/Premium tier, allowlist, dates and checkout locations. On-commit refresh hooks invalidate changes; the derived cache must not be hand-edited.
+
+## Recommended Test Data and Setup
+
+Use the actor guide’s preparation procedure, then repeat each selected case’s own Preconditions. Default calculator data: one published event, standalone $20 tickets, controlled customer, unused promotion and independent fee/tax settings. For permissions use a minimum allowed Employee and a denied Employee in the same selected Venue; foreign Venue data is an API-only scoped negative. Record original settings and preserve completed transactions.
+
+## Cases and Verification
+
+Admin create/inspect/edit/disable/re-enable procedure; TC-O04; backend complete/incomplete/foreign/unsupported graphs, every gate off, regular-auto cap unchanged, constant query budgets, concurrent invalidation and ordered cache refresh.
+
+## Risk Areas
+
+Source presence is not deployed proof. Partial saved graphs, stale baskets, per-discount rounding, financial representation, restricted access and overlapping promotions must be checked at their owning layer. A temporary reservation is not completed usage; a success toast is not payment/fulfillment evidence.
+
+## Minimum Execution Set
+
+Run the card’s focused owning-layer checks above, then the relevant clean purchase and saved-state smoke. Backend V1 smoke is TC-C01 → TC-C02 → TC-B01 → TC-O01; additional cases follow risk, not a full Cartesian product. For planning/UI-unavailable cards, the minimum is a concrete review/revision receipt, not invented clicks.
+
+## Suggested Automated Coverage
+
+Use the owning-layer checks in Cases and Verification above. Calculation/validation/cache/race/provider work belongs in backend tests; saved browser journeys belong in Playwright. Configuration, independent assertions and safe restoration are mandatory.
+
+Existing patterns: [PublicCheckoutDiscounts.ts](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/pages/public/checkout/PublicCheckoutDiscounts.ts>) (web/Widget summary and code handling), [dashboard-discounts.ts](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/fixtures/helpers/dashboard-discounts.ts>) and checkout-journey composition. Extend independent expected amounts, purchase references, saved allocation, ticket count, inventory and cleanup. The repository search found no named BOGO-specific automation; no absence claim is made about all generic coverage. Backend evaluator/oracle, model, cache, race, provider, financial and usage tests are references only, not passing execution evidence.
+
+## Assumptions and Unknowns
+
+Admin schedule fields are read-only; date-bound configuration needs a supported timezone-aware writer. Incomplete graph exclusion is not the same as rejecting every root Discount save. All cases and planned checks are unexecuted. User clarified V1 phased delivery; document differences are noted as phase/revision distinctions without claiming deployed defects.
+
+## Open Questions
+
+Which exact candidate revision/deployment is intended for this card’s execution? Which phase accepts any source/document difference relevant to this card? Record the answer with the execution receipt; no answer is required to finish these local drafts.

@@ -10,16 +10,18 @@ Start here to test [Showpass beta](https://beta.showpass.com/) in **actual deskt
 
 ## Follow this order
 
-1. [[09 Appium/Common Setup|Common Setup]] — install Appium and create a separate automation project.
-2. [[09 Appium/Test Project|Test Project]] — add the shared configuration, tests, and reports once.
+1. [[09 Appium/Common Setup|Common Setup]] — install Appium in the existing `appium-pof` project.
+2. [[09 Appium/Test Project|Test Project]] — find the runnable code and generated reports in `appium-pof`.
 3. [[09 Appium/Native Safari|Native Safari]] — run desktop Safari first, then Safari in an iPhone simulator on your Mac.
-4. [[09 Appium/CI|CI]] — run those same Safari tests in GitHub Actions.
+4. [[09 Appium/CI|CI]] — run those same Safari tests from `appium-pof` in GitHub Actions.
 5. [[09 Appium/Android Setup|Android Setup]] — prepare your Windows computer or Mac for Android.
 6. [[09 Appium/WebView|WebView]] — switch between app controls and an embedded web page, using small iOS and Android sample apps.
 7. [[09 Appium/Showpass Mobile App|Showpass Mobile App]] — install a beta build from the frontend repo, test app launch, and inspect its real WebViews.
-8. Return to [[09 Appium/CI#Add WebView and Showpass app jobs|CI: add app jobs]] after each corresponding local test passes.
+8. [[09 Appium/iPhone Ticket Purchases|iPhone Ticket Purchases]] — follow the separate public and mobile Box Office purchase cases after the beta app launches.
+9. [[09 Appium/Organizer Dashboard Navigation|Organizer Dashboard Navigation]] — check that each of the eight iPhone Organizer tiles opens its screen.
+10. Return to [[09 Appium/CI#Add WebView and Showpass app jobs later|CI: add app jobs]] after each corresponding local test passes.
 
-Each note owns a different part of setup. Node/Appium installation lives only in Common Setup; configuration and reusable tests live only in Test Project; device setup lives in Native Safari or Android Setup.
+Each note owns a different part of setup. Node/Appium installation lives in Common Setup; the actual configuration and tests live in `/Users/christianvaldez/Documents/personal/appium-pof`; device setup lives in Native Safari or Android Setup.
 
 ## What runs where
 
@@ -37,29 +39,28 @@ Windows and Android do not run current native Safari. Android WebView coverage d
 
 - **Appium:** the service that receives test commands and passes them to a device or browser.
 - **Driver:** the adapter for a platform, such as Safari or XCUITest.
-- **WebdriverIO (WDIO):** the JavaScript test runner used throughout these notes.
+- **WebdriverIO (WDIO):** the runner for this project's TypeScript tests.
 - **Capabilities:** settings that tell Appium which browser, device, and app to open.
 - **Context:** the part of a hybrid app you control. `NATIVE_APP` exposes app controls; `WEBVIEW_…` exposes the embedded page's HTML.
 
 ## What the first pass proves
 
-The supplied tests establish browser connectivity, beta-page loading, app launch, and WebView switching. They do not prove login, checkout, payments, refunds, ticket delivery, permissions, or release readiness. Add those as separate proof targets under [[00 Start Here/World-Class Software Quality Standard]]. These first tests do not submit purchases or change Showpass records.
+The Safari starter tests check browser connectivity and beta-page loading. The iPhone app launch, native Explore → WebView checkout, and one public Comic Con purchase have now been exercised locally. Those results do not prove the native mobile Box Office, Android, Safari purchase, physical-device behavior, or release readiness. Keep separate proof targets under [[00 Start Here/World-Class Software Quality Standard]].
 
 | Milestone | Evidence to keep | Execution status |
 | --- | --- | --- |
-| Desktop Safari and iPhone Safari | Passing test, screenshot, OS/browser/driver versions | Not run during this documentation review |
-| Android and iOS sample WebViews | Passing test including return to native context | Not run |
-| Showpass beta app | Build identity, foreground app, visible usable screen | Source setup reviewed; app not launched |
-| Showpass app WebView | Context list, expected beta URL, inspected native entry steps | Debugging enabled in source; runtime proof still needed |
-| GitHub Actions | Green jobs and downloadable logs/reports | Workflow examples supplied; not activated |
+| Desktop Safari and iPhone Safari | Passing test, screenshot, OS/browser/driver versions | Desktop Safari remote-automation permission blocked; iPhone Safari attempt inconclusive |
+| Android and iOS sample WebViews | Passing test including return to native context | Sample apps not built; not run |
+| Showpass beta app | Build identity, foreground app, visible usable screen | Beta 3.6.7 (135) launched on iOS 18.6 and 26.3 simulators |
+| Showpass app WebView | Context list, expected beta URL, inspected native entry steps | Public Comic Con WebView and native checkout controls observed on iOS 18.6 |
+| iPhone ticket purchases | Public and mobile Box Office orders, payment/ticket evidence | One $25.46 public WebView order and ticket verified; native mobile Box Office pending |
+| GitHub Actions | Green jobs and downloadable logs/reports | Safari workflow file created locally; not pushed or run |
 | Physical devices and product workflows | Device-specific cases and outcomes | Deferred until local and simulator CI pass |
+
+The user reports TestFlight **3.7.2 (180)** as the current iPhone build. The local simulator results in this table are for **3.6.7 (135)** and do not verify the TestFlight build; see [[09 Appium/Showpass Mobile App]].
 
 ## Review baseline
 
-Reviewed on 2026-09-19 against the local frontend checkout and official tool documentation. The Mac has Apple Silicon, Node 22.21.1, npm 10.9.4, and Xcode 26.6. Appium was not found on the current shell's path. Installed simulator runtimes could not be verified from the restricted review session; use the inventory step in Native Safari.
+Updated 2026-10-03. The Mac has Node 26.3.0 as its global version and Xcode 27.0. Use Node 24 LTS from `.node-version` in `appium-pof`; the public no-submit checkout passed under Node 24.21.0 on iOS 18.6 using the already-installed app. The project pins Appium and its drivers in `package-lock.json`. Desktop Safari permission, Windows execution, and GitHub Actions runs remain unverified. Continue with [[09 Appium/Native Safari]] for Safari setup and [[09 Appium/iPhone Ticket Purchases]] for the purchase evidence.
 
-Source references and platform-specific troubleshooting are kept in the relevant notes below this index.
-
-For the recommended runtime versions, follow [[09 Appium/Common Setup#Version policy|the shared 2026 version policy]]. The installed versions recorded above describe the inspected machine; they are not all the recommended versions for a fresh setup.
-
-Documentation checks: internal links and source paths resolve; JavaScript, shell, YAML, and XML examples pass syntax checks; all six target configurations and missing-input guards were evaluated without launching devices. The index and shared test instructions were also checked in Obsidian reading view. Browser sessions, native builds, Windows execution, and CI remain unexecuted.
+The tool versions for this project are recorded in `appium-pof/package.json` and `package-lock.json`. Follow [[09 Appium/Common Setup#Version policy|the shared version policy]] for why they are pinned. Product source remains in the backend/frontend repositories; the beta URL is the system under test, not a repository of test code.

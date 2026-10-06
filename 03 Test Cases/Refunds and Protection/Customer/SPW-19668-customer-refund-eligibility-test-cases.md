@@ -12,7 +12,21 @@ tags:
 # Customer Refund Eligibility Test Cases
 
 > [!important] Scope
-> This card tests whether the venue policy and each purchased item's switch control customer return eligibility. Organization and item form editing is covered in [[SPW-19667-customer-refund-policy-test-cases]]. Completed refund accounting and recovery are in [[SPW-19671-customer-self-refund-acceptance-test-cases]]. These are unexecuted local drafts; Qase was not accessed.
+> This card tests whether the venue policy and each purchased item's switch control customer return eligibility. Organization and item form editing is covered in [[SPW-19667-customer-refund-policy-test-cases]]. Completed refund accounting and recovery are in [[SPW-19671-customer-self-refund-acceptance-test-cases]]. The cases are unexecuted; the publication section below identifies the published base cases.
+
+## Qase publication
+
+Published and verified **2026-10-05** after user approval in [Customer (1108)](https://app.qase.io/project/SPT?suite=1108). Saved fields, parameters, tags, steps, and suite placement matched the local cases. Publication does not mean execution.
+
+| Local draft | Qase case |
+| --- | --- |
+| TC-1 | [SPT-5309](https://app.qase.io/case/SPT-5309) |
+| TC-2 | [SPT-5310](https://app.qase.io/case/SPT-5310) |
+| TC-3 | [SPT-5311](https://app.qase.io/case/SPT-5311) |
+| TC-5 | [SPT-5312](https://app.qase.io/case/SPT-5312) |
+| TC-8 | [SPT-5313](https://app.qase.io/case/SPT-5313) |
+
+TC-4, TC-6, and TC-7 remain local; see [[SPW-19666-customer-self-refunds-test-cases|the publication map]] for their status.
 
 ## Testing Intent
 
@@ -91,7 +105,7 @@ ItemType: TicketType, Product
 
 * The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * An employee with **Manage Organization Info** saves **Enable configurable refund amounts = off** before this order is purchased; this case uses the basic customer-return amount path.
-* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **After barcode delivery = Allow customer refunds**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**.
 * For TicketType, an employee with **Manage Events** saves **Allow customer-initiated refunds = off** on the purchased ticket type. For Product, an employee with **Manage Marketplace** creates or selects a priced product on a non-Basic organization, sets **Availability → Checkout add-ons → Add to event checkout process** for the event, and saves its **Fulfillment → Allow customer-initiated refunds = off**. Keep the accompanying ticket's switch off so only the product can become selectable.
 * The customer buys the order described by ItemType with a refundable card payment. Record its transaction and the original item switch; do not refund the order.
 
@@ -159,9 +173,9 @@ CutoffScenario: Absolute, EventStart, ItemStart, ManuallyClosed
 **Preconditions:**
 
 * The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
-* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, and the **Cutoff type** from the chosen row; record its original settings.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **After barcode delivery = Allow customer refunds**, and **Cutoff type = No cutoff**; record its original settings. After the purchase below, save the deadline from the selected row before starting the customer check.
 * An employee with **Manage Events** prepares the future event and ticket timing from the row, turns **Allow customer-initiated refunds = on** in ticket Basic info, and saves. The customer buys one paid ticket with a refundable card payment before the cutoff is applied; record the order.
-* Use an unscanned, untransferred ticket and keep barcode delivery, fulfillment, and check-in restrictions from independently blocking it.
+* Use an unscanned, untransferred ticket and leave it unfulfilled and save **After barcode delivery = Allow customer refunds** so barcode delivery does not independently block it.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
@@ -216,8 +230,8 @@ CutoffScenario: Absolute, EventStart, ItemStart, ManuallyClosed
 **Preconditions:**
 
 * The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
-* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Block when any remaining item is ineligible**; record prior settings.
-* An employee with **Manage Events** turns on **Allow customer-initiated refunds** for one ticket type and off for another. The customer buys one paid ticket of each type in one refundable card order; record the transaction.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **After barcode delivery = Allow customer refunds**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Block when any remaining item is ineligible**; record prior settings.
+* An employee with **Manage Events** turns on **Allow customer-initiated refunds** for one ticket type and off for another. The customer buys one paid ticket of each type in one refundable card order; keep both tickets unscanned, unfulfilled, and untransferred, and record the transaction.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |

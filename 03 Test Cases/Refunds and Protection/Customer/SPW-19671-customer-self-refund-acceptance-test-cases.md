@@ -12,7 +12,19 @@ tags:
 # Customer Self-Refund Acceptance Test Cases
 
 > [!important] Scope
-> This card proves successful and failed customer return execution, final order/ticket state, credit, and transaction results. Venue configuration belongs to [[SPW-19667-customer-refund-policy-test-cases]]; eligibility-only cases belong to [[SPW-19668-customer-refund-eligibility-test-cases]]. The Jira acceptance list also needs the now source-present amount and delayed-barcode scenarios in separate notes. These local cases are unexecuted and have not been sent to Qase.
+> This card proves successful and failed customer return execution, final order/ticket state, credit, and transaction results. Venue configuration belongs to [[SPW-19667-customer-refund-policy-test-cases]]; eligibility-only cases belong to [[SPW-19668-customer-refund-eligibility-test-cases]]. The Jira acceptance list also needs the now source-present amount and delayed-barcode scenarios in separate notes. The cases are unexecuted; the publication section below identifies the published base cases.
+
+## Qase publication
+
+Published and verified **2026-10-05** after user approval in [Customer (1108)](https://app.qase.io/project/SPT?suite=1108). Saved fields, parameters, tags, steps, and suite placement matched the local cases. Publication does not mean execution.
+
+| Local draft | Qase case |
+| --- | --- |
+| TC-1 | [SPT-5314](https://app.qase.io/case/SPT-5314) |
+| TC-2 | [SPT-5315](https://app.qase.io/case/SPT-5315) |
+| TC-3 | [SPT-5316](https://app.qase.io/case/SPT-5316) |
+
+TC-4 remains local as additional duplicate-return coverage.
 
 ## Testing Intent
 
@@ -77,9 +89,10 @@ We are testing whether an order owner can complete one allowed return while the 
 
 **Preconditions:**
 
+* The employee checking the completed refund has **Manage Transactions** for the selected organization.
 * The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * An employee with **Manage Organization Info** saves **Enable configurable refund amounts = off** before this order is purchased; this case uses the basic customer-return amount path.
-* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** sets **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**, then saves.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** sets **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **After barcode delivery = Allow customer refunds**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**, then saves.
 * An employee with **Manage Events** sets **Allow customer-initiated refunds = on** in a future event ticket type's **Basic info**. The customer buys exactly one paid ticket with a refundable card payment; record its transaction ID and receipt. Keep it unscanned and untransferred.
 * In Admin → Venue, an authorized administrator sets **Automated return medium = Organizer Credit** and **Automated return refund type = Full refund excluding Showpass fees**. Record the previous values and the customer's starting **Account → Credits → Organizer Credits** balance.
 
@@ -112,10 +125,11 @@ We are testing whether an order owner can complete one allowed return while the 
 
 **Preconditions:**
 
+* The employee checking the completed refund has **Manage Transactions** for the selected organization.
 * The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * An employee with **Manage Organization Info** saves **Enable configurable refund amounts = off** before this order is purchased; this case uses the basic customer-return amount path.
-* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**; record prior settings.
-* An employee with **Manage Events** prepares two paid ticket types for the same future event. Save **Allow customer-initiated refunds = on** for one and **off** for the other. The customer buys one of each in a single refundable card order; record the transaction and both ticket prices.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **After barcode delivery = Allow customer refunds**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**; record prior settings.
+* An employee with **Manage Events** prepares two paid ticket types for the same future event. Save **Allow customer-initiated refunds = on** for one and **off** for the other. The customer buys one of each in a single refundable card order; keep both tickets unscanned, unfulfilled, and untransferred, and record the transaction and both ticket prices.
 * In Admin → Venue, an authorized administrator sets **Automated return medium = Organizer Credit** and records the customer's initial Organizer Credits balance plus the original Venue values.
 
 | Step Action | Data | Expected Result |
@@ -146,9 +160,10 @@ We are testing whether an order owner can complete one allowed return while the 
 
 **Preconditions:**
 
+* The employee checking Transactions has **Manage Transactions**. In Showpass Admin → Venues → Venues, open the selected organization and set **Automated return medium = Organizer Credit**; record its original value and the customer’s starting **Account → Credits → Organizer Credits** balance.
 * The selected organization is included in the `enable_venue_policy_customer_self_refunds` rollout flag.
 * An employee with **Manage Organization Info** saves **Enable configurable refund amounts = off** before this order is purchased; this case uses the basic customer-return amount path.
-* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**; record prior settings.
+* In Showpass Admin → Venue customer refund policies, search by organization name. Open its policy; if none exists, select Add → choose the organization in Venue → Save. An employee with **Manage Organization Info** saves **Enable customer refund policy = on**, **Customer outcome = Customers can self-refund automatically**, **After barcode delivery = Allow customer refunds**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**; record prior settings.
 * An employee with **Manage Events** enables **Allow customer-initiated refunds** for a future event ticket type. The customer buys one paid, unscanned ticket with a refundable card payment. The customer and employee can use separate sessions for the same organization.
 
 | Step Action | Data | Expected Result |
@@ -160,11 +175,13 @@ We are testing whether an order owner can complete one allowed return while the 
 | Choose Manually closed for Cutoff type. |  | The cutoff selection changes. |
 | Select Save. |  | Customer refund policy saved appears. |
 | In the customer session, select Return Order once. |  | The return is rejected, the page shows that the ticket can no longer be returned, and Return Successful does not appear. |
-| Reload the order in My Orders. |  | The ticket remains paid and is not marked returned; no organizer credit or refund transaction was created. |
+| Reload the order in My Orders. |  | The ticket remains paid and is not marked returned. |
+| Open Account → Credits → Organizer Credits. | Recorded starting balance | The organization’s credit balance is unchanged. |
+| As the employee, open Dashboard → Transactions and find the order. | Transaction reference recorded during purchase | No refund or credit adjustment was created for this attempt. |
 
 **Postconditions:**
 
-* Restore the original policy and ticket switch. Keep the order unrefunded.
+* Restore the original policy, ticket switch, and Automated return medium. Keep the order unrefunded.
 
 ### TC-4: My Orders - Refunds - Prevent a second return of an already refunded ticket
 

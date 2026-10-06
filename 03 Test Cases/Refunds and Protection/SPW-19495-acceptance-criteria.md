@@ -122,6 +122,8 @@ The classifications describe the **test design**, not results. No criteria have 
 
 Run [[00 Staff Refund Permissions - How to Test|the Staff guide]]. These criteria are separate from customer self-returns. Use a paid order whose refund types would otherwise be valid, and test **both** the older and newer Dashboard refund dialogs.
 
+**Current-source qualification, 2026-10-05:** S1's unconditional five-row expectation differs from the current backend: **Full admin refund** may be omitted based on order fee calculation and master refund privileges. The newer dialog also uses different names from Team → Permissions; the Staff guide now maps them. Its old-page navigation action expired in current source on 2026-08-17. Keep the Jira criteria below intact, but record these differences and the supported legacy entry point before judging those rows. The new Staff base case checks permission denial and **Partial Refund → Custom amount** on the current dialog; it does not claim all five types or both dialogs have been executed.
+
 | ID | Acceptance criterion in plain language | Where to prove it |
 | --- | --- | --- |
 | S1 | Both Dashboard refund dialogs show all five current refund choices when the refund-type form opens. | Staff guide, both dialogs. |

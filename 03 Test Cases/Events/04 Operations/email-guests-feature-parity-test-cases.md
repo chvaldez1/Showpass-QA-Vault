@@ -34,13 +34,13 @@ We are testing whether an organizer can use `/manage/events/{slug}/email-guests/
 
 | Proof Target | Covered By |
 | --- | --- |
-| Eligible organizers can open and use the Email guests form | TC-1 |
-| Ineligible organizer or event states do not expose a usable form | TC-2 |
-| Required recipient and message input is enforced | TC-3 |
-| A valid submission shows one sending and success flow | TC-4 |
-| Event status controls match the event lifecycle | TC-5 |
-| Refund controls match organizer permission and venue setup | TC-6 |
-| Approval-required content is shown as pending, not sent | TC-7 |
+| Eligible organizers can open and use the Email guests form | SPT-5012 |
+| Ineligible organizer or event states do not expose a usable form | SPT-5013 |
+| Required recipient and message input is enforced | SPT-5014 |
+| A valid submission shows one sending and success flow | SPT-5015 |
+| Event status controls match the event lifecycle | SPT-5016 |
+| Refund controls match organizer permission and venue setup | SPT-5017 |
+| Approval-required content is shown as pending, not sent | SPT-5018 |
 
 ## Declared Scope
 
@@ -67,15 +67,15 @@ The canonical page replaces the Angular page without changing the organizer work
 
 ## Qase Cases
 
-| Local Label | Qase Case |
+| Case ID | Qase Case |
 | --- | --- |
-| TC-1 | [SPT-5012](https://app.qase.io/project/SPT?case=5012&suite=1035) |
-| TC-2 | [SPT-5013](https://app.qase.io/project/SPT?case=5013&suite=1035) |
-| TC-3 | [SPT-5014](https://app.qase.io/project/SPT?case=5014&suite=1035) |
-| TC-4 | [SPT-5015](https://app.qase.io/project/SPT?case=5015&suite=1035) |
-| TC-5 | [SPT-5016](https://app.qase.io/project/SPT?case=5016&suite=1035) |
-| TC-6 | [SPT-5017](https://app.qase.io/project/SPT?case=5017&suite=1035) |
-| TC-7 | [SPT-5018](https://app.qase.io/project/SPT?case=5018&suite=1035) |
+| SPT-5012 | [SPT-5012](https://app.qase.io/project/SPT?case=5012&suite=1035) |
+| SPT-5013 | [SPT-5013](https://app.qase.io/project/SPT?case=5013&suite=1035) |
+| SPT-5014 | [SPT-5014](https://app.qase.io/project/SPT?case=5014&suite=1035) |
+| SPT-5015 | [SPT-5015](https://app.qase.io/project/SPT?case=5015&suite=1035) |
+| SPT-5016 | [SPT-5016](https://app.qase.io/project/SPT?case=5016&suite=1035) |
+| SPT-5017 | [SPT-5017](https://app.qase.io/project/SPT?case=5017&suite=1035) |
+| SPT-5018 | [SPT-5018](https://app.qase.io/project/SPT?case=5018&suite=1035) |
 
 ## Sources Reviewed
 
@@ -102,14 +102,14 @@ The canonical page replaces the Angular page without changing the organizer work
 - `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/email-guests/ui/components/EmailGuestsFormContent.web.tsx`
 - `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/email-guests/ui/pages/EventEmailGuestsPage.web.tsx`
 
-Qase was searched for existing Email Guests cases before creation. No title matches were found. TC-1 through TC-7 were created in suite `1035` as SPT-5012 through SPT-5018 and verified by readback.
+Qase was searched for existing Email Guests cases before creation. No title matches were found. The seven cases were created in suite `1035` as SPT-5012 through SPT-5018 and verified by readback.
 
 ## Assumptions and Unknowns
 
 - `Dashboard` is used as the Qase Platform value for this authenticated organizer page.
 - The test environment has an organizer account with Manage Events permission and another with Manage Financials permission.
-- The environment has disposable event-email fixtures so valid and pending submissions are safe.
-- TC-1 can compare with the legacy page only where the legacy route still renders instead of redirecting.
+- The environment has test event-email test setups so valid and pending submissions are safe.
+- SPT-5012 can compare with the legacy page only where the legacy route still renders instead of redirecting.
 
 ## Source-Backed Behavior
 
@@ -142,24 +142,24 @@ Qase was searched for existing Email Guests cases before creation. No title matc
 
 | Axis | Representative Setup | Covered By |
 | --- | --- | --- |
-| Organizer access | Manage Events; missing Manage Events | TC-1, TC-2 |
-| Event state | Upcoming; past; draft; no ticket types; terminal status | TC-2, TC-5 |
-| Required input | Ticket types selected/empty; message filled/empty | TC-1, TC-3 |
-| Submission result | Success; pending review | TC-4, TC-7 |
-| Financial permission | Manage Events only; Manage Events plus Manage Financials | TC-6 |
-| Refund setup | Exchange eligible/ineligible; package-origin warning present/absent | TC-6 |
+| Organizer access | Manage Events; missing Manage Events | SPT-5012, SPT-5013 |
+| Event state | Upcoming; past; draft; no ticket types; terminal status | SPT-5013, SPT-5016 |
+| Required input | Ticket types selected/empty; message filled/empty | SPT-5012, SPT-5014 |
+| Submission result | Success; pending review | SPT-5015, SPT-5018 |
+| Financial permission | Manage Events only; Manage Events plus Manage Financials | SPT-5017 |
+| Refund setup | Exchange eligible/ineligible; package-origin warning present/absent | SPT-5017 |
 
 ## Coverage Ledger
 
 | UI Item | Coverage |
 | --- | --- |
-| Route, navigation, fields, defaults, warnings | TC-1 |
-| Permission, draft, and no-ticket-type unavailable states | TC-2 |
-| Ticket type and message validation | TC-3 |
-| Sending, disabled action, success, redirect | TC-4 |
-| Upcoming, past, and terminal status presentation | TC-5 |
-| Refund permission and conditional fields | TC-6 |
-| Pending-review presentation | TC-7 |
+| Route, navigation, fields, defaults, warnings | SPT-5012 |
+| Permission, draft, and no-ticket-type unavailable states | SPT-5013 |
+| Ticket type and message validation | SPT-5014 |
+| Sending, disabled action, success, redirect | SPT-5015 |
+| Upcoming, past, and terminal status presentation | SPT-5016 |
+| Refund permission and conditional fields | SPT-5017 |
+| Pending-review presentation | SPT-5018 |
 | Load failure and refund-inventory failure | Automated/deferred because they require controlled request failures |
 | Email delivery, billing, ownership, recurrence, and background processing | Out of scope for this UI-only suite |
 
@@ -178,7 +178,7 @@ Qase was searched for existing Email Guests cases before creation. No title matc
 
 ## Qase-Ready Manual Test Cases
 
-### TC-1: Dashboard - Email Guests - Verify an organizer can use the message form
+### SPT-5012: Dashboard - Email Guests - Verify an organizer can use the message form
 
 **Description:**
 
@@ -215,7 +215,7 @@ Validates the visible Email guests controls, defaults, and basic field interacti
 | Toggle **Attach each guest's tickets as a PDF** on and off. | On, then Off | The checkbox follows the organizer's selection. |
 | Leave the page without selecting **Send email**. | None | No success or pending message appears. |
 
-### TC-2: Dashboard - Email Guests - Verify unavailable organizer and event states
+### SPT-5013: Dashboard - Email Guests - Verify unavailable organizer and event states
 
 **Description:**
 
@@ -227,7 +227,7 @@ Validates that the page does not expose a usable email form when the organizer l
 
 **Preconditions:**
 
-* An account and event fixture exist for every `UnavailableState`.
+* An account and event test setup exist for every `UnavailableState`.
 
 **Postconditions:**
 
@@ -246,7 +246,7 @@ UnavailableState: MissingManageEventsPermission, DraftEvent, EventWithoutTicketT
 | Open `/manage/events/{slug}/email-guests/` directly. | Parameterized slug | Access is denied, a draft-event warning appears, or the page states that the event has no ticket types. |
 | Inspect the page. | None | A usable Ticket types, Subject, Message, and Send email form is not displayed. |
 
-### TC-3: Dashboard - Email Guests - Verify required fields block sending
+### SPT-5014: Dashboard - Email Guests - Verify required fields block sending
 
 **Description:**
 
@@ -280,7 +280,7 @@ MissingInput: NoTicketTypesSelected, EmptyMessage
 | Enter a valid value in the invalid field without submitting. | One ticket type or `Valid event message` | The field now contains valid input. |
 | Leave the page. | None | No email is submitted. |
 
-### TC-4: Dashboard - Email Guests - Verify a valid email submission shows success
+### SPT-5015: Dashboard - Email Guests - Verify a valid email submission shows success
 
 **Description:**
 
@@ -294,7 +294,7 @@ Validates the organizer-visible sending and success flow for a valid event email
 
 * An organizer is signed in with Manage Events permission.
 * An upcoming, non-draft event has at least one ticket type with a reachable guest.
-* The event and email are disposable test data.
+* The event and email are test test data.
 
 **Postconditions:**
 
@@ -305,13 +305,13 @@ Validates the organizer-visible sending and success flow for a valid event email
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Open `/manage/events/{slug}/email-guests/` for the upcoming, non-draft event. | Event slug | The Email guests form loads. |
-| Select one ticket type. | Disposable guest ticket type | Only that ticket type remains selected. |
+| Select one ticket type. | Test guest ticket type | Only that ticket type remains selected. |
 | Enter a subject. | `EG UI success {timestamp}` | The subject remains visible. |
 | Enter a message without cancellation, refund, or postpone wording. | `Please review the updated event entrance details.` | The message remains visible. |
 | Select **Send email** once. | None | The action changes to **Sending...** and cannot be selected again while submission is active. |
 | Wait for the result. | None | One success message shows the number of guests and the browser returns to Event Overview. |
 
-### TC-5: Dashboard - Email Guests - Verify event-status controls follow event state
+### SPT-5016: Dashboard - Email Guests - Verify event-status controls follow event state
 
 **Description:**
 
@@ -342,7 +342,7 @@ Validates the organizer-visible status selector for upcoming, past, and terminal
 | Open Email guests for the event that has ended. | Event slug | **Update event status before sending** is absent. |
 | Open Email guests for the upcoming Cancelled event. | Event slug | The status selector is disabled and states that the event status cannot be changed from this page. |
 
-### TC-6: Dashboard - Email Guests - Verify refund controls follow organizer permission and setup
+### SPT-5017: Dashboard - Email Guests - Verify refund controls follow organizer permission and setup
 
 **Description:**
 
@@ -379,7 +379,7 @@ Validates the organizer-visible refund section, conditional fields, and guidance
 | Turn **Include a refund request** off. | Off | Refund-only fields and guidance are hidden and the ordinary per-email price notice returns. |
 | Leave the page without selecting **Send email**. | None | No email or refund request is submitted. |
 
-### TC-7: Dashboard - Email Guests - Verify approval-required content shows pending review
+### SPT-5018: Dashboard - Email Guests - Verify approval-required content shows pending review
 
 **Description:**
 
@@ -393,7 +393,7 @@ Validates the organizer-visible outcome when email content requires approval. Th
 
 * A non-superuser organizer is signed in with Manage Events permission.
 * The event has one selected ticket type with at least one reachable guest.
-* The event and pending email are disposable test data.
+* The event and pending email are test test data.
 
 **Postconditions:**
 
@@ -404,8 +404,8 @@ Validates the organizer-visible outcome when email content requires approval. Th
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Open `/manage/events/{slug}/email-guests/` for the approval fixture. | Event slug | The Email guests form loads. |
-| Select one ticket type. | Disposable guest ticket type | One ticket type remains selected. |
+| Open `/manage/events/{slug}/email-guests/` for the approval test setup. | Event slug | The Email guests form loads. |
+| Select one ticket type. | Test guest ticket type | One ticket type remains selected. |
 | Enter a subject. | `EG UI pending {timestamp}` | The subject remains visible. |
 | Enter a message containing cancellation wording. | `This cancellation update requires review.` | The message remains visible. |
 | Select **Send email** once. | None | The action changes to **Sending...** and cannot be selected again while submission is active. |
@@ -414,12 +414,12 @@ Validates the organizer-visible outcome when email content requires approval. Th
 
 ## Minimum Execution Set
 
-- TC-1: Message form and field interactions.
-- TC-2: `MissingManageEventsPermission` and `DraftEvent`.
-- TC-3: Both missing-input values.
-- TC-4: Valid submission success.
-- TC-6: Refund section for both organizer permissions.
-- TC-7: Pending-review outcome.
+- SPT-5012: Message form and field interactions.
+- SPT-5013: `MissingManageEventsPermission` and `DraftEvent`.
+- SPT-5014: Both missing-input values.
+- SPT-5015: Valid submission success.
+- SPT-5017: Refund section for both organizer permissions.
+- SPT-5018: Pending-review outcome.
 
 ## Suggested Automated Coverage
 

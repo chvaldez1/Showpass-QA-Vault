@@ -33,7 +33,7 @@ TC-4, TC-6, TC-8, TC-9, TC-11, and TC-12 remain local only. Publication does not
 
 On 2026-09-24, the six published cases above were rewritten in plainer product language and updated in place. Qase readback verified the saved wording and steps; suite, tags, parameters, and other case metadata stayed the same. SPT-5254 gained one direct-link permission check. No case was created or deleted.
 
-Current-source review on 2026-10-02 found a new organization-targeted rollout flag and Refund amounts section. The local case prerequisites and TC-1 field list below now reflect those controls. **SPT-5250–SPT-5255 in Qase were not updated in this turn**; compare their saved fields with this local draft before the next Qase publication.
+Current-source review on 2026-10-02 found a new organization-targeted rollout flag and Refund amounts section. The local case prerequisites and TC-1 field list below now reflect those controls. At that review, SPT-5250–SPT-5255 had not yet been updated. On **2026-10-05**, all six were updated in place and moved to [Organizer and Venue (1107)](https://app.qase.io/project/SPT?suite=1107). Readback matched the rollout prerequisites, current Refund amounts field coverage/defaults, all steps, and suite placement. Titles, tags, parameters, and unrelated metadata were preserved. No cases were executed.
 
 ## Testing Intent
 
@@ -312,6 +312,11 @@ In a French run, use the French equivalents of the English control names below. 
 | Inspect Customer refund policy. | | Enable customer refund policy is off and Customer outcome is Customers cannot initiate refunds. |
 | Inspect Refund cutoff. | Saved cutoff recorded before execution | Cutoff type and its applicable date/time or duration fields show the saved values listed for that field type above. |
 | Inspect Eligibility restrictions. | Recorded policy values | All four restriction fields are visible and show the organization’s saved selections. |
+| Inspect Refund amounts. | Recorded policy values | Enable configurable refund amounts shows its saved value; shipping and fee controls appear only when it is on. |
+| Turn on Enable configurable refund amounts if it is off. | Do not save this inspection change. | Shipping refund rule and Refundable customer-paid fees appear. |
+| Open Shipping refund rule, then close it without changing the selection. | Shipping choices in Expected form fields | All four listed choices are available. |
+| Open Refundable customer-paid fees, then close it without changing the selections. | Showpass fee; Payment processing fee | Both listed fee classes are available. |
+| Return Enable configurable refund amounts to its recorded value. | Do not save this inspection change. | The amount settings match the values recorded before execution. |
 | Open each visible dropdown to inspect its choices, then close it without changing the selection. | Choices in Expected form fields | Each dropdown offers the listed choices and retains its saved selection. |
 | Turn on Enable customer refund policy. |  | The switch is on; Customer outcome still shows Customers cannot initiate refunds. |
 | Select Customer outcome. | Customers can self-refund automatically | The automatic-refund choice is selected. |
@@ -724,7 +729,10 @@ Language: English, French
 | Inspect Cutoff type. |  | No cutoff is selected and date/duration inputs are absent. |
 | Inspect the delivery, fulfillment, and check-in settings. |  | All three show Block customer refunds. |
 | Inspect Orders with mixed eligibility. |  | Block when any remaining item is ineligible is selected. |
-| Inspect Refund amounts. | | Enable configurable refund amounts is off; when turned on for inspection, Shipping refund rule defaults to Never refund shipping and no fee class is selected. Turn it off again without saving. |
+| Inspect Refund amounts. | | Enable configurable refund amounts is off and the shipping and fee controls are hidden. |
+| Turn on Enable configurable refund amounts without saving. | | Shipping refund rule and Refundable customer-paid fees appear. |
+| Inspect the shipping and fee choices. | | Never refund shipping is selected and no fee class is selected. |
+| Turn off Enable configurable refund amounts without saving. | | The amount switch returns to off and the shipping and fee controls are hidden. |
 | Open the event → Tickets → Edit Default Refund Ticket → Basic info. |  | Allow customer-initiated refunds is off and the disabled-policy warning appears in the selected language. |
 | Open Build → Products → All products → Default Refund Product → Fulfillment. |  | Allow customer-initiated refunds is off and the disabled-policy warning appears in the selected language. |
 
@@ -901,7 +909,7 @@ TC-1 tests saved changes. TC-10 now covers first-time policy and item defaults f
 * The organizer can use the migrated Dashboard pages; a legacy page that lacks the new switch does not establish that the configuration is absent from the backend.
 * Exact organizations, credentials, category, event, product, and account permissions have not been verified. Proposed names must be created/provided before execution.
 * Event creation, account provisioning, and category creation are environment setup dependencies; only the relevant ticket/product configuration paths were traced in detail.
-* The supplied 2026-09 commits had no dedicated customer-refunds gate. Current source adds `enable_venue_policy_customer_self_refunds` for the selected organization. The cases now include it; existing SPT-5250–5255 wording in Qase has not been updated in this turn.
+* The supplied 2026-09 commits had no dedicated customer-refunds gate. Current source adds `enable_venue_policy_customer_self_refunds` for the selected organization. The cases now include it; SPT-5250–5255 were updated and their saved prerequisites verified on 2026-10-05.
 * No business maximum for relative cutoff duration, runtime boundary inclusivity, blocked-reason contract, or recurring-session eligibility rule is established by this configuration work.
 * No actual defect is confirmed. All behavior claims are source-backed; all manual results remain not executed.
 

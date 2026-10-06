@@ -11,13 +11,13 @@ Prerequisites: [[09 Appium/Common Setup]] and [[09 Appium/Test Project]], plus [
 
 A WebView is a web page embedded **inside an app**. Safari tests and WebView tests exercise different containers. These small sample apps open beta immediately, so you can prove context switching without first automating the Showpass app's navigation. They are learning tools, not substitutes for testing the real app.
 
-Both samples use app ID `com.example.showpasswebview`, matching the shared config. They use the same `webview.smoke.mjs` test from Test Project.
+Both samples use app ID `com.example.showpasswebview`, matching the shared config. They use the same `webview.smoke.ts` test from Test Project.
 
 ## Android sample app
 
 ### 1. Create the project shell
 
-In Android Studio, choose **New Project → No Activity**. Name it `ShowpassWebView`, package `com.example.showpasswebview`, minimum SDK **26**, and Kotlin DSL for build files. Save directly as `showpass-appium/android-webview`.
+In Android Studio, choose **New Project → No Activity**. Name it `ShowpassWebView`, package `com.example.showpasswebview`, minimum SDK **26**, and Kotlin DSL for build files. Save directly as `appium-pof/android-webview`.
 
 The IDE creates Gradle's wrapper (`gradlew`, `gradlew.bat`, and `gradle/wrapper/`). Keep these files. Replace the following build files to use one known Java 17/API 36 toolchain, regardless of the current IDE template.
 
@@ -120,7 +120,7 @@ Sync the project in Android Studio. Build the debug variant, where WebView debug
 
 ### 3. Build and test
 
-Start the emulator and set its serial using [[09 Appium/Android Setup#3. Create a dedicated Android emulator|Android Setup]]. Run from the root of `showpass-appium`.
+Start the emulator and set its serial using [[09 Appium/Android Setup#3. Create a dedicated Android emulator|Android Setup]]. Run from the root of `appium-pof`.
 
 **Mac:**
 
@@ -155,7 +155,7 @@ Expected: the sample app displays beta, the test enters its WebView, checks the 
 
 1. In Xcode, choose **File → New → Project → iOS → App**.
 2. Product Name: `ShowpassWebView`; Organization Identifier: `com.example`; Interface: SwiftUI; Language: Swift; no storage or test targets needed.
-3. Save under `showpass-appium/ios-webview`. Ensure the project file is exactly `ios-webview/ShowpassWebView.xcodeproj`; move the generated project folder there if Xcode nested it one level deeper.
+3. Save under `appium-pof/ios-webview`. Ensure the project file is exactly `ios-webview/ShowpassWebView.xcodeproj`; move the generated project folder there if Xcode nested it one level deeper.
 4. Select the app target. Set **Bundle Identifier** to `com.example.showpasswebview` and the iOS deployment target to **16.4** or newer, no higher than your chosen simulator runtime.
 5. Choose your dedicated iPhone simulator as the run destination. This guide builds for the simulator with code signing disabled.
 
@@ -186,7 +186,7 @@ In **Product → Scheme → Manage Schemes**, mark `ShowpassWebView` as **Shared
 
 ### 2. Build and test
 
-Start the simulator and set `IOS_UDID` using [[09 Appium/Native Safari#4. Create and start a dedicated simulator|Native Safari]]. From `showpass-appium`:
+Start the simulator and set `IOS_UDID` using [[09 Appium/Native Safari#4. Create and start a dedicated simulator|Native Safari]]. From `appium-pof`:
 
 ```bash
 xcodebuild -project ios-webview/ShowpassWebView.xcodeproj -scheme ShowpassWebView -configuration Debug -sdk iphonesimulator -destination "id=$IOS_UDID" -derivedDataPath ios-webview/build CODE_SIGNING_ALLOWED=NO build
@@ -216,6 +216,6 @@ The actual app does not open the beta homepage immediately like these samples. F
 | Web selectors fail on native controls | Switch back to `NATIVE_APP` before operating native headers, tabs, and dialogs. |
 | Sample passes, Showpass fails | Keep the results separate; investigate app navigation, cookies, injected scripts, and native-to-web messages in the real app. |
 
-Next: [[09 Appium/CI#Add WebView and Showpass app jobs|add the passing target to CI]].
+Next: [[09 Appium/CI#Add WebView and Showpass app jobs later|add the passing target to CI]].
 
 Sources: [Android WebView debugging](https://developer.android.com/develop/ui/views/layout/webapps/debugging), [AGP 8.11 compatibility](https://developer.android.com/build/releases/agp-8-11-0-release-notes), [WKWebView inspection](https://developer.apple.com/documentation/webkit/wkwebview/isinspectable), [React Native WebView debugging prop](https://github.com/react-native-webview/react-native-webview/blob/master/docs/Reference.md#webviewDebuggingEnabled).

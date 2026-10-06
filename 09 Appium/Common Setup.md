@@ -6,134 +6,71 @@ tags:
 
 # Common Setup
 
-Start at [[09 Appium/Appium]]. Do this once on the first computer. On another computer, clone the completed test project and use step 4.
+Start at [[09 Appium/Appium]]. The runnable project is **`/Users/christianvaldez/Documents/personal/appium-pof`**, separate from this QA vault and the Showpass product repositories. Open that project's `README.md` for the shortest first run. This note explains the tools and shared setup once.
 
 ## 1. Check Node and npm
 
-Open **Terminal** on macOS or **PowerShell** on Windows:
+On your Mac, open Terminal. On Windows, open PowerShell:
 
 ```sh
 node --version
 npm --version
 ```
 
-Use **Node 24 LTS** for this Appium project, with the npm version bundled with it (Appium requires npm 10 or newer). As checked on **2026-09-19**, the current LTS download is **24.21.0**. Install that release, or a newer security/maintenance release within Node 24, from [Node.js](https://nodejs.org/en/download), then reopen the terminal and check again.
+Use **Node 24 LTS**. The project records the exact baseline in `.node-version` (`24.21.0` at this review). If you use `nvm`, run `nvm install` and `nvm use` from the project folder; otherwise install Node 24 LTS from [Node.js](https://nodejs.org/en/download). Reopen the terminal and confirm `node --version` begins with `v24.`. Appium requires npm 10 or newer. The Mac inspected on 2026-10-03 currently has Node 26.3.0; select Node 24 for this project without changing the frontend repository's Node version.
 
-The reviewed Mac's Node 22.21.1 meets Appium's minimum requirements, but it is not this guide's new-project baseline. Node 22 is in Maintenance LTS; Node 24 is in Active LTS. Node 26 is still Current at this review date. See the [Node release schedule](https://nodejs.org/en/about/previous-releases).
-
-If `showpass-frontend` requires Node 22, use a Node version manager to select that repository's version when building the app and Node 24 when running `showpass-appium`. On Windows, if PowerShell blocks `npm.ps1`, use `npm.cmd` and `npx.cmd` in these examples.
+On Windows, if PowerShell blocks `npm.ps1`, use `npm.cmd` and `npx.cmd`.
 
 ### Version policy
 
-| Tool | Version choice | Reason |
+| Tool | Choice | Where recorded |
 | --- | --- | --- |
-| Node | 24 LTS; record the exact installed patch in `.node-version` | One Active LTS baseline for the Appium project locally and in CI |
-| Java | Latest Temurin 17 LTS maintenance release | Supported LTS line matching Showpass's Android build requirements |
-| Appium, drivers, WDIO | Compatible stable releases pinned in npm's lockfile | Use the reviewed package versions below; LTS is not the version label used for these pins |
-| Xcode, iOS, Android SDK, Gradle | Explicit compatible versions in the platform notes | Keep the native build tools aligned with the app and CI image |
-| Ruby / Fastlane for app builds | Follow the frontend repository's build requirements | A separate app-build toolchain; do not describe it as Node-style LTS |
+| Node | 24 LTS | `.node-version` and `package.json` |
+| Appium, Safari/XCUITest/UiAutomator2 drivers, WebdriverIO | Exact compatible package versions | `package.json` and `package-lock.json` in `appium-pof` |
+| Xcode and iOS runtime | Compatible installed pair | Check on the Mac; CI records its actual versions |
+| Java and Android SDK | Follow [[09 Appium/Android Setup]] when you reach Android | Android setup note |
 
-Java 17 remains a [supported Temurin LTS line](https://adoptium.net/support/), though newer Java LTS versions exist. Update maintenance patches within the chosen runtime lines; change major versions or native build tools deliberately and rerun the local and CI checks.
+Appium and its drivers are npm packages, not tools with an LTS release line. The lockfile keeps local and CI installs on the same versions.
 
-## 2. Create a separate test project
+## 2. Install this project
 
-Keep automation outside this vault and outside `showpass-frontend`. The frontend continues to use its own pnpm setup; this project uses npm so Appium can discover drivers from its dependencies.
+Change to the existing project and install what its lockfile specifies:
 
 **Mac:**
 
-```bash
-mkdir -p "$HOME/Documents/Showpass/repos/showpass-appium"
-cd "$HOME/Documents/Showpass/repos/showpass-appium"
-```
-
-**Windows PowerShell:**
-
-```powershell
-New-Item -ItemType Directory -Force "$HOME\Documents\Showpass\repos\showpass-appium"
-Set-Location "$HOME\Documents\Showpass\repos\showpass-appium"
-```
-
-If this folder already contains a test project, use step 4 instead of initializing over it. Otherwise run the following on either computer:
-
 ```sh
-npm init -y
-npm pkg set type=module
-npm pkg set private=true --json
-npm pkg set "engines.node=24.x" "engines.npm=>=10"
-npm pkg set "scripts.test=wdio run ./wdio.conf.mjs"
-npm install --save-dev --save-exact appium@3.7.0 appium-safari-driver@5.0.9 appium-xcuitest-driver@12.12.6 appium-uiautomator2-driver@8.7.0
-npm install --save-dev --save-exact @wdio/cli@9 @wdio/local-runner@9 @wdio/mocha-framework@9 @wdio/spec-reporter@9 @wdio/junit-reporter@9 @wdio/appium-service@9 @wdio/globals@9
-node -e "require('node:fs').writeFileSync('.node-version', process.versions.node + '\n')"
+cd /Users/christianvaldez/Documents/personal/appium-pof
+npm ci
 ```
 
-The first install pins the reviewed Appium/driver versions. The second saves exact resolved WDIO versions. Check that `.node-version` contains the Node 24 patch selected in step 1. Keep `package.json`, `package-lock.json`, and `.node-version` together in Git. CI reads that exact Node version and installs the same dependency tree with `npm ci`.
+**Windows PowerShell:** clone `https://github.com/chvaldez1/appium-pof` into a folder outside this vault, change into that folder, then run `npm ci`. The new starter files must be pushed to GitHub before another machine can clone them.
 
-A driver's package does not install Xcode, Java, or an Android SDK. Complete only the device setup needed for your next target.
+`npm ci` creates `node_modules/` locally. It does not install Xcode, Safari, an iOS runtime, Java, or Android Studio. Those platform tools are covered in their target notes. Keep app binaries in ignored `apps/`, not in Git.
 
 ## 3. Check Appium
 
-This guide uses project-local Appium and drivers. If an old tutorial set `APPIUM_HOME`, clear it in this terminal so it does not override the project:
+If a previous tutorial set `APPIUM_HOME`, clear it in this terminal so project-local drivers are used. On Mac: `unset APPIUM_HOME`. On PowerShell: `Remove-Item Env:APPIUM_HOME -ErrorAction SilentlyContinue`.
 
-**Mac:**
-
-```bash
-unset APPIUM_HOME
-```
-
-**Windows PowerShell:**
-
-```powershell
-Remove-Item Env:APPIUM_HOME -ErrorAction SilentlyContinue
-```
-
-From the test project, run:
+From `appium-pof`:
 
 ```sh
 npx appium --version
 npm ls --depth=0
 ```
 
-Expected: Appium `3.7.0` and the driver/WDIO packages without dependency errors. Use `npx appium` from this project whenever a later step asks for Appium. Do not mix in global driver installs from another tutorial.
-
-Continue with [[09 Appium/Test Project]] to create the test files. The WDIO Appium service starts and stops the server for every test run; you do not need to leave another Appium server running.
+Expected: Appium and all locked packages appear without dependency errors. `npm test` starts and stops Appium automatically through WebdriverIO; there is no separate server to keep running. Continue with [[09 Appium/Test Project]] to see where the code lives, then [[09 Appium/Native Safari]] for the first run.
 
 ## 4. Use the project on another computer
 
-After the first project is saved in your team's Git repository:
-
-1. Clone it into a folder outside the vault.
-2. Install the Node version recorded in `.node-version`.
-3. Open a terminal in that folder, clear any `APPIUM_HOME` override as above, and run `npm ci`.
-4. Follow [[09 Appium/Native Safari]] on a Mac or [[09 Appium/Android Setup]] on Windows/Mac.
-5. Set that computer's device ID and app path using the relevant target note. These values are not shared between computers.
-
-Create `.gitignore` in the project with:
-
-```gitignore
-node_modules/
-artifacts/
-apps/
-.env
-.env.*
-!.env.example
-.DS_Store
-android-webview/local.properties
-android-webview/.gradle/
-android-webview/**/build/
-ios-webview/build/
-ios-webview/**/xcuserdata/
-```
-
-Commit the tests and buildable sample-app source. Keep downloaded binaries under ignored `apps/`; CI obtains them as build artifacts. Keep frontend secrets and signing credentials out of the vault and test project.
+Clone the same repository, select the Node version in `.node-version`, run `npm ci`, and follow the platform note for that computer. Device IDs and app build paths are local to each machine. Do not copy your Mac's simulator UUID into Windows or CI.
 
 ## Shared troubleshooting
 
 | Symptom | What to check |
 | --- | --- |
-| `EBADENGINE` during installation | Check Node/npm against step 1; use the same Node version locally and in CI. |
-| Appium cannot find a driver | Run from the test-project folder, clear `APPIUM_HOME`, then check `npm ls --depth=0`. |
-| Port 4723 already in use | End your own Inspector session or manually started Appium server with Ctrl+C before testing. |
-| Connection refused / wrong endpoint | Use `127.0.0.1:4723` and path `/`, as in Test Project. Old `/wd/hub` examples do not match this setup. |
-| A command works on Mac but not Windows | Use the PowerShell block where provided; `export NAME=value` is Mac/Linux shell syntax. |
+| `EBADENGINE` during installation | Confirm Node 24 and npm 10+ in this terminal. |
+| Appium cannot find a driver | Run from `appium-pof`, clear `APPIUM_HOME`, and check `npm ls --depth=0`. |
+| Port 4723 already in use | End your own Inspector or manually started Appium server before testing. |
+| Connection refused / wrong endpoint | The starter uses `127.0.0.1:4723` with path `/`, not `/wd/hub`. |
 
 Sources: [Appium requirements](https://appium.io/docs/en/latest/quickstart/requirements/), [project-local driver management](https://appium.io/docs/en/latest/guides/managing-exts/), [WDIO Appium service](https://webdriver.io/docs/appium-service/).

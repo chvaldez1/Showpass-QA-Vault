@@ -11,7 +11,17 @@ tags:
 # Customer Refund Shipping and Fee Amount Rules Test Cases
 
 > [!important] Buy new orders after saving the amount settings
-> The amount controls and calculation are now present in local source. Older purchases can use the previous calculation. These cases are unexecuted and have not been sent to Qase. Start with [[00 Organizer and Venue - How to Test]] and [[00 Customer - How to Test]].
+> The amount controls and calculation are now present in local source. Older purchases can use the previous calculation. The cases are unexecuted; the publication section below lists which are saved in Qase. Start with [[00 Organizer and Venue - How to Test]] and [[00 Customer - How to Test]].
+
+## Qase publication
+
+Published and verified **2026-10-05** after user approval in [Organizer and Venue (1107)](https://app.qase.io/project/SPT?suite=1107). Saved fields, parameters, tags, steps, and suite placement matched the local cases. Publication does not mean execution.
+
+| Local draft | Qase case |
+| --- | --- |
+| TC-1 | [SPT-5308](https://app.qase.io/case/SPT-5308) |
+
+TC-2 and TC-3 remain local pending the preparation/evidence gaps in [[SPW-19666-customer-self-refunds-test-cases|the publication map]].
 
 ## Testing Intent
 
@@ -32,6 +42,7 @@ Prove that the customer receives the previewed amount once and that returned ite
 * The organization must be included in `enable_venue_policy_customer_self_refunds`, with its policy and **Enable configurable refund amounts** on. Compatible new ticket purchases store component values for preview and final return.
 * **Shipping refund rule** offers Never, after all items sharing the charge, proportional, and unshipped-only. Shipping already returned cannot be returned again.
 * **Refundable customer-paid fees** offers Showpass fee and Payment processing fee. Empty selection excludes both. Existing Venue **Automated return medium** still decides credit versus original payment.
+* Fee selections are read from the current policy when the customer previews/submits a return; saving a selection before purchase does not freeze that selection for the order. Purchase component amounts are saved at purchase.
 * The new component calculation is ticket-only. An older/non-itemized order may use the older amount path. With amount rules on, a product/add-on can be blocked even if its item switch is on. A changed quote must be reviewed again before confirmation.
 
 ## State-space / setup matrix
@@ -62,18 +73,24 @@ Use a future paid ticket type with **Allow customer-initiated refunds** on and a
 
 **Preconditions:**
 
-* The organization is included in `enable_venue_policy_customer_self_refunds`.
 * Employee permission: **Manage Organization Info**.
+* The organization is included in `enable_venue_policy_customer_self_refunds`.
 * In Showpass Admin → Venue customer refund policies, search by organization; reuse its record, or **Add** → select the organization in **Venue** → **Save**. Record its original settings.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Open Dashboard → Organization → Organization settings → Customer refunds. | Selected organization | **Refund amounts** shows **Enable configurable refund amounts**. |
 | Turn on Enable configurable refund amounts. | | **Shipping refund rule** and **Refundable customer-paid fees** appear. |
-| Open Shipping refund rule. | | Never, after all items sharing the charge, proportional, and unshipped-only choices are available. |
-| Choose **Refund shipping proportionally** and select **Showpass fee**. | | Both selections appear. |
-| Select Save and reload Customer refunds. | | The amount switch and both selections stay saved. |
-| Turn the amount switch off, save and reload, then turn it on again. | | The shipping and fee selections remain stored while amount rules are off. |
+| Open Shipping refund rule. | | Never refund shipping; Refund after all shipped items sharing the charge are refunded; Refund shipping proportionally; Refund shipping for unshipped items only are available. |
+| Choose Refund shipping proportionally. | | That shipping rule is selected. |
+| Open Refundable customer-paid fees. | | Showpass fee and Payment processing fee are available. |
+| Select Showpass fee and leave Payment processing fee unselected. | | Only Showpass fee is selected. |
+| Select Save. | | Customer refund policy saved appears. |
+| Reload Customer refunds. | | The amount switch is on, proportional shipping is selected, and only Showpass fee is selected. |
+| Turn off Enable configurable refund amounts. | | Shipping and fee controls are hidden. |
+| Select Save. | | Customer refund policy saved appears. |
+| Reload Customer refunds. | | The amount switch remains off. |
+| Turn on Enable configurable refund amounts without saving. | | Proportional shipping and Showpass fee remain selected. |
 
 **Postconditions:**
 
@@ -87,9 +104,10 @@ Use a future paid ticket type with **Allow customer-initiated refunds** on and a
 | --- | --- |
 | WebPublic | Desktop |
 
-**Tags:** my-orders, refunds, shipping
+**Tags:** my-orders, refunds, fees-and-taxes
 
-**Parameters:** ShippingRule: Never, AfterAll, Proportional, UnshippedOnly
+**Parameters:**
+ShippingRule: Never, AfterAll, Proportional, UnshippedOnly
 
 | ShippingRule | Save as | Expected across two returns |
 | --- | --- | --- |
@@ -124,7 +142,7 @@ Use a future paid ticket type with **Allow customer-initiated refunds** on and a
 | --- | --- |
 | WebPublic | Desktop |
 
-**Tags:** my-orders, refunds, fees
+**Tags:** my-orders, refunds, fees-and-taxes
 
 **Preconditions:**
 
@@ -134,9 +152,14 @@ Use a future paid ticket type with **Allow customer-initiated refunds** on and a
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| As buyer, open Account → My Orders → first order → Return order. | Fee unselected | Preview excludes the fee and shows it as nonrefundable. |
+| As the employee, open Dashboard → Organization → Organization settings → Customer refunds. | | The organization’s current fee selections are shown. |
+| Clear Refundable customer-paid fees. | | Neither fee class is selected. |
+| Select Save. | | Customer refund policy saved appears. |
+| As buyer, open Account → My Orders → first order → Return order. | Fee unselected in the current saved policy | Preview excludes the fee and shows it as nonrefundable. |
 | Complete the first return once and reopen Organizer Credits. | First preview | Credit increases once by the preview; the excluded fee is not added. |
-| Open the second order's Return order. | Showpass fee selected before purchase | Preview includes the eligible fee charged on that receipt. |
+| As the employee, open Customer refunds and select Showpass fee under Refundable customer-paid fees. | | Only Showpass fee is selected. |
+| Select Save. | | Customer refund policy saved appears. |
+| As buyer, open the second order’s Return order. | Showpass fee selected in the current saved policy | Preview includes the eligible fee charged on that receipt. |
 | Complete the second return once and reopen Organizer Credits. | Second preview | Credit increases once by the preview and never exceeds original charges. |
 | As a permitted employee, compare both orders in Dashboard → Transactions. | Receipts and return records | Item, tax, and fee components match previews and credits. |
 
