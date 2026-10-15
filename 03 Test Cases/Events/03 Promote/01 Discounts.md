@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Discounts
 
+**Qase location:** [Events > Promote > Discounts](https://app.qase.io/project/SPT?suite=1136)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Existing coverage and migration gap

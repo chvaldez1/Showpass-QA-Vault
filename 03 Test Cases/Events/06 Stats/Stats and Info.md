@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Stats & Info
 
+**Qase location:** [Events > Stats > Stats & Info](https://app.qase.io/project/SPT?suite=1146)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Migration coverage
@@ -53,7 +55,7 @@ This test validates that event statistics for parent and child events accurately
 
 | Case | Current Qase suite | Local handling |
 | --- | --- | --- |
-| [SPT-5080](https://app.qase.io/case/SPT-5080) | Create Events (80) | Existing case preserved; migration notes below apply |
+| [SPT-5080](https://app.qase.io/case/SPT-5080) | Stats & Info (1146) | Existing case preserved; migration notes below apply |
 
 ### SPT-5080: Dashboard - Event Stats & Info - Verify event reporting
 

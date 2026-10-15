@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Facebook
 
+**Qase location:** [Events > Promote > Facebook](https://app.qase.io/project/SPT?suite=1139)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Migration coverage

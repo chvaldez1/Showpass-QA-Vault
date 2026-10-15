@@ -9,11 +9,13 @@ status: Local review draft; not executed or pushed
 
 # Upgrades
 
+**Qase location:** [Events > Promote > Upgrades](https://app.qase.io/project/SPT?suite=1137)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Scope and shared coverage
 
-These existing cases remain in [Upgrade Paths — suite 818](https://app.qase.io/project/SPT?suite=818). The event page must retain the selected event and show only supported origins/destinations; a successful list load does not prove a completed customer upgrade. Use the existing create/edit/delete, origin uniqueness and customer messaging cases below. No shared suite is relocated.
+Event-specific SPT-4296 now lives under [Events → Promote → Upgrades (1137)](https://app.qase.io/project/SPT?suite=1137). The remaining shared event/membership cases stay in [Upgrade Paths (818)](https://app.qase.io/project/SPT?suite=818). The event page must retain the selected event and show only supported origins/destinations; a successful list load does not prove a completed customer upgrade. Use the existing create/edit/delete, origin uniqueness and customer messaging cases below.
 
 Source: [event upgrades page](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/ui/pages/EventUpgradePathsPage.web.tsx>).
 

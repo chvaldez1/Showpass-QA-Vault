@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Financial settings
 
+**Qase location:** [Events > Manage > Financial settings](https://app.qase.io/project/SPT?suite=1134)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Presence only

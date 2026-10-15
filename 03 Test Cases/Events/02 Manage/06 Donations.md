@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Donations
 
+**Qase location:** [Events > Manage > Donations](https://app.qase.io/project/SPT?suite=1133)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Migration coverage
@@ -23,10 +25,10 @@ Sources: [charity validation called by event serializer](</Users/christianvaldez
 
 | Case | Current Qase suite | Local handling |
 | --- | --- | --- |
-| [SPT-780](https://app.qase.io/case/SPT-780) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
-| [SPT-782](https://app.qase.io/case/SPT-782) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
-| [SPT-783](https://app.qase.io/case/SPT-783) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
-| [SPT-3300](https://app.qase.io/case/SPT-3300) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
+| [SPT-780](https://app.qase.io/case/SPT-780) | Donations (1133) | Existing case preserved; migration notes below apply |
+| [SPT-782](https://app.qase.io/case/SPT-782) | Donations (1133) | Existing case preserved; migration notes below apply |
+| [SPT-783](https://app.qase.io/case/SPT-783) | Donations (1133) | Existing case preserved; migration notes below apply |
+| [SPT-3300](https://app.qase.io/case/SPT-3300) | Donations (1133) | Existing case preserved; migration notes below apply |
 
 ### SPT-780: Dashboard - Events - Configure charitable donations
 

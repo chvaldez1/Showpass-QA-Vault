@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Clone event
 
+**Qase location:** [Events > Operations > Clone event](https://app.qase.io/project/SPT?suite=1143)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Migration coverage
@@ -23,7 +25,7 @@ Sources: [clone page](</Users/christianvaldez/Documents/Showpass/repos/showpass-
 
 | Case | Current Qase suite | Local handling |
 | --- | --- | --- |
-| [SPT-786](https://app.qase.io/case/SPT-786) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
+| [SPT-786](https://app.qase.io/case/SPT-786) | Clone event (1143) | Existing case preserved; migration notes below apply |
 
 ### SPT-786: Dashboard - Manage Events - Clone an event into an independent draft
 

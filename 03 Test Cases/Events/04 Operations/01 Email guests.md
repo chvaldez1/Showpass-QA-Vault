@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Email guests
 
+**Qase location:** [Events > Operations > Email guests](https://app.qase.io/project/SPT?suite=1035)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Existing cases

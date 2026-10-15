@@ -9,11 +9,13 @@ status: Local review draft; not executed or pushed
 
 # Tracking links
 
+**Qase location:** [Events > Promote > Tracking links](https://app.qase.io/project/SPT?suite=1052)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Scope and shared coverage
 
-Event-owned cases below stay in Tracking Links (1052). Refer to [shared Tracking Links — suite 183](https://app.qase.io/project/SPT?suite=183) for global search/export, affiliate/checkout links and attribution (SPT-4236–4238/4240/4241/4800/4801). SPT-5157 overlaps the stronger event cases. SPT-5256–5262/5270 are generated route/run variants: do not count them as independent behavioral gaps without comparing their steps.
+Event-owned cases below live under Events → Promote → Tracking links (1052). Refer to [shared Tracking Links (183)](https://app.qase.io/project/SPT?suite=183) for global search/export, affiliate/checkout links and attribution (SPT-4236–4238/4240/4241/4800/4801). SPT-5157 overlaps the stronger event cases. Event-only generated cases SPT-5328/5329/5331/5333/5334/5336/5338 were moved into its [Migration regressions child folder (1150)](https://app.qase.io/project/SPT?suite=1150); every ID was preserved. Older SPT-5256–5262/5270 references are historical route/run variants, not additional confirmed gaps.
 
 Check create/cancel, applicable link types, selected event, copy/open destination, filter clear and access denial. Attribution still requires a controlled customer journey; a copied URL is not proof of a tracked sale.
 

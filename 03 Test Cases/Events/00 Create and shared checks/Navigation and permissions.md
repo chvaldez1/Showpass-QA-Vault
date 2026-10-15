@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Navigation and permissions
 
+**Qase location:** [Events > Create and shared checks > Navigation and permissions](https://app.qase.io/project/SPT?suite=820)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Migration corrections
@@ -21,10 +23,10 @@ Sources: [route visibility](</Users/christianvaldez/Documents/Showpass/repos/sho
 
 | Case | Current Qase suite | Local handling |
 | --- | --- | --- |
-| [SPT-5072](https://app.qase.io/case/SPT-5072) | Create Events (80) | Existing case preserved; migration notes below apply |
-| [SPT-5074](https://app.qase.io/case/SPT-5074) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
-| [SPT-5075](https://app.qase.io/case/SPT-5075) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
-| [SPT-5076](https://app.qase.io/case/SPT-5076) | Edge Cases (820) | Existing case preserved; migration notes below apply |
+| [SPT-5072](https://app.qase.io/case/SPT-5072) | Navigation and permissions (820) | Existing case preserved; migration notes below apply |
+| [SPT-5074](https://app.qase.io/case/SPT-5074) | Navigation and permissions (820) | Existing case preserved; migration notes below apply |
+| [SPT-5075](https://app.qase.io/case/SPT-5075) | Navigation and permissions (820) | Existing case preserved; migration notes below apply |
+| [SPT-5076](https://app.qase.io/case/SPT-5076) | Navigation and permissions (820) | Existing case preserved; migration notes below apply |
 
 ### SPT-5072: Dashboard - Event Management - Show the right pages for each event type
 

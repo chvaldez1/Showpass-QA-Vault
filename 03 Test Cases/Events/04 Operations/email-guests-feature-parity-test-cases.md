@@ -17,6 +17,8 @@ related:
 
 # Event Email Guests UI Test Cases
 
+**Qase location:** [Events > Operations > Email guests](https://app.qase.io/project/SPT?suite=1035)
+
 ## Testing Intent
 
 We are testing whether an organizer can use `/manage/events/{slug}/email-guests/` with the same visible controls and outcomes as the legacy `/dashboard/events/{slug}/manage/#/notify-guests` page.

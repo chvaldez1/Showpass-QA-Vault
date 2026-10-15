@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Custom fees
 
+**Qase location:** [Events > Manage > Custom fees](https://app.qase.io/project/SPT?suite=1135)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Presence only

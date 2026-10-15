@@ -9,11 +9,13 @@ status: Local review draft; not executed or pushed
 
 # Packages
 
+**Qase location:** [Events > Promote > Packages](https://app.qase.io/project/SPT?suite=87)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Scope and shared coverage
 
-Cases below are copied locally for reading, not moved in Qase; they remain in [Ticket Packages — suite 87](https://app.qase.io/project/SPT?suite=87). SPT-811/815/2944/4887/4889 retain seating, recurring and template variants there. The screenshot adds an event-scoped entry: verify that creating/editing a package retains the selected event, then use the existing cases. SPT-5132 mixes packages, sellers, tiered discounts and auto-release; treat it as a split candidate, not four completed proof targets.
+The complete event-ticket package suite was moved to [Events → Promote → Packages (87)](https://app.qase.io/project/SPT?suite=87), preserving all ten cases and their content. SPT-811/815/2944/4887/4889 retain seating, recurring and template variants there. Verify that the event-scoped entry retains the selected event, then use the existing cases. Mixed SPT-5132 now lives under Create and shared checks → Page save and recovery; it remains a split candidate rather than four completed proof targets.
 
 Source: [event package page](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/packages/ui/pages/EventTicketPackagesPage.web.tsx>).
 

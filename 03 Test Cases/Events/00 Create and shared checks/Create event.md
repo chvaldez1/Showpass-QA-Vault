@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Create event
 
+**Qase location:** [Events > Create and shared checks > Create event](https://app.qase.io/project/SPT?suite=84)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Migration notes
@@ -21,10 +23,10 @@ Sources: [backend create/update validation](</Users/christianvaldez/Documents/Sh
 
 | Case | Current Qase suite | Local handling |
 | --- | --- | --- |
-| [SPT-764](https://app.qase.io/case/SPT-764) | Create / Edit Events (84) | Locally enhanced for native creation; not pushed |
-| [SPT-4874](https://app.qase.io/case/SPT-4874) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
-| [SPT-5073](https://app.qase.io/case/SPT-5073) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
-| [SPT-4876](https://app.qase.io/case/SPT-4876) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
+| [SPT-764](https://app.qase.io/case/SPT-764) | Create event (84) | Locally enhanced for native creation; not pushed |
+| [SPT-4874](https://app.qase.io/case/SPT-4874) | Create event (84) | Existing case preserved; migration notes below apply |
+| [SPT-5073](https://app.qase.io/case/SPT-5073) | Create event (84) | Existing case preserved; migration notes below apply |
+| [SPT-4876](https://app.qase.io/case/SPT-4876) | Create event (84) | Existing case preserved; migration notes below apply |
 
 ### SPT-764: Dashboard - Events - Create and publish a single-day event
 

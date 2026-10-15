@@ -144,16 +144,27 @@ Default to the minimum prerequisites needed to execute the case. When the user a
 
 ### Verify Expectations Before Stating Them
 
+- Record the exact backend and frontend revisions reviewed in Sources Reviewed. After a fresh pull, verify the relevant fields and rules again; do not carry forward a mismatch established against an older checkout. A saved remote ref, local checkout, supplied branch, and deployed build are different sources. Identify which was read without running prohibited diffs or silently updating repositories.
 - Read backend and frontend behavior together for setup and negative cases. A policy enabled in admin does not necessarily expose navigation; a missing record does not necessarily deny page access.
 - Trace the actual missing-record response through the frontend, including empty arrays/objects, null, errors, and cached data. An error branch or a test mocked with `undefined` does not prove what happens for an API response of `[]`.
 - Distinguish source-backed intent, a source-backed implementation mismatch, and a live reproduced defect. Do not confidently promise an error screen, hidden form, or permission denial based only on one component branch.
 - Pasted URLs and screenshots provide context; do not open links or use a live browser unless authorized. A screenshot of an enabled checkbox does not prove the value was saved or the corresponding frontend was deployed.
+
+### Settings Coverage Versus Financial Proof
+
+- State what each case proves: available controls, save/reopen behavior, customer preview, completed refund or credit, or financial reconciliation. Saving every setting combination does not prove those combinations calculate correctly for purchased orders.
+- Money cases require exact item configuration, quantities, original charges, funding, and refund destination. Explain whether the customer receives Organizer Credit, a payment refund, or restored existing credit; these are different outcomes.
+- Calculate expected amounts from independently established original purchase values. Do not copy the refund preview into its own expected result. A combined Tax or Fees total cannot prove separate shipping tax or fee-class amounts.
+- Verify that the proposed receipt, report, or Admin field actually exposes the required values. Do not prescribe reading a hidden or nonexistent component field. Name unavailable financial evidence as Blocked outside the execution fields; do not present an incomplete recipe as runnable Qase coverage.
+- Older purchases can use different calculation rules. State required purchase timing and compatibility, and preserve orders and financial records after execution rather than deleting them as cleanup.
 
 ### Copy-to-Qase Review Gate
 
 Before delivering, read each case without the surrounding note. Can a product-team member tell **what must exist, how to prepare it, what to do, and what should happen**? Remove shared-setup references, unnecessary environment/identity constraints, draft-to-draft commentary, and duplicate cleanup. Check that every stated field, flag, permission, route, and outcome has evidence or an explicit unresolved status outside the case. A Qase-ready label must mean the case fields are already complete.
 
 When the user corrects the workflow or simplifies setup, review the entire case: Description, parameter mapping, Preconditions, Steps, Data, Expected Results, and Postconditions, plus surrounding test-data and execution notes. Remove stale assumptions everywhere, update numbered stopping points, and preserve the requested behavioral coverage. Updating only the entry step or mentioning the correction in a final reply is not enough.
+
+For settings with multiple choices, also apply [[#Readable Parameters And Combination Accounting]]. Verify that parameter tables survive the Markdown-to-Qase parser, the selected combinations match the claimed scope, and setup checks are not presented as completed customer or financial proof.
 
 ## Plain-Language Wording
 
@@ -212,6 +223,7 @@ Use this title shape for Qase cases:
 - `[Feature]` is the main product area or workflow the case touches, such as `Discounts`, `Checkout`, `Refunds`, `Exchanges`, `Assigned Seating`, `Group Sales`, or `Reports`.
 - `[Description]` is a short one-line behavior statement that makes it clear what the person is testing.
 - Keep the description readable and specific. Prefer `Verify partial discounts stay correct after basket changes` over vague wording like `Verify discount behavior`.
+- When a case tests a named restriction or policy choice, include that visible setting or choice in the title so someone can find it without opening the steps. Preserve an existing case's purpose when improving its wording.
 - Do not stack too many areas into the feature segment. If the case touches several areas, choose the area where the main user action happens and put the rest in the description or tags.
 
 Examples of Qase Title values (local Markdown headings may separately prefix these with `TC-*`):
@@ -245,6 +257,26 @@ Example:
 Parameters:
 DeliveryMethod: Email, Print, WillCall
 ```
+
+### Readable Parameters And Combination Accounting
+
+- Use short PascalCase values and map each to the exact product choice in a plain-language table inside Description or Preconditions. Short names are labels, not a substitute for setup instructions.
+- When two controls vary independently and every selected pairing is supported, use separate parameters. Avoid concatenated names such as `NeverProcessingFee` when `ShippingRule = Never` and `FeeSelection = ProcessingOnly` say the same thing more clearly.
+- Use one scenario parameter when choices depend on each other or independent parameters would create unsupported combinations. Do not split dependent setup merely to shorten names.
+- Distinguish **each option covered** from **each combination covered**. Five selected shipping/fee pairs can include every option without covering all 16 pairs. List omitted combinations or classify them as deferred; never imply they were covered by another isolated case.
+- Follow the canonical standard's risk-weighted combination selection by default. If the user explicitly requests a finite full matrix, define its boundaries and count it. Four shipping choices × four fee selections means 16 settings runs, not exhaustive feature coverage across items, payments, taxes, or fulfillment states.
+- State the execution rule in the case: run every selected pair, or run only the listed scenarios. Keep parameter combinations separate from the count of Qase cases, step rows, and executed results.
+- Before publication, verify every declared value has a setup mapping, every required combination can be reached, and the original meaningful scenario is preserved. Check a concrete pair, such as Never + ProcessingOnly, rather than counting values alone.
+
+Example of two independent controls:
+
+```markdown
+**Parameters:**
+ShippingRule: Never, AfterAll, Proportional, UnshippedOnly
+FeeSelection: None, ShowpassOnly, ProcessingOnly, Both
+```
+
+Include separate tables mapping ShippingRule to the shipping dropdown and FeeSelection to the fee multiselect. If all pairs are in scope, say `Run each ShippingRule with each FeeSelection: 16 runs.` This proves only the outcome asserted by that case.
 
 ## Platform And View Rules
 

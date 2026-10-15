@@ -9,16 +9,18 @@ status: Local review draft; not executed or pushed
 
 # Recurring events and templates
 
+**Qase location:** [Events > Create and shared checks > Recurring events and templates](https://app.qase.io/project/SPT?suite=1148)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Existing Qase coverage
 
 | Case | Current Qase suite | Local handling |
 | --- | --- | --- |
-| [SPT-5082](https://app.qase.io/case/SPT-5082) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
-| [SPT-769](https://app.qase.io/case/SPT-769) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
-| [SPT-4299](https://app.qase.io/case/SPT-4299) | Edge Cases (820) | Existing case preserved; migration notes below apply |
-| [SPT-4879](https://app.qase.io/case/SPT-4879) | Edge Cases (820) | Existing case preserved; migration notes below apply |
+| [SPT-5082](https://app.qase.io/case/SPT-5082) | Recurring events and templates (1148) | Existing case preserved; migration notes below apply |
+| [SPT-769](https://app.qase.io/case/SPT-769) | Recurring events and templates (1148) | Existing case preserved; migration notes below apply |
+| [SPT-4299](https://app.qase.io/case/SPT-4299) | Recurring events and templates (1148) | Existing case preserved; migration notes below apply |
+| [SPT-4879](https://app.qase.io/case/SPT-4879) | Recurring events and templates (1148) | Existing case preserved; migration notes below apply |
 
 ### SPT-5082: Dashboard - Events - Edit one recurring child without changing sibling settings
 

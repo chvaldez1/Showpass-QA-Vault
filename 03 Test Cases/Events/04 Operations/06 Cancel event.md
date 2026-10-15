@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Cancel event
 
+**Qase location:** [Events > Operations > Cancel event](https://app.qase.io/project/SPT?suite=1144)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Safety and remaining gap

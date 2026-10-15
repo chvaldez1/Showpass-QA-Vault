@@ -4,12 +4,25 @@ date: 2026-10-04
 tags:
   - qa/test-cases
   - events
-status: Local review draft; not executed or pushed
+status: New cases published to Qase; existing-case enhancements local; not executed
 ---
 
 # Advanced options
 
+**Qase location:** [Events > Manage > Advanced options](https://app.qase.io/project/SPT?suite=1049)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
+
+## Qase publication — 2026-10-14
+
+All cases below were created and read back, including every field and step. Test execution is still pending.
+
+| Former local draft | Qase case | Folder | Steps |
+| --- | --- | --- | --- |
+| TC-11 | [SPT-5352](https://app.qase.io/case/SPT-5352) | Advanced options (1049) | 10 |
+| TC-12 | [SPT-5353](https://app.qase.io/case/SPT-5353) | Advanced options (1049) | 7 |
+| TC-13 | [SPT-5354](https://app.qase.io/case/SPT-5354) | Advanced options (1049) | 7 |
+| TC-14 | [SPT-5355](https://app.qase.io/case/SPT-5355) | Advanced options (1049) | 9 |
 
 ## Page coverage and source notes
 
@@ -19,7 +32,7 @@ SPT-5078 supplies the broad save/reopen baseline. SPT-5110 is an overlapping, we
 
 Sources: [event serializer](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/venue_based/serializers/events.py>), [transfer-limit API regressions](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/tests/api/venue/events/test_api_venue_based_events.py>), [field definitions](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/advanced/hooks/useEventAdvancedFormFields.ts>), [availability and payload rules](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/advanced/utils/event-advanced-form.ts>), [custom field editor](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/advanced/ui/components/EventCustomDisplayFields/EventCustomDisplayFields.web.tsx>).
 
-### TC-11: Dashboard - Advanced Options - Add edit and remove custom display fields
+### SPT-5352: Dashboard - Advanced Options - Add edit and remove custom display fields
 
 **Description:** An employee saves extra event information for an integrated website, edits it, and removes it without changing another custom field. These fields do not appear on the standard Showpass event page.
 
@@ -51,7 +64,7 @@ Sources: [event serializer](</Users/christianvaldez/Documents/Showpass/repos/web
 | Save and reopen Advanced options. | | English is saved and Arrival instructions remains unchanged. |
 | Remove Performance language, then save and reopen. | | Only that field is removed; Arrival instructions and pre-existing fields remain. |
 
-### TC-12: Dashboard - Advanced Options - Override and restore the event transfer limit
+### SPT-5353: Dashboard - Advanced Options - Override and restore the event transfer limit
 
 **Description:** An employee overrides the organization's ticket-transfer limit for one event, rejects invalid limits, and returns to the organization setting.
 
@@ -80,7 +93,7 @@ Sources: [event serializer](</Users/christianvaldez/Documents/Showpass/repos/web
 
 This is the transfer-settings portion split from SPT-5111, not a new claim that the public transfer lifecycle was executed. Existing transfer suites own completed transfers and recipient admission.
 
-### TC-13: Dashboard - Advanced Options - Reject invalid settings without losing saved values
+### SPT-5354: Dashboard - Advanced Options - Reject invalid settings without losing saved values
 
 **Description:** Invalid advanced-setting input cannot replace a previously saved value, and correcting the input allows saving.
 
@@ -105,14 +118,14 @@ Setting: ThirdPartyUrl, EventReportRecipient, ThermalTitle, ThermalMessage
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Open the event → Advanced options and locate the selected Setting. | | The selected control and saved value are visible. |
-| Enter the accepted value. | **ThirdPartyUrl:** https://example.com and When Buy Now is selected; **EventReportRecipient:** controlled inbox address; **ThermalTitle:** exactly 40 characters; **ThermalMessage:** exactly 20 characters | The accepted value is shown without an error. |
+| Enter the accepted value. | **ThirdPartyUrl:** https://example.com and When Buy Now is selected; **EventReportRecipient:** controlled inbox address; **ThermalTitle:** ABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJ (40 characters); **ThermalMessage:** ABCDEFGHIJABCDEFGHIJ (20 characters) | The accepted value is shown without an error. |
 | Save and reopen Advanced options. | | The accepted value remains saved. |
-| Try the invalid value for the same field. | **ThirdPartyUrl:** not-a-url; **EventReportRecipient:** invalid-address; **ThermalTitle:** 41 characters; **ThermalMessage:** 21 characters | The invalid value is prevented or clearly identified. |
+| Try the invalid value for the same field. | **ThirdPartyUrl:** not-a-url; **EventReportRecipient:** invalid-address; **ThermalTitle/ThermalMessage:** append X to the saved 40/20-character value | The invalid value is prevented or clearly identified. |
 | Try saving if Save is enabled. | | The invalid value cannot replace the accepted value. |
 | Reload Advanced options. | | The last accepted saved value remains. |
 | Correct the field and save again. | **Value:** the previously accepted value | Saving can complete after correction. |
 
-### TC-14: Dashboard - Advanced Options - Add cancel and delete an event password
+### SPT-5355: Dashboard - Advanced Options - Add cancel and delete an event password
 
 **Description:** An employee adds an exact-match event password, cancels a second password, and deletes the first through its own confirmation without changing other settings.
 
@@ -208,7 +221,7 @@ The event's configuration reflects that it is NFC Only.
 
 | Case | Current Qase suite | Local handling |
 | --- | --- | --- |
-| [SPT-5078](https://app.qase.io/case/SPT-5078) | Advanced Options (1049) | Existing case preserved; migration notes below apply |
+| [SPT-5078](https://app.qase.io/case/SPT-5078) | Advanced options (1049) | Existing case preserved; migration notes below apply |
 
 ### SPT-5078: Dashboard - Edit Event - Save Advanced Options
 

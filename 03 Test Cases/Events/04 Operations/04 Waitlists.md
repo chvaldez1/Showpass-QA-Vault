@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Waitlists
 
+**Qase location:** [Events > Operations > Waitlists](https://app.qase.io/project/SPT?suite=1142)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Existing coverage and migration gap

@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Legal & important info
 
+**Qase location:** [Events > Manage > Legal & important info](https://app.qase.io/project/SPT?suite=1131)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Migration coverage
@@ -58,7 +60,7 @@ Read on 2026-10-04. These are existing cases, not new drafts; any local enhancem
 
 | Case | Current Qase suite | Local handling |
 | --- | --- | --- |
-| [SPT-4878](https://app.qase.io/case/SPT-4878) | Order Form & Custom Questions (446) | Existing case preserved; migration notes below apply |
+| [SPT-4878](https://app.qase.io/case/SPT-4878) | Legal & important info (1131) | Existing case preserved; migration notes below apply |
 
 ### SPT-4878: Dashboard - Order Form - Enforce one event-terms scenario
 

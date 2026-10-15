@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Live stream (conditional)
 
+**Qase location:** [Events > Settings > Live stream](https://app.qase.io/project/SPT?suite=1145)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Conditional page

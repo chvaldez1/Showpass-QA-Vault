@@ -4,18 +4,30 @@ date: 2026-10-04
 tags:
   - qa/test-cases
   - events
-status: Local draft; not executed or pushed
+status: Published to Qase; not executed
 ---
 
 # Page save and recovery
 
+**Qase location:** [Events > Create and shared checks > Page save and recovery](https://app.qase.io/project/SPT?suite=1123)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
+
+## Qase publication — 2026-10-14
+
+All cases below were created and read back, including every field and step. Test execution is still pending.
+
+| Former local draft | Qase case | Folder | Steps |
+| --- | --- | --- | --- |
+| TC-9 | [SPT-5356](https://app.qase.io/case/SPT-5356) | Page save and recovery (1123) | 7 |
+| TC-10 | [SPT-5357](https://app.qase.io/case/SPT-5357) | Page save and recovery (1123) | 7 |
+| TC-15 | [SPT-5358](https://app.qase.io/case/SPT-5358) | Page save and recovery (1123) | 7 |
 
 These checks protect the split-page migration: an event save may include fields edited on other pages. A submitted background job is not proof that changes finished saving.
 
 Sources: [event update and pending-state guards](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/venue_based/viewsets/events.py>), [event save and recurring follow-up work](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/venue_based/serializers/events.py>), [cross-section save integration tests](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/ticket-types/editor-modal/event-sections-save.integration.test.tsx>). Source tests were inspected, not executed.
 
-### TC-9: Dashboard - Events - Preserve another page's saved changes
+### SPT-5356: Dashboard - Events - Preserve another page's saved changes
 
 **Description:** An employee saves two different event pages from two open tabs and confirms the later save does not undo the earlier change.
 
@@ -47,7 +59,7 @@ SecondPage: LegalInfo, Tickets
 | Reopen Basic info from Events. | | Subtitle is still First page saved. |
 | Reopen the second page from Events. | | Its saved refund policy or ticket price is also retained. |
 
-### TC-10: Dashboard - Events - Recover from a save attempted without a connection
+### SPT-5357: Dashboard - Events - Recover from a save attempted without a connection
 
 **Description:** An unsuccessful save is not reported as completed, and the employee can recover without losing unrelated saved event information.
 
@@ -76,7 +88,7 @@ SecondPage: LegalInfo, Tickets
 
 This covers a disconnected browser, not a database rollback or worker crash. Delayed-job failure and server-commit recovery remain backend fault-test candidates, not claimed manual coverage.
 
-### TC-15: Dashboard - Events - Use page controls with the keyboard and on a narrow screen
+### SPT-5358: Dashboard - Events - Use page controls with the keyboard and on a narrow screen
 
 **Description:** The employee can reach, edit, save and reopen one event setting using the keyboard, including controls inside drawers or dialogs.
 

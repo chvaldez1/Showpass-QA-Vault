@@ -4,24 +4,39 @@ date: 2026-10-04
 tags:
   - qa/test-cases
   - events
-status: Local review draft; not executed or pushed
+status: New cases published to Qase; existing-case enhancements local; not executed
 ---
 
 # Basic info
 
+**Qase location:** [Events > Manage > Basic info](https://app.qase.io/project/SPT?suite=1122)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
+
+## Qase publication — 2026-10-14
+
+All cases below were created and read back, including every field and step. Test execution is still pending.
+
+| Former local draft | Qase case | Folder | Steps |
+| --- | --- | --- | --- |
+| TC-1 | [SPT-5339](https://app.qase.io/case/SPT-5339) | Basic info (1122) | 7 |
+| TC-2 | [SPT-5340](https://app.qase.io/case/SPT-5340) | Basic info (1122) | 6 |
+| TC-3 | [SPT-5341](https://app.qase.io/case/SPT-5341) | Basic info (1122) | 8 |
+| TC-4 | [SPT-5342](https://app.qase.io/case/SPT-5342) | Basic info (1122) | 9 |
+| TC-16 | [SPT-5343](https://app.qase.io/case/SPT-5343) | Basic info (1122) | 7 |
+| TC-19 | [SPT-5344](https://app.qase.io/case/SPT-5344) | Basic info (1122) | 5 |
 
 ## Page coverage and source notes
 
 The migrated page groups **Event details**, **Event Date & Time**, and **Discovery**. Some optional fields are inside each section's **Advanced** drawer. Purchase button text is now here, not under Order form. Accommodations and Custom display fields are under Advanced options.
 
-Existing SPT-764 covers creation; SPT-775 covers public-link validation; SPT-745/SPT-749 cover category-specific artists, comedians, shows and teams; SPT-4877 covers online/streamed events. SPT-5077 is locally split into a Basic info case plus page-specific coverage. Its former scenarios are mapped in the Events index; no Qase case has been changed. New cases below isolate previously shallow checks.
+Existing SPT-764 covers creation; SPT-775 covers public-link validation; SPT-745/SPT-749 cover category-specific artists, comedians, shows and teams; SPT-4877 covers online/streamed events. SPT-5077 is locally split into a Basic info case plus page-specific coverage. Its former scenarios are mapped in the Events index; SPT-5077 itself has not been updated in Qase. The newly published cases below isolate previously shallow checks.
 
 Sources: [event model](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/models/event_management/event.py>), [event serializer](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/venue_based/serializers/events.py>), [Basic info fields](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/basic-info/hooks/useEventBasicInfoFormFields.tsx>), [images and location](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/basic-info/hooks/event-basic-info-media-location-field-config.tsx>).
 
-## New local cases
+## Published Qase cases
 
-### TC-19: Dashboard - Basic Info - Save discovery choices independently
+### SPT-5344: Dashboard - Basic Info - Save discovery choices independently
 
 **Description:** Changing event visibility or calendar display preserves the other discovery settings and remains saved after reopening.
 
@@ -53,7 +68,7 @@ DiscoverySetting: Visibility, CalendarDisplay, GoogleThingsToDo
 
 Calendar appearance remains linked to existing calendar coverage SPT-2428/2429/2687; saving a toggle alone does not prove widget or Kiosk filtering. Google feed eligibility remains in SPT-4900/4901.
 
-### TC-16: Dashboard - Basic Info - Save date display choices without losing the schedule
+### SPT-5343: Dashboard - Basic Info - Save date display choices without losing the schedule
 
 **Description:** Date-display choices affect customer presentation without removing the event's real saved start and end times.
 
@@ -86,7 +101,7 @@ DisplayChoice: DateToBeDetermined, HideTicketEndTime
 | Turn off the selected choice and save. | | Saving succeeds. |
 | Reopen Basic info. | | The display choice remains off and the real schedule is unchanged. |
 
-### TC-1: Dashboard - Basic Info - Replace an image and reject unsupported uploads
+### SPT-5339: Dashboard - Basic Info - Replace an image and reject unsupported uploads
 
 **Description:** An employee replaces an event image, checks its saved crop, and confirms rejected files do not replace the saved image.
 
@@ -119,7 +134,7 @@ ImageField: BannerImage, SquareImage
 | Try each unsupported file separately in the same field. | **Files:** 99 × 99 PNG; 2001 × 2001 PNG; PNG over 3 MB; text file | Each file is rejected with an explanation and does not replace the accepted image. |
 | Reload Basic info. | | The last successfully saved image remains intact. |
 
-### TC-2: Dashboard - Basic Info - Keep text within the supported field limits
+### SPT-5340: Dashboard - Basic Info - Keep text within the supported field limits
 
 **Description:** Text at the supported limit saves without losing characters; an extra character cannot be silently saved as different content.
 
@@ -149,7 +164,7 @@ TextField: EventName, Subtitle
 | Try appending one more character. | **Extra character:** X | The field prevents the extra character or shows a length error; it does not silently save an over-limit value. |
 | Return the field to its accepted value and save. | **Value:** the previously accepted text | The field can be saved after the correction. |
 
-### TC-3: Dashboard - Basic Info - Change location without changing another event
+### SPT-5341: Dashboard - Basic Info - Change location without changing another event
 
 **Description:** Selecting a different saved location and timezone changes only the chosen event and retains the intended local event times.
 
@@ -178,7 +193,7 @@ TextField: EventName, Subtitle
 | Open View Event. | | The public page identifies the selected location and the intended event date and time. |
 | Open Basic info for the comparison event. | **Event:** the second recorded event | Its location, timezone and times are unchanged. |
 
-### TC-4: Dashboard - Basic Info - Validate and clear the doors-open time
+### SPT-5342: Dashboard - Basic Info - Validate and clear the doors-open time
 
 **Description:** A single event accepts an earlier doors-open time, rejects a doors-open time after the start, and allows the optional time to be cleared.
 
@@ -249,12 +264,12 @@ Restore event date/time settings.
 
 | Case | Current Qase suite | Local handling |
 | --- | --- | --- |
-| [SPT-775](https://app.qase.io/case/SPT-775) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
-| [SPT-5077](https://app.qase.io/case/SPT-5077) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
-| [SPT-4877](https://app.qase.io/case/SPT-4877) | Create / Edit Events (84) | Existing case preserved; migration notes below apply |
-| [SPT-745](https://app.qase.io/case/SPT-745) | Google Events - Event Categories (81) | Existing case preserved; migration notes below apply |
-| [SPT-749](https://app.qase.io/case/SPT-749) | Google Events - Event Categories (81) | Existing case preserved; migration notes below apply |
-| [SPT-3248](https://app.qase.io/case/SPT-3248) | Order Form & Custom Questions (446) | Existing case preserved; migration notes below apply |
+| [SPT-775](https://app.qase.io/case/SPT-775) | Basic info (1122) | Existing case preserved; migration notes below apply |
+| [SPT-5077](https://app.qase.io/case/SPT-5077) | Manage (1125) | Existing case preserved; migration notes below apply |
+| [SPT-4877](https://app.qase.io/case/SPT-4877) | Basic info (1122) | Existing case preserved; migration notes below apply |
+| [SPT-745](https://app.qase.io/case/SPT-745) | Categories and discovery (81) | Existing case preserved; migration notes below apply |
+| [SPT-749](https://app.qase.io/case/SPT-749) | Categories and discovery (81) | Existing case preserved; migration notes below apply |
+| [SPT-3248](https://app.qase.io/case/SPT-3248) | Basic info (1122) | Existing case preserved; migration notes below apply |
 
 ### SPT-775: Dashboard - Events - Generate and validate an event's public link
 

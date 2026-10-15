@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Overview
 
+**Qase location:** [Events > Event > Overview](https://app.qase.io/project/SPT?suite=1053)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Migration coverage
@@ -21,7 +23,7 @@ Sources: [event statistics API](</Users/christianvaldez/Documents/Showpass/repos
 
 | Case | Current Qase suite | Local handling |
 | --- | --- | --- |
-| [SPT-5071](https://app.qase.io/case/SPT-5071) | Event Overview (1053) | Existing case preserved; migration notes below apply |
+| [SPT-5071](https://app.qase.io/case/SPT-5071) | Overview (1053) | Existing case preserved; migration notes below apply |
 
 ### SPT-5071: Dashboard - Event Overview - Verify totals for single and recurring events
 

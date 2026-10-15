@@ -12,6 +12,8 @@ status: draft
 
 # SPW-20014 Event Clone Resale and Waitlist Qase Test Case
 
+**Qase location:** [Events > Operations > Clone event](https://app.qase.io/project/SPT?suite=1143)
+
 Related Jira: [SPW-20014 - Event clones retain source-event resale and waitlist relationships](https://showpass.atlassian.net/browse/SPW-20014)
 
 Vault guides: [[00 Start Here/World-Class Software Quality Standard]], [[06 Prompts/Showpass QA Test Case Generator]], [[05 Tooling/Qase Test Case Writing Rules]], and [[05 Tooling/qasectl]].
@@ -170,7 +172,7 @@ SPW-20014 reports that Churchill's 2026 ticket types inherited active resale set
 
 - Action: Existing case; local reference only. No Qase write in this refactor
 - Project: SPT
-- Suite: 84
+- Suite: 1143
 - Existing case: [SPT-5154](https://app.qase.io/case/SPT-5154)
 - Tags: dashboard, resale, waitlists
 - Step count: 15

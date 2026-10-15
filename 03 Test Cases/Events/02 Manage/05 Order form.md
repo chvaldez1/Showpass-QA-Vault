@@ -4,12 +4,22 @@ date: 2026-10-04
 tags:
   - qa/test-cases
   - events
-status: Local review draft; not executed or pushed
+status: New cases published to Qase; existing-case enhancements local; not executed
 ---
 
 # Order form
 
+**Qase location:** [Events > Manage > Order form](https://app.qase.io/project/SPT?suite=446)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
+
+## Qase publication — 2026-10-14
+
+All cases below were created and read back, including every field and step. Test execution is still pending.
+
+| Former local draft | Qase case | Folder | Steps |
+| --- | --- | --- | --- |
+| TC-20 | [SPT-5351](https://app.qase.io/case/SPT-5351) | Order form (446) | 9 |
 
 ## Page coverage and source notes
 
@@ -19,7 +29,7 @@ Current controls: Collection type; Enhanced information (First name, Last name, 
 
 Sources: [question validation](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/venue_based/serializers/events.py>), [page fields](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/hooks/useEventOrderFormFields.ts>), [sync gate and page-owned fields](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/utils/event-order-form-utils.ts>), [legacy embedding and separate-save warning](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/main/templates/tickets/events/partials/__create-form.html>).
 
-### TC-20: Dashboard - Order Form - Show profile sync only for supported collection settings
+### SPT-5351: Dashboard - Order Form - Show profile sync only for supported collection settings
 
 **Description:** Profile sync is offered only when the organization allows it and the collected information can belong to the purchaser rather than separate ticket holders.
 
@@ -31,7 +41,7 @@ Sources: [question validation](</Users/christianvaldez/Documents/Showpass/repos/
 
 * The employee has Manage Events permission for an owned single event created for testing.
 * The organization has allow_info_upload_from_basket_to_vu enabled, and enable_nextjs_order_form is enabled for the organization.
-* The event has no custom questions. Record the original collection type, per-ticket requirement and sync choice.
+* The event has no custom questions, resale or waitlist setup, so per-ticket information collection can be changed. Record the original collection type, per-ticket requirement and sync choice.
 
 **Postconditions:** Restore the recorded collection and sync settings; remove only the question added by this case; save and reopen Order form.
 
@@ -107,16 +117,16 @@ Confirm check-in ticket details show the same readable answers submitted during 
 
 | Case | Current Qase suite | Local handling |
 | --- | --- | --- |
-| [SPT-3247](https://app.qase.io/case/SPT-3247) | Order Form & Custom Questions (446) | Existing case preserved; migration notes below apply |
-| [SPT-3249](https://app.qase.io/case/SPT-3249) | Order Form & Custom Questions (446) | Existing case preserved; migration notes below apply |
-| [SPT-3251](https://app.qase.io/case/SPT-3251) | Order Form & Custom Questions (446) | Existing case preserved; migration notes below apply |
-| [SPT-3252](https://app.qase.io/case/SPT-3252) | Order Form & Custom Questions (446) | Existing case preserved; migration notes below apply |
-| [SPT-3253](https://app.qase.io/case/SPT-3253) | Order Form & Custom Questions (446) | Existing case preserved; migration notes below apply |
-| [SPT-3261](https://app.qase.io/case/SPT-3261) | Order Form & Custom Questions (446) | Existing case preserved; migration notes below apply |
-| [SPT-3262](https://app.qase.io/case/SPT-3262) | Order Form & Custom Questions (446) | Existing case preserved; migration notes below apply |
-| [SPT-3263](https://app.qase.io/case/SPT-3263) | Order Form & Custom Questions (446) | Existing case preserved; migration notes below apply |
-| [SPT-3264](https://app.qase.io/case/SPT-3264) | Order Form & Custom Questions (446) | Existing case preserved; migration notes below apply |
-| [SPT-3268](https://app.qase.io/case/SPT-3268) | Order Form & Custom Questions (446) | Existing case preserved; migration notes below apply |
+| [SPT-3247](https://app.qase.io/case/SPT-3247) | Order form (446) | Existing case preserved; migration notes below apply |
+| [SPT-3249](https://app.qase.io/case/SPT-3249) | Order form (446) | Existing case preserved; migration notes below apply |
+| [SPT-3251](https://app.qase.io/case/SPT-3251) | Order form (446) | Existing case preserved; migration notes below apply |
+| [SPT-3252](https://app.qase.io/case/SPT-3252) | Order form (446) | Existing case preserved; migration notes below apply |
+| [SPT-3253](https://app.qase.io/case/SPT-3253) | Order form (446) | Existing case preserved; migration notes below apply |
+| [SPT-3261](https://app.qase.io/case/SPT-3261) | Order form (446) | Existing case preserved; migration notes below apply |
+| [SPT-3262](https://app.qase.io/case/SPT-3262) | Order form (446) | Existing case preserved; migration notes below apply |
+| [SPT-3263](https://app.qase.io/case/SPT-3263) | Order form (446) | Existing case preserved; migration notes below apply |
+| [SPT-3264](https://app.qase.io/case/SPT-3264) | Order form (446) | Existing case preserved; migration notes below apply |
+| [SPT-3268](https://app.qase.io/case/SPT-3268) | Order form (446) | Existing case preserved; migration notes below apply |
 
 ### SPT-3247: Dashboard - Order Form - Show the saved Display & Email Message
 

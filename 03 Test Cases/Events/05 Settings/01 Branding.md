@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Branding
 
+**Qase location:** [Events > Settings > Branding](https://app.qase.io/project/SPT?suite=1050)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Shared suite reference

@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Edit attraction
 
+**Qase location:** [Events > Settings > Edit attraction](https://app.qase.io/project/SPT?suite=674)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Existing coverage and migration gap

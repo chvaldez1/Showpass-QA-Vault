@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Email customization
 
+**Qase location:** [Events > Settings > Email customization](https://app.qase.io/project/SPT?suite=1051)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Shared suite reference

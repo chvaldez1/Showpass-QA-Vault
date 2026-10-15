@@ -9,6 +9,8 @@ status: Local review draft; not executed or pushed
 
 # Sellers
 
+**Qase location:** [Events > Promote > Sellers](https://app.qase.io/project/SPT?suite=1138)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
 ## Migration coverage
@@ -21,7 +23,7 @@ Source: [Sellers page](</Users/christianvaldez/Documents/Showpass/repos/showpass
 
 | Case | Current Qase suite | Local handling |
 | --- | --- | --- |
-| [SPT-5079](https://app.qase.io/case/SPT-5079) | Create Events (80) | Existing case preserved; migration notes below apply |
+| [SPT-5079](https://app.qase.io/case/SPT-5079) | Sellers (1138) | Existing case preserved; migration notes below apply |
 
 ### SPT-5079: Dashboard - Edit Sellers - Save event seller access
 

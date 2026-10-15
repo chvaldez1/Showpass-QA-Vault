@@ -26,6 +26,17 @@ Start with:
 
 For Qase-ready output, apply that note's **Short, Actionable Prerequisites**, **Standalone Qase Fields**, **Form Coverage And Case Purpose**, and **Verify Expectations Before Stating Them** sections before drafting. Finish with its **Copy-to-Qase Review Gate**. Each case must explain its own setup and expected behavior without requiring the surrounding note.
 
+## Settings And Amount Coverage Review
+
+Apply [[05 Tooling/Qase Test Case Writing Rules#Readable Parameters And Combination Accounting]] and [[05 Tooling/Qase Test Case Writing Rules#Settings Coverage Versus Financial Proof]] before claiming settings or financial coverage:
+
+1. Record the backend and frontend revisions actually read. Recheck renamed or removed controls after a fresh pull; distinguish local source, a saved remote ref, the supplied branch, and deployment.
+2. List independent controls and dependent setup. Use short separate parameters for independent choices; use a scenario parameter for dependent combinations. Include exact UI mappings in each standalone case.
+3. Declare whether coverage checks each option, selected risk combinations, or an explicitly requested finite full matrix. Count the selected runs and verify a concrete required pairing. Follow the canonical standard's risk-weighted default rather than expanding every feature dimension.
+4. Account separately for saving settings, customer preview, completed money movement, and financial records. Isolated shipping and fee checks do not prove their combined refund calculations.
+5. Prepare exact purchase configurations and independent original amounts. If the required tax/fee detail or supported setup cannot be obtained, classify that proof as Blocked rather than inventing an Admin field or calling the case ready.
+6. Run the Copy-to-Qase review on parsed fields. After an approved write, verify the stored parameter structure, values, mappings, and steps, then update the canonical note and handbook status. Publication is not execution.
+
 ## Testing Intent Gate
 
 Before writing test cases, answer: **what are we testing and why does it matter?**
@@ -280,6 +291,7 @@ Apply this beginner-readability check before finalizing the note:
 - Use plain titles and step wording, but keep parameter names and values in PascalCase per [[05 Tooling/Qase Test Case Writing Rules]].
 - Prefer readable PascalCase parameter names such as `TicketQuantity`, `FeeSetup`, `PaymentType`, `BasketChange`, `SeatPath`, and `TicketSelection`.
 - Prefer readable PascalCase parameter values such as `TwoSelectedOneDiscounted`, `FlatFeePlusTax`, `OtherCustomType`, and `ExchangeAfterPartialRefund`.
+- Apply the readable-parameter review above before combining several controls into one long value. Keep independent choices separate and dependent setup explicit; do not mistake individual-option coverage for combination coverage.
 - Keep parameters easy to execute. Prefer one high-signal value for baseline coverage and only add variants when they materially change behavior or risk.
 - Do not combine too many broad axes in one test case. If a case needs more than 2-3 parameters, split it or move lower-risk variants to the minimum execution set, test data notes, or automation candidates.
 - Do not create every platform, role, payment type, or state permutation. Add a variant only when it changes the invariant being proved or catches a realistic Major/Critical-style failure.

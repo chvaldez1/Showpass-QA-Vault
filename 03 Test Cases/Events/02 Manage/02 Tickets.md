@@ -4,12 +4,27 @@ date: 2026-10-04
 tags:
   - qa/test-cases
   - events
-status: Local review draft; not executed or pushed
+status: New cases published to Qase; existing-case enhancements local; not executed
 ---
 
 # Tickets
 
+**Qase location:** [Events > Manage > Tickets](https://app.qase.io/project/SPT?suite=83)
+
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
+
+## Qase publication — 2026-10-14
+
+All cases below were created and read back, including every field and step. Test execution is still pending.
+
+| Former local draft | Qase case | Folder | Steps |
+| --- | --- | --- | --- |
+| TC-5 | [SPT-5345](https://app.qase.io/case/SPT-5345) | Tickets (83) | 7 |
+| TC-6 | [SPT-5346](https://app.qase.io/case/SPT-5346) | Tickets (83) | 6 |
+| TC-7 | [SPT-5347](https://app.qase.io/case/SPT-5347) | Tickets (83) | 7 |
+| TC-8 | [SPT-5348](https://app.qase.io/case/SPT-5348) | Tickets (83) | 5 |
+| TC-17 | [SPT-5349](https://app.qase.io/case/SPT-5349) | Tickets (83) | 7 |
+| TC-18 | [SPT-5350](https://app.qase.io/case/SPT-5350) | Tickets (83) | 5 |
 
 ## Page coverage and source notes
 
@@ -17,9 +32,9 @@ Separate the ticket table/editor from event-wide settings. SPT-758–760 cover p
 
 Sources: [event validation and nested saves](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/venue_based/serializers/events.py>), [ticket validation](</Users/christianvaldez/Documents/Showpass/repos/web-app/apps/tickets/api/venue_based/serializers/ticket_types.py>), [event-wide settings](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/ticket-types/event-settings/event-ticket-settings-fields.ts>), [ticket requirement control](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/ticket-types/list/EventTicketTypesPageSections.web.tsx>).
 
-## New local cases
+## Published Qase cases
 
-### TC-17: Dashboard - Tickets - Add and remove an unsold ticket type
+### SPT-5349: Dashboard - Tickets - Add and remove an unsold ticket type
 
 **Description:** An employee adds a ticket type, saves it, removes it, and confirms other ticket types are unchanged.
 
@@ -48,7 +63,7 @@ Sources: [event validation and nested saves](</Users/christianvaldez/Documents/S
 | Save and confirm removal if prompted. | | Removal succeeds for the unsold ticket. |
 | Leave and reopen Tickets. | | Added Admission is absent and General Admission retains its recorded values. |
 
-### TC-18: Dashboard - Tickets - Handle unsaved list changes before opening a ticket editor
+### SPT-5350: Dashboard - Tickets - Handle unsaved list changes before opening a ticket editor
 
 **Description:** Opening a ticket's detailed editor does not silently save or discard changes made in the ticket list.
 
@@ -77,7 +92,7 @@ DialogChoice: Cancel, DiscardChanges, SaveAndContinue
 | Return to Tickets and reload the page, discarding any remaining unsaved change. | | Only SaveAndContinue retains Updated; Cancel and DiscardChanges leave the original saved name. |
 | Inspect the ticket inventory. | **Inventory:** recorded original value | The inventory is unchanged in every scenario. |
 
-### TC-5: Dashboard - Tickets - Enforce the total event inventory across ticket types
+### SPT-5345: Dashboard - Tickets - Enforce the total event inventory across ticket types
 
 **Description:** Two individually available ticket types share one event-wide limit; a customer cannot reserve more than that combined limit.
 
@@ -107,7 +122,7 @@ DialogChoice: Cancel, DiscardChanges, SaveAndContinue
 | Try adding one more of either ticket type. | **Requested total:** 3 | The event capacity prevents the additional ticket, even though the individual type has stock. |
 | Remove all tickets from the basket. | | The basket is empty; no order or payment was created. |
 
-### TC-6: Dashboard - Tickets - Save event-wide ticket messages and check the downloaded ticket
+### SPT-5346: Dashboard - Tickets - Save event-wide ticket messages and check the downloaded ticket
 
 **Description:** Event-wide PDF terms and the custom message survive saving and appear on a newly issued electronic ticket.
 
@@ -135,7 +150,7 @@ DialogChoice: Cancel, DiscardChanges, SaveAndContinue
 | Open View Event in the customer session and obtain one free ticket. | **Quantity:** 1; **Email:** controlled inbox | One order containing the intended event ticket is completed without a payment charge. |
 | Download the ticket PDF from the order confirmation. | | The PDF identifies the correct event and displays both saved messages. |
 
-### TC-7: Dashboard - Tickets - Save and clear the event inventory display settings
+### SPT-5347: Dashboard - Tickets - Save and clear the event inventory display settings
 
 **Description:** Inventory display choices and default sale timing remain saved independently of individual ticket settings.
 
@@ -163,7 +178,7 @@ DialogChoice: Cancel, DiscardChanges, SaveAndContinue
 | Clear Show Remaining Tickets and select Disable Threshold Displays. | **Amount:** empty | The amount is blank and threshold displays are disabled. |
 | Save, leave and reopen event settings. | | The amount remains blank and threshold displays remain disabled. |
 
-### TC-8: Dashboard - Tickets - Change an unsold event to admission without tickets
+### SPT-5348: Dashboard - Tickets - Change an unsold event to admission without tickets
 
 **Description:** Turning on Tickets not required changes the event to admission without ticket purchasing; it does not create an order or an admission ticket.
 
@@ -193,15 +208,15 @@ DialogChoice: Cancel, DiscardChanges, SaveAndContinue
 
 | Case | Current Qase suite | Local handling |
 | --- | --- | --- |
-| [SPT-758](https://app.qase.io/case/SPT-758) | Ticket Types (83) | Existing case preserved; migration notes below apply |
-| [SPT-759](https://app.qase.io/case/SPT-759) | Ticket Types (83) | Existing case preserved; migration notes below apply |
-| [SPT-760](https://app.qase.io/case/SPT-760) | Ticket Types (83) | Existing case preserved; migration notes below apply |
-| [SPT-766](https://app.qase.io/case/SPT-766) | Ticket Types (83) | Existing case preserved; migration notes below apply |
-| [SPT-768](https://app.qase.io/case/SPT-768) | Ticket Types (83) | Existing case preserved; migration notes below apply |
-| [SPT-770](https://app.qase.io/case/SPT-770) | Ticket Types (83) | Existing case preserved; migration notes below apply |
-| [SPT-4063](https://app.qase.io/case/SPT-4063) | Ticket Types (83) | Existing case preserved; migration notes below apply |
-| [SPT-4384](https://app.qase.io/case/SPT-4384) | Ticket Types (83) | Existing case preserved; migration notes below apply |
-| [SPT-4875](https://app.qase.io/case/SPT-4875) | Ticket Types (83) | Existing case preserved; migration notes below apply |
+| [SPT-758](https://app.qase.io/case/SPT-758) | Tickets (83) | Existing case preserved; migration notes below apply |
+| [SPT-759](https://app.qase.io/case/SPT-759) | Tickets (83) | Existing case preserved; migration notes below apply |
+| [SPT-760](https://app.qase.io/case/SPT-760) | Tickets (83) | Existing case preserved; migration notes below apply |
+| [SPT-766](https://app.qase.io/case/SPT-766) | Tickets (83) | Existing case preserved; migration notes below apply |
+| [SPT-768](https://app.qase.io/case/SPT-768) | Tickets (83) | Existing case preserved; migration notes below apply |
+| [SPT-770](https://app.qase.io/case/SPT-770) | Tickets (83) | Existing case preserved; migration notes below apply |
+| [SPT-4063](https://app.qase.io/case/SPT-4063) | Tickets (83) | Existing case preserved; migration notes below apply |
+| [SPT-4384](https://app.qase.io/case/SPT-4384) | Tickets (83) | Existing case preserved; migration notes below apply |
+| [SPT-4875](https://app.qase.io/case/SPT-4875) | Tickets (83) | Existing case preserved; migration notes below apply |
 | [SPT-3275](https://app.qase.io/case/SPT-3275) | Delivery Settings (448) | Existing case preserved; migration notes below apply |
 | [SPT-3276](https://app.qase.io/case/SPT-3276) | Delivery Settings (448) | Existing case preserved; migration notes below apply |
 | [SPT-3277](https://app.qase.io/case/SPT-3277) | Delivery Settings (448) | Existing case preserved; migration notes below apply |

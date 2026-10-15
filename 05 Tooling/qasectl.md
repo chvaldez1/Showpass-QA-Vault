@@ -173,6 +173,8 @@ Before running an update dry-run, confirm:
 - [ ] Every removed or narrowed behavior is documented and explicitly approved.
 - [ ] Parameters represent behavior-changing setup, not redundant execution context.
 - [ ] The smallest clear parameter set is used; independent parameters are added only when they change the flow or expected result.
+- [ ] Parameter names are short, every value maps to exact setup inside the case, and required combinations remain reachable after simplification.
+- [ ] The claimed run count matches the selected combinations; form persistence, customer preview, completed returns, and financial proof are accounted for separately.
 
 1. Confirm scope before writing: suite ID, whether cases are creates or updates, existing Qase case IDs only for updates, and exact field types to update.
 2. Read and apply [[05 Tooling/Qase Test Case Writing Rules]] for any test case content changes.
@@ -202,6 +204,8 @@ Prefer `05 Tooling/scripts/create-or-update-qase-case.mjs` over fragile inline s
 Local draft labels such as `TC-1` are not Qase case IDs. For new cases, do not pass `--update`; Qase assigns the new case ID during apply. Use `--update <case-id>` only when modifying an existing Qase case that already has a real Qase ID.
 
 Parameter caveat: the reusable script sends Markdown `Parameters` as Qase `params`, which Qase stores as separate single parameters. Keep execution context in the Description table by default, and use Markdown `Parameters` for setup values that change the behavior being verified. Use the smallest parameter set that remains clear. If grouped parameters are explicitly required, use an explicit `parameters` payload with `type: "group"` and verify the readback contains the intended group. Treat parameter-structure changes as high-risk writes: dry-run them, apply the smallest safe change, and confirm the stored structure and values from Qase before continuing.
+
+When simplifying a long scenario parameter into independent parameters, apply [[05 Tooling/Qase Test Case Writing Rules#Readable Parameters And Combination Accounting]]. Verify the stored parameters are separate collections with the intended values, confirm the Description still contains both setup mappings, and preserve the case's original assertions. Record the exact write scope and successful readback in the canonical note and linked handbook status; do not label unpublished customer drafts as published or definitions as executed tests.
 
 For copyable examples, see [[05 Tooling/Create Or Update Qase Case Examples]].
 
