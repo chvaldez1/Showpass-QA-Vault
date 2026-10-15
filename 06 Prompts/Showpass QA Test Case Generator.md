@@ -8,416 +8,177 @@ tags:
 
 # Showpass QA Test Case Generator
 
-Use this workflow for Qase-ready manual coverage, regression planning, PR QA plans, Jira-derived coverage, and Playwright-friendly scenarios.
+Generate source-backed, Qase-ready manual cases or compare existing Qase coverage with current behavior. Optimize for useful proof and repeatable execution; case count alone is not a coverage goal.
 
 ## Canonical Relationship
 
-Read [[00 Start Here/World-Class Software Quality Standard]] first. It owns the cross-cutting rules for scope, proof targets, state-space, coverage accounting, evidence, complex controls, mutation lifecycle, data safety, findings, readiness, and release decisions.
+Read [[00 Start Here/World-Class Software Quality Standard]] first. It owns scope, testing intent, proof targets, coverage accounting, evidence, safety, findings, and readiness. This workflow owns the procedure; link to the rules instead of restating them in every output.
 
-This note owns the test-design workflow and Showpass-specific Qase preparation. It no longer depends on a separate canonical workflow outside the vault.
+Apply [[05 Tooling/Qase Test Case Writing Rules]] to every Qase-ready draft. It owns case fields, titles, tags, parameters, prerequisites, readability, and the Copy-to-Qase Review Gate. Use [[05 Tooling/qasectl]] for Qase access and write approval.
 
-Start with:
-
-- [[01 Repositories/Backend - web-app]]
-- [[01 Repositories/Frontend - showpass-frontend]]
-- [[01 Repositories/QA Automation - showpass-playwright]]
-- [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
-- [[05 Tooling/Qase Test Case Writing Rules]] when Qase-ready formatting is requested
-
-For Qase-ready output, apply that note's **Short, Actionable Prerequisites**, **Standalone Qase Fields**, **Form Coverage And Case Purpose**, and **Verify Expectations Before Stating Them** sections before drafting. Finish with its **Copy-to-Qase Review Gate**. Each case must explain its own setup and expected behavior without requiring the surrounding note.
-
-## Settings And Amount Coverage Review
-
-Apply [[05 Tooling/Qase Test Case Writing Rules#Readable Parameters And Combination Accounting]] and [[05 Tooling/Qase Test Case Writing Rules#Settings Coverage Versus Financial Proof]] before claiming settings or financial coverage:
-
-1. Record the backend and frontend revisions actually read. Recheck renamed or removed controls after a fresh pull; distinguish local source, a saved remote ref, the supplied branch, and deployment.
-2. List independent controls and dependent setup. Use short separate parameters for independent choices; use a scenario parameter for dependent combinations. Include exact UI mappings in each standalone case.
-3. Declare whether coverage checks each option, selected risk combinations, or an explicitly requested finite full matrix. Count the selected runs and verify a concrete required pairing. Follow the canonical standard's risk-weighted default rather than expanding every feature dimension.
-4. Account separately for saving settings, customer preview, completed money movement, and financial records. Isolated shipping and fee checks do not prove their combined refund calculations.
-5. Prepare exact purchase configurations and independent original amounts. If the required tax/fee detail or supported setup cannot be obtained, classify that proof as Blocked rather than inventing an Admin field or calling the case ready.
-6. Run the Copy-to-Qase review on parsed fields. After an approved write, verify the stored parameter structure, values, mappings, and steps, then update the canonical note and handbook status. Publication is not execution.
-
-## Testing Intent Gate
-
-Before writing test cases, answer: **what are we testing and why does it matter?**
-
-Use the Major/Critical Jira calibration in [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]] as a quality bar, not as a reason to over-test. A test case should protect a reusable product behavior or business invariant, not just mirror a support request.
-
-Start with this one-sentence intent:
-
-`We are testing whether <actor/surface> can <workflow> while <business invariant> stays true; this matters because <bad outcome>, and we will prove it with <observable proof>.`
-
-Every generated test-case note should include a short `Testing Intent` section before the cases:
-
-| Field | Required Answer |
-| --- | --- |
-| Criticality bucket | Money/order state, fulfillment/access, inventory/ownership, refund/exchange/credit/payout math, reporting/dashboard agreement, permission boundary, async final state, live sales completion, or lower-signal support task. |
-| Business invariant | What must always remain true? |
-| User or business impact | Who is hurt if this breaks: customer, organizer, Box Office employee, support, finance, attendee, or reporting user? |
-| Failure mode | What bad outcome are we preventing? |
-| Observable proof | What visible or source-backed result proves the invariant is still true? |
-| Source of truth | Backend, frontend, Jira intake, product behavior, or existing Playwright pattern used to prove the behavior. |
-| Primary surfaces | Public checkout, Widget, Box Office, Dashboard, My Orders, mobile app, API, reports, payouts, or another named surface. |
-| In scope | The exact workflows, states, roles, and data that must be covered. |
-| Out of scope | Similar-looking variants that should not be tested now because they do not change the risk. |
-| Confidence | High / Medium / Low, based on source evidence and unresolved questions. |
-
-If the testing intent cannot be stated clearly, stop and add `Open Questions` instead of creating a broad case list.
-
-## Branch / PR Scope Gate
-
-Use this gate whenever the user supplies a PR, names a branch, says the changes are already checked out, or asks for coverage of code changes.
-
-1. Confirm the active repository branch and the intended base branch.
-2. Inspect the branch comparison before searching the broad feature area.
-3. Describe the changed user behavior in plain language. Do not use the feature name as a substitute for understanding the diff.
-4. Trace changed backend endpoints, services, models, webhooks, background tasks, and shared frontend code to every client that consumes them.
-5. Include affected clients even when their files are unchanged on the branch. State whether each client is directly changed or indirectly affected through shared behavior.
-6. Keep entry points and outcome states separate:
-   - Entry points answer **where does the actor start?**
-   - Outcomes answer **how can the workflow finish or recover?**
-7. Create an entry-point coverage table for multi-surface work:
-
-| Entry Point | Actor Flow | Why It Is Affected | Required Outcomes |
-| --- | --- | --- | --- |
-| Example: Electron Box Office | Employee sells from the installed desktop app | Uses the changed shared payment API | Clean success, cancel, retry, failure |
-
-8. Create an outcome matrix when payment, checkout, async state, or recovery is involved. At minimum, consider:
-   - clean success without a prior failure
-   - user cancellation
-   - provider/device cancellation when different
-   - failure or timeout
-   - retry through the same path
-   - recovery through another supported path
-   - duplicate or delayed final updates
-   - cancel/success or other realistic final-state races
-9. Include a clean successful flow as a dedicated proof target and case or explicit existing-case reference. A successful retry does not replace baseline success coverage.
-10. Do not force all outcomes onto all platforms. Verify which controls and recovery choices each client actually exposes, and mark unsupported combinations as not applicable.
-
-Do not use this gate to override the Jira-card no-diff rule. For Jira-card generation, inspect a branch comparison only when the user explicitly asks for diff-based coverage.
-
-## State-Distinct Entry Point Audit
-
-Use this audit whenever a workflow can be reached from more than one visible action, route, modal, client, or handoff. An entry point is the complete actor path and the state carried into the shared workflow, not only the final route or component.
-
-Ask:
-
-> Can the actor reach this action another way that leaves the application in a different state?
-
-If yes, treat it as a separate candidate entry point until source evidence proves the behavior is equivalent.
-
-1. Find every route and component that exposes the action.
-2. Trace every visible actor path into each caller. Do not stop when multiple paths converge on the same modal, hook, service, or shared component.
-3. Record the state at the moment the shared workflow begins:
-   - entity already selected or added vs only viewed
-   - modal kept open vs closed and reopened
-   - empty basket vs existing items
-   - direct navigation vs redirect, deep link, or cross-page handoff
-   - client-only state vs state already persisted to the backend
-   - permission, feature-flag, venue, customer, or role differences
-4. Treat paths with materially different starting state as separate entry-point values even when their later steps and expected result are identical.
-5. Keep entry-point variants separate from outcome variants. Entry points describe how the actor arrives; outcomes describe how the workflow completes, fails, cancels, retries, or recovers.
-6. For one shared behavior, prefer one Qase single parameter such as `EntryPoint` or a specific name such as `ManageRenewalEntryPoint`. Encode dependent setup in the entry-point value or its Description mapping instead of creating invalid independent-parameter combinations.
-7. Put the complete path-to-parameter mapping and starting-state requirements in the Qase Description. Keep Steps focused on the shared actor actions and observable proof after the parameterized path is followed.
-8. Before enhancing an existing broad Qase case, finish this audit. Create a focused regression case when the defect depends on state-distinct paths that would overload or change the existing case's responsibility.
-
-Add an entry-point table when two or more state-distinct paths are in scope:
-
-| Entry Point | Actor Path | Starting State | Supported Surface |
-| --- | --- | --- | --- |
-| Example: ViewWithoutAdding | Search customer → View info → start action | Customer is viewed but not attached; modal remains open | Web Box Office |
-
-After `Testing Intent`, add a compact `Proof Target Map`:
-
-| Proof Target | Why It Matters | Covered By |
-| --- | --- | --- |
-| Example: failed payment does not issue tickets | Prevents unpaid fulfillment | TC-1 |
-
-Keep the map small. Most requests should have 1-5 proof targets. Every generated case must map to a proof target or it should be removed, deferred, or called out as a lower-priority manual check.
-
-Use this criticality filter:
-
-- Prioritize cases that protect money movement, paid/unpaid final state, order or ticket fulfillment, inventory/seat ownership, refund/exchange/credit/payout math, live sales completion, reporting disagreement, permissions/ownership, or async provider/background task final state.
-- Treat scripts, imports, one-off data moves, config/content requests, hardware/printer issues, and demo setup as lower signal unless they reveal reusable product behavior.
-- Prefer one representative high-risk path over a matrix of low-signal permutations.
-- Add a new case only when it proves a different invariant, actor impact, entry path, state transition, permission boundary, or financial/fulfillment outcome.
-
-Use these CSV-calibrated proof buckets when deciding what is worth testing:
-
-| Bucket | Test When The Case Proves |
-| --- | --- |
-| Money/order state | Charged amount, payment status, order, invoice, receipt, or Dashboard state cannot disagree. |
-| Fulfillment/access | A paid customer gets usable tickets/orders, and an unpaid customer does not. |
-| Inventory/ownership | Ticket quantity, holds, seats, memberships, packages, resale, waitlist, or transfers remain owned by the right party. |
-| Financial math | Refunds, exchanges, discounts, credits, gift cards, fees, taxes, payouts, or settlements calculate and display correctly. |
-| Reporting/dashboard agreement | Organizer-facing totals, transaction details, reports, and payout views match the real order state. |
-| Permission boundary | The wrong user, employee, organizer, or account cannot view, claim, refund, edit, or fulfill the wrong thing. |
-| Async final state | Provider callbacks, scheduled jobs, webhooks, retries, cancels, or delayed payment states cannot create duplicate, stuck, or incorrect final outcomes. |
-| Live sales completion | A real checkout, Box Office, transfer, or assigned seating sales path is not blocked. |
-
-If a request only describes a script, import, data cleanup, configuration, hardware/printer issue, demo setup, or one-off support workaround, narrow the output to the reusable product behavior. If no reusable behavior is source-backed, write narrow verification notes and `Open Questions` instead of broad regression cases.
+Use [[00 Start Here/Showpass QA Handbook/00 Index|Showpass QA Master Handbook]] selectively for Showpass knowledge. Its recipes are investigation aids, not proof of current behavior or executed tests.
 
 ## Workflow Routing
 
-Default to test-case generation unless the user explicitly asks to compare against existing Qase coverage.
+| Request | Flow | Qase access |
+| --- | --- | --- |
+| New cases, feature/regression coverage, Jira-derived cases, PR QA plan | [[#Test Case Generator Flow]] | None |
+| Gaps, duplicate analysis, whether existing coverage is enough | [[#Read / Gap Analysis Flow]] | Read only |
+| Review/enhance exact existing case IDs | Exact-ID Review in [[05 Tooling/qasectl]] | Read named cases; broader search only for requested gap/duplicate analysis or a proposed new case |
 
-- Use [[#Test Case Generator Flow]] for new test cases, regression coverage, PR QA plans, Jira-card coverage, and source-backed manual case drafts.
-- Use [[#Read / Gap Analysis Flow]] only when the user asks for gap analysis, existing Qase coverage, coverage comparison, whether Qase coverage is enough, or suggested Qase updates.
-- Do not query Qase during the generator flow.
-- Do not call generated test cases a gap analysis unless existing Qase coverage was read and compared against source behavior.
-- Do not write to Qase from either flow unless the user explicitly approves a Qase update after a dry-run preview.
+Neither flow authorizes Qase writes. Prepare a dry-run preview and obtain explicit confirmation of the exact write scope before apply, following the Qase guide. Multi-case writes use its batch-plan script and readback verification.
 
-Example prompts:
-- New cases without Qase comparison: [[06 Prompts/Example - Generate Test Cases]]
-- Jira-card test cases: [[06 Prompts/Jira Card To Test Cases]]
-- Existing Qase coverage comparison: [[06 Prompts/Example - Qase Gap Analysis]]
+Examples: [[06 Prompts/Example - Generate Test Cases]] · [[06 Prompts/Example - Qase Gap Analysis]] · [[06 Prompts/Jira Card To Test Cases]].
 
-## Vault Output Target
+## Efficient Investigation
 
-Always write generated test cases in the matching feature folder under:
-`03 Test Cases/<feature>/`
+1. Find and reuse the active note for the same request, feature, Jira ticket, or Qase work item. Read existing user edits and evidence before searching again.
+2. Set breadth: **focused workflow** by default; **full page** when requested; **finite full matrix** only when explicitly requested. Full-page coverage inventories all relevant controls, child controls, states, validation, effects, and cleanup within that page/context. A focused request accounts for its own paths and dependencies; record unrelated observations separately.
+3. Read the canonical standard and applicable writing rules once per task. From the handbook index, select only the relevant setup sections, product playbook, and integration passes below. Do not load the whole handbook or all repository guides.
+4. Search the nearest backend implementation first, then frontend callers and relevant tests. Expand along actual dependencies and affected consumers. Batch independent reads; reuse reviewed paths, source revisions, and valid evidence. Re-read when source, build, state, or scope changes.
+5. Gather current navigation, UI wording, conditional states, and useful screenshots during one authorized browser walkthrough. Do not replay mutations just to improve documentation. Keep source facts, browser observations, existing case definitions, and executed results distinct.
+6. Stop expanding when every declared item has a proof target and coverage decision, expected results/setup are sourced or explicitly unresolved, and another case would repeat the same proof. Do not stop at an arbitrary number of cases or silently reduce requested combinations.
 
-If the user specifies only a filename, classify the request by its primary product behavior or business invariant and treat the filename as relative to the matching feature folder. Reuse an existing feature folder whenever one fits.
+### Select Handbook Knowledge
 
-Example:
-`employees-qa-test-cases.md` means `03 Test Cases/Employees/employees-qa-test-cases.md`.
+| Need | Read only the applicable sections | Bring into this task |
+| --- | --- | --- |
+| Actors, Venue, client, configuration, permissions/flags | [[00 Start Here/Showpass QA Handbook/12 Venue Client and Scenario Setup]] | Correct actor versus recipient, exact gates, supported setup and original values; production-to-TEA comparison only when relevant and authorized |
+| Feature behavior | Matching playbook from the [[00 Start Here/Showpass QA Handbook/00 Index\|index]] | Setup → action → final business result, bound to current source |
+| Money, recipients, ownership, completion | [[00 Start Here/Showpass QA Handbook/03 Evidence and Expected Results]] | Independent amounts, exact expected items/people, fresh final reads |
+| Shared behavior, existing records, failures, concurrency, migration | [[00 Start Here/Showpass QA Handbook/13 Senior QA Integration Passes]] | Only passes justified by the changed contract or requested workflow |
+| Purchase or post-purchase effects | [[00 Start Here/Showpass QA Handbook/14 Checkout and Post-Purchase Coverage]] | Applicable issuance, answers, delivery, admission, fulfillment, accounting, analytics and external consumers; disabled versus inaccessible outcomes |
+| Automation candidates or physical devices | [[00 Start Here/Showpass QA Handbook/06 Automation Strategy]] | Existing assertions to extend, right testing layer, and named native/hardware checks |
 
-Template files are protected reusable scaffolds. If the requested output path is named `*Template.md`, such as `03 Test Cases/Test Case Template.md`, do not overwrite it for generated cases or gap analysis unless the user explicitly says to overwrite or edit the template itself. Instead, create a feature-specific note in the matching feature folder, using a filename such as:
-`03 Test Cases/<feature>/<feature-or-scenario>-test-cases.md`
-or
-`03 Test Cases/<feature>/<feature-or-scenario>-qase-gap-analysis.md`
+Record selected sections in Sources Reviewed and apply useful facts directly. Do not copy handbook checklists or require every offering, payment method, adjustment, or integration in every case. Keep selected Refund, Void, and Exchange branches on independent orders; preserve an untouched control where it helps detect collateral change.
 
-If the user specifies a path outside `03 Test Cases/`, keep the test case output under `03 Test Cases/` unless they explicitly say the file must be outside that folder.
+## Testing Intent Gate
 
-If the user does not specify an output file, create a new note under the matching feature folder:
-`03 Test Cases/<feature>/`
+Before cases, state:
 
-Use the best suitable filename for the feature or scenario, such as:
-`03 Test Cases/<feature>/<feature-or-scenario>-test-cases.md`
+`We are testing whether <actor/surface> can <workflow> while <business invariant> stays true; this matters because <bad outcome>, and we will prove it with <observable proof>.`
 
-Use [[03 Test Cases/Test Cases by Feature]] as the current folder index and filing guide.
+Record the canonical intent fields: criticality bucket, invariant, actor impact, failure mode, proof, surfaces, in/out scope, and confidence with evidence gaps. Combine with the scope summary rather than repeating them in several sections.
 
-Use [[00 Start Here/World-Class Software Quality Standard]] for source review, risk analysis, coverage accounting, evidence, and readiness. For Qase-ready cases, use [[05 Tooling/Qase Test Case Writing Rules]] instead of GIVEN / WHEN / THEN formatting.
+Build a Proof Target Map. Each case must protect a distinct outcome or materially different risk. Include clean success independently of failure/retry. Add negative, boundary, missing-input, permission, cancellation, persistence, downstream, and regression checks where applicable; explicitly account for exclusions and blockers.
 
-When producing Qase-ready cases or Qase update recommendations, also read and apply [[05 Tooling/Qase Test Case Writing Rules]] for the Showpass Qase standard on user perspective, observable behavior, role-specific language, plain common product wording, 1-3 best approved tags, platform/view parameterization, concise one-sentence expected results, descriptions, and Qase step structure.
+Use [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]] when incident calibration helps prioritize. Money, admission, ownership, customer data, final order state, and recovery deserve strong proof. A one-off script, content change, printer request, or support workaround warrants broad regression coverage only when source reveals reusable product risk. If intent is unresolved, record the exact question and continue independent known work without inventing cases.
+
+## Branch / PR Scope Gate
+
+For a supplied PR/branch or requested diff-based coverage:
+
+1. Record the active branch, intended base, and exact reviewed base/head revisions. Inspect that comparison before broad feature searches; do not switch or update repositories merely to read it.
+2. Summarize changed user behavior, including relevant API/schema, permission, validation, job, callback, and shared-component changes.
+3. Trace changed backend/shared behavior to all actual consumers, including unchanged clients. Separate directly changed and indirectly affected clients with source evidence.
+4. Keep **entry points** (where/how the actor starts) separate from **outcomes** (success, cancel, failure, timeout, retry, supported recovery, delayed/duplicate final updates). Include provider callbacks, webhooks, polling, and background completion when they affect final business state.
+5. Verify client-specific controls. Unsupported recovery choices are Not applicable with evidence; inaccessible supported behavior is Blocked. One successful retry does not prove clean success.
+
+Jira-only intake keeps the no-diff rule unless the user explicitly requests branch/diff coverage. A PR supplied only as a reference informs the named task; it does not expand scope to testing that whole PR.
 
 ## Jira Card Intake
 
-Use this flow when the user says to generate tests from a Jira card, pastes a Jira issue key, or pastes an Atlassian card link.
+Follow `AGENTS.md` Jira Access rules: discover and use the connected Atlassian Rovo issue-details tool, requesting description, status, priority, and comments. Report the specific connector failure if reading fails; do not replace it with a local token reader or unauthorized browser access.
 
-1. Discover the connected Atlassian Rovo plugin's Jira tools and follow the Jira Access rules in `AGENTS.md`.
-2. Fetch the Jira card through the plugin using the pasted issue key or URL, including its description, status, priority, and comments.
-3. Treat Jira as intake context only. Extract the problem statement, requested behavior, acceptance criteria, affected role or surface, comments, known edge cases, and unresolved questions.
-4. Save the raw Jira API response under `/private/tmp` only when repeat local inspection is useful.
-5. Continue through [[00 Start Here/World-Class Software Quality Standard]] and this generator workflow before writing test cases.
-6. Verify behavior against backend source first when the Jira card touches APIs, validation, permissions, checkout, payments, credits, refunds, settlement, reports, or other source-of-truth logic.
-7. Verify frontend behavior for routes, UI state, forms, copy, entry paths, permissions, and visible outcomes.
-8. Classify the card by business invariant before writing cases. If it is mainly a one-off script, import, config, printer/device, or demo request, generate only narrow verification cases unless source review shows recurring product behavior.
-9. Do not run git diff, branch comparison, or changed-file discovery for Jira-card test generation unless the user explicitly asks for diff-based coverage. Inspect the relevant source files directly from the Jira context, branch name, route, API, or feature terms.
-10. Use Playwright only for existing automation patterns unless the user asks for automation work.
-11. If the user asks for new coverage from the Jira card, use [[#Test Case Generator Flow]] unless they explicitly ask for Qase gap analysis.
-12. If the user asks whether existing Qase coverage is enough, use [[#Read / Gap Analysis Flow]] and [[05 Tooling/qasectl]].
+Summarize the problem, acceptance input, affected actors/surfaces, and unresolved comments briefly. Verify expected behavior in backend and frontend source. Choose generation or gap analysis from the user's goal, not merely from a Jira link. Do not run diffs or query Qase for ordinary Jira-to-case generation. Do not write to Jira unless requested.
 
-Example request:
+## State-Distinct Entry Point Audit
 
-```text
-Use 06 Prompts/Showpass QA Test Case Generator.md.
+Ask: **Can the actor reach this action another way that leaves different starting state?** Trace visible callers into the shared workflow; convergence on one modal/component does not establish equivalence.
 
-Goal:
-Generate Qase-ready manual test cases from this Jira card:
-https://showpass.atlassian.net/browse/SPW-12345
+Consider viewed versus attached customer, existing versus empty basket, uninterrupted versus reopened modal, direct versus redirected entry, client-only versus saved state, and permission/flag/Venue differences. For multi-path work, record:
 
-Jira:
-- Use the connected Atlassian Rovo plugin to read the card, following the Jira Access rules in AGENTS.md.
-- Treat Jira as intake only, not source of truth.
+| Entry Point | Visible Actor Path | Starting State | Supported Client / Evidence |
+| --- | --- | --- | --- |
 
-Source code:
-- Start from the vault repo notes:
-  [[01 Repositories/Backend - web-app]], [[01 Repositories/Frontend - showpass-frontend]], and [[01 Repositories/QA Automation - showpass-playwright]]
-- Verify backend behavior first:
-  /Users/christianvaldez/Documents/Showpass/repos/web-app
-- Verify the frontend user flow:
-  /Users/christianvaldez/Documents/Showpass/repos/showpass-frontend
-- Use Playwright only for automation pattern references:
-  /Users/christianvaldez/Documents/Showpass/repos/showpass-playwright
+Parameterize equivalent actions/results with a short entry-point value and a complete mapping inside each case. Keep dependent setup together; avoid invalid independent combinations. Split materially different flows or an overloaded existing case. Track outcomes separately, in the same ledger if clear; add another matrix only when it resolves real client/outcome differences.
 
-Output:
-Write Qase-ready cases to:
-03 Test Cases/<feature>/<jira-key-or-feature>-test-cases.md
+## Dashboard UI Organization
 
-Constraints:
-- Do not query or update Qase unless I explicitly ask for a gap analysis.
-- Do not run git diff or branch comparison unless I explicitly ask for diff-based coverage.
-- Use [[05 Tooling/Qase Test Case Writing Rules]].
-- Include Testing Intent, a short Jira Intake Summary, Sources Reviewed, source-backed behavior, risks, manual test cases, minimum execution set, automation candidates, and open questions.
-```
+For Dashboard `/manage/` pages, apply [[03 Test Cases/Test Cases by Feature#Dashboard UI Organization]]. Group cases and gap rows by **visible navigation section → menu group, when present → destination page → actual tab/subpage**. The screen owning the behavior determines placement; a route string or setup screen does not.
+
+Verify current navigation definitions and use an already-open relevant browser to enrich labels/state when available. Record the visible path, source/route evidence, owning feature folder, and existing or proposed Qase suite together. Use the same grouping for inventories, cases, gaps, and minimum execution sets. Keep cross-screen journeys in one owning group and reference other touchpoints. Navigation grouping is not a reason to duplicate equivalent cases or move existing Qase suites.
+
+## Already-Open Codex Browser
+
+The user's standing preference is to use an already-open, relevant Codex browser to improve generation and gap analysis. Follow the browser rules in `AGENTS.md` and the selected runtime's exposed APIs.
+
+- Check available tabs once when relevant. Reuse the matching session; verify environment, role, Organization and page before relying on it. Do not inspect unrelated tabs or start a new browser/session solely because a URL was supplied.
+- Use read-only navigation, opening menus/tabs/dialogs, and other non-saving interactions with known behavior to confirm visible labels, grouping, defaults, disabled/empty/error states, and supported paths. Derive permitted roles and flags from source; one session cannot establish every permission state.
+- Combine observation and evidence capture in one pass. Preserve relevant screenshots with brief captions beside the claim they support; do not require a screenshot after every draft step. A requested executed browser guide can follow its own evidence requirements.
+- A generation/gap request does not by itself authorize saving, creating, deleting, sending, purchasing, refunding, or triggering jobs. Execute those only within the user's authorized test-data/cleanup scope. Use [[06 Prompts/Interactive Browser Release Testing]] for requested execution and the canonical mutation proof rules.
+- Browser observations enhance source investigation. Record deployed/local differences; do not replace an expected result with whatever the current page shows. Screenshots, successful clicks, and loaded routes do not prove persistence, one charge/order, delivery, or downstream completion.
+- If no suitable session/access is available, continue source-backed drafting. Record the exact unverified UI fact when it matters. Separate Confirmed, Inconclusive, Client-side risk not submitted, and Product-expectation question; never call an unexecuted case passed.
+
+Keep stable roles/labels/test IDs and their provenance in automation notes only when useful. Temporary browser element references are not reusable Playwright selectors and do not belong in manual steps.
+
+## Settings And Amount Coverage Review
+
+Apply [[05 Tooling/Qase Test Case Writing Rules#Readable Parameters And Combination Accounting]] and [[05 Tooling/Qase Test Case Writing Rules#Settings Coverage Versus Financial Proof]].
+
+- Record exact source revisions; local checkout, remote ref, supplied branch, and deployment are different evidence.
+- Map every parameter value to exact supported setup within its case. Separate independent controls; keep dependent combinations together. State selected combinations and run count separately from case count. A finite full settings matrix proves only its stated settings outcome.
+- Account separately for available controls, save/reopen, customer preview, completed money movement, and financial records. Isolated fee/shipping checks do not prove combined refund calculations.
+- Calculate financial expectations from independent original amounts. Name missing tax/fee breakdown or unsupported setup as Blocked instead of inventing an Admin field or a runnable recipe.
+- After an approved Qase write, verify stored fields/parameters and update the canonical note and any relevant maintained handbook status. Publication is not execution.
 
 ## Test Case Voice And Grouping
 
-Write manual test cases so any product-team member can execute them without translating implementation language.
+Use the writing rules as the field-format authority. Each copied case must stand alone: exact required permissions, concise find-or-create setup, parameter mappings, named starting screen, visible actions/results, and restoration or intentionally retained data. Define unfamiliar Showpass terms when first needed.
 
-Apply this beginner-readability check before finalizing the note:
+Keep implementation, Jira traceability, coverage commentary, and selector hints outside execution fields. Prefer visible navigation to hard-coded routes, except when the route itself is tested or no visible navigation exists. Use local `TC-*` labels outside the Title; use `SPT-*` only for real existing Qase IDs.
 
-- Assume the reader is new to Showpass.
-- Add a short plain-language glossary when product-specific terms are required.
-- Name the starting product screen in the first step. Use a route only when the route itself is under test or no visible navigation exists.
-- Use visible control names where source confirms them.
-- Explain where to verify a result when the selling device does not expose the proof surface, such as opening Web Dashboard Transactions after a Mobile POS sale.
-- Use one observable sentence per Expected Result whenever possible.
-- Prefer `one charge, one transaction, one order, and one ticket` over internal payment-state or basket-field wording.
-- Move checkout IDs, stored statuses, flags, webhook names, and implementation fields to Sources Reviewed, Source-Backed Behavior, Risk Areas, or automation notes unless they are required test data.
-- Read every case once as if the reader has never used the product. If a step requires unstated Showpass knowledge, add the missing navigation, setup, or visible result.
-- Treat the canonical output note as the complete reviewer handoff. Do not require a QA employee to open source code, a PR, or a separate execution narrative to understand a case or finding.
-- For every multi-action case or defect reproduction, use `Step Action | Data | Expected Result` with one visible action and decision per row.
-- Give named product areas, visible control labels, and clear record-selection or creation instructions. Do not require invented QA venue names, specific account IDs, or a generic `QA environment`; include an isolation requirement only when a concrete risk requires it.
-- Keep prerequisites concise but actionable: exact employee permissions, required flags with their scope and setup location, and supported admin find-or-create steps with required values. Distinguish ordinary settings from feature flags and verify which actually controls page access.
-- For a base form case, list the expected fields, choices, conditional controls, and save/reopen result. Account for supplied PR verification details and distinguish fresh defaults, existing settings, disabled settings, missing configuration, and denied permissions.
-- Put actual defect behavior in a separate Actual Result field, not inside an expected-result sentence.
-- Keep automation-only terms such as locator, DOM, hidden input, sentinel, isolated clipboard, mocked response, and programmatic click out of manual procedures.
-- Place screenshots beside the behavior they prove. If browser execution produced evidence, embed it in the active gap-analysis or test-case note rather than making the reviewer discover it in another file.
-- If an action depends on browser permission, operating-system state, timing, or test-tool behavior, do not call it Confirmed until a normal user path independently reproduces it.
-- Include a final data-state instruction: no change, cleanup steps, or the exact Preserve-for-review artifact and cleanup condition.
-
-- Start from the `Testing Intent` section. Test cases should trace back to the business invariant and failure mode.
-- Order cases by execution workflow, not by backend class or implementation detail.
-- Prefer an execution order such as discount entry paths and purchase handoff, basket recalculation with fees and tender, item identity and split boundaries, post-transaction financial workflows, and rollback.
-- Do not use Markdown numbered lists for test case titles. Use `TC-1: Title`, `TC-2: Title`, and so on only as local Markdown headings; the Qase Title excludes the `TC-*` label. Keep Jira titles, issue keys, and cross-case commentary outside the Description and other execution fields. Never require `Setup A` or another case to understand or run a case.
-- Use the title format from [[05 Tooling/Qase Test Case Writing Rules#Title Naming Rules]]: `Core - [Feature] - [Description]`.
-- Use `Core` only when the same behavior can be tested across more than one platform or entry point. For one-surface cases, start with the surface or app area, such as `Box Office`, `Public Checkout`, `Widget`, or `Dashboard`.
-- Use `[Feature]` for the main app area or workflow the case mostly touches. Use `[Description]` for a short one-line behavior statement that someone can understand without reading the steps.
-- Avoid cramped or malformed title wording. Titles should read naturally after the prefix, with a space after `Verify`.
-- Use the same `TC-*` labels in the Minimum Execution Set.
-- Keep technical source behavior in source-backed behavior or risk sections; keep test steps focused on what the customer, Box Office employee, organizer, or dashboard user sees and does.
-- Use plain titles and step wording, but keep parameter names and values in PascalCase per [[05 Tooling/Qase Test Case Writing Rules]].
-- Prefer readable PascalCase parameter names such as `TicketQuantity`, `FeeSetup`, `PaymentType`, `BasketChange`, `SeatPath`, and `TicketSelection`.
-- Prefer readable PascalCase parameter values such as `TwoSelectedOneDiscounted`, `FlatFeePlusTax`, `OtherCustomType`, and `ExchangeAfterPartialRefund`.
-- Apply the readable-parameter review above before combining several controls into one long value. Keep independent choices separate and dependent setup explicit; do not mistake individual-option coverage for combination coverage.
-- Keep parameters easy to execute. Prefer one high-signal value for baseline coverage and only add variants when they materially change behavior or risk.
-- Do not combine too many broad axes in one test case. If a case needs more than 2-3 parameters, split it or move lower-risk variants to the minimum execution set, test data notes, or automation candidates.
-- Do not create every platform, role, payment type, or state permutation. Add a variant only when it changes the invariant being proved or catches a realistic Major/Critical-style failure.
-- For complex features, use one representative parameter value for the primary manual case, then create separate cases for materially different flows such as Box Office payment, basket changes, refunds, exchanges, or assigned seating.
-- Choose 1-3 accurate approved tags. Prefer one surface tag, such as `public`, `widget`, or `box-office`, plus one feature tag, such as `discounts`, `checkout`, `basket`, `fees-and-taxes`, `refunds`, `exchanges`, or `reports`.
-- Do not tag every related domain in a broad case. Tags should help someone find the case, not list every risk.
-- Avoid generated table headers like `Column 1`, `Column 2`, and `Column 3`; use `Platform / View` and `Step Action / Data / Expected Result` for tables.
-- Do not put Qase parameters in a `Name / Values` table. Use `ParameterName: Value1, Value2, Value3`.
-- Prefer customer-facing terms such as `discounted tickets`, `regular-price tickets`, `checkout total`, `order details`, `transaction details`, `invoice details`, and `credit details`.
-- Avoid implementation-heavy wording in manual cases unless it is the exact product term needed for setup: `metadata`, `artifacts`, `mutation`, `split rows`, `full-price rows`, `orphaned rows`, `unsplit`, `parameterized`, and `recalculation drift`.
-- Expected results should be observable and testable. State what should be visible, unchanged, issued, selected, charged, refunded, exchanged, or reported.
-- When editing an existing generated note, preserve user edits and improve only the requested wording or structure unless the user explicitly asks for a rewrite.
+Before adding cases, compare actions, expected results, starting state, and risk. Parameterize equivalent single/recurring Event, entry-point, role, or client variants when one short mapping and step set remain clear. Split when setup, outcome, permission boundary, or recovery changes materially. Use short PascalCase parameters, relevant Platform/View rows in Description, and 1–3 approved tags. Do not cap useful coverage at a fixed case count or inflate it with cosmetic variations.
 
 ## Test Case Generator Flow
 
-Use this flow when the user wants new source-backed test cases or a QA plan and is not asking to compare against existing Qase cases. This includes new features, switches, routes, PRs, APIs, workflows, regressions, bug fixes, and Jira-card coverage.
-
-Do not label the output as a gap analysis unless the user explicitly asks to compare existing coverage against source behavior.
-
-1. Treat the user request as new coverage.
-2. Do not query Qase in this flow.
-3. Write a concise Testing Intent draft before case generation. Identify the criticality bucket, business invariant, affected actor, failure mode, observable proof, primary surfaces, in-scope paths, out-of-scope variants, and confidence.
-4. Create a small Proof Target Map with the specific outcomes the cases must prove.
-5. Inspect backend behavior first when backend source is provided or the feature affects APIs, validation, permissions, checkout, payments, credits, refunds, settlement, reports, or other source-of-truth logic.
-6. Inspect frontend behavior when the user flow, route, UI state, or entry path needs frontend confirmation.
-7. For branch or PR work, complete the Branch / PR Scope Gate and distinguish directly changed clients from unchanged clients that consume the changed shared behavior.
-8. Complete the State-Distinct Entry Point Audit, then identify the remaining setup choices, state transitions, permissions, feature flags, outcome states, and downstream surfaces.
-9. Add a clean successful path before recovery and edge cases when the changed workflow can complete successfully.
-10. Remove low-value permutations. Keep only cases that prove a distinct invariant, actor impact, state transition, permission boundary, financial outcome, fulfillment outcome, reporting outcome, or materially different client recovery path.
-11. Apply the beginner-readability check to the full note and the writing rules' Copy-to-Qase Review Gate to each case in isolation.
-12. Write the output under the matching `03 Test Cases/<feature>/` folder with a `*-test-cases.md` or `*-coverage-plan.md` filename. Reuse the active note for the same request, Jira ticket, feature, or Qase work item; do not create a parallel draft when the approach changes.
-
-The output should separate:
-
-- Testing Intent
-- Proof Target Map
-- Declared scope and out-of-scope decisions
-- Summary of new behavior
-- Sources reviewed
-- Assumptions and unknowns
-- Source-backed behavior
-- Product-surface and complex-control inventory
-- Entry-point coverage, including directly changed and indirectly affected clients when applicable
-- Outcome coverage, including clean success and supported recovery states
-- Risk areas
-- Coverage decisions: why these cases were included and what was intentionally excluded
-- State-space / setup matrix
-- Coverage ledger with every in-scope item marked covered, manual-only, deferred, not applicable, or blocked
-- Recommended test data
-- Manual test cases ordered by execution workflow, using `TC-*` labels and Qase-ready structure when the user asks for Qase-ready output
-- Minimum execution set
-- Suggested automated coverage
-- Open questions that block confident coverage
-
-Example request:
-
-```text
-Use 06 Prompts/Showpass QA Test Case Generator.md.
-
-Goal:
-Create test cases for the new switch `enable_itemized_partial_apply_to_each_split` enabled.
-Focus on switch-on behavior across every entry path where a discount can be applied, such as public checkout, widget checkout, Box Office direct sale, holds, hold-link purchase, group sales, basket updates, and tender or credit combinations.
-Include downstream post-transaction checks for refunds, exchanges, voids, transfers, check-in, transactions, payouts, and reports.
-Include a small switch-off rollback smoke.
-
-Source code:
-/Users/christianvaldez/Documents/Showpass/repos/web-app
-
-Output:
-Write to 03 Test Cases.
-
-Constraints:
-Keep output concise. This is a new feature, so do not query or update Qase.
-```
-
-Example output target:
-
-`03 Test Cases/Discounts/itemized-partial-apply-to-each-split-test-cases.md`
-
-Example title:
-
-`# Itemized Partial APPLY_TO_EACH Split Test Cases`
+1. Resolve the active output note, request breadth, intent, and proof targets. Fetch Jira intake or review the exact PR comparison only when applicable.
+2. Inspect backend truth → frontend paths/consumers → relevant existing assertions. Use selected handbook sections and the already-open browser as described above. Inspect source-only behavior without presenting it as executed proof.
+3. Build one scope inventory/coverage ledger including controls and child controls, states, validation, permissions, mutations, downstream effects and cleanup. Add state/combination and entry/outcome tables only where they clarify real differences.
+4. Draft standalone cases in UI/workflow order. Cover distinct risks and preserve every declared item through a case, existing reference, or explicit Manual-only, Deferred, Not applicable, or Blocked decision with reason/evidence.
+5. Apply the Copy-to-Qase Review Gate in isolation to every case. Check parameter/run accounting, source expectations, navigation grouping, and the minimum execution set. Save in the canonical note. Do not query Qase or label this a Qase gap analysis.
 
 ## Read / Gap Analysis Flow
 
-Use this flow only when the goal is to compare existing Qase knowledge against the codebase before creating or updating cases.
+1. Read [[05 Tooling/qasectl]]. Use exact-ID reads for a bounded review; for broad gaps, prefer one complete bulk snapshot under `/private/tmp` and local filtering. Reuse a snapshot only when project, scope, retrieval time, and completeness are known. Refresh after relevant Qase changes. Fetch all pages through the reported total; a failed/truncated read cannot establish absence.
+2. Search saved titles, tags, suites, descriptions, parameters, and steps using feature names, UI labels, route aliases, shared behavior and supported clients. Read full details for final candidates. Record project, time, filters, scanned/matching totals, and IDs reviewed. A title/tag match is a candidate, not coverage proof.
+3. Inspect backend and frontend behavior and selected handbook paths. Trace existing Playwright configs/helpers/assertions when automation is relevant; filenames and test discovery alone cannot prove coverage or absence.
+4. Compare each proof target, entry path, required combination and final assertion against actual Qase fields. Classify **Adequate definition**, **Partial/weak**, **Missing**, **Stale/conflicting**, **Duplicate candidate**, or **Unknown**. These describe definitions, not execution. Keep execution evidence/status separate.
+5. Build a decision table, grouped by owning UI page for Dashboard work:
 
-1. Read existing Qase cases for the feature, route, ticket, API, or keyword using `qasectl` when available.
-2. Inspect backend behavior as the source of truth.
-3. Inspect frontend code to see how users follow that backend behavior.
-4. Compare Qase coverage against source behavior.
-5. Write the output under the matching `03 Test Cases/<feature>/` folder. Reuse the active note for the same request, Jira ticket, feature, or Qase work item and consolidate revisions there instead of creating parallel gap-analysis and final-case drafts. If the user gave only a filename, place that filename in the matching feature folder; if no output file is specified and no active note exists, create a new suitably named note there. If the requested path is a `*Template.md` file, create a feature-specific gap-analysis note instead unless the user explicitly says to overwrite the template.
+| UI Page / Proof Target | Source-Backed Requirement | Existing SPT IDs / Actual Assertions | Coverage Assessment | Risk / Evidence | Recommendation |
+| --- | --- | --- | --- | --- | --- |
 
-The output should separate:
+6. Prefer **Keep** or **Enhance** a suitable case over creating another. Capture its preservation baseline: purpose, supported platforms/views, parameters, scenarios, useful assertions, suite/tags and step count. Explain every proposed removal/narrowing; never silently repurpose it. Recommend **New** only for distinct proof that does not fit clearly. Mark duplicates for review without deletion.
+7. Draft full Qase-ready replacements/additions for prioritized in-scope gaps; reference adequate cases instead of reproducing them. If requested breadth exceeds the drafted set, account for the rest explicitly. Record specific access/evidence blockers as Unknown/Blocked rather than asserting no coverage. Save all analysis and final drafts in the same canonical note. Do not write to Qase.
 
-- Testing Intent
-- Proof Target Map
-- Declared scope and out-of-scope decisions
-- Existing Qase coverage
-- Source-backed behavior found in code
-- Product-surface and complex-control inventory
-- Coverage gaps
-- Coverage ledger
-- Risk areas
-- Suggested new or updated Qase-ready cases
-- Browser findings with beginner-executable reproduction tables and evidence when browser execution has occurred
-- Open questions that block confident coverage
+## Vault Output Target
 
-Do not push changes to Qase during read/gap analysis. Treat Qase updates as a separate sign-off step.
+Use [[03 Test Cases/Test Cases by Feature]] for filing. Reuse the active note for the same scope; consolidate later revisions there. Otherwise create `03 Test Cases/<feature>/<feature-or-scenario>-test-cases.md` or `*-qase-gap-analysis.md`. A bare filename is relative to the owning feature folder. Keep output there unless the user explicitly requires another location.
 
-When a user does approve Qase updates, follow [[05 Tooling/qasectl#Qase Update Workflow]] before writing: use the existing `.env`, dry run the exact changes, apply only after the preview is clean, then re-read Qase to verify.
+Never generate output into `*Template.md` unless the user explicitly asks to edit/overwrite that scaffold. Apply Dashboard UI grouping inside the note; add nested navigation folders only for new or explicitly reorganized work. Preserve existing notes, links, IDs and user edits.
 
-## When To Use
+### Compact Output Contract
 
-- Generate QA test cases from backend and frontend code.
-- Turn source behavior into structured QA coverage.
-- Prepare test cases that may later become Playwright automation.
-- Create broader manual QA coverage separate from `SPEC_*.md` browser plans.
-- Compare existing Qase coverage against backend/frontend source behavior.
+Keep one canonical artifact with these contents; combine sections/tables when clear, omit empty sections, and avoid duplicating the same fact:
+
+1. **Testing Intent and Scope:** canonical intent fields, breadth, roles/clients/configuration, boundaries and confidence; short changed-behavior/Jira summary when applicable.
+2. **Sources Reviewed and Behavior:** actual revisions/files, selected handbook sections, verified behavior, independent expected values, and browser environment/observations or evidence conflicts.
+3. **Proof Targets and Coverage Ledger:** every declared item, risk, case/reference or disposition with reason/evidence; selected combinations and required setup. In design work, label case mappings as planned/not executed. Execution requires evidence under canonical statuses.
+4. **Existing Coverage and Gaps** for gap analysis: query summary and decision table; definitions versus execution kept separate.
+5. **Manual Cases:** standalone Qase fields in owning UI/workflow order. Keep essential setup inside each case even if a note-level data overview is useful.
+6. **Minimum Execution Set and Remaining Work:** exact case/parameter selections and why, excluded/deferred/device/backend proof, focused automation candidates when useful, and precise unresolved questions. A minimum set is a prioritized subset, not a claim that remaining scope passed.
+
+This replaces the old requirement for many overlapping report sections; it does not remove canonical coverage obligations. For an actual browser run, retain required findings, execution evidence, cleanup proof and release recommendation. Drafting or publishing cases is not release sign-off.
 
 ## Source Context
 
-- Backend first source of truth: [[01 Repositories/Backend - web-app]] (`/Users/christianvaldez/Documents/Showpass/repos/web-app`)
-- Frontend follows backend behavior: [[01 Repositories/Frontend - showpass-frontend]] (`/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`)
-- Playwright automation patterns: [[01 Repositories/QA Automation - showpass-playwright]] (`/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`)
+- Backend truth: [[01 Repositories/Backend - web-app]] — `/Users/christianvaldez/Documents/Showpass/repos/web-app`.
+- Frontend paths/presentation: [[01 Repositories/Frontend - showpass-frontend]] — `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`.
+- Existing automation patterns: [[01 Repositories/QA Automation - showpass-playwright]] — `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`. Inspect assertions before suggesting a duplicate; choose backend/component/browser/device layers from the handbook.
+
+Tuning reference: [Playwright PR #458](https://github.com/showpass/showpass-playwright/pull/458), reviewed at head `d321dfda77fb80021dd7543ccea5062dce983335` against base `74781e488ad122e023d8c79594cca09b5956a0f2` on 2026-10-15. Adopted focused versus full-page scope, outcome-driven QA judgment, one-pass evidence gathering, session reuse, and concise reporting. Its browser-guide exceptions to ledgers, shared setup, IDs, and readiness do not replace the vault's canonical accounting or standalone Qase rules. UI organization also follows local Playwright `docs/agent-workflows/standards/test-architecture.md#ui-aligned-test-folders`; verify current navigation before applying it.
 
 ## Agent Reminder
 
-Read [[00 Start Here/World-Class Software Quality Standard]] first, then apply this test-design workflow. Before writing cases, complete the Testing Intent gate and Proof Target Map so the output states the criticality bucket, business invariant, actor impact, failure mode, observable proof, scope, non-goals, and confidence. Every generated case should map back to one proof target and every declared in-scope item must be accounted for in the coverage ledger or equivalent artifact. If the input is a Jira card, fetch the card through the connected Atlassian Rovo plugin following the Jira Access rules in AGENTS.md, summarize Jira intake briefly, classify the business invariant, then verify behavior against source before generating cases. For Jira-card test generation, do not run git diff or branch comparison unless the user explicitly asks for diff-based coverage. For simple generation, PR coverage, new-feature coverage, or regression coverage, use the Test Case Generator Flow and do not query Qase. For gap analysis, read Qase first, inspect source code second, then write findings under the matching `03 Test Cases/<feature>/` folder. Bare filenames from the user should be resolved inside the matching feature folder. Never overwrite a `*Template.md` file with generated output unless the user explicitly asks to edit or overwrite that template. Keep vault notes short and reference source paths instead of copying repository implementation. Write cases from the perspective of the real Showpass actor, such as customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user. Do not use `the tester` phrasing in generated Qase cases. Preserve user edits when revising an existing note. Prefer plain product wording over abstract QA or implementation terms unless the technical term is required for accuracy.
+Select the correct flow, prove expectations from source, reuse relevant context, account for all declared scope, and write only distinct, executable cases. Use the open relevant browser to improve accuracy without turning drafting into unrequested mutations. Keep one maintained note and make unknowns explicit.

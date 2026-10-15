@@ -1,40 +1,33 @@
 # Example: Qase Gap Analysis Prompt
 
-Use this when you want an agent to read existing Qase coverage, compare it with the codebase, and write a gap analysis into the vault.
+Use to compare actual Qase case definitions with current source behavior. The linked workflow supplies repository paths, handbook selection, Qase access, browser boundaries, and case formatting.
 
-Related workflow: [[06 Prompts/Showpass QA Test Case Generator]]
-
-For new test cases without a Qase coverage comparison, use [[06 Prompts/Example - Generate Test Cases]].
+Related: [[06 Prompts/Showpass QA Test Case Generator]] · [[06 Prompts/Example - Generate Test Cases]].
 
 ```text
-Use 06 Prompts/Showpass QA Test Case Generator.md.
+Use [[06 Prompts/Showpass QA Test Case Generator]] and [[05 Tooling/qasectl]].
 
 Goal:
-Perform a read-only QA gap analysis for [feature, route, ticket, PR, API, or workflow].
+Perform read-only Qase gap analysis for [feature, workflow, page, Jira key, or PR].
 
-Qase:
-- Search existing Qase cases for: [keywords, case IDs, suite, feature area, or ticket].
-- Summarize what is already covered.
-- Do not create, update, or push Qase cases.
+Qase scope:
+[Keywords/aliases, suites, tags, or exact case IDs; note if this is an exact-ID review only.]
 
-Source code:
-- Start from the vault repo notes:
-  [[01 Repositories/Backend - web-app]], [[01 Repositories/Frontend - showpass-frontend]], and [[01 Repositories/QA Automation - showpass-playwright]]
-- Treat backend as the first source of truth:
-  /Users/christianvaldez/Documents/Showpass/repos/web-app
-- Use frontend to confirm how users follow backend behavior:
-  /Users/christianvaldez/Documents/Showpass/repos/showpass-frontend
-- Use Playwright only for existing automation patterns:
-  /Users/christianvaldez/Documents/Showpass/repos/showpass-playwright
+Coverage scope:
+[Focused workflow by default; say “full page” for all relevant page controls/states.]
+[Required clients/combinations, risks or exclusions, if known.]
 
 Output:
-- Write the gap analysis to:
-  03 Test Cases/<feature>/<feature-or-scenario>-qase-gap-analysis.md
-- Include existing Qase coverage, source-backed behavior, coverage gaps, risk areas, suggested Qase-ready cases, automation candidates, and open questions.
+Update the existing canonical note for this scope; otherwise use:
+03 Test Cases/<feature>/<feature-or-scenario>-qase-gap-analysis.md
 
-Constraints:
-- Keep the output concise and Qase-ready.
-- Use [[05 Tooling/Qase Test Case Writing Rules]] for suggested cases, including Qase step tables with Step Action, Data, and Expected Result.
-- Reference source paths instead of copying code.
-- Ask one targeted question only if the missing context materially changes the gap analysis.
+Use one complete bulk Qase snapshot and local filtering for broad gaps; read only named cases for an exact-ID review.
+Compare full case fields/assertions with source, not titles alone. Report query completeness and separate definitions from executed proof.
+Prefer enhancing suitable existing cases; draft distinct missing cases in the same note. Preserve existing useful coverage.
+Use selected handbook sections and an already-open matching Codex browser for non-saving UI checks.
+Group Dashboard cases and gaps by visible navigation and the screen owning the behavior.
+Review the exact diff for a supplied coverage PR/branch; keep Jira-only intake source-based without a diff.
+Do not create, update, move, or delete Qase cases/suites, or execute live mutations.
 ```
+
+Fill in the goal and Qase scope; omit optional lines. An incomplete Qase read means coverage is unknown, not missing. A minimum execution set prioritizes the resulting drafts; it does not establish an executed pass.

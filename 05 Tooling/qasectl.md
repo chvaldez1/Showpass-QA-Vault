@@ -1,6 +1,6 @@
 # qasectl
 
-`qasectl` is the bridge between local QA analysis and Qase. Use it to read existing Qase coverage before creating new cases, and later to push signed-off updates.
+`qasectl` is the bridge between local QA analysis and Qase. Use it for requested Qase reads/gap analysis and later for signed-off writes. Ordinary source-backed case generation does not query Qase; select the flow in [[06 Prompts/Showpass QA Test Case Generator#Workflow Routing]].
 
 ## Intended Uses
 
@@ -17,7 +17,7 @@ These rules define the Showpass Qase standard for user perspective, observable b
 
 ## Read-First Workflow
 
-Use this with [[06 Prompts/Showpass QA Test Case Generator]]:
+Use this for the generator's Read / Gap Analysis Flow, not ordinary new-case generation:
 
 1. Query Qase for existing coverage.
 2. Inspect backend source truth in `/Users/christianvaldez/Documents/Showpass/repos/web-app`.
@@ -44,11 +44,11 @@ Use this before gap analysis when searching by feature, keyword, route, tag, or 
 Do not use this workflow for a review limited to exact case IDs. A duplicate search is required only when gap analysis or a possible new case is in scope.
 
 1. Load credentials from the vault `.env`; do not echo tokens.
-2. Try a targeted Qase search first when the keyword is narrow.
-3. If the result may miss tag-only matches, false negatives, or related titles, page through all cases once and save the response under `/private/tmp`.
-4. Filter the saved JSON locally with `jq` for titles, tags, suite IDs, params, and step counts.
-5. Batch-read full case details only for the final matching case IDs.
-6. Save the important query summary in the gap-analysis note: keyword, total cases scanned, match count, filter rule, and case IDs reviewed.
+2. For broad gaps, prefer one complete project snapshot and local filtering. A targeted search is useful for a narrow lookup, but does not establish absence across aliases, tags or related suites.
+3. Page through the API-reported total with no fixed page ceiling. Check each response and final unique-case count. A failed, truncated or changing scan is incomplete; do not classify coverage as Missing from it.
+4. Reuse saved JSON only when project, retrieval time, scope and completeness are known; refresh after relevant Qase changes. Filter titles, tags, suites, descriptions, parameters and steps, not only the first keyword match.
+5. Batch-read full case details only for final candidates when the snapshot lacks needed fields. Compare actual setup, parameter mappings and assertions; a title/tag match does not prove adequate coverage or an executed pass.
+6. Save project, retrieval time, total scanned, match count, filter rule and reviewed IDs in the canonical gap note. Group Dashboard comparisons using [[03 Test Cases/Test Cases by Feature#Dashboard UI Organization]].
 
 Targeted keyword search:
 
@@ -76,16 +76,44 @@ source .env
 set +a
 TOKEN="${QASE_TESTOPS_API_TOKEN:-$QASE_API_TOKEN}"
 
-for offset in 0 100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500; do
-  curl -sS -G -H "Token: $TOKEN" \
-    --data-urlencode "limit=100" \
-    --data-urlencode "offset=$offset" \
-    "https://api.qase.io/v1/case/${QASE_PROJECT_CODE}"
-done > /private/tmp/qase-cases-pages.jsonl
+# Keep failures inside this subshell; publish the cache only after validation.
+(
+  qase_scan_offset=0
+  qase_scan_total=1
+  : > /private/tmp/qase-cases-pages.jsonl
+  rm -f /private/tmp/qase-cases-all.json
+  while [ "$qase_scan_offset" -lt "$qase_scan_total" ]; do
+    curl --fail --silent --show-error -G -H "Token: $TOKEN" \
+      --data-urlencode "limit=100" \
+      --data-urlencode "offset=$qase_scan_offset" \
+      "https://api.qase.io/v1/case/${QASE_PROJECT_CODE}" \
+      > /private/tmp/qase-cases-page.json || exit 1
+    jq -e '.status == true and (.result.total | type == "number") and
+      (.result.entities | type == "array")' \
+      /private/tmp/qase-cases-page.json > /dev/null || exit 1
+    qase_page_total=$(jq '.result.total' /private/tmp/qase-cases-page.json)
+    qase_page_count=$(jq '.result.entities | length' /private/tmp/qase-cases-page.json)
+    if [ "$qase_scan_offset" -gt 0 ] && [ "$qase_page_total" -ne "$qase_scan_total" ]; then
+      echo 'Qase total changed; scan incomplete. Repeat before claiming absence.' >&2
+      exit 1
+    fi
+    qase_scan_total=$qase_page_total
+    if [ "$qase_page_count" -eq 0 ] && [ "$qase_scan_offset" -lt "$qase_scan_total" ]; then
+      echo 'Empty page before reported total; scan incomplete.' >&2
+      exit 1
+    fi
+    jq -c . /private/tmp/qase-cases-page.json >> /private/tmp/qase-cases-pages.jsonl
+    qase_scan_offset=$((qase_scan_offset + qase_page_count))
+  done
+  jq -s '[.[].result.entities[]?]' /private/tmp/qase-cases-pages.jsonl \
+    > /private/tmp/qase-cases-all.pending.json || exit 1
+  jq -e --argjson expected "$qase_scan_total" \
+    'length == $expected and ([.[].id] | unique | length) == $expected' \
+    /private/tmp/qase-cases-all.pending.json > /dev/null || exit 1
+  mv /private/tmp/qase-cases-all.pending.json /private/tmp/qase-cases-all.json
+)
 
-jq -s '[.[].result.entities[]?]' \
-  /private/tmp/qase-cases-pages.jsonl \
-  > /private/tmp/qase-cases-all.json
+# Continue only after the scan succeeds. Record project and retrieval time.
 
 jq '[.[] | select(((.title // "") | test("<keyword>"; "i")) or ((.tags // []) | any((.title // "") == "<tag>"))) | {id, title, suite_id, tags: [(.tags // [])[]?.title], params, step_count: ((.steps // []) | length)}] | sort_by(.id)' \
   /private/tmp/qase-cases-all.json

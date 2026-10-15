@@ -148,7 +148,7 @@ Default to the minimum prerequisites needed to execute the case. When the user a
 - Read backend and frontend behavior together for setup and negative cases. A policy enabled in admin does not necessarily expose navigation; a missing record does not necessarily deny page access.
 - Trace the actual missing-record response through the frontend, including empty arrays/objects, null, errors, and cached data. An error branch or a test mocked with `undefined` does not prove what happens for an API response of `[]`.
 - Distinguish source-backed intent, a source-backed implementation mismatch, and a live reproduced defect. Do not confidently promise an error screen, hidden form, or permission denial based only on one component branch.
-- Pasted URLs and screenshots provide context; do not open links or use a live browser unless authorized. A screenshot of an enabled checkbox does not prove the value was saved or the corresponding frontend was deployed.
+- Pasted URLs and screenshots provide context; follow `AGENTS.md` browser authorization, including the standing preference for non-saving inspection in an already-open relevant Codex browser during generation/gap analysis. A screenshot of an enabled checkbox does not prove the value was saved or the corresponding frontend was deployed.
 
 ### Settings Coverage Versus Financial Proof
 
@@ -213,6 +213,8 @@ When a Qase-ready note includes a defect or regression reproduction, use the sam
 - If browser permission, operating-system state, timing, or a test tool could explain the observation, classify it as Inconclusive until a normal user interaction reproduces it.
 
 ## Title Naming Rules
+
+For Dashboard cases, use [[03 Test Cases/Test Cases by Feature#Dashboard UI Organization]] for note grouping and proposed suite placement. Preserve this title format and keep route strings, local draft labels, and suite-organization commentary outside the Title and execution fields. UI grouping does not authorize Qase moves.
 
 Use this title shape for Qase cases:
 

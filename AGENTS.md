@@ -22,7 +22,9 @@ Backend code is the first source of truth for behavior, schemas, APIs, permissio
 
 - A pasted link is context, not an instruction to open the page, inspect a live session, or start browser testing.
 - Continue tracing local backend and frontend code by default. Use the URL's route, model, or record identifier to understand the user's question and locate the relevant code.
-- Open or inspect a linked page only when the user explicitly asks for browser inspection, navigation, or live testing within that scope. A question such as “should I change it here?” with a URL does not authorize browser use.
+- For test generation and gap analysis, the user's standing preference authorizes using an already-open, relevant Codex browser for read-only navigation and non-saving UI inspection. Verify the environment, role, Organization and page; use it to enrich visible wording, navigation grouping and state coverage alongside source review. Do not inspect unrelated tabs or start a new browser/session solely because a URL was pasted.
+- Outside that standing scope, open or inspect a linked page only when the user explicitly asks for browser inspection, navigation, or live testing. A question such as “should I change it here?” with a URL does not independently authorize browser use.
+- Browser enrichment does not by itself authorize saving, creating, deleting, sending, purchasing, refunding, or triggering jobs. Execute mutations only within the user's authorized test-data and cleanup scope. If no suitable session exists, continue source-backed drafting and name material unverified UI facts.
 - Do not replace code tracing with browser inspection or automatically fall back to a browser when source evidence is incomplete. State the specific evidence gap instead.
 - Distinguish source-backed behavior from live record state; a URL alone does not establish the record's saved values or deployed behavior.
 
@@ -67,6 +69,7 @@ Write every manual test case for a regular person who may have little Showpass k
 - Define a Showpass-specific term the first time it is needed and cannot be replaced with common wording.
 - Put the current route in the Description or Sources Reviewed when it helps trace source behavior. Do not put a hard-coded route, Angular hash URL, slug pattern, or framework-specific path in a manual Step or Data cell unless the route itself is the behavior under test or no visible product navigation exists.
 - Prefer visible navigation such as `Dashboard → Events → Manage Events → Edit`. Treat legacy Angular routes as temporary because they may change during the Next.js migration.
+- Organize Dashboard `/manage/` cases and gap rows by the visible navigation hierarchy and owning screen, following [[03 Test Cases/Test Cases by Feature#Dashboard UI Organization]]. Keep route evidence outside manual steps; grouping does not authorize moving existing notes or Qase suites.
 - A route migration must not require rewriting user-focused steps when the visible workflow and expected behavior remain the same.
 - Before drafting separate cases, check whether the cases use the same actions and prove the same result. If they do, create one case with a clear parameter. Single-event and recurring-event versions should normally be parameter values when only the displayed table or setup changes.
 - Combine entry-point and permission variations only when one short scenario table and one step set remain easy to follow. Split the case when conditional steps would make execution confusing.

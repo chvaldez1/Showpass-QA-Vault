@@ -72,11 +72,24 @@ These folders are ready for future notes and are backed by user-facing feature d
 
 - [[03 Test Cases/Test Case Template]]
 
+## Dashboard UI Organization
+
+For Dashboard `/manage/` coverage, organize by what employees see: **navigation section → visible menu group, when present → destination page → actual tab/subpage**. Keep groups even when they contain one destination; omit levels that do not exist. Use the current UI labels and order, verified against frontend navigation definitions and an already-open relevant browser when available.
+
+- The screen that owns the tested behavior determines its group. Setup screens, purchase channels, backend model names and URL segments do not determine placement.
+- Group cases, gap rows and minimum execution selections consistently inside the canonical feature note. Keep one cross-screen journey at its owning page and reference other touchpoints; do not duplicate it across groups.
+- Add a compact mapping when several pages or suite choices are involved: `Visible navigation | Current route/source | Owning feature folder / case group | Existing or proposed Qase suite`. Routes are evidence, not manual navigation steps unless the route itself is tested.
+- Reuse existing feature folders and active notes. For new or explicitly reorganized Dashboard work, nested folders may mirror verified navigation using displayed labels. Keep one note for a single request; use headings for its pages rather than creating parallel drafts. Do not move existing notes as a side effect of generation or gap analysis.
+- Suggest Qase suite placement using the same visible hierarchy, but preserve actual suite names/IDs in the coverage baseline. Mark proposed placement when the tree has not been read; never invent suite IDs. Creating/moving suites or cases requires separate authorized scope.
+- UI organization does not change platform scope. Browser layout does not prove native app/hardware behavior, and shared implementation alone does not make a case cross-platform. Parameterize equivalent scenarios instead of duplicating them by page or client.
+
+This adapts the Playwright repository's `docs/agent-workflows/standards/test-architecture.md#ui-aligned-test-folders` to vault notes. Automation uses its own repository folder conventions. Verify current navigation and record conflicts rather than guessing from a legacy route or folder name.
+
 ## Filing Rules
 
 - File a note under the feature that owns the primary user behavior or business invariant.
 - Keep test cases, Qase work, gap analyses, and execution evidence for the same feature in that feature folder.
-- Use an existing feature folder when one fits. Create a new direct child folder only for a distinct product feature.
+- Use an existing feature folder when one fits. Create a new direct child folder only for a distinct product feature; apply Dashboard UI Organization to case grouping and any new or explicitly reorganized nested navigation folders.
 - Preserve filenames when moving notes so basename-only Obsidian links remain stable.
 - Keep reusable templates at the `03 Test Cases/` root.
 - Keep empty feature folders with a hidden `.gitkeep` placeholder, then remove the placeholder when the first test note is added.
