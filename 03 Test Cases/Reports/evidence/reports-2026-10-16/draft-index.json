@@ -1,0 +1,1554 @@
+{
+  "existing_enhancements": 43,
+  "new_conditional_cases": 2,
+  "definitions": [
+    {
+      "label": "SPT-880",
+      "report": "Itemized Sales Report",
+      "title": "Dashboard - Reports - Verify Itemized Sales Report CSV/PDF contents",
+      "formats": [
+        "CSV",
+        "PDF"
+      ],
+      "columns": [
+        [
+          "Transaction ID",
+          "Transaction ID"
+        ],
+        [
+          "Sale Transaction ID",
+          "Sale Transaction ID"
+        ],
+        [
+          "Item Type",
+          "Item Type"
+        ],
+        [
+          "Description",
+          "Description"
+        ],
+        [
+          "Transaction Quantity",
+          "Transaction Quantity"
+        ],
+        [
+          "Item Quantity",
+          "Item Quantity"
+        ],
+        [
+          "Payment Method",
+          "Payment Method"
+        ],
+        [
+          "Gross Sales",
+          "Gross Sales"
+        ],
+        [
+          "Refunds",
+          "Refunds"
+        ],
+        [
+          "Discounts",
+          "Discounts"
+        ],
+        [
+          "Net Sales",
+          "Net Sales"
+        ],
+        [
+          "Service Fees",
+          "Service Fees"
+        ],
+        [
+          "Gross Revenue",
+          "Gross Revenue"
+        ],
+        [
+          "Net Revenue",
+          "Net Revenue"
+        ]
+      ],
+      "old_id": 880
+    },
+    {
+      "label": "SPT-881",
+      "report": "Settlement Report",
+      "title": "Dashboard - Reports - Verify Settlement Report CSV/PDF contents",
+      "formats": [
+        "CSV",
+        "PDF"
+      ],
+      "columns": [
+        [
+          "Transaction ID",
+          "Transaction ID"
+        ],
+        [
+          "Sale Transaction ID",
+          "Sale Transaction ID"
+        ],
+        [
+          "Description",
+          "Description"
+        ],
+        [
+          "Settlement Date",
+          "Settlement Date"
+        ],
+        [
+          "Item Quantity",
+          "Item Quantity"
+        ],
+        [
+          "Payment Method",
+          "Payment Method"
+        ],
+        [
+          "Gross Sales",
+          "Gross Sales"
+        ],
+        [
+          "Refunds",
+          "Refunds"
+        ],
+        [
+          "Discounts",
+          "Discounts"
+        ],
+        [
+          "Net Sales",
+          "Net Sales"
+        ],
+        [
+          "Service Fees",
+          "Service Fees"
+        ],
+        [
+          "Gross Revenue",
+          "Gross Revenue"
+        ],
+        [
+          "Net Revenue",
+          "Net Revenue"
+        ]
+      ],
+      "old_id": 881
+    },
+    {
+      "label": "SPT-882",
+      "report": "Advance Report",
+      "title": "Dashboard - Reports - Verify Advance Report CSV/PDF contents",
+      "formats": [
+        "CSV",
+        "PDF"
+      ],
+      "columns": [
+        [
+          "Transaction ID",
+          "Transaction ID"
+        ],
+        [
+          "Sale Transaction ID",
+          "Sale Transaction ID"
+        ],
+        [
+          "Description",
+          "Description"
+        ],
+        [
+          "Advance Date",
+          "Advance Date"
+        ],
+        [
+          "Item Quantity",
+          "Item Quantity"
+        ],
+        [
+          "Payment Method",
+          "Payment Method"
+        ],
+        [
+          "Gross Sales",
+          "Gross Sales"
+        ],
+        [
+          "Refunds",
+          "Refunds"
+        ],
+        [
+          "Discounts",
+          "Discounts"
+        ],
+        [
+          "Net Sales",
+          "Net Sales"
+        ],
+        [
+          "Service Fees",
+          "Service Fees"
+        ],
+        [
+          "Gross Revenue",
+          "Gross Revenue"
+        ],
+        [
+          "Net Revenue",
+          "Net Revenue"
+        ]
+      ],
+      "old_id": 882
+    },
+    {
+      "label": "SPT-883",
+      "report": "Payment Type Breakdown",
+      "title": "Dashboard - Reports - Verify Payment Type Breakdown PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": 883
+    },
+    {
+      "label": "SPT-884",
+      "report": "Event Financial Summary",
+      "title": "Dashboard - Reports - Verify Event Financial Summary PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": 884
+    },
+    {
+      "label": "SPT-885",
+      "report": "Ticket Type Financial Summary",
+      "title": "Dashboard - Reports - Verify Ticket Type Financial Summary PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": 885
+    },
+    {
+      "label": "SPT-886",
+      "report": "Product Summary",
+      "title": "Dashboard - Reports - Verify Product Summary PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": 886
+    },
+    {
+      "label": "SPT-887",
+      "report": "Product Summary",
+      "title": "Dashboard - Reports - Verify Product Summary CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Product Name",
+          "Product"
+        ],
+        [
+          "Total Redeemable Tickets",
+          "Redeemable Tickets"
+        ],
+        [
+          "Num Cash Tickets Sold",
+          "Cash Tickets Sold"
+        ],
+        [
+          "Num Credit Tickets Sold",
+          "Credit Tickets Sold"
+        ],
+        [
+          "Cash Revenue",
+          "Cash Revenue"
+        ],
+        [
+          "Credit Revenue",
+          "Credit Revenue"
+        ],
+        [
+          "Gross Sales",
+          "Gross Sales"
+        ],
+        [
+          "Refunds",
+          "Refunds"
+        ],
+        [
+          "Discounts",
+          "Discounts"
+        ],
+        [
+          "Net Sales",
+          "Net Sales"
+        ],
+        [
+          "Service Fees",
+          "Service Fees"
+        ],
+        [
+          "Gross Revenue",
+          "Gross Revenue"
+        ],
+        [
+          "Net Revenue",
+          "Net Revenue"
+        ]
+      ],
+      "old_id": 887
+    },
+    {
+      "label": "SPT-888",
+      "report": "Event Summary",
+      "title": "Dashboard - Reports - Include existing settlements in summary PDFs",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": 888
+    },
+    {
+      "label": "SPT-889",
+      "report": "Marketing Campaign Summary",
+      "title": "Dashboard - Reports - Verify Marketing Campaign Summary CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "UTM Campaign",
+          "UTM Campaign"
+        ],
+        [
+          "UTM Source",
+          "UTM Source"
+        ],
+        [
+          "UTM Medium",
+          "UTM Medium"
+        ],
+        [
+          "Items Sold",
+          "Items Sold"
+        ],
+        [
+          "Page Views",
+          "Page Views"
+        ],
+        [
+          "Add To Cart Events",
+          "Add To Cart Events"
+        ],
+        [
+          "Initiate Checkout Events",
+          "Initiate Checkout Events"
+        ],
+        [
+          "Purchase Events",
+          "Purchase Events"
+        ]
+      ],
+      "old_id": 889
+    },
+    {
+      "label": "SPT-891",
+      "report": "Shipping Fulfillment Stats",
+      "title": "Dashboard - Reports - Verify Standard Shipping ticket and product rows",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Transaction ID",
+          "Transaction ID"
+        ],
+        [
+          "Purchase Date",
+          "Purchase Date"
+        ],
+        [
+          "Name On Ticket",
+          "Name On Ticket"
+        ],
+        [
+          "Quantity Per Order",
+          "Quantity Per Order"
+        ],
+        [
+          "Fulfillment Status",
+          "Fulfillment Status"
+        ],
+        [
+          "Fulfilled By Employee",
+          "Fulfilled By Employee"
+        ],
+        [
+          "Fulfillment Date",
+          "Fulfillment Date"
+        ],
+        [
+          "Event Name",
+          "Event Name"
+        ],
+        [
+          "Ticket Type Name",
+          "Ticket Type Name"
+        ],
+        [
+          "Product Name",
+          "Product Name"
+        ],
+        [
+          "Product Attribute Name",
+          "Product Attribute Name"
+        ],
+        [
+          "SKU",
+          "SKU"
+        ]
+      ],
+      "old_id": 891
+    },
+    {
+      "label": "SPT-892",
+      "report": "Shipping Fulfillment Stats",
+      "title": "Dashboard - Reports - Include shipping and pickup memberships",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Transaction ID",
+          "Transaction ID"
+        ],
+        [
+          "Purchase Date",
+          "Purchase Date"
+        ],
+        [
+          "Name On Ticket",
+          "Name On Ticket"
+        ],
+        [
+          "Quantity Per Order",
+          "Quantity Per Order"
+        ],
+        [
+          "Fulfillment Status",
+          "Fulfillment Status"
+        ],
+        [
+          "Fulfilled By Employee",
+          "Fulfilled By Employee"
+        ],
+        [
+          "Fulfillment Date",
+          "Fulfillment Date"
+        ],
+        [
+          "Membership Group Name",
+          "Membership Group Name"
+        ],
+        [
+          "Membership Level Name",
+          "Membership Level Name"
+        ]
+      ],
+      "old_id": 892
+    },
+    {
+      "label": "SPT-894",
+      "report": "Transactions",
+      "title": "Dashboard - Reports - Verify Transactions for selected events or products",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Transaction ID",
+          "Transaction ID"
+        ],
+        [
+          "Invoice Type",
+          "Invoice Type"
+        ],
+        [
+          "Customer Name",
+          "Username"
+        ],
+        [
+          "Payment Method",
+          "Payment Method"
+        ],
+        [
+          "Total Sales",
+          "Gross Sales"
+        ],
+        [
+          "Revenue",
+          "Gross Revenue"
+        ],
+        [
+          "Purchase Date",
+          "Sold At"
+        ],
+        [
+          "Refunds",
+          "Refunds"
+        ],
+        [
+          "Discounts",
+          "Discount Amount"
+        ],
+        [
+          "Net Sales",
+          "Net Sales"
+        ],
+        [
+          "Service Fees",
+          "Service Fees"
+        ],
+        [
+          "Net Revenue",
+          "Net Revenue"
+        ]
+      ],
+      "old_id": 894
+    },
+    {
+      "label": "SPT-896",
+      "report": "Customers and Employees",
+      "title": "Dashboard - Reports - Verify Customers and Employees CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Customer Name",
+          "Full Name"
+        ],
+        [
+          "Customer Email",
+          "Email"
+        ],
+        [
+          "Seller Status",
+          "Is Seller"
+        ],
+        [
+          "Employee Status",
+          "Is Employee"
+        ],
+        [
+          "Subscribed to Email",
+          "Subscribed to Email"
+        ],
+        [
+          "Tickets Purchased",
+          "Total External Ticket Quantity"
+        ],
+        [
+          "Tickets Sold",
+          "Tickets Sold"
+        ]
+      ],
+      "old_id": 896
+    },
+    {
+      "label": "SPT-897",
+      "report": "Will Call",
+      "title": "Dashboard - Reports - Verify Will Call CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Name On Ticket",
+          "Name on Ticket"
+        ],
+        [
+          "Customer Email",
+          "Email Address"
+        ],
+        [
+          "Event",
+          "Event Name"
+        ],
+        [
+          "Ticket Type Name",
+          "Ticket Type Name"
+        ],
+        [
+          "Ticket Status",
+          "Status"
+        ],
+        [
+          "Barcode String",
+          "Barcode String"
+        ],
+        [
+          "Seat Section",
+          "Section"
+        ],
+        [
+          "Row/Area",
+          "Location"
+        ],
+        [
+          "Seat",
+          "Seat"
+        ]
+      ],
+      "old_id": 897
+    },
+    {
+      "label": "SPT-898",
+      "report": "Ticket Sales History",
+      "title": "Dashboard - Reports - Verify Ticket Sales History PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": 898
+    },
+    {
+      "label": "SPT-899",
+      "report": "Employee Sales History",
+      "title": "Dashboard - Reports - Verify Employee Sales History PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": 899
+    },
+    {
+      "label": "SPT-901",
+      "report": "Event Summary",
+      "title": "Dashboard - Reports - Verify Event Summary PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": 901
+    },
+    {
+      "label": "SPT-902",
+      "report": "Event Audit",
+      "title": "Dashboard - Reports - Verify Event Audit XLSX contents",
+      "formats": [
+        "XLSX"
+      ],
+      "columns": [],
+      "old_id": 902
+    },
+    {
+      "label": "SPT-903",
+      "report": "Financial Scan Summary",
+      "title": "Dashboard - Reports - Verify Financial Scan Summary PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": 903
+    },
+    {
+      "label": "SPT-904",
+      "report": "Ticket Type Summary",
+      "title": "Dashboard - Reports - Verify Ticket Type Summary CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Ticket Type Name",
+          "Ticket Type"
+        ],
+        [
+          "Ticket Type Price",
+          "Ticket Price"
+        ],
+        [
+          "Event",
+          "Event"
+        ],
+        [
+          "Total Redeemable Tickets",
+          "Redeemable Tickets"
+        ],
+        [
+          "Num Cash Tickets Sold",
+          "Cash Tickets Sold"
+        ],
+        [
+          "Num Credit Tickets Sold",
+          "Credit Tickets Sold"
+        ],
+        [
+          "Num Tickets Refunded",
+          "Refunded Tickets"
+        ]
+      ],
+      "old_id": 904
+    },
+    {
+      "label": "SPT-905",
+      "report": "Password Used Summary",
+      "title": "Dashboard - Reports - Verify Password Used Summary CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Password",
+          "Password"
+        ],
+        [
+          "Event",
+          "Event/Ticket Type"
+        ],
+        [
+          "Number Of Passwords Used",
+          "Password Entered Count"
+        ],
+        [
+          "Tickets Sold",
+          "Ticket Quantity"
+        ]
+      ],
+      "old_id": 905
+    },
+    {
+      "label": "SPT-906",
+      "report": "Seller Stats",
+      "title": "Dashboard - Reports - Verify Seller Stats CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Customer Name",
+          "Username"
+        ],
+        [
+          "Customer Email",
+          "Email"
+        ],
+        [
+          "Tickets Sold",
+          "Tickets Sold"
+        ],
+        [
+          "Total Sales",
+          "Net Sales"
+        ],
+        [
+          "Revenue",
+          "Gross Revenue"
+        ],
+        [
+          "Cash Commission",
+          "Cash Commission Earned"
+        ],
+        [
+          "Credit Commission",
+          "Credit Commission Earned"
+        ]
+      ],
+      "old_id": 906
+    },
+    {
+      "label": "SPT-907",
+      "report": "Ticket Scan History Report",
+      "title": "Dashboard - Reports - Verify Ticket Scan History Report CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Barcode String",
+          "Barcode String"
+        ],
+        [
+          "Event Name",
+          "Event Name"
+        ],
+        [
+          "Ticket Type Name",
+          "Ticket Type Name"
+        ],
+        [
+          "Created On",
+          "Created On"
+        ],
+        [
+          "Action",
+          "Action"
+        ],
+        [
+          "Status Before",
+          "Status Before"
+        ],
+        [
+          "Status After",
+          "Status After"
+        ],
+        [
+          "Created By",
+          "Created By"
+        ]
+      ],
+      "old_id": 907
+    },
+    {
+      "label": "SPT-908",
+      "report": "Ticket Scan History Report",
+      "title": "Dashboard - Reports - Verify Ticket Scan History Report PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": 908
+    },
+    {
+      "label": "SPT-909",
+      "report": "Employee Scan History Report",
+      "title": "Dashboard - Reports - Verify Employee Scan History Report PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": 909
+    },
+    {
+      "label": "SPT-910",
+      "report": "Seller Cash Out Report",
+      "title": "Dashboard - Reports - Verify Seller Cash Out Report PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": 910
+    },
+    {
+      "label": "SPT-911",
+      "report": "Discount Creation Report",
+      "title": "Dashboard - Reports - Verify Discount Creation Report CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Discount Code Used",
+          "Code"
+        ],
+        [
+          "Discount Type",
+          "Discount Type"
+        ],
+        [
+          "Discount Code Percentage",
+          "Percentage"
+        ],
+        [
+          "Discount Code Amount",
+          "Dollar amount"
+        ],
+        [
+          "Total Limit",
+          "Total Limit"
+        ],
+        [
+          "Usage Limit Per User",
+          "Limit usage per user"
+        ],
+        [
+          "Discount Created By",
+          "User that created the discount"
+        ],
+        [
+          "Discount Created On",
+          "Created On"
+        ]
+      ],
+      "old_id": 911
+    },
+    {
+      "label": "SPT-912",
+      "report": "Holds Stats",
+      "title": "Dashboard - Reports - Verify Holds Stats CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Customer Name",
+          "Customer Name"
+        ],
+        [
+          "Customer Email",
+          "Customer Email"
+        ],
+        [
+          "Basket UUID",
+          "Basket UUID"
+        ],
+        [
+          "Quantity",
+          "Quantity"
+        ],
+        [
+          "Event Name",
+          "Event Name"
+        ],
+        [
+          "Ticket Type Name",
+          "Ticket Type Name"
+        ],
+        [
+          "Seat Section",
+          "Section"
+        ],
+        [
+          "Row/Area",
+          "Row/Area"
+        ],
+        [
+          "Seat",
+          "Seat"
+        ],
+        [
+          "Last Updated",
+          "Last Updated"
+        ],
+        [
+          "Hold Link",
+          "Hold Link"
+        ]
+      ],
+      "old_id": 912
+    },
+    {
+      "label": "SPT-913",
+      "report": "Event/Product Inventory Report",
+      "title": "Dashboard - Reports - Verify Event/Product Inventory Report CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Customer Email",
+          "Customer email"
+        ],
+        [
+          "Product Name",
+          "Product"
+        ],
+        [
+          "Product Attribute Name",
+          "Product Attribute"
+        ],
+        [
+          "Quantity",
+          "Quantity"
+        ],
+        [
+          "Picked Up",
+          "Picked up"
+        ],
+        [
+          "Event",
+          "Event"
+        ],
+        [
+          "Ticket Type Name",
+          "Ticket Type"
+        ],
+        [
+          "Total Sales",
+          "Final amount"
+        ],
+        [
+          "Billing Address",
+          "Billing address"
+        ]
+      ],
+      "old_id": 913
+    },
+    {
+      "label": "SPT-914",
+      "report": "Member Report",
+      "title": "Dashboard - Reports - Verify Member Report CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Member Name",
+          "Username"
+        ],
+        [
+          "Member Email",
+          "Email"
+        ],
+        [
+          "Member Status",
+          "Status"
+        ],
+        [
+          "Member Quantity",
+          "Quantity"
+        ],
+        [
+          "Member Expiry Date",
+          "Expiry Date"
+        ],
+        [
+          "Membership Group Name",
+          "Membership Group"
+        ],
+        [
+          "Membership Level Name",
+          "Membership Level"
+        ],
+        [
+          "Member Scans Used",
+          "Scans Used"
+        ],
+        [
+          "Member Discounts Used",
+          "Discounts Used"
+        ]
+      ],
+      "old_id": 914
+    },
+    {
+      "label": "SPT-915",
+      "report": "Member History Report",
+      "title": "Dashboard - Reports - Verify Member History Report CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Created",
+          "Created"
+        ],
+        [
+          "Member Name",
+          "Username"
+        ],
+        [
+          "Membership Group Name",
+          "Membership Group"
+        ],
+        [
+          "Membership Level Name",
+          "Membership Level"
+        ],
+        [
+          "Member History Action",
+          "Action"
+        ],
+        [
+          "Member History Type",
+          "Type"
+        ],
+        [
+          "Member Status Before",
+          "Member Status Before"
+        ],
+        [
+          "Member Status After",
+          "Member Status After"
+        ],
+        [
+          "Amount",
+          "Amount"
+        ],
+        [
+          "Membership Benefit",
+          "Membership Benefit"
+        ]
+      ],
+      "old_id": 915
+    },
+    {
+      "label": "SPT-916",
+      "report": "Member Benefit Usage Report",
+      "title": "Dashboard - Reports - Verify Member Benefit Usage Report CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Membership Group Name",
+          "Membership Group"
+        ],
+        [
+          "Membership Level Name",
+          "Membership Level"
+        ],
+        [
+          "Membership Benefit",
+          "Membership Benefit"
+        ],
+        [
+          "Membership Benefit Type",
+          "Benefit Type"
+        ],
+        [
+          "Member Scans Allowed",
+          "Scans Allowed Per Member"
+        ],
+        [
+          "Member Scans Used",
+          "Total Scans Used"
+        ],
+        [
+          "Member Discounts Allowed",
+          "Discount Usages Allowed Per Member"
+        ],
+        [
+          "Member Discounts Used",
+          "Total Discounts Used"
+        ]
+      ],
+      "old_id": 916
+    },
+    {
+      "label": "SPT-920",
+      "report": "Member Seating Report",
+      "title": "Dashboard - Reports - Verify Member Seating Report CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Member Name",
+          "Member"
+        ],
+        [
+          "Member Email",
+          "Email"
+        ],
+        [
+          "Membership Group Name",
+          "Membership Group"
+        ],
+        [
+          "Membership Level Name",
+          "Membership Level"
+        ],
+        [
+          "Seat Section",
+          "Section"
+        ],
+        [
+          "Row/Area",
+          "Row/Area"
+        ],
+        [
+          "Seat",
+          "Seat"
+        ],
+        [
+          "Seating Reserved",
+          "Seating Reserved"
+        ],
+        [
+          "Quantity",
+          "Quantity"
+        ]
+      ],
+      "old_id": 920
+    },
+    {
+      "label": "SPT-917",
+      "report": "Waitlist Subscribers Report",
+      "title": "Dashboard - Reports - Verify Waitlist Subscribers Report CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "First Name",
+          "Customer First name"
+        ],
+        [
+          "Last Name",
+          "Customer Last name"
+        ],
+        [
+          "Customer Email",
+          "Customer email"
+        ],
+        [
+          "Event",
+          "Event"
+        ],
+        [
+          "Ticket Type Name",
+          "Ticket Type"
+        ],
+        [
+          "Quantity",
+          "Quantity"
+        ],
+        [
+          "Total Price",
+          "Total Price"
+        ],
+        [
+          "Total Price No Fees",
+          "Total Price No Fees"
+        ],
+        [
+          "Status",
+          "Status"
+        ]
+      ],
+      "old_id": 917
+    },
+    {
+      "label": "SPT-918",
+      "report": "Reselling Submissions Report",
+      "title": "Dashboard - Reports - Verify Reselling Submissions Report CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "First Name",
+          "Customer First name"
+        ],
+        [
+          "Last Name",
+          "Customer Last name"
+        ],
+        [
+          "Customer Email",
+          "Customer email"
+        ],
+        [
+          "Event",
+          "Event"
+        ],
+        [
+          "Ticket Type Name",
+          "Ticket Type"
+        ],
+        [
+          "Quantity",
+          "Quantity"
+        ],
+        [
+          "Refund Amount",
+          "Refund Amount"
+        ],
+        [
+          "Status",
+          "Status"
+        ]
+      ],
+      "old_id": 918
+    },
+    {
+      "label": "SPT-919",
+      "report": "Donations History",
+      "title": "Dashboard - Reports - Verify Donations History CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Customer Name",
+          "Customer Name"
+        ],
+        [
+          "Customer Email",
+          "Customer Email"
+        ],
+        [
+          "Purchase Date",
+          "Donation Date"
+        ],
+        [
+          "Donation Total",
+          "Donation Amount"
+        ],
+        [
+          "Charity Registration Number",
+          "Charity Registration Number"
+        ],
+        [
+          "Charity Name",
+          "Charity Name"
+        ],
+        [
+          "Charity Currency",
+          "Charity Currency"
+        ],
+        [
+          "Event",
+          "Related Event"
+        ]
+      ],
+      "old_id": 919
+    },
+    {
+      "label": "SPT-3832",
+      "report": "Gift Card Recipient Report",
+      "title": "Dashboard - Reports - Verify Gift Card Recipient Report CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Purchaser Name",
+          "Purchaser Name"
+        ],
+        [
+          "Sender Name",
+          "Sender Name"
+        ],
+        [
+          "Recipient Name",
+          "Recipient Name"
+        ],
+        [
+          "Gift Card Name",
+          "Gift Card Name"
+        ],
+        [
+          "Gift Card Denomination Price",
+          "Gift Card Denomination Price"
+        ],
+        [
+          "Quantity",
+          "Quantity"
+        ],
+        [
+          "Amount Paid",
+          "Amount Paid"
+        ],
+        [
+          "Total Amount",
+          "Total Gift Card Amount"
+        ],
+        [
+          "Is Redeemed",
+          "Is redeemed"
+        ],
+        [
+          "Amount Used",
+          "Amount Used"
+        ],
+        [
+          "Amount Remaining",
+          "Amount Remaining"
+        ],
+        [
+          "Amount Advanced",
+          "Amount Advanced"
+        ],
+        [
+          "Redemption Code",
+          "Redemption Code"
+        ]
+      ],
+      "old_id": 3832
+    },
+    {
+      "label": "SPT-921",
+      "report": "Marketing Campaign Detail",
+      "title": "Dashboard - Reports - Verify Marketing Campaign Detail CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "UTM Campaign",
+          "UTM Campaign"
+        ],
+        [
+          "UTM Source",
+          "UTM Source"
+        ],
+        [
+          "UTM Medium",
+          "UTM Medium"
+        ],
+        [
+          "Transaction ID",
+          "Transaction ID"
+        ],
+        [
+          "Item Type",
+          "Item Type"
+        ],
+        [
+          "Event Name",
+          "Event Name"
+        ],
+        [
+          "Item Quantity",
+          "Item Quantity"
+        ],
+        [
+          "Payment Method",
+          "Payment Method"
+        ],
+        [
+          "Gross Sales",
+          "Gross Sales"
+        ],
+        [
+          "Refunds",
+          "Refunds"
+        ],
+        [
+          "Discounts",
+          "Discounts"
+        ],
+        [
+          "Net Sales",
+          "Net Sales"
+        ],
+        [
+          "Service Fees",
+          "Service Fees"
+        ],
+        [
+          "Gross Revenue",
+          "Gross Revenue"
+        ],
+        [
+          "Net Revenue",
+          "Net Revenue"
+        ]
+      ],
+      "old_id": 921
+    },
+    {
+      "label": "SPT-922",
+      "report": "Marketing Campaign Detail",
+      "title": "Dashboard - Reports - Verify Marketing Campaign Detail PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": 922
+    },
+    {
+      "label": "SPT-4393",
+      "report": "Ticket Credit Usage Report",
+      "title": "Dashboard - Reports - Update ticket credit usage after one redemption",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Customer Name",
+          "Customer Name"
+        ],
+        [
+          "Email",
+          "Email"
+        ],
+        [
+          "Discount Code",
+          "Discount Code"
+        ],
+        [
+          "Times Used",
+          "Times Used"
+        ],
+        [
+          "Usage Limit",
+          "Usage Limit"
+        ]
+      ],
+      "old_id": 4393
+    },
+    {
+      "label": "SPT-4798",
+      "report": "Custom Consent Items",
+      "title": "Dashboard - Reports - Verify Custom Consent Items CSV contents",
+      "formats": [
+        "CSV"
+      ],
+      "columns": [
+        [
+          "Submitted At",
+          "Submitted At"
+        ],
+        [
+          "Customer Name",
+          "Customer Name"
+        ],
+        [
+          "Customer Email",
+          "Customer Email"
+        ],
+        [
+          "Transaction ID",
+          "Transaction ID"
+        ],
+        [
+          "Basket UUID",
+          "Basket UUID"
+        ],
+        [
+          "Event IDs",
+          "Event IDs"
+        ],
+        [
+          "Event Names",
+          "Event Names"
+        ],
+        [
+          "Consent Items",
+          "One column per recorded consent question"
+        ]
+      ],
+      "old_id": 4798
+    },
+    {
+      "label": "TC-1",
+      "report": "Base Ticket Revenue Report",
+      "title": "Dashboard - Reports - Verify Base Ticket Revenue Report PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": null
+    },
+    {
+      "label": "TC-2",
+      "report": "Event Settlement Report",
+      "title": "Dashboard - Reports - Verify Event Settlement Report PDF contents",
+      "formats": [
+        "PDF"
+      ],
+      "columns": [],
+      "old_id": null
+    }
+  ],
+  "qase_writes": 0,
+  "new_over_limit_email_cases": 1,
+  "total_definitions": 46,
+  "additional_definitions": [
+    {
+      "label": "SPT-900",
+      "responsibility": "60-event Event Summary direct download"
+    },
+    {
+      "label": "TC-3",
+      "responsibility": "61-event Event Summary automatic email completion"
+    }
+  ]
+}

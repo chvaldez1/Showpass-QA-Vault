@@ -81,3 +81,11 @@ Use [[00 Start Here/Showpass QA Handbook/14 Checkout and Post-Purchase Coverage|
 **Business risk:** a valid paid ticket is not obtainable, wrong barcode is printed, duplicate scan admits someone twice, or transferred/resold tickets retain the wrong owner/validity.
 
 **Automation:** supported order/delivery/ownership journeys and browser check-in where applicable; backend barcode/eligibility/idempotency/payout tests. Physical camera/scanner, print quality, and native wallet behavior need separate evidence. Source route: B4, B19, B10.
+
+## Maintained legacy Check In coverage
+
+2026-10-16: [[03 Test Cases/Check In/check-in-qase-test-cases|Legacy Check In cases and remaining gaps]] records 29 published additions (SPT-5473–5501) and updates to SPT-1663/1664 in [suite 184](https://app.qase.io/project/SPT?suite=184), with complete field readback. Membership cases in suite 185 remain unchanged. The product-only preset mismatch and held revisions are explicit. Publication is not admission, export, recovery or physical-device execution proof.
+
+## Maintained digital wallet branding coverage
+
+2026-10-16: [[03 Test Cases/Organizations/organization-settings-qase-test-cases#Branding → Deliverables → Digital Wallets|Digital Wallets cases and retained gaps]] records **SPT-5502–5513**, enhanced **SPT-65**, and unchanged-content **SPT-4742** in [Digital wallets (1179)](https://app.qase.io/project/SPT?suite=1179): 14 direct cases verified by full readback. Organization-only inherited pass refresh and a supported failure/retry recipe remain held; SPT-4899 is unchanged. Published definitions do not establish native pass appearance, admission or release readiness.

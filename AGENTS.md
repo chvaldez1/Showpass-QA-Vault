@@ -71,6 +71,7 @@ Write every manual test case for a regular person who may have little Showpass k
 - Prefer visible navigation such as `Dashboard → Events → Manage Events → Edit`. Treat legacy Angular routes as temporary because they may change during the Next.js migration.
 - Organize Dashboard `/manage/` cases and gap rows by the visible navigation hierarchy and owning screen, following [[03 Test Cases/Test Cases by Feature#Dashboard UI Organization]]. Keep route evidence outside manual steps; grouping does not authorize moving existing notes or Qase suites.
 - A route migration must not require rewriting user-focused steps when the visible workflow and expected behavior remain the same.
+- For replacement pages, legacy embeds and navigation changes, apply [[00 Start Here/World-Class Software Quality Standard#Preserve Access During Page Migrations]]. Compare previous business functions with reachable replacements from the actual user landing page; do not treat a direct URL, a different navigation shell, or a deferred owning-screen review as proof of preserved access.
 - Before drafting separate cases, check whether the cases use the same actions and prove the same result. If they do, create one case with a clear parameter. Single-event and recurring-event versions should normally be parameter values when only the displayed table or setup changes.
 - Combine entry-point and permission variations only when one short scenario table and one step set remain easy to follow. Split the case when conditional steps would make execution confusing.
 - Label an uncreated local case as `TC-*`. Use `SPT-*` only for a case that already has that Qase ID.
@@ -121,7 +122,7 @@ When user action or judgment is requested:
 
 ## Qase Workflow Rules
 
-Use [[05 Tooling/qasectl]] as the required operating guide for Qase reads, gap analysis, creates, and updates.
+Use [[05 Tooling/qasectl]] as the required operating guide for Qase reads, gap analysis, creates, and updates. Use [[06 Prompts/Showpass Qase Gap Analysis]] for gap-analysis procedure and output: focused, standalone Qase-ready cases first, compact analysis and evidence afterward. Split distinct behaviors instead of combining several tests into one large case.
 
 To avoid repeated permission prompts and inconsistent Qase payloads:
 

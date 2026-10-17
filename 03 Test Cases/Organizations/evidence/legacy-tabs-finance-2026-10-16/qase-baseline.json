@@ -1,0 +1,3444 @@
+{
+  "query": {
+    "project": "SPT",
+    "retrieved_at": "2026-10-16T19:10:40.301677+00:00",
+    "count": 1980,
+    "unique_ids": 1980,
+    "pages": 20,
+    "complete": true
+  },
+  "reviewedIds": [
+    968,
+    1650,
+    1653,
+    1654,
+    3142,
+    3144,
+    3156,
+    3166,
+    3168,
+    3169,
+    3492,
+    3586,
+    3587,
+    3876,
+    4084,
+    4095,
+    4826,
+    4884,
+    5118,
+    5139,
+    5418,
+    5443,
+    5447,
+    5457
+  ],
+  "cases": [
+    {
+      "id": 968,
+      "position": 3,
+      "title": "Products - Rate Cards - Set product organizer fee",
+      "description": "This test verifies the ability to define and apply organizer-specific rate cards directly to a product within the Showpass Dashboard. This allows organizers to set unique fees for specific products, which are then applied during checkout based on platform groups ('Online', 'In Person') and payment types ('Cash', 'Card', 'Other').",
+      "preconditions": "User has permissions to manage products and is logged into the Showpass Dashboard.\nAn existing product is available for configuration, or a new product is being created.\nThe organizer has defined the custom fee structure (name, type, amount/percentage, and applicability rules) for the product.",
+      "postconditions": "Organizer-specific rate cards (VenueCustomFeeValue linked to a VenueCustomFee) are successfully configured and saved for the target product.\nWhen this product is purchased, the configured organizer fees are correctly calculated and applied based on the purchase context (platform and payment type).\nThe order confirmation and transaction details accurately reflect the applied product-specific organizer rate card.",
+      "severity": 4,
+      "priority": 2,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 109,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "9da8656374abee748be55416032ea1466d82432f",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Navigate to the 'Products' section in the Showpass Dashboard and select an existing product to edit, or create a new product.",
+          "expected_result": "Product management interface in the Dashboard is accessible.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "af0ad842cf0e3b649aaebd6c89df3b1b4153abaf",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Locate the section for configuring 'Custom Fees' or 'Organizer Rate Cards' for the product.",
+          "expected_result": "Custom fee/organizer rate card configuration section for the product is found.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "17fd976023fa2eb3d894d609e0184af55ba98c26",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Define a new custom fee: specify its name (e.g., 'Product Handling Fee'), type (fee or tax), and whether it's a fixed amount (fee_added) or a percentage (fee_percent).",
+          "expected_result": "New `VenueCustomFee` details for the product are entered and saved.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "a0a1ff52581157dd4bae51c9cecc078bb857d14e",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Configure the `VenueCustomFeeValue` for this fee, detailing the fee amount/percentage, applicable item_type (should be 'product' or specific product variant), payment_types (e.g., card, cash), and purchase_platforms (online, in-person).",
+          "expected_result": "`VenueCustomFeeValue` linked to this `VenueCustomFee` is configured with specific fee parameters and applicability rules.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "f65aa6ab8d0a9c652f257fb10254e4a386260c75",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Save the product's configuration.",
+          "expected_result": "Product configuration, including its organizer rate cards, is saved without errors.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "4456b5349e0265584b0d1a19f1bfe1f8cd912ead",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "As a user (e.g., via a public store page or POS), add the configured product to the cart.",
+          "expected_result": "Product can be added to the cart.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "9337a82582d2aab5b1716f8df47f49381a82519b",
+          "position": 7,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Proceed to checkout, matching a configured platform and payment type for the custom fee.",
+          "expected_result": "Checkout page is reached for the order containing the product.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "45c86955e37262fec5b6680130628187b2b3c1aa",
+          "position": 8,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Observe the checkout summary to ensure the product-specific custom fee is applied correctly.",
+          "expected_result": "The product-specific custom fee is listed in the order summary with the correctly calculated amount based on its definition and the purchase context.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": [],
+      "parameters": [],
+      "member_id": 2,
+      "author_id": 281534,
+      "author_uuid": "736c9c54-546b-4660-97ac-a713c9e6ae07",
+      "tags": [
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "financials",
+          "internal_id": 181
+        },
+        {
+          "title": "fees-taxes",
+          "internal_id": 66
+        }
+      ],
+      "deleted": null,
+      "created": "2025-03-21T18:09:27.000000Z",
+      "updated": "2026-06-25T21:36:12.000000Z",
+      "created_at": "2025-03-21T18:09:27+00:00",
+      "updated_at": "2026-06-25T21:36:12+00:00"
+    },
+    {
+      "id": 1650,
+      "position": 1,
+      "title": "Dashboard - Finance - Payouts - Update payment information and authorization",
+      "description": "Verifies that an organizer can update payout payment information and authorization from Finance > Payouts > Payment info for supported currencies.",
+      "preconditions": "- Organizer or employee is logged into the dashboard with permission to manage payout payment information.\n- Test venue uses the selected supported currency.\n- Valid banking details, authorization signer, and any required verification code are available.\n- Existing payout payment information can be safely updated or restored.",
+      "postconditions": "- Original payout payment information is restored if required by the test environment.\n- Updated payment preference record is visible in admin/backend data.",
+      "severity": 3,
+      "priority": 1,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 1011,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "766880139f604499d5de33e44bd92c15377cf630",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open Dashboard > Finance > Payouts > Payment info, or navigate to /manage/finance/payouts/payment-info.",
+          "expected_result": "The Payment information page loads with banking fields, terms, authorization controls, and save action.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "0339eaf4c94d20057341b544a0cdff9e650dbcd0",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Review the displayed payment details and authorization section for the selected currency.",
+          "expected_result": "Currency-specific terms and required banking fields are shown for the selected supported currency.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "063f1e061ec34e9d4aed030246c804fb1299604f",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Enter valid banking details and required authorization information.",
+          "expected_result": "The form accepts valid values and marks the form dirty/valid only when required fields are complete.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "20b4d96f81268bf1008559ecf7b6fa61623badca",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Attempt to save before all required authorization fields or verification are complete.",
+          "expected_result": "The save action is blocked or prompts for required authorization/verification without persisting incomplete data.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "62937c0c9e584b084f572281bd510e90f8ab360d",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Complete the required authorization and verification, then save.",
+          "expected_result": "The update succeeds and the dashboard shows a success notification.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "789b42bafd44f0e2d60b752af42d4c901500222f",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Verify the saved payout payment preference in the dashboard and admin/backend data.",
+          "expected_result": "Saved account details, signature/authorization state, agreement user, and venue association match the submitted data.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": {
+        "Currency": [
+          "CAD",
+          "USD"
+        ]
+      },
+      "parameters": [
+        {
+          "shared_id": null,
+          "type": "single",
+          "item": {
+            "title": "Currency",
+            "values": [
+              "CAD",
+              "USD"
+            ]
+          }
+        }
+      ],
+      "member_id": 2,
+      "author_id": 281534,
+      "author_uuid": "736c9c54-546b-4660-97ac-a713c9e6ae07",
+      "tags": [
+        {
+          "title": "payment",
+          "internal_id": 54
+        },
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "financials",
+          "internal_id": 181
+        },
+        {
+          "title": "payouts",
+          "internal_id": 20
+        }
+      ],
+      "deleted": null,
+      "created": "2025-03-21T18:09:59.000000Z",
+      "updated": "2026-06-19T18:08:56.000000Z",
+      "created_at": "2025-03-21T18:09:59+00:00",
+      "updated_at": "2026-06-19T18:08:56+00:00"
+    },
+    {
+      "id": 1653,
+      "position": 4,
+      "title": "Dashboard - Finance - Payouts - Verify payment information access restrictions",
+      "description": "Verifies that payout payment information editing is available only to permitted non-admin organization users, while administrators are blocked with the current restriction message.",
+      "preconditions": "- A venue exists with payout payment information available to view or edit.\n- Test users are available for a permitted organization user and an administrator/superuser.\n- The environment behavior for administrator edit restrictions is known.",
+      "postconditions": "- No payout payment information is changed by restricted users.\n- Any permitted-user edits are restored if needed.",
+      "severity": 4,
+      "priority": 2,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 1011,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "cf93bf51a4ee4bd36a9107a7a9062f432b9abd5d",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Log in as the permitted organization user and open Finance > Payouts > Payment info.",
+          "expected_result": "The permitted organization user can access the page.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "a7aba7095fcf04c50d658923f0329163a3611240",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Verify the page shows editable payment details and authorization controls.",
+          "expected_result": "Editable fields and the save action are available when the user has the required permission.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "3da53c3e9c03321be4adc20a64361d82fc68ff01",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Log out and log in as an administrator/superuser.",
+          "expected_result": "The administrator/superuser can navigate to the page for review.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "e44fd106e55712b9e4b7ff84baf08aff093b3bc7",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open the same venue payment information page.",
+          "expected_result": "The page displays the restriction message that administrators are not permitted to update payment information.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "d9a0fe15a98208bb5c104ca255fa9bdda47a5faa",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Attempt to edit or save payout payment information as the administrator/superuser.",
+          "expected_result": "The administrator/superuser cannot save changes and the payout payment preference remains unchanged.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": [],
+      "parameters": [],
+      "member_id": 2,
+      "author_id": 281534,
+      "author_uuid": "736c9c54-546b-4660-97ac-a713c9e6ae07",
+      "tags": [
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "financials",
+          "internal_id": 181
+        },
+        {
+          "title": "payment",
+          "internal_id": 54
+        },
+        {
+          "title": "payouts",
+          "internal_id": 20
+        }
+      ],
+      "deleted": null,
+      "created": "2025-03-21T18:09:59.000000Z",
+      "updated": "2026-06-19T18:08:58.000000Z",
+      "created_at": "2025-03-21T18:09:59+00:00",
+      "updated_at": "2026-06-19T18:08:58+00:00"
+    },
+    {
+      "id": 1654,
+      "position": 5,
+      "title": "Dashboard - Finance - Payouts - Verify payment information update notification",
+      "description": "Verifies that updating payout payment information triggers the expected payment preference update notification with masked banking details.",
+      "preconditions": "- Organizer or employee can update payout payment information for the venue.\n- Notification recipients are configured for the venue and finance/accounting workflow.\n- Email or task output can be inspected in the test environment.",
+      "postconditions": "- Original payout payment information is restored if required.\n- Notification artifacts are retained for review or cleaned up according to test-data policy.",
+      "severity": 4,
+      "priority": 2,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 1011,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "8d34a0ff765595de99616396e3f35ab914b6f0ab",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open Finance > Payouts > Payment info and update payout payment information with valid authorization.",
+          "expected_result": "The payment information form accepts the update.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "f216905e3698d6167cea9e555419756cee84da5e",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Save the update.",
+          "expected_result": "A success notification appears and the payout payment preference is saved.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "c9d8c05feb65deeaff8abeba4cae09a9c9ae8e23",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Inspect the email/task output sent for the payment preference update.",
+          "expected_result": "A payment preference update notification is generated.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "0892f2bdbdeef87749856fc47edaafe46ff24377",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Verify the recipient list.",
+          "expected_result": "Finance/accounting and configured venue recipients are included without duplicate email addresses.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "4d0ca4c6206f7d7ca6b8daa014f8334fc2bf0342",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Verify the email content and banking details.",
+          "expected_result": "Sensitive banking details are masked where expected, and the message includes the signer, signed date, venue, and updated payment information context.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": [],
+      "parameters": [],
+      "member_id": 2,
+      "author_id": 281534,
+      "author_uuid": "736c9c54-546b-4660-97ac-a713c9e6ae07",
+      "tags": [
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "financials",
+          "internal_id": 181
+        },
+        {
+          "title": "payment",
+          "internal_id": 54
+        },
+        {
+          "title": "payouts",
+          "internal_id": 20
+        }
+      ],
+      "deleted": null,
+      "created": "2025-03-21T18:09:59.000000Z",
+      "updated": "2026-06-19T18:08:59.000000Z",
+      "created_at": "2025-03-21T18:09:59+00:00",
+      "updated_at": "2026-06-19T18:08:59+00:00"
+    },
+    {
+      "id": 3142,
+      "position": 5,
+      "title": "Core - Internal Rate Cards - Verify internal Stripe processing rate card is passed onto customer during checkout",
+      "description": "Verifies that a venue using the Showpass/system Stripe gateway applies the configured internal Stripe processing rate card to checkout totals and post-purchase financial records.",
+      "preconditions": "The venue uses the Showpass/system Stripe gateway for card payments. An internal Stripe processing rate card is configured for the selected platform and item type with customer-paid processing fees. The selected item is published and purchasable.",
+      "postconditions": "The checkout review, order confirmation, receipt or invoice, and processor transaction show matching processing fee totals where those records are available.",
+      "severity": 4,
+      "priority": 4,
+      "type": 1,
+      "layer": 1,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 2,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 615,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "d018a1030104f8cdef9374d84c4434d111dac4f9",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Select a supported platform and item type from the case parameters.",
+          "expected_result": "The selected item is available for purchase.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "f4bacbd74f69b1665a6a0ccae6106cb3a472b7ef",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open the selected item on the selected purchase surface.",
+          "expected_result": "The item opens successfully on the selected surface.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "6e5a93629e0a8cfd18135472a7f7ad193913e9df",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Verify fee visibility before adding the item to the basket.",
+          "expected_result": "All-in pricing or fee display matches the configured customer-paid processing fee behavior.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "ee55be8d201aab70a83501992dfd21690945aa20",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add one item to the basket and open the cost breakdown.",
+          "expected_result": "The internal Stripe processing fee appears in service fees or the configured fee breakdown with the expected amount.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "21427478b7547be9ca896bebdcbafb74d5a0e94f",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add an additional quantity or second eligible item in the same scenario.",
+          "expected_result": "The processing fee recalculates correctly for the updated quantity or item count.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "f79383e9ec6938ac6683160a18b15a82d2e4bbc2",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Complete checkout with card payment on the system Stripe gateway.",
+          "expected_result": "The purchase completes and the confirmation total matches checkout review.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "6388fbd44bd5732585882573f9403ceff090cb52",
+          "position": 7,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Verify the completed order, receipt or invoice, and Stripe transaction details where available.",
+          "expected_result": "Post-purchase records match the checkout processing fee and final total.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": {
+        "Platform": [
+          "WebPublic",
+          "WebBoxOffice",
+          "Widget",
+          "ReactNativePublic",
+          "POS",
+          "Electron",
+          "WebPublic",
+          "Kiosk",
+          "POS",
+          "WebPublic",
+          "SquarePOS",
+          "WebPublic",
+          "WebPublic",
+          "WebPublic",
+          "WebPublic",
+          "WebPublic"
+        ],
+        "ItemType": [
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Product",
+          "Tip",
+          "GiftCard",
+          "Donation",
+          "Product",
+          "Memberships",
+          "Protection"
+        ],
+        "PaymentType": [
+          "Card",
+          "Card",
+          "Card",
+          "Card",
+          "Card",
+          "Card",
+          "Affirm",
+          "Card",
+          "Card",
+          "Card",
+          "Card",
+          "Card",
+          "Card",
+          "Card",
+          "Card",
+          "Card"
+        ]
+      },
+      "parameters": [
+        {
+          "shared_id": null,
+          "type": "group",
+          "items": [
+            {
+              "title": "Platform",
+              "values": [
+                "WebPublic",
+                "WebBoxOffice",
+                "Widget",
+                "ReactNativePublic",
+                "POS",
+                "Electron",
+                "WebPublic",
+                "Kiosk",
+                "POS",
+                "WebPublic",
+                "SquarePOS",
+                "WebPublic",
+                "WebPublic",
+                "WebPublic",
+                "WebPublic",
+                "WebPublic"
+              ]
+            },
+            {
+              "title": "ItemType",
+              "values": [
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Product",
+                "Tip",
+                "GiftCard",
+                "Donation",
+                "Product",
+                "Memberships",
+                "Protection"
+              ]
+            },
+            {
+              "title": "PaymentType",
+              "values": [
+                "Card",
+                "Card",
+                "Card",
+                "Card",
+                "Card",
+                "Card",
+                "Affirm",
+                "Card",
+                "Card",
+                "Card",
+                "Card",
+                "Card",
+                "Card",
+                "Card",
+                "Card",
+                "Card"
+              ]
+            }
+          ]
+        }
+      ],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "internal-rate-card",
+          "internal_id": 128
+        },
+        {
+          "title": "financials",
+          "internal_id": 181
+        },
+        {
+          "title": "fees-taxes",
+          "internal_id": 66
+        },
+        {
+          "title": "checkout",
+          "internal_id": 32
+        }
+      ],
+      "deleted": null,
+      "created": "2025-05-23T22:57:06.000000Z",
+      "updated": "2026-06-25T21:27:39.000000Z",
+      "created_at": "2025-05-23T22:57:06+00:00",
+      "updated_at": "2026-06-25T21:27:39+00:00"
+    },
+    {
+      "id": 3144,
+      "position": 4,
+      "title": "Core - Rate Card - Verify processing rate card application when Organizer is using an external Square account",
+      "description": "This Core test verifies the correct application of External Showpass fees per item in the basket/checkout and their display on detail pages when a venue is using an external Square account. (Organizer Rate Cards may define these external fees).",
+      "preconditions": "The venue must be configured to use an external Square Account.\nThis test is applicable for Card payment types.",
+      "postconditions": "External Showpass fees are correctly calculated and applied per item and to the final order when an external Square account is used.\nFee visibility (customer-facing or absorbed) is handled according to settings.\nTransaction details on the external Square dashboard and Showpass receipts reflect the correct fees.",
+      "severity": 4,
+      "priority": 1,
+      "type": 1,
+      "layer": 1,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 2,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 1,
+      "milestone_id": null,
+      "suite_id": 615,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "782cea6c118b8abec8b82f90a4ef0e6bbf854ef3",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Select a platform and view an item type.",
+          "expected_result": "The item type is displayed.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "926c3cccca3b1feeae5490ae0a800827b0258007",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Verify the all-in price on the item detail page.",
+          "expected_result": "The all-in price is correct. Fees are shown if not absorbed; hidden if absorbed.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "bc1dedc9c576953242028f2a2a530128dba9249c",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add an item to the basket.",
+          "expected_result": "Correct fees are applied to the single item in the basket.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "5bf292c3e8c8978ddf01a4a044fb3b4284239492",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add more items to the basket.",
+          "expected_result": "Correct fees are applied per item for all items in the basket.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "785693c532f423e1cdc79d5931e060142432943b",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Initiate checkout and proceed to the review page.",
+          "expected_result": "Fees are displayed correctly on the review page.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "133df26739db0ac0b8cf147034c66dbffed0d264",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Complete the checkout.",
+          "expected_result": "Correct fees are applied to the entire basket in the final order.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "85692db51cb293358ddf960e6c003d2a5dd2dd37",
+          "position": 7,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "If applicable, verify that the fees match on the external Square dashboard and on the Showpass receipt (email or paper).",
+          "expected_result": "Fee details on the external Square dashboard and Showpass receipt match.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": {
+        "Platform": [
+          "WebBoxOffice",
+          "WebBoxOffice",
+          "WebBoxOffice",
+          "Electron",
+          "Electron",
+          "Electron",
+          "Kiosk",
+          "Kiosk",
+          "SquarePOS",
+          "SquarePOS"
+        ],
+        "ItemType": [
+          "Event",
+          "Product",
+          "Membership",
+          "Event",
+          "Product",
+          "Membership",
+          "Event",
+          "Product",
+          "Event",
+          "Product"
+        ],
+        "SquareAccount": [
+          "Internal",
+          "External"
+        ]
+      },
+      "parameters": [
+        {
+          "shared_id": null,
+          "type": "group",
+          "items": [
+            {
+              "title": "Platform",
+              "values": [
+                "WebBoxOffice",
+                "WebBoxOffice",
+                "WebBoxOffice",
+                "Electron",
+                "Electron",
+                "Electron",
+                "Kiosk",
+                "Kiosk",
+                "SquarePOS",
+                "SquarePOS"
+              ]
+            },
+            {
+              "title": "ItemType",
+              "values": [
+                "Event",
+                "Product",
+                "Membership",
+                "Event",
+                "Product",
+                "Membership",
+                "Event",
+                "Product",
+                "Event",
+                "Product"
+              ]
+            }
+          ]
+        },
+        {
+          "shared_id": null,
+          "type": "single",
+          "item": {
+            "title": "SquareAccount",
+            "values": [
+              "Internal",
+              "External"
+            ]
+          }
+        }
+      ],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "internal-rate-card",
+          "internal_id": 128
+        },
+        {
+          "title": "financials",
+          "internal_id": 181
+        }
+      ],
+      "deleted": null,
+      "created": "2025-05-26T16:56:00.000000Z",
+      "updated": "2025-09-04T18:23:16.000000Z",
+      "created_at": "2025-05-26T16:56:00+00:00",
+      "updated_at": "2025-09-04T18:23:16+00:00"
+    },
+    {
+      "id": 3156,
+      "position": 6,
+      "title": "Core - Internal Rate Cards - Verify Internal Showpass Rate Card Passed Onto Customer Using Checkout Flow",
+      "description": "This core test ensures that internal Showpass processing rate cards are correctly applied to each item in the basket/checkout and are accurately displayed on item detail pages across various platforms and item types. This is crucial, as it represents the core of our business.\n\n1. With super admin privileges, set the Showpass fees for your event/venue and configure the fees to be passed on to customers.\n2. Locate the item using the public/venue-facing side. Verify that the displayed price(s) are correct.\n3. Add the item(s) to your basket. Ensure that the cart total is accurate.\n4. Complete the checkout flow. Confirm that the final price is correct on the confirmation email, transaction page, and Stripe dashboard.",
+      "preconditions": "As a super admin, configure the desired internal Showpass fee(s) or tax(es) using internal rate cards under `/dashboard/financials/internal-fees/`.\n\nFees or taxes can also be set on the event edit page: `/dashboard/events/{slug}/manage/#/edit/`.",
+      "postconditions": "Internal Showpass processing fees are accurately calculated and applied to each item in the basket and to the overall order.\n\nThe visibility of Showpass fees (customer-facing or absorbed) aligns with the configured settings.\n\nTransaction details on payment gateway dashboards (e.g., Stripe, Square) and Showpass receipts correctly reflect applied Showpass fees.",
+      "severity": 4,
+      "priority": 4,
+      "type": 3,
+      "layer": 1,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 2,
+      "automation": 1,
+      "isManual": true,
+      "isToBeAutomated": true,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 615,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "0d8f264756f00e4b965c9518ce8aabd28369a184",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Select a platform and view an item type.",
+          "expected_result": "The item type is displayed correctly.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "96e10904560d2c8d4f78dccb73445a190c8b03f7",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Verify the all-in price on the item detail page, checking how Showpass fees are displayed.",
+          "expected_result": "The all-in price is accurate. Showpass fees are shown if not absorbed; hidden if absorbed.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "a8c4feb859528db6daacbb8a9e796f9de2c34997",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add an item to the basket.",
+          "expected_result": "Correct Showpass fees are applied to the single item in the basket.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "9e0c3f393d4f42e9be63dd1b2ad0321a91c6bef6",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add more items to the basket.",
+          "expected_result": "Correct Showpass fees are applied per item for all items in the basket.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "f261bd2895139049c40ad75403acfa7e16881476",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Initiate checkout and proceed to the order review page.",
+          "expected_result": "Showpass fees are correctly displayed on the order review page.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "8edc64e2456c84ceabd3e3dc5218918ca290be07",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Complete the checkout.",
+          "expected_result": "The final order confirmation shows correct application of Showpass fees to the entire basket.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "58b0dfb01d5011b71217837fbeb988d855f3b187",
+          "position": 7,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "If applicable, verify the transaction details on the payment gateway dashboard (Stripe/Square) and compare with the Showpass receipt.",
+          "expected_result": "Fee details on the payment gateway dashboard and Showpass receipt match the applied Showpass fees.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": {
+        "Platform": [
+          "WebPublic",
+          "WebPublic",
+          "WebPublic",
+          "WebPublic",
+          "WebBoxOffice",
+          "WebBoxOffice",
+          "WebBoxOffice",
+          "Widget",
+          "ReactNativePublic",
+          "POS",
+          "Electron",
+          "Electron",
+          "Electron",
+          "WebPublic"
+        ],
+        "ItemType": [
+          "Event",
+          "Event",
+          "Membership",
+          "Membership",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Product",
+          "Membership",
+          "Protection"
+        ],
+        "PaymentType": [
+          "Card",
+          "Affirm",
+          "Card",
+          "Affirm",
+          "Card",
+          "Cash",
+          "Other",
+          "Card",
+          "Card",
+          "Card",
+          "Card",
+          "Cash",
+          "Comp",
+          "Card"
+        ]
+      },
+      "parameters": [
+        {
+          "shared_id": null,
+          "type": "group",
+          "items": [
+            {
+              "title": "Platform",
+              "values": [
+                "WebPublic",
+                "WebPublic",
+                "WebPublic",
+                "WebPublic",
+                "WebBoxOffice",
+                "WebBoxOffice",
+                "WebBoxOffice",
+                "Widget",
+                "ReactNativePublic",
+                "POS",
+                "Electron",
+                "Electron",
+                "Electron",
+                "WebPublic"
+              ]
+            },
+            {
+              "title": "ItemType",
+              "values": [
+                "Event",
+                "Event",
+                "Membership",
+                "Membership",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Product",
+                "Membership",
+                "Protection"
+              ]
+            },
+            {
+              "title": "PaymentType",
+              "values": [
+                "Card",
+                "Affirm",
+                "Card",
+                "Affirm",
+                "Card",
+                "Cash",
+                "Other",
+                "Card",
+                "Card",
+                "Card",
+                "Card",
+                "Cash",
+                "Comp",
+                "Card"
+              ]
+            }
+          ]
+        }
+      ],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "internal-rate-card",
+          "internal_id": 128
+        },
+        {
+          "title": "financials",
+          "internal_id": 181
+        }
+      ],
+      "deleted": null,
+      "created": "2025-05-26T17:18:19.000000Z",
+      "updated": "2026-06-19T21:19:07.000000Z",
+      "created_at": "2025-05-26T17:18:19+00:00",
+      "updated_at": "2026-06-19T21:19:07+00:00"
+    },
+    {
+      "id": 3166,
+      "position": 74,
+      "title": "Core - Rate Cards - Verify that items reset to correct price tier for internal and organizer rate cards",
+      "description": "This Core test verifies that event item prices correctly update to reflect changes in price tiers or fee structures (based on internal rate cards or organizer settings) when price-tiering is enabled and relevant updates (e.g., admin actions like \"update fee\") are performed.\n\nRelated original test case titles (merged into this Core test):\n\n* Verify that fees successfully update for TT with locked price after changing price (price tier enabled)",
+      "preconditions": "As a super admin, set desired internal rate card(s)/tax(es) at `/dashboard/financials/internal-fees/`.\nAs an event organizer with \"manage venue\" permissions, set desired fee(s)/tax(es) at `/dashboard/venues/edit/`.\nFees/taxes can also be set on event/product edit pages: `/dashboard/events/{slug}/manage/#/edit/`.\nPrice-tiering for the event item must be enabled.\nAn event item is available for purchase with defined price tiers.",
+      "postconditions": "The price of an event item updates correctly on detail pages and during checkout when its price tier changes.\nAfter venue/custom fees or internal rate cards are changed and an \"update fee\" admin action is run, the item prices reflect these updated fees correctly.",
+      "severity": 4,
+      "priority": 2,
+      "type": 1,
+      "layer": 1,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 2,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 1,
+      "milestone_id": null,
+      "suite_id": 622,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "52140cca11ce7e94902d383bf054163fc3f6c18c",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Select a platform and view an event item with price tiers enabled.",
+          "expected_result": "The event item is displayed with its current price based on the active price tier.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "faaea96a4dbc0fa5e0d020806df8bfc0879e495a",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Purchase the item with the payment type of your choice. Note the price.",
+          "expected_result": "The item is purchased at the current tier's price.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "c8c323bdf52f9ea12677c23d174c161872126349",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "If possible and applicable for the test scenario, manually change the active price tier for the event item or simulate conditions that would trigger a tier change.",
+          "expected_result": "The price tier for the item is changed.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "2ec7e283e519ed0dfaf89af50462f6a63954b54f",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "View the event item again on the detail page.",
+          "expected_result": "The item's price on the detail page updates to reflect the new active price tier or pricing rules.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "172dddb840a42c35b80d50769f228a3fcda1c1d5",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Modify venue or custom fee settings, or internal rate card settings.",
+          "expected_result": "Rate card settings are updated.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "3e55ec598e72d996e39548f52dbd1d0bba367d78",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Run the \"update fee\" admin action for the event or venue.",
+          "expected_result": "The admin action completes successfully.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "80423e40295292799354fe5ddddca913670111be",
+          "position": 7,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "View the event item again on the detail page and attempt to purchase it.",
+          "expected_result": "The item's price on the detail page and at checkout accurately reflects the updated fee structure (based on new rate cards/settings) and current price tier. A new purchase uses this updated price.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": {
+        "Platform": [
+          "WebPublic",
+          "WebBoxOffice",
+          "Widget",
+          "ReactNativePublic",
+          "POS",
+          "Electron",
+          "Kiosk",
+          "POS"
+        ],
+        "ItemType": [
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event"
+        ],
+        "PaymentType": [
+          "Card",
+          "Cash",
+          "Other",
+          "Affirm"
+        ]
+      },
+      "parameters": [
+        {
+          "shared_id": null,
+          "type": "group",
+          "items": [
+            {
+              "title": "Platform",
+              "values": [
+                "WebPublic",
+                "WebBoxOffice",
+                "Widget",
+                "ReactNativePublic",
+                "POS",
+                "Electron",
+                "Kiosk",
+                "POS"
+              ]
+            },
+            {
+              "title": "ItemType",
+              "values": [
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event"
+              ]
+            }
+          ]
+        },
+        {
+          "shared_id": null,
+          "type": "single",
+          "item": {
+            "title": "PaymentType",
+            "values": [
+              "Card",
+              "Cash",
+              "Other",
+              "Affirm"
+            ]
+          }
+        }
+      ],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "internal-rate-card",
+          "internal_id": 128
+        },
+        {
+          "title": "financials",
+          "internal_id": 181
+        }
+      ],
+      "deleted": null,
+      "created": "2025-05-26T19:21:03.000000Z",
+      "updated": "2026-07-13T17:21:13.000000Z",
+      "created_at": "2025-05-26T19:21:03+00:00",
+      "updated_at": "2026-07-13T17:21:13+00:00"
+    },
+    {
+      "id": 3168,
+      "position": 1,
+      "title": "Core - Organizer Rate Cards - Verify organizer fees are passed onto customer during checkout",
+      "description": "Verifies that customer-paid organizer fees are applied per eligible item and displayed correctly through checkout and post-purchase financial records.",
+      "preconditions": "A customer-paid organizer fee is configured on the venue, event, product, or item setup used by the selected parameter row. The selected item is available for purchase on the selected platform. The tester has access to the completed order or transaction details.",
+      "postconditions": "Organizer fee totals match across checkout review, order confirmation, receipt or invoice, and transaction details.",
+      "severity": 4,
+      "priority": 1,
+      "type": 1,
+      "layer": 1,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 2,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 1,
+      "milestone_id": null,
+      "suite_id": 622,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "69929529d28fdad31521e1d5901c5bf0a54f816f",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Select one Platform, ItemType, and PaymentType row from the parameters.",
+          "expected_result": "The scenario is valid for the configured organizer fee.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "e2b0a4925f885f287a592911d7d61f6ad7b4b32e",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open the selected item on the selected purchase surface.",
+          "expected_result": "The item opens successfully and can be purchased.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "18616386489be6a7ee760ee14e6c7d551fb86af0",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Verify the customer-facing price or fee display before adding the item to the basket.",
+          "expected_result": "Fee visibility matches the configured absorbed/customer-paid behavior.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "17b160f88d0a27e96be2d5dede31bed1fdffc189",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add one item to the basket and open the fee breakdown.",
+          "expected_result": "The organizer fee appears in the basket or checkout breakdown with the expected amount.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "872927e6bc057d32dfe226b055a5c650d4e8b944",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add an additional quantity or another eligible item for the same scenario.",
+          "expected_result": "The organizer fee recalculates correctly for the added quantity or item.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "748d5258f1c69d9eae82af0b2078067a9758278d",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Complete checkout with the selected payment type.",
+          "expected_result": "The purchase completes and the confirmation total includes the expected organizer fee.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "5a619e89b17aa0483ba7c854ec90946427fc35f8",
+          "position": 7,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Verify the completed order, receipt, invoice, or transaction details.",
+          "expected_result": "Post-purchase financial records show the same organizer fee and final total.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": {
+        "Platform": [
+          "WebPublic",
+          "WebBoxOffice",
+          "WebBoxOffice",
+          "WebBoxOffice"
+        ],
+        "ItemType": [
+          "EventTicket",
+          "EventTicket",
+          "EventTicket",
+          "EventTicket"
+        ],
+        "PaymentType": [
+          "Card",
+          "Card",
+          "Cash",
+          "Other"
+        ]
+      },
+      "parameters": [
+        {
+          "shared_id": null,
+          "type": "group",
+          "items": [
+            {
+              "title": "Platform",
+              "values": [
+                "WebPublic",
+                "WebBoxOffice",
+                "WebBoxOffice",
+                "WebBoxOffice"
+              ]
+            },
+            {
+              "title": "ItemType",
+              "values": [
+                "EventTicket",
+                "EventTicket",
+                "EventTicket",
+                "EventTicket"
+              ]
+            },
+            {
+              "title": "PaymentType",
+              "values": [
+                "Card",
+                "Card",
+                "Cash",
+                "Other"
+              ]
+            }
+          ]
+        }
+      ],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "financials",
+          "internal_id": 181
+        },
+        {
+          "title": "fees-taxes",
+          "internal_id": 66
+        },
+        {
+          "title": "checkout",
+          "internal_id": 32
+        }
+      ],
+      "deleted": null,
+      "created": "2025-05-26T19:25:22.000000Z",
+      "updated": "2026-06-25T21:27:34.000000Z",
+      "created_at": "2025-05-26T19:25:22+00:00",
+      "updated_at": "2026-06-25T21:27:34+00:00"
+    },
+    {
+      "id": 3169,
+      "position": 22,
+      "title": "Core - Organizer Rate Cards - Verify custom taxes on organizer fees during checkout",
+      "description": "Verifies that a tax configured to apply to an organizer fee is calculated and displayed as tax on fee in checkout and post-purchase financial records.",
+      "preconditions": "A customer-paid organizer fee is configured for the selected item. A custom tax is configured for fee item type and linked to the organizer fee. The selected item is published and purchasable through Web Public checkout with card payment.",
+      "postconditions": "The tax on organizer fee is included in checkout totals and matches the completed order, receipt, invoice, and transaction details.",
+      "severity": 4,
+      "priority": 1,
+      "type": 1,
+      "layer": 1,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 2,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 622,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "40dc62bf31d2995b65b74b5319763af4e03733d7",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open the selected item type from the ItemType parameter.",
+          "expected_result": "The item is available for purchase and uses the configured organizer fee.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "39b0d06c848a0595884a24d7c70e8d52f767b161",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add one item to the basket and open the checkout order summary.",
+          "expected_result": "The basket contains the item and shows the organizer fee and related tax rows.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "f94a8ae1ef3775b54836f732204b152747495023",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Review the fee and tax breakdown before payment.",
+          "expected_result": "The tax on fee amount is calculated from the organizer fee, not only from the item subtotal.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "20ff274eaebb656520f6b01056ae4bc2217093a2",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Increase the quantity or add another eligible item from the same scenario.",
+          "expected_result": "The organizer fee and tax on fee recalculate for the updated quantity or item count.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "136307361896f37f8b3ebe8b98c4de8ec5f181a8",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Complete checkout with card payment.",
+          "expected_result": "The purchase completes and the confirmation total matches the checkout review total.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "bb67cf53ae4282bcb4b51ee88658501299efdba1",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open the completed order, receipt, invoice, or transaction details.",
+          "expected_result": "Post-purchase financial records show the same organizer fee, tax on fee, and final total.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": {
+        "ItemType": [
+          "EventTicket",
+          "Product",
+          "Membership",
+          "GiftCard",
+          "Donation"
+        ]
+      },
+      "parameters": [
+        {
+          "shared_id": null,
+          "type": "single",
+          "item": {
+            "title": "ItemType",
+            "values": [
+              "EventTicket",
+              "Product",
+              "Membership",
+              "GiftCard",
+              "Donation"
+            ]
+          }
+        }
+      ],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "financials",
+          "internal_id": 181
+        },
+        {
+          "title": "fees-taxes",
+          "internal_id": 66
+        },
+        {
+          "title": "checkout",
+          "internal_id": 32
+        }
+      ],
+      "deleted": null,
+      "created": "2025-05-26T19:36:36.000000Z",
+      "updated": "2026-06-25T21:27:32.000000Z",
+      "created_at": "2025-05-26T19:36:36+00:00",
+      "updated_at": "2026-06-25T21:27:32+00:00"
+    },
+    {
+      "id": 3492,
+      "position": 26,
+      "title": "Core - Internal Rate Cards - Verify Matched Internal Showpass Rate Card Application Using Checkout Flow",
+      "description": "This core test ensures that internal Showpass processing rate cards are correctly absorbed for each item in the basket/checkout and are not displayed on item detail pages across various platforms and item types. This is crucial, as it represents the core of our business.\n\n1. With super admin privileges, set the Showpass fees for your event/venue and configure the fees to be absorbed.\n2. Locate the item using the public/venue-facing side. Verify that the displayed price(s) are absorbed.\n3. Add the item(s) to your basket. Ensure that the cart total is accurate.\n4. Complete the checkout flow. Confirm that the final price is correct on the confirmation email, transaction page, and Stripe dashboard.",
+      "preconditions": "As a super admin, configure the desired internal Showpass fee(s) or tax(es) using internal rate cards under `/dashboard/financials/internal-fees/`.\n\nFees or taxes can also be set on the event edit page: `/dashboard/events/{slug}/manage/#/edit/`.",
+      "postconditions": "Internal Showpass processing fees are absorbed but applied to each item in the basket and to the overall order.\n\nThe visibility of Showpass fees (customer-facing or absorbed) aligns with the configured settings.\n\nTransaction details on payment gateway dashboards (e.g., Stripe, Square) and Showpass receipts correctly reflect applied Showpass fees.",
+      "severity": 4,
+      "priority": 1,
+      "type": 3,
+      "layer": 1,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 2,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 615,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "0d8f264756f00e4b965c9518ce8aabd28369a184",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Select a platform and view an item type.",
+          "expected_result": "The item type is displayed correctly.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "96e10904560d2c8d4f78dccb73445a190c8b03f7",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Verify the price on the item detail page, checking how Showpass fees are absorbed.",
+          "expected_result": "Showpass fees are absorbed.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "a8c4feb859528db6daacbb8a9e796f9de2c34997",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add an item to the basket.",
+          "expected_result": "Correct Showpass fees are applied to the single item in the basket.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "9e0c3f393d4f42e9be63dd1b2ad0321a91c6bef6",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add more items to the basket.",
+          "expected_result": "Correct Showpass fees are applied per item for all items in the basket.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "f261bd2895139049c40ad75403acfa7e16881476",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Initiate checkout and proceed to the order review page.",
+          "expected_result": "Showpass fees are absorbed.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "8edc64e2456c84ceabd3e3dc5218918ca290be07",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Complete the checkout.",
+          "expected_result": "The final order confirmation shows correct application of Showpass fees to the entire basket.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "58b0dfb01d5011b71217837fbeb988d855f3b187",
+          "position": 7,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "If applicable, verify the transaction details on the payment gateway dashboard (Stripe/Square) and compare with the Showpass receipt.",
+          "expected_result": "Fee details on the payment gateway dashboard and Showpass receipt match the applied Showpass fees.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": {
+        "Platform": [
+          "WebPublic",
+          "WebPublic",
+          "WebPublic",
+          "WebPublic",
+          "WebBoxOffice",
+          "WebBoxOffice",
+          "WebBoxOffice",
+          "Widget",
+          "ReactNativePublic",
+          "POS",
+          "Electron",
+          "Electron",
+          "Electron"
+        ],
+        "ItemType": [
+          "Event",
+          "Event",
+          "Membership",
+          "Membership",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Event",
+          "Product",
+          "Membership"
+        ],
+        "PaymentType": [
+          "Card",
+          "Affirm",
+          "Card",
+          "Affirm",
+          "Card",
+          "Cash",
+          "Other",
+          "Card",
+          "Card",
+          "Card",
+          "Card",
+          "Cash",
+          "Comp"
+        ]
+      },
+      "parameters": [
+        {
+          "shared_id": null,
+          "type": "group",
+          "items": [
+            {
+              "title": "Platform",
+              "values": [
+                "WebPublic",
+                "WebPublic",
+                "WebPublic",
+                "WebPublic",
+                "WebBoxOffice",
+                "WebBoxOffice",
+                "WebBoxOffice",
+                "Widget",
+                "ReactNativePublic",
+                "POS",
+                "Electron",
+                "Electron",
+                "Electron"
+              ]
+            },
+            {
+              "title": "ItemType",
+              "values": [
+                "Event",
+                "Event",
+                "Membership",
+                "Membership",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Event",
+                "Product",
+                "Membership"
+              ]
+            },
+            {
+              "title": "PaymentType",
+              "values": [
+                "Card",
+                "Affirm",
+                "Card",
+                "Affirm",
+                "Card",
+                "Cash",
+                "Other",
+                "Card",
+                "Card",
+                "Card",
+                "Card",
+                "Cash",
+                "Comp"
+              ]
+            }
+          ]
+        }
+      ],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "internal-rate-card",
+          "internal_id": 128
+        },
+        {
+          "title": "financials",
+          "internal_id": 181
+        }
+      ],
+      "deleted": null,
+      "created": "2025-06-08T02:50:18.000000Z",
+      "updated": "2026-06-19T21:19:18.000000Z",
+      "created_at": "2025-06-08T02:50:18+00:00",
+      "updated_at": "2026-06-19T21:19:18+00:00"
+    },
+    {
+      "id": 3586,
+      "position": 17,
+      "title": "Dashboard - Internal Rate Cards - Verify calculator fee values",
+      "description": "Verifies that the Internal Fees calculator returns the expected fee and tax totals for the selected item type and rate-card setup.",
+      "preconditions": "User is logged into the Showpass Dashboard with super admin permissions. A target venue has known internal and custom rate cards for the selected ItemType parameter. Expected fee values are available from a fixture, backend calculation, or controlled checkout record.",
+      "postconditions": "No rate-card values are changed by the calculator review. Any temporary checkout/order data created for comparison is cleaned up or documented.",
+      "severity": 4,
+      "priority": 1,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 110,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "fb6e3d561bc923779b0e098de632dc1df4886b5b",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Select one ItemType parameter value.",
+          "expected_result": "The selected item type has a valid configured fee scenario.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "1248c4dda4132b3bcc476c4ef155ffd8e60af228",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open the venue Internal Fees page and open the fee calculator or review calculator.",
+          "expected_result": "The calculator opens without changing the venue fee configuration.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "ea9adb988e966749222613f32e0dc5b501d2a5a5",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Enter a controlled item price and choose the applicable payment type and purchase platform for the selected scenario.",
+          "expected_result": "The calculator accepts the scenario inputs.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "5854f2ced33c0cae5e7e2a626b37742d1496549e",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Run the calculator and review each returned fee, tax-on-fee, and total value.",
+          "expected_result": "Each fee component and total is displayed with the expected label and amount.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "718b7810c54c3c25083d5e740285d624bed36df7",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Compare the calculator results with the expected fixture/backend value or a controlled checkout fee breakdown.",
+          "expected_result": "Calculator totals match the selected source of truth for the same item/payment/platform setup.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "06f44c36e71e8b990cd3426162b1e15a2a290a96",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Repeat with a price or payment/platform combination that should select a different configured rate card.",
+          "expected_result": "The calculator switches to the correct rate card when the matching criteria changes.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": {
+        "ItemType": [
+          "Ticket",
+          "Product",
+          "Membership",
+          "Donation",
+          "GiftCard"
+        ]
+      },
+      "parameters": [
+        {
+          "shared_id": null,
+          "type": "single",
+          "item": {
+            "title": "ItemType",
+            "values": [
+              "Ticket",
+              "Product",
+              "Membership",
+              "Donation",
+              "GiftCard"
+            ]
+          }
+        }
+      ],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "internal-rate-card",
+          "internal_id": 128
+        },
+        {
+          "title": "financials",
+          "internal_id": 181
+        }
+      ],
+      "deleted": null,
+      "created": "2025-07-02T20:15:08.000000Z",
+      "updated": "2026-06-25T21:35:59.000000Z",
+      "created_at": "2025-07-02T20:15:08+00:00",
+      "updated_at": "2026-06-25T21:35:59+00:00"
+    },
+    {
+      "id": 3587,
+      "position": 12,
+      "title": "Dashboard - Internal Rate Cards - Modify Fee Calculation Inputs",
+      "description": "This test verifies the UI functionality for modifying the Fee Calculation Configuration for a venue. This configuration determines which inputs (e.g., pre-discount amount, organizer fees) are used to calculate each major fee type, providing critical flexibility for organizers.",
+      "preconditions": "User is logged into the Showpass Dashboard with super admin permissions.\nA target venue is selected.",
+      "postconditions": "The selected fee calculation inputs for each fee type are saved for the venue.\nThe updated configuration is reflected in the UI after refresh.",
+      "severity": 4,
+      "priority": 1,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 110,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "8a95a6bf7d1beb5bf7f1961e683513c64362b9f7",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Navigate to the 'Internal Fees' page.",
+          "expected_result": "The page loads.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "482fa2b545418a60f5cf097b6f5e3c25930e100a",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Click on the 'Fee Calculation' or similarly named tab/button.",
+          "expected_result": "The 'Fee Calculation' configuration UI is displayed.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "12eac596e1a75db3093aea7bee0bea74add9edbe",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Modify the selections for 'Showpass fees inputs'. For example, add 'organizer_fees'.",
+          "expected_result": "The 'organizer_fees' checkbox is selected.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "7aed5fa9e3671f5ee94ffb298ebaf4e0e86c9150",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Modify the selections for 'Processing fees inputs'. For example, add 'company_fees'.",
+          "expected_result": "The 'company_fees' checkbox is selected.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "d0e01443f26b660eef0687ac5be01c56c33a5459",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Modify the selections for 'Organizer fees inputs'. For example, change to 'pre_discount_amount'.",
+          "expected_result": "The 'pre_discount_amount' radio button is selected.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "f40672a80bf958ef63b4aefe82efb8d88ebe1106",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Click 'Save'.",
+          "expected_result": "The configuration is saved without error and the changes persist after reloading the page.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": [],
+      "parameters": [],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "internal-rate-card",
+          "internal_id": 128
+        }
+      ],
+      "deleted": null,
+      "created": "2025-07-02T20:15:51.000000Z",
+      "updated": "2026-06-23T18:34:20.000000Z",
+      "created_at": "2025-07-02T20:15:51+00:00",
+      "updated_at": "2026-06-23T18:34:20+00:00"
+    },
+    {
+      "id": 3876,
+      "position": 1,
+      "title": "Core - Financials - Fee Breakdown - Verify Final Amount Accuracy on Checkout With Varying Quantities",
+      "description": "Verify the final amount accuracy by having different configs.\n\nThis is best tested by a basket with varying quantities and with several item types of varying prices.\n\nBelow are sample steps.",
+      "preconditions": "Fees added to your venue",
+      "postconditions": "The final amount in the invoice and processor dashboard is correct",
+      "severity": 4,
+      "priority": 0,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 676,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "6b32b9d2835955f988e4b09ea50c81342fb781ce",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Navigate to the detail page",
+          "expected_result": "Detail page loads",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "e131057964c0a3a5e49abfb474d0396de4c228e6",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add 3 items to your basket",
+          "expected_result": "3 items added to your basket",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "d7b1a027673ba92f4cf07351a735b1ee279b0d4f",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Proceed to the checkout",
+          "expected_result": "The final amount in the review breakdown is correct",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "d09f0b93c5151338fd64c38b2a13ec523193c098",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Complete the checkout",
+          "expected_result": "The final amount in the invoice and processor dashboard is correct",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": {
+        "ItemType": [
+          "Ticket",
+          "Product",
+          "Membership"
+        ],
+        "Fees": [
+          "InternalFees",
+          "TaxesOnFees",
+          "CustomFees"
+        ]
+      },
+      "parameters": [
+        {
+          "shared_id": null,
+          "type": "single",
+          "item": {
+            "title": "ItemType",
+            "values": [
+              "Ticket",
+              "Product",
+              "Membership"
+            ]
+          }
+        },
+        {
+          "shared_id": null,
+          "type": "single",
+          "item": {
+            "title": "Fees",
+            "values": [
+              "InternalFees",
+              "TaxesOnFees",
+              "CustomFees"
+            ]
+          }
+        }
+      ],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "internal-rate-card",
+          "internal_id": 128
+        }
+      ],
+      "deleted": null,
+      "created": "2025-10-15T21:52:17.000000Z",
+      "updated": "2025-10-15T21:52:18.000000Z",
+      "created_at": "2025-10-15T21:52:17+00:00",
+      "updated_at": "2025-10-15T21:52:18+00:00"
+    },
+    {
+      "id": 4084,
+      "position": 116,
+      "title": "Core - Rate Card - Verify processing rate card application when Organizer is using a Yuno account",
+      "description": "This Core test verifies the correct application of External Showpass fees per item in the basket/checkout and their display on detail pages when a venue is using a Yuno account. (Organizer Rate Cards may define these external fees).",
+      "preconditions": "The venue must be configured to use a Yuno Account.\nThis test is applicable for Card payment types.",
+      "postconditions": "External Showpass fees are correctly calculated and applied per item and to the final order when a Yuno account is used.\nFee visibility (customer-facing or absorbed) is handled according to settings.\nTransaction details on the Yuno dashboard and Showpass receipts reflect the correct fees.",
+      "severity": 4,
+      "priority": 1,
+      "type": 1,
+      "layer": 1,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 2,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 1,
+      "milestone_id": null,
+      "suite_id": 615,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "782cea6c118b8abec8b82f90a4ef0e6bbf854ef3",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Select a platform and view an item type.",
+          "expected_result": "The item type is displayed.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "926c3cccca3b1feeae5490ae0a800827b0258007",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Verify the all-in price on the item detail page.",
+          "expected_result": "The all-in price is correct. Fees are shown if not absorbed; hidden if absorbed.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "bc1dedc9c576953242028f2a2a530128dba9249c",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add an item to the basket.",
+          "expected_result": "Correct fees are applied to the single item in the basket.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "5bf292c3e8c8978ddf01a4a044fb3b4284239492",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add more items to the basket.",
+          "expected_result": "Correct fees are applied per item for all items in the basket.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "785693c532f423e1cdc79d5931e060142432943b",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Initiate checkout and proceed to the review page.",
+          "expected_result": "Fees are displayed correctly on the review page.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "133df26739db0ac0b8cf147034c66dbffed0d264",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Complete the checkout.",
+          "expected_result": "Correct fees are applied to the entire basket in the final order.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "85692db51cb293358ddf960e6c003d2a5dd2dd37",
+          "position": 7,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "If applicable, verify that the fees match on the external Square dashboard and on the Showpass receipt (email or paper).",
+          "expected_result": "Fee details on the external Square dashboard and Showpass receipt match.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": {
+        "Platform": [
+          "WebBoxOffice",
+          "WebBoxOffice",
+          "WebBoxOffice",
+          "Electron",
+          "Electron",
+          "Electron",
+          "POS",
+          "POS"
+        ],
+        "ItemType": [
+          "Event",
+          "Product",
+          "Membership",
+          "Event",
+          "Product",
+          "Membership",
+          "Event",
+          "Product"
+        ]
+      },
+      "parameters": [
+        {
+          "shared_id": null,
+          "type": "group",
+          "items": [
+            {
+              "title": "Platform",
+              "values": [
+                "WebBoxOffice",
+                "WebBoxOffice",
+                "WebBoxOffice",
+                "Electron",
+                "Electron",
+                "Electron",
+                "POS",
+                "POS"
+              ]
+            },
+            {
+              "title": "ItemType",
+              "values": [
+                "Event",
+                "Product",
+                "Membership",
+                "Event",
+                "Product",
+                "Membership",
+                "Event",
+                "Product"
+              ]
+            }
+          ]
+        }
+      ],
+      "member_id": 2,
+      "author_id": 281534,
+      "author_uuid": "736c9c54-546b-4660-97ac-a713c9e6ae07",
+      "tags": [
+        {
+          "title": "internal-rate-card",
+          "internal_id": 128
+        },
+        {
+          "title": "financials",
+          "internal_id": 181
+        }
+      ],
+      "deleted": null,
+      "created": "2026-01-06T16:25:03.000000Z",
+      "updated": "2026-01-06T16:27:39.000000Z",
+      "created_at": "2026-01-06T16:25:03+00:00",
+      "updated_at": "2026-01-06T16:27:39+00:00"
+    },
+    {
+      "id": 4095,
+      "position": 6,
+      "title": "Verify banner visibility for the organizations that have no banking info",
+      "description": "This test verifies the banner visibility in the dashboard for the organizations that have no banking info",
+      "preconditions": "1. Create/use feature flag`enable_banking_details_banner`\n2. Enable this flag for the specific organization/venue to be tested\n3. Venue must not have banking information saved. To check, go to Dashboard > Org Info > Payment Details and Authorization, and must show blank.\n\n![Screenshot 2026-01-26 at 16.14.40.png](https://d2cxucsjd6xvsd.cloudfront.net/public/team/0883b91954101910c6d42d19e3682bf05dea91db/attachment/864369a130501f8c4e1cb2c1e1e59bf7f61cfb9f/Screenshot%202026-01-26%20at%2016.14.40.png)\nIf it is present, you can delete this info on: [https://beta.showpass.com/admin/venues/venuepayoutpaymentpreference/](https://beta.showpass.com/admin/venues/venuepayoutpaymentpreference/)",
+      "postconditions": null,
+      "severity": 4,
+      "priority": 2,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 78,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "cdac96597d5d8acfb5347cdb4f364fab7ab171a2",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Go to [https://beta.showpass.com/dashboard/](https://beta.showpass.com/dashboard/)",
+          "expected_result": "A banner displaying about missing banking details is displayed:\n![Screenshot 2026-01-26 at 16.15.48.png](https://d2cxucsjd6xvsd.cloudfront.net/public/team/0883b91954101910c6d42d19e3682bf05dea91db/attachment/5447b5731f6e7724a5ce49dd4894ebf9b307f37d/Screenshot%202026-01-26%20at%2016.15.48.png)",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "9b703d3f0d878f7cda905db6787cdf8736617874",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Click on \"Organization Settings\"",
+          "expected_result": "It goes to this page:\n![Screenshot 2026-01-26 at 16.16.17.png](https://d2cxucsjd6xvsd.cloudfront.net/public/team/0883b91954101910c6d42d19e3682bf05dea91db/attachment/e436c2f49dcea1eb471826f018dc457711fca05b/Screenshot%202026-01-26%20at%2016.16.17.png)",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "f46a4ebdd279b4cd96a81e0bffa5ff0cbb599f3c",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Populate any valid numbers to the fields and hit save.",
+          "expected_result": "Banking information is saved, banner is no longer displayed (must refresh page)\n![Screenshot 2026-01-26 at 16.17.23.png](https://d2cxucsjd6xvsd.cloudfront.net/public/team/0883b91954101910c6d42d19e3682bf05dea91db/attachment/d87266f8fc1a9426511184ffac0083d7fc4f0782/Screenshot%202026-01-26%20at%2016.17.23.png)",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": [],
+      "parameters": [],
+      "member_id": 6,
+      "author_id": 325286,
+      "author_uuid": "7b300816-4483-41b3-bea5-1bb5f4ae8ca0",
+      "tags": [],
+      "deleted": null,
+      "created": "2026-01-26T23:08:19.000000Z",
+      "updated": "2026-04-01T20:58:16.000000Z",
+      "created_at": "2026-01-26T23:08:19+00:00",
+      "updated_at": "2026-04-01T20:58:16+00:00"
+    },
+    {
+      "id": 4826,
+      "position": 9,
+      "title": "Dashboard - Organization Settings - Configure low inventory display settings",
+      "description": "Verify that an organizer can configure low-inventory threshold display and remaining-inventory display settings, and that invalid threshold values are rejected.",
+      "preconditions": "Organizer has permission to edit organization settings.\nAn event fixture exists where buyer-facing inventory badges can be checked after settings are saved.\nCurrent organization low-inventory settings are known so they can be restored.",
+      "postconditions": null,
+      "severity": 0,
+      "priority": 1,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 181,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "3746415f510571b9bd7ec0582b9f5c997d39c44a",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open the dashboard organization settings area that contains Low Inventory Display settings.",
+          "expected_result": "The settings page loads and shows controls for enabling inventory threshold display, low/middle/high thresholds, and Show remaining inventory.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "6ef9830df08d47a562e85c74b034f9169040fc84",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Enable inventory threshold display and enter valid low, middle, and high threshold values in ascending order.",
+          "expected_result": "The valid values are accepted and the settings can be saved.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "c7b37cf932173276b98d76880373ddf3032fc138",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open a buyer-facing event or ticket surface whose inventory crosses the configured threshold.",
+          "expected_result": "The expected Over X% Sold label appears for the configured threshold.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "284d68c81a49579c0bda525b2227f44a4105d47d",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Configure Show remaining inventory with a valid remaining-count value and open an eligible buyer-facing surface.",
+          "expected_result": "The remaining inventory count appears when inventory_left is within the configured amount.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "1f1ca7c297824e000d5126c596e9e01764536a74",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Attempt to save invalid threshold values, such as low greater than middle or middle greater than high.",
+          "expected_result": "The form blocks saving and shows clear validation for the invalid threshold order.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "286cc70cc5176c45a16bfb2dc3b773e3b608e5ab",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Restore the original organization settings.",
+          "expected_result": "The organization is returned to its starting configuration.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": {
+        "SettingMode": [
+          "ThresholdDisplayEnabled",
+          "ThresholdDisplayDisabled",
+          "ShowRemainingInventoryEnabled",
+          "InvalidThresholdOrder"
+        ],
+        "ExpectedBuyerDisplay": [
+          "OverPercentSold",
+          "NoThresholdBadge",
+          "RemainingCount",
+          "ValidationError"
+        ]
+      },
+      "parameters": [
+        {
+          "shared_id": null,
+          "type": "group",
+          "items": [
+            {
+              "title": "SettingMode",
+              "values": [
+                "ThresholdDisplayEnabled",
+                "ThresholdDisplayDisabled",
+                "ShowRemainingInventoryEnabled",
+                "InvalidThresholdOrder"
+              ]
+            },
+            {
+              "title": "ExpectedBuyerDisplay",
+              "values": [
+                "OverPercentSold",
+                "NoThresholdBadge",
+                "RemainingCount",
+                "ValidationError"
+              ]
+            }
+          ]
+        }
+      ],
+      "member_id": 2,
+      "author_id": 281534,
+      "author_uuid": "736c9c54-546b-4660-97ac-a713c9e6ae07",
+      "tags": [
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "organizer",
+          "internal_id": 33
+        },
+        {
+          "title": "inventory",
+          "internal_id": 114
+        }
+      ],
+      "deleted": null,
+      "created": "2026-06-18T19:42:58.000000Z",
+      "updated": "2026-06-18T19:42:58.000000Z",
+      "created_at": "2026-06-18T19:42:58+00:00",
+      "updated_at": "2026-06-18T19:42:58+00:00"
+    },
+    {
+      "id": 4884,
+      "position": 10,
+      "title": "Web Dashboard - Organization Settings - Configure shipping fulfillment controls",
+      "description": "Verify that an organizer can configure organization-level shipping fulfillment controls that affect delivery-capable checkout flows.",
+      "preconditions": "The organizer user has permission to manage organization settings. A venue exists with at least one shipping-capable event ticket or product fixture available for downstream verification.",
+      "postconditions": "Shipping fulfillment settings are restored to their original values. Any test shipping copy, thresholds, allowed countries, and blocked regions are removed unless the fixture is intentionally reusable.",
+      "severity": 0,
+      "priority": 2,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 181,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "32b1c5bdcfa3ee0b1e0c66a804d04cee7ed6629f",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open Dashboard > Organization Settings > Shipping & Fulfillment for the target venue.",
+          "expected_result": "The page loads with fulfillment controls, shipping messaging, shipping quantity threshold, and destination restrictions sections.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "df1f111ddeb5fd55f2d5a13a5fd337e2a0ec43ca",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Enable Fulfillment features enabled and Allow delivery ticket transfers, then save.",
+          "expected_result": "A success message appears. After refresh, both toggles remain enabled.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "66a5943653d739622f28d7c361bb1b64e02fb2a0",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Enter a checkout shipping message and a shipping quantity threshold message with leading/trailing spaces, then save.",
+          "expected_result": "The messages are saved trimmed. The checkout shipping message is available to the shipping delivery option for delivery-capable checkout flows.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "642207e8957db9c3d8764b356ce00dda9a3ad126",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Enable shipping quantity threshold, enter a valid positive integer threshold, save, then disable the threshold and save again.",
+          "expected_result": "When enabled, the threshold value persists. When disabled, the numeric threshold is cleared while the threshold message remains saved for reuse.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "ac780fee539f342f9e28ce27cb16ee4bc56ad8db",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Add at least one allowed shipping country and one blocked shipping region using search, then save and refresh.",
+          "expected_result": "Selected destinations persist with normalized labels, and selected destinations are not offered again as duplicate choices.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "5ddb93bdee5fbfeb6d70e599e646199a8aa60ced",
+          "position": 6,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Attempt invalid values such as a missing or zero threshold while the threshold is enabled, over-limit or HTML shipping message, or invalid destination values when available through admin/API setup.",
+          "expected_result": "Invalid values are rejected with clear validation errors and the previous valid shipping settings remain unchanged.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": [],
+      "parameters": [],
+      "member_id": 2,
+      "author_id": 281534,
+      "author_uuid": "736c9c54-546b-4660-97ac-a713c9e6ae07",
+      "tags": [
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "organizer",
+          "internal_id": 33
+        },
+        {
+          "title": "settings",
+          "internal_id": 92
+        },
+        {
+          "title": "shipping",
+          "internal_id": 186
+        }
+      ],
+      "deleted": null,
+      "created": "2026-06-23T21:06:39.000000Z",
+      "updated": "2026-06-23T21:06:40.000000Z",
+      "created_at": "2026-06-23T21:06:39+00:00",
+      "updated_at": "2026-06-23T21:06:40+00:00"
+    },
+    {
+      "id": 5118,
+      "position": 1,
+      "title": "Financials - Create and edit a custom fee or tax rate card",
+      "description": "Verify custom-fee and tax definition CRUD, rate-card save behavior, and financial-permission enforcement.\n\n**Parameters:**\n```json\n{\n  \"type\": \"fee,tax\"\n}\n```",
+      "preconditions": "Organizer has financial permission; disposable fee/tax data; applicable venue currency.",
+      "postconditions": "Delete or restore the created rate card and definition.",
+      "severity": 0,
+      "priority": 1,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 1010,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "9dd5d97067abda555df8f896e4ad0bf0bec0f836",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open custom fees or taxes",
+          "expected_result": "Valid definition and rate card persist",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "8aae54fac4a6dfd7a1ffddce02d6f401e822650a",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Create a definition with initial rate card",
+          "expected_result": "Invalid input remains unsaved with validation",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "6b38b5e2ba44ff5f56a1bbaeca1f25bef668248f",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Edit the rate card",
+          "expected_result": "Unauthorized user cannot mutate financial settings",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "44279931fcc22affba5d9a42f1112bfa2f6aeb2f",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Reload list and detail",
+          "expected_result": null,
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "c27cba681c0d65bac5fa95f3e2627d63137ab26f",
+          "position": 5,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Attempt direct access as user without financial permission",
+          "expected_result": null,
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": [],
+      "parameters": [],
+      "member_id": 4,
+      "author_id": 290638,
+      "author_uuid": "bf1d7a8b-6897-4f7f-bd7b-55f1fb754ef1",
+      "tags": [
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "financials",
+          "internal_id": 181
+        },
+        {
+          "title": "custom-fees",
+          "internal_id": 520
+        }
+      ],
+      "deleted": null,
+      "created": "2026-09-02T20:38:33.000000Z",
+      "updated": "2026-09-02T20:38:34.000000Z",
+      "created_at": "2026-09-02T20:38:33+00:00",
+      "updated_at": "2026-09-02T20:38:34+00:00"
+    },
+    {
+      "id": 5139,
+      "position": 11,
+      "title": "Organization - Save organization transfer limits and resync Intellitix invoice",
+      "description": "Verify organization transfer-limit settings persist and the Intellitix self-service invoice resync is permission-gated and reports its result.\n\n**Parameters:**\n```json\n{\n  \"operation\": \"transfer-limit,invoice-resync\"\n}\n```",
+      "preconditions": "Organization admin; eligible Intellitix integration/invoice for non-destructive resync; lower-permission user.",
+      "postconditions": "Record resync result; restore transfer limit.",
+      "severity": 0,
+      "priority": 1,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 181,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "5d288bba4c12941d4ee6cdef807179376bb4682b",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Save an allowed organization transfer limit",
+          "expected_result": "Transfer limit persists",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "59cb153dece9dff5c23783450f50fdb9d1d33fb2",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Reload settings",
+          "expected_result": "Resync reports accepted/completed/failed state clearly",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "fbd532508fb7781e68a805d44d0b0f1c75632c95",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Trigger approved invoice resync",
+          "expected_result": "Unauthorized user cannot access mutations",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "23130dbe3b528d06e61539f369c6700d64e18f73",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Attempt both routes without permission",
+          "expected_result": null,
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": [],
+      "parameters": [],
+      "member_id": 4,
+      "author_id": 290638,
+      "author_uuid": "bf1d7a8b-6897-4f7f-bd7b-55f1fb754ef1",
+      "tags": [
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "organization",
+          "internal_id": 521
+        },
+        {
+          "title": "integrations",
+          "internal_id": 534
+        },
+        {
+          "title": "financials",
+          "internal_id": 181
+        }
+      ],
+      "deleted": null,
+      "created": "2026-09-02T20:38:54.000000Z",
+      "updated": "2026-09-02T20:38:54.000000Z",
+      "created_at": "2026-09-02T20:38:54+00:00",
+      "updated_at": "2026-09-02T20:38:54+00:00"
+    },
+    {
+      "id": 5418,
+      "position": 1,
+      "title": "Dashboard - Organization - Save general details",
+      "description": "Change the organization name and internal information. Verify all General controls and the saved edit. Run on the new Organization page in desktop and narrow mobile Dashboard views.\n\n| Platform | View |\n| --- | --- |\n| Dashboard | Desktop |\n| Dashboard | Mobile |",
+      "preconditions": "* Employee permission: **Manage Organization Info**.\n* Use an organization whose settings may be changed without affecting active sales or customer messages. Record the fields being changed.",
+      "postconditions": "* Restore the recorded settings, save, and reopen to confirm restoration.",
+      "severity": 0,
+      "priority": 0,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 1158,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "1c2ef333384bd88bd5bdd7616e9ceffcab6a757f",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open Dashboard \u2192 Organization \u2192 Organization settings \u2192 General.",
+          "expected_result": "Organization name, Organization profile link, Timezone, read-only Currency, Internal info, Private organizer, and Save appear.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "748541693e109d0d2be3bfab231b31c17dcc63ca",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Edit Organization name and Internal info.",
+          "expected_result": "Both edits appear; the saved timezone and currency remain unchanged.",
+          "data": "Append QA to the recorded name; Internal info = Settings save test",
+          "steps": []
+        },
+        {
+          "hash": "5044cb26ed7f6931fc11225a477556d24471ff1e",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Select Save.",
+          "expected_result": "A success message appears.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "8300d2e022da0d7af9c4e6ebc464d8fa95ff2c8a",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Leave the page and reopen General.",
+          "expected_result": "The name and internal information retain the edits; timezone, currency and Private organizer retain their original values.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": [],
+      "parameters": [],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "organizer",
+          "internal_id": 33
+        }
+      ],
+      "deleted": null,
+      "created": "2026-10-15T23:05:31.000000Z",
+      "updated": "2026-10-15T23:05:32.000000Z",
+      "created_at": "2026-10-15T23:05:31+00:00",
+      "updated_at": "2026-10-15T23:05:32+00:00"
+    },
+    {
+      "id": 5443,
+      "position": 4,
+      "title": "Dashboard - Organization - Save the default refund-policy text",
+      "description": "Save the text customers read about refunds. This text is separate from the Customer refunds policy that controls whether a customer may initiate a return. Run on the new Organization page in desktop and narrow mobile Dashboard views.\n\n| Platform | View |\n| --- | --- |\n| Dashboard | Desktop |\n| Dashboard | Mobile |",
+      "preconditions": "* Employee permission: **Manage Organization Info**.\n* Use an organization whose settings may be changed without affecting active sales or customer messages. Record the fields being changed.\n* Record Default refund policy.",
+      "postconditions": "* Restore the recorded settings, save, and reopen to confirm restoration.",
+      "severity": 0,
+      "priority": 0,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 1164,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "ebd367fbe5f243e31e63fcb49df39058c3ab6a9e",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open Dashboard \u2192 Organization \u2192 Organization settings \u2192 Legal.",
+          "expected_result": "Default refund policy is visible.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "9b5711d0000ed89b15f6cd5243fa4cd1f301635a",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Edit Default refund policy.",
+          "expected_result": "The entered text appears.",
+          "data": "Refund-policy copy for this settings test.",
+          "steps": []
+        },
+        {
+          "hash": "3e2c7fea8c4e29377b55e6f0534015a76b52653c",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Select Save.",
+          "expected_result": "A success message appears.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "2af3e22b02dfad0369d277b65b12cbd14418be94",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Leave the page and reopen Legal.",
+          "expected_result": "The exact text remains saved.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": [],
+      "parameters": [],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "organizer",
+          "internal_id": 33
+        }
+      ],
+      "deleted": null,
+      "created": "2026-10-15T23:05:42.000000Z",
+      "updated": "2026-10-15T23:05:43.000000Z",
+      "created_at": "2026-10-15T23:05:42+00:00",
+      "updated_at": "2026-10-15T23:05:43+00:00"
+    },
+    {
+      "id": 5447,
+      "position": 1,
+      "title": "Dashboard - Organization - Save post-event email options",
+      "description": "Save the organization-wide post-event switch and the message, promotion and review options. Actual scheduled sending and delivered content need the retained email delivery cases. Run on the new Organization page in desktop and narrow mobile Dashboard views.\n\n| Platform | View |\n| --- | --- |\n| Dashboard | Desktop |\n| Dashboard | Mobile |",
+      "preconditions": "* Employee permission: **Manage Organization Info**.\n* The organization-scoped flag `thank_you_emails_flag` is on.\n* Use an organization whose settings may be changed without affecting active sales or customer messages. Record the fields being changed.\n* Use an organization with no event ending during this test. Record all Post-Event settings.",
+      "postconditions": "* Restore the recorded settings, save, and reopen to confirm restoration.",
+      "severity": 0,
+      "priority": 0,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 1169,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "94b122cfd92d6b71d4a40360216e51c0b5252118",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open Dashboard \u2192 Organization \u2192 Branding \u2192 Emails \u2192 Post-Event.",
+          "expected_result": "Enable organization-wide post-event email, Message, Include upcoming events, Upcoming event message, Include rating and review request, Review request message and Save appear.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "c32da9d9e14c438081845a135dff051489ed7b35",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Edit the post-event options.",
+          "expected_result": "The form shows each selected switch and message.",
+          "data": "Enable organization-wide post-event email on; Message = Thanks for attending.; Include upcoming events on; Upcoming event message = More events to explore.; Include rating and review request on; Review request message = Share your experience.",
+          "steps": []
+        },
+        {
+          "hash": "d1b5de865a3dde6ce9f4a955a89e091c2c417fb0",
+          "position": 3,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Select Save.",
+          "expected_result": "A success message appears.",
+          "data": null,
+          "steps": []
+        },
+        {
+          "hash": "bb6c06657f82a3af9024a2ae2dab492f1d1b99cb",
+          "position": 4,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Leave the page and reopen Post-Event.",
+          "expected_result": "All three switches and all three messages retain the selected values.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": [],
+      "parameters": [],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "organizer",
+          "internal_id": 33
+        }
+      ],
+      "deleted": null,
+      "created": "2026-10-15T23:05:44.000000Z",
+      "updated": "2026-10-15T23:05:45.000000Z",
+      "created_at": "2026-10-15T23:05:44+00:00",
+      "updated_at": "2026-10-15T23:05:45+00:00"
+    },
+    {
+      "id": 5457,
+      "position": 7,
+      "title": "Dashboard - Organization - Open settings through the legacy entry",
+      "description": "Verify which settings page opens at /dashboard/venues/edit/. The organization-scoped enable_organization_settings_nextjs_embed flag off selects Angular; on selects the new settings embed. This case checks entry behavior only. Run on the new Organization page in desktop and narrow mobile Dashboard views.\n\n| Platform | View |\n| --- | --- |\n| Dashboard | Desktop |\n| Dashboard | Mobile |",
+      "preconditions": "* Employee permission: **Manage Organization Info**.\n* A setup owner prepares `enable_organization_settings_nextjs_embed` for the selected organization: Legacy = off; New embed = on. Record its original state. The employee does not change the flag during the case.",
+      "postconditions": "* No settings change. Restore the original flag through the setup owner if it was changed for execution.",
+      "severity": 0,
+      "priority": 0,
+      "type": 1,
+      "layer": 0,
+      "is_flaky": 0,
+      "is_muted": false,
+      "behavior": 1,
+      "automation": 0,
+      "isManual": true,
+      "isToBeAutomated": false,
+      "status": 0,
+      "milestone_id": null,
+      "suite_id": 1158,
+      "links": [],
+      "custom_fields": [],
+      "attachments": [],
+      "steps_type": "classic",
+      "steps": [
+        {
+          "hash": "a1322660c5a6a35c1b2e896e7599a980e79246c3",
+          "position": 1,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Open the organization\u2019s legacy settings entry.",
+          "expected_result": "EntryVersion Legacy shows Organization Info with Basic Info and legacy tabs; New embed shows the modern General settings form.",
+          "data": "/dashboard/venues/edit/",
+          "steps": []
+        },
+        {
+          "hash": "80f174fbcfdffba7914e72c276d6c70c484f0c82",
+          "position": 2,
+          "shared_step_hash": null,
+          "shared_step_nested_hash": null,
+          "attachments": [],
+          "action": "Inspect the organization name, timezone and navigation.",
+          "expected_result": "The selected organization\u2019s saved values appear; the available sections match the selected presentation, without an access error.",
+          "data": null,
+          "steps": []
+        }
+      ],
+      "params": {
+        "EntryVersion": [
+          "Legacy",
+          "New embed"
+        ]
+      },
+      "parameters": [
+        {
+          "shared_id": null,
+          "type": "single",
+          "item": {
+            "title": "EntryVersion",
+            "values": [
+              "Legacy",
+              "New embed"
+            ]
+          }
+        }
+      ],
+      "member_id": 1,
+      "author_id": 280826,
+      "author_uuid": "ee3de738-c589-442a-ae7b-17edfd5e6249",
+      "tags": [
+        {
+          "title": "dashboard",
+          "internal_id": 74
+        },
+        {
+          "title": "organizer",
+          "internal_id": 33
+        }
+      ],
+      "deleted": null,
+      "created": "2026-10-15T23:05:48.000000Z",
+      "updated": "2026-10-15T23:05:49.000000Z",
+      "created_at": "2026-10-15T23:05:48+00:00",
+      "updated_at": "2026-10-15T23:05:49+00:00"
+    }
+  ]
+}

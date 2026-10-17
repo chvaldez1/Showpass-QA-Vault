@@ -1,0 +1,174 @@
+{
+  "mode": "suite-batch-apply",
+  "results": [
+    {
+      "key": "custom_fees",
+      "action": "create",
+      "before": null,
+      "after": {
+        "title": "Custom Fees",
+        "parent_id": 1010
+      },
+      "status": "verified",
+      "suiteId": 1180,
+      "verified": {
+        "id": 1180,
+        "title": "Custom Fees",
+        "parent_id": 1010
+      }
+    },
+    {
+      "key": "fee_settings",
+      "action": "create",
+      "before": null,
+      "after": {
+        "title": "Fee Settings",
+        "parent_id": 1010
+      },
+      "status": "verified",
+      "suiteId": 1181,
+      "verified": {
+        "id": 1181,
+        "title": "Fee Settings",
+        "parent_id": 1010
+      }
+    },
+    {
+      "key": "payment_authorization",
+      "action": "create",
+      "before": null,
+      "after": {
+        "title": "Payment Details and Authorization",
+        "parent_id": 1157
+      },
+      "status": "verified",
+      "suiteId": 1182,
+      "verified": {
+        "id": 1182,
+        "title": "Payment Details and Authorization",
+        "parent_id": 1157
+      }
+    },
+    {
+      "key": "shipping_fulfillment",
+      "action": "create",
+      "before": null,
+      "after": {
+        "title": "Shipping & Fulfillment",
+        "parent_id": 1157
+      },
+      "status": "verified",
+      "suiteId": 1183,
+      "verified": {
+        "id": 1183,
+        "title": "Shipping & Fulfillment",
+        "parent_id": 1157
+      }
+    },
+    {
+      "key": "organization_name",
+      "action": "update",
+      "suiteId": 181,
+      "before": {
+        "title": "Organizer Info"
+      },
+      "after": {
+        "title": "Organization"
+      },
+      "status": "verified",
+      "verified": {
+        "id": 181,
+        "title": "Organization",
+        "parent_id": 78
+      }
+    },
+    {
+      "key": "emails_under_branding",
+      "action": "update",
+      "suiteId": 523,
+      "before": {
+        "parent_id": 181
+      },
+      "after": {
+        "parent_id": 1165
+      },
+      "status": "verified",
+      "verified": {
+        "id": 523,
+        "title": "Emails",
+        "parent_id": 1165
+      }
+    },
+    {
+      "key": "deliverables_under_branding",
+      "action": "update",
+      "suiteId": 1170,
+      "before": {
+        "parent_id": 181
+      },
+      "after": {
+        "parent_id": 1165
+      },
+      "status": "verified",
+      "verified": {
+        "id": 1170,
+        "title": "Deliverables",
+        "parent_id": 1165
+      }
+    },
+    {
+      "key": "upselling_under_modules",
+      "action": "update",
+      "suiteId": 440,
+      "before": {
+        "parent_id": 181,
+        "title": "Web Dashboard - Organizer info - Event Upsell Settings"
+      },
+      "after": {
+        "parent_id": 1161,
+        "title": "Event Upselling"
+      },
+      "status": "verified",
+      "verified": {
+        "id": 440,
+        "title": "Event Upselling",
+        "parent_id": 1161
+      }
+    },
+    {
+      "key": "refunds_under_settings",
+      "action": "update",
+      "suiteId": 1091,
+      "before": {
+        "parent_id": 181
+      },
+      "after": {
+        "parent_id": 1157
+      },
+      "status": "verified",
+      "verified": {
+        "id": 1091,
+        "title": "Customer Refunds",
+        "parent_id": 1157
+      }
+    },
+    {
+      "key": "email_customization_label",
+      "action": "update",
+      "suiteId": 749,
+      "before": {
+        "title": "Email Customization"
+      },
+      "after": {
+        "title": "Customization"
+      },
+      "status": "verified",
+      "verified": {
+        "id": 749,
+        "title": "Customization",
+        "parent_id": 523
+      }
+    }
+  ],
+  "operation_count": 10
+}

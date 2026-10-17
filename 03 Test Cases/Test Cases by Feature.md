@@ -39,8 +39,13 @@ Use one feature folder for each test plan, Qase draft, gap analysis, or executio
   - [[03 Test Cases/Memberships/membership-benefit-seating-permissions-beta-release-run-2026-07-26|Membership Benefit Seating Permissions Beta Release Run]]
   - [[03 Test Cases/Memberships/SPD-2349-qase-case-720-1188-updates|SPD-2349 Qase Case 720 and 1188 Updates]]
   - [[03 Test Cases/Memberships/SPD-2461-manage-membership-renewal-entry-points-qase-case|SPD-2461 Manage Membership Renewal Entry Points Qase Case]]
+- **Organizations**
+  - [[03 Test Cases/Organizations/organization-settings-qase-test-cases|Organization Settings — Qase-Ready Cases]]
+  - [[03 Test Cases/Organizations/organization-registration-qase-gap-analysis|Organization Registration — Qase-Ready Cases]]
 - **Payments**
   - [[03 Test Cases/Payments/square-test-cases|Square Terminal Test Cases]]
+- **Products**
+  - [[03 Test Cases/Products/inventory-qase-test-cases|Marketplace Inventory — Qase-Ready Cases]]
 - **Ticket Credits**
   - [[03 Test Cases/Ticket Credits/SPD-2383-ticket-credit-flex-pass-per-event-limit|SPD-2383 Ticket Credit Flex Pass Per-Event Limit]]
 - **Ticketing**

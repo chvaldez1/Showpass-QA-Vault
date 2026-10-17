@@ -1,0 +1,362 @@
+{
+  "approved": true,
+  "receiptPath": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/qase-case-apply.json",
+  "operations": [
+    {
+      "label": "SPT-5118",
+      "action": "update",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 5118,
+      "suiteId": 1180,
+      "destination": {
+        "key": "custom_fees",
+        "suiteId": 1180,
+        "path": "Dashboard → Finance → Custom Fees",
+        "parentId": 1010,
+        "route": "/manage/finance/custom-fees/"
+      },
+      "caseId": 5118,
+      "onlyFields": "title,description,preconditions,postconditions,steps,suite_id,params"
+    },
+    {
+      "label": "SPT-1650",
+      "action": "update",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 1650,
+      "suiteId": 1182,
+      "destination": {
+        "key": "payment_authorization",
+        "suiteId": 1182,
+        "path": "Dashboard → Organization → Settings → Payment Details and Authorization",
+        "parentId": 1157,
+        "route": "/manage/organization/settings/payment-authorization/"
+      },
+      "caseId": 1650,
+      "onlyFields": "title,description,preconditions,postconditions,steps,suite_id"
+    },
+    {
+      "label": "SPT-1653",
+      "action": "update",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 1653,
+      "suiteId": 1182,
+      "destination": {
+        "key": "payment_authorization",
+        "suiteId": 1182,
+        "path": "Dashboard → Organization → Settings → Payment Details and Authorization",
+        "parentId": 1157,
+        "route": "/manage/organization/settings/payment-authorization/"
+      },
+      "caseId": 1653,
+      "onlyFields": "title,description,preconditions,postconditions,steps,suite_id,params"
+    },
+    {
+      "label": "SPT-1654",
+      "action": "update",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 1654,
+      "suiteId": 1182,
+      "destination": {
+        "key": "payment_authorization",
+        "suiteId": 1182,
+        "path": "Dashboard → Organization → Settings → Payment Details and Authorization",
+        "parentId": 1157,
+        "route": "/manage/organization/settings/payment-authorization/"
+      },
+      "caseId": 1654,
+      "onlyFields": "title,description,preconditions,postconditions,steps,suite_id"
+    },
+    {
+      "label": "SPT-5443",
+      "action": "update",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 5443,
+      "suiteId": 1164,
+      "destination": {
+        "suiteId": 1164,
+        "path": "Dashboard → Organization → Settings → Legal",
+        "route": "/manage/organization/settings/terms/"
+      },
+      "caseId": 5443,
+      "onlyFields": "title,description,preconditions,postconditions,steps,suite_id,params"
+    },
+    {
+      "label": "TC-100",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 100,
+      "suiteId": 1180,
+      "destination": {
+        "key": "custom_fees",
+        "suiteId": 1180,
+        "path": "Dashboard → Finance → Custom Fees",
+        "parentId": 1010,
+        "route": "/manage/finance/custom-fees/"
+      }
+    },
+    {
+      "label": "TC-101",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 101,
+      "suiteId": 1180,
+      "destination": {
+        "key": "custom_fees",
+        "suiteId": 1180,
+        "path": "Dashboard → Finance → Custom Fees",
+        "parentId": 1010,
+        "route": "/manage/finance/custom-fees/"
+      }
+    },
+    {
+      "label": "TC-102",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 102,
+      "suiteId": 1180,
+      "destination": {
+        "key": "custom_fees",
+        "suiteId": 1180,
+        "path": "Dashboard → Finance → Custom Fees",
+        "parentId": 1010,
+        "route": "/manage/finance/custom-fees/"
+      }
+    },
+    {
+      "label": "TC-103",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 103,
+      "suiteId": 1180,
+      "destination": {
+        "key": "custom_fees",
+        "suiteId": 1180,
+        "path": "Dashboard → Finance → Custom Fees",
+        "parentId": 1010,
+        "route": "/manage/finance/custom-fees/"
+      }
+    },
+    {
+      "label": "TC-104",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 104,
+      "suiteId": 1180,
+      "destination": {
+        "key": "custom_fees",
+        "suiteId": 1180,
+        "path": "Dashboard → Finance → Custom Fees",
+        "parentId": 1010,
+        "route": "/manage/finance/custom-fees/"
+      }
+    },
+    {
+      "label": "TC-105",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 105,
+      "suiteId": 1180,
+      "destination": {
+        "key": "custom_fees",
+        "suiteId": 1180,
+        "path": "Dashboard → Finance → Custom Fees",
+        "parentId": 1010,
+        "route": "/manage/finance/custom-fees/"
+      }
+    },
+    {
+      "label": "TC-106",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 106,
+      "suiteId": 1180,
+      "destination": {
+        "key": "custom_fees",
+        "suiteId": 1180,
+        "path": "Dashboard → Finance → Custom Fees",
+        "parentId": 1010,
+        "route": "/manage/finance/custom-fees/"
+      }
+    },
+    {
+      "label": "TC-107",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 107,
+      "suiteId": 1180,
+      "destination": {
+        "key": "custom_fees",
+        "suiteId": 1180,
+        "path": "Dashboard → Finance → Custom Fees",
+        "parentId": 1010,
+        "route": "/manage/finance/custom-fees/"
+      }
+    },
+    {
+      "label": "TC-108",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 108,
+      "suiteId": 1180,
+      "destination": {
+        "key": "custom_fees",
+        "suiteId": 1180,
+        "path": "Dashboard → Finance → Custom Fees",
+        "parentId": 1010,
+        "route": "/manage/finance/custom-fees/"
+      }
+    },
+    {
+      "label": "TC-109",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 109,
+      "suiteId": 1181,
+      "destination": {
+        "key": "fee_settings",
+        "suiteId": 1181,
+        "path": "Dashboard → Finance → Fee Settings",
+        "parentId": 1010,
+        "route": "/manage/finance/settings/"
+      }
+    },
+    {
+      "label": "TC-110",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 110,
+      "suiteId": 1181,
+      "destination": {
+        "key": "fee_settings",
+        "suiteId": 1181,
+        "path": "Dashboard → Finance → Fee Settings",
+        "parentId": 1010,
+        "route": "/manage/finance/settings/"
+      }
+    },
+    {
+      "label": "TC-111",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 111,
+      "suiteId": 1181,
+      "destination": {
+        "key": "fee_settings",
+        "suiteId": 1181,
+        "path": "Dashboard → Finance → Fee Settings",
+        "parentId": 1010,
+        "route": "/manage/finance/settings/"
+      }
+    },
+    {
+      "label": "TC-112",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 112,
+      "suiteId": 1181,
+      "destination": {
+        "key": "fee_settings",
+        "suiteId": 1181,
+        "path": "Dashboard → Finance → Fee Settings",
+        "parentId": 1010,
+        "route": "/manage/finance/settings/"
+      }
+    },
+    {
+      "label": "TC-113",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 113,
+      "suiteId": 1182,
+      "destination": {
+        "key": "payment_authorization",
+        "suiteId": 1182,
+        "path": "Dashboard → Organization → Settings → Payment Details and Authorization",
+        "parentId": 1157,
+        "route": "/manage/organization/settings/payment-authorization/"
+      }
+    },
+    {
+      "label": "TC-114",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 114,
+      "suiteId": 1158,
+      "destination": {
+        "suiteId": 1158,
+        "path": "Dashboard → Organization → Settings → General",
+        "route": "/manage/organization/settings/"
+      }
+    },
+    {
+      "label": "TC-115",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 115,
+      "suiteId": 1180,
+      "destination": {
+        "key": "custom_fees",
+        "suiteId": 1180,
+        "path": "Dashboard → Finance → Custom Fees",
+        "parentId": 1010,
+        "route": "/manage/finance/custom-fees/"
+      }
+    },
+    {
+      "label": "TC-116",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 116,
+      "suiteId": 1158,
+      "destination": {
+        "suiteId": 1158,
+        "path": "Dashboard → Organization → Settings → General",
+        "route": "/manage/organization/settings/"
+      }
+    },
+    {
+      "label": "TC-117",
+      "action": "create",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 117,
+      "suiteId": 1181,
+      "destination": {
+        "key": "fee_settings",
+        "suiteId": 1181,
+        "path": "Dashboard → Finance → Fee Settings",
+        "parentId": 1010,
+        "route": "/manage/finance/settings/"
+      }
+    },
+    {
+      "label": "SPT-4826",
+      "action": "update",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 4826,
+      "suiteId": 1161,
+      "destination": {
+        "suiteId": 1161,
+        "path": "Dashboard → Organization → Settings → Enabled modules",
+        "route": "/manage/organization/settings/modules/"
+      },
+      "caseId": 4826,
+      "onlyFields": "suite_id"
+    },
+    {
+      "label": "SPT-4884",
+      "action": "update",
+      "caseFile": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/organization-settings-qase-test-cases.md",
+      "caseNumber": 4884,
+      "suiteId": 1183,
+      "destination": {
+        "key": "shipping_fulfillment",
+        "suiteId": 1183,
+        "path": "Dashboard → Organization → Settings → Shipping & Fulfillment",
+        "parentId": 1157,
+        "route": "/manage/organization/settings/shipping-fulfillment/"
+      },
+      "caseId": 4884,
+      "onlyFields": "suite_id"
+    }
+  ]
+}

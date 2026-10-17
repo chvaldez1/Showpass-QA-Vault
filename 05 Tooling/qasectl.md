@@ -17,13 +17,13 @@ These rules define the Showpass Qase standard for user perspective, observable b
 
 ## Read-First Workflow
 
-Use this for the generator's Read / Gap Analysis Flow, not ordinary new-case generation:
+Use this with [[06 Prompts/Showpass Qase Gap Analysis]], not ordinary new-case generation:
 
 1. Query Qase for existing coverage.
 2. Inspect backend source truth in `/Users/christianvaldez/Documents/Showpass/repos/web-app`.
 3. Inspect frontend behavior in `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`.
 4. Apply [[05 Tooling/Qase Test Case Writing Rules]] to any suggested new or updated cases.
-5. Write the gap analysis to the requested output file, or create a suitably named note under the matching `03 Test Cases/<feature>/` folder.
+5. Deliver focused Qase-ready cases in the existing canonical note, with a brief coverage summary and supporting evidence afterward. Follow the dedicated gap-analysis workflow for layout and splitting.
 6. Do not push to Qase until the output is reviewed and signed off.
 
 ## Exact-ID Review Workflow

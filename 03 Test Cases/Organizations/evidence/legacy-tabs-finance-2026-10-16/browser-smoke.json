@@ -1,0 +1,34 @@
+{
+  "environment": "demo",
+  "accountDisplay": "Christian Valdez",
+  "organization": "Calgary Outlaws",
+  "tabsInspected": [
+    "Basic Info",
+    "Branding",
+    "Business Schedule",
+    "Enabled Modules",
+    "Ticketing",
+    "Shipping & Fulfillment",
+    "Low Inventory Display",
+    "Financial Settings",
+    "Post-Event Emails",
+    "Email Customizations",
+    "Integrations",
+    "Payment Details and Authorization",
+    "Terms & Conditions",
+    "Event Upselling",
+    "Analytics"
+  ],
+  "conditionalNotVisible": [
+    "Customer refunds",
+    "Add Suborganization"
+  ],
+  "unsavedFeeForm": "opened, inspected, Cancel Editing removed it",
+  "taxForm": "source reviewed; native selection did not change Fee",
+  "restoredTab": "Payment Details and Authorization",
+  "productSaves": 0,
+  "deletions": 0,
+  "emails": 0,
+  "calculatorCalls": 0,
+  "agreements": 0
+}

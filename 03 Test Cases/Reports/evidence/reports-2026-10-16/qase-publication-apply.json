@@ -1,0 +1,2577 @@
+{
+  "mode": "batch-apply",
+  "operation_count": 46,
+  "results": [
+    {
+      "label": "SPT-880",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 880,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps",
+        "params"
+      ],
+      "before": {
+        "id": 880,
+        "title": "Web - Dashboard - Reports - Itemized sales report CSV/PDF",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "fees-taxes",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 3
+      },
+      "verified": {
+        "id": 880,
+        "title": "Dashboard - Reports - Verify Itemized Sales Report CSV/PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "fees-taxes",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "ReportFormat": [
+            "CSV",
+            "PDF"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "ReportFormat",
+              "value_count": 2,
+              "values": [
+                "CSV",
+                "PDF"
+              ]
+            }
+          }
+        ],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-881",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 881,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps",
+        "params"
+      ],
+      "before": {
+        "id": 881,
+        "title": "Web - Dashboard - Reports - Settlement Report CSV/PDF",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "post-purchase",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 2
+      },
+      "verified": {
+        "id": 881,
+        "title": "Dashboard - Reports - Verify Settlement Report CSV/PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "post-purchase",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "ReportFormat": [
+            "CSV",
+            "PDF"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "ReportFormat",
+              "value_count": 2,
+              "values": [
+                "CSV",
+                "PDF"
+              ]
+            }
+          }
+        ],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-882",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 882,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps",
+        "params"
+      ],
+      "before": {
+        "id": 882,
+        "title": "Web - Dashboard - Reports - Advance Report CSV/PDF",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 3
+      },
+      "verified": {
+        "id": 882,
+        "title": "Dashboard - Reports - Verify Advance Report CSV/PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "ReportFormat": [
+            "CSV",
+            "PDF"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "ReportFormat",
+              "value_count": 2,
+              "values": [
+                "CSV",
+                "PDF"
+              ]
+            }
+          }
+        ],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-883",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 883,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 883,
+        "title": "Web - Dashboard - Reports - Payment type breakdown report PDF",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "PaymentTypes": [
+            "Card",
+            "Cash",
+            "Other",
+            "Comp",
+            "Affirm",
+            "Credit",
+            "AutoGenerated"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "PaymentTypes",
+              "value_count": 7,
+              "values": [
+                "Card",
+                "Cash",
+                "Other",
+                "Comp",
+                "Affirm",
+                "Credit",
+                "AutoGenerated"
+              ]
+            }
+          }
+        ],
+        "step_count": 3
+      },
+      "verified": {
+        "id": 883,
+        "title": "Dashboard - Reports - Verify Payment Type Breakdown PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "PaymentTypes": [
+            "Card",
+            "Cash",
+            "Other",
+            "Comp",
+            "Affirm",
+            "Credit",
+            "AutoGenerated"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "PaymentTypes",
+              "value_count": 7,
+              "values": [
+                "Card",
+                "Cash",
+                "Other",
+                "Comp",
+                "Affirm",
+                "Credit",
+                "AutoGenerated"
+              ]
+            }
+          }
+        ],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-884",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 884,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 884,
+        "title": "Web - Dashboard - Reports - Event financial summary report PDF",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 884,
+        "title": "Dashboard - Reports - Verify Event Financial Summary PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-885",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 885,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 885,
+        "title": "Web - Dashboard - Reports - Ticket type financial summary report PDF",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 885,
+        "title": "Dashboard - Reports - Verify Ticket Type Financial Summary PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-886",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 886,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 886,
+        "title": "Web - Dashboard - Reports - Product summary report PDF",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 886,
+        "title": "Dashboard - Reports - Verify Product Summary PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-887",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 887,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 887,
+        "title": "Web - Dashboard - Reports - Product summary report CSV",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 887,
+        "title": "Dashboard - Reports - Verify Product Summary CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-888",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 888,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps",
+        "params"
+      ],
+      "before": {
+        "id": 888,
+        "title": "Web - Dashboard - Reports - Add existing settlements to summary PDF report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "post-purchase",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 2
+      },
+      "verified": {
+        "id": 888,
+        "title": "Dashboard - Reports - Include existing settlements in summary PDFs",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "post-purchase",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "SummaryKind": [
+            "Event",
+            "Product"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "SummaryKind",
+              "value_count": 2,
+              "values": [
+                "Event",
+                "Product"
+              ]
+            }
+          }
+        ],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-889",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 889,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 889,
+        "title": "Web - Dashboard - Reports - Marketing Campaign Summary CSV",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 3
+      },
+      "verified": {
+        "id": 889,
+        "title": "Dashboard - Reports - Verify Marketing Campaign Summary CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-891",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 891,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps",
+        "params"
+      ],
+      "before": {
+        "id": 891,
+        "title": "Web - Dashboard - Reports - Shipping fulfilment stats report contain correct information for event tickets and shows only events with \"Standard Shipping\" delivery type",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 891,
+        "title": "Dashboard - Reports - Verify Standard Shipping ticket and product rows",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "ItemSelection": [
+            "EventTickets",
+            "Products"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "ItemSelection",
+              "value_count": 2,
+              "values": [
+                "EventTickets",
+                "Products"
+              ]
+            }
+          }
+        ],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-892",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 892,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 892,
+        "title": "Web - Dashboard - Reports - Shipping fulfilment stats report contain correct information for memberships and shows memberships with both \"Standard Shipping\" and \"Will Call/Pick Up\" delivery type",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "memberships"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 4
+      },
+      "verified": {
+        "id": 892,
+        "title": "Dashboard - Reports - Include shipping and pickup memberships",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "memberships"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-894",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 894,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps",
+        "params"
+      ],
+      "before": {
+        "id": 894,
+        "title": "Web - Dashboard - Reports - Transactions report for events",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 894,
+        "title": "Dashboard - Reports - Verify Transactions for selected events or products",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "ItemSelection": [
+            "Event",
+            "Product"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "ItemSelection",
+              "value_count": 2,
+              "values": [
+                "Event",
+                "Product"
+              ]
+            }
+          }
+        ],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-896",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 896,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 896,
+        "title": "Web - Dashboard - Reports - Customers and Employees report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 3
+      },
+      "verified": {
+        "id": 896,
+        "title": "Dashboard - Reports - Verify Customers and Employees CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-897",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 897,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 897,
+        "title": "Web - Dashboard - Reports - Will Call report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 897,
+        "title": "Dashboard - Reports - Verify Will Call CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-898",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 898,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 898,
+        "title": "Web - Dashboard - Reports - Ticket Sales History report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 898,
+        "title": "Dashboard - Reports - Verify Ticket Sales History PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-899",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 899,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 899,
+        "title": "Web - Dashboard - Reports - Employee Sales history report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 899,
+        "title": "Dashboard - Reports - Verify Employee Sales History PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-900",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 900,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 900,
+        "title": "Web - Dashboard - Reports - Event Summary Report CSV",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 2
+      },
+      "verified": {
+        "id": 900,
+        "title": "Dashboard - Reports - Download Event Summary CSV at the 60-event limit",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-901",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 901,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 901,
+        "title": "Web - Dashboard - Reports - Event Summary Report PDF",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 2
+      },
+      "verified": {
+        "id": 901,
+        "title": "Dashboard - Reports - Verify Event Summary PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-902",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 902,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 902,
+        "title": "Web - Dashboard - Reports - Event Audit report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 902,
+        "title": "Dashboard - Reports - Verify Event Audit XLSX contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 4
+      }
+    },
+    {
+      "label": "SPT-903",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 903,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 903,
+        "title": "Web - Dashboard - Reports - Financial Scan Summary report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 903,
+        "title": "Dashboard - Reports - Verify Financial Scan Summary PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-904",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 904,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 904,
+        "title": "Web - Dashboard - Reports - Ticket Type Summary report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "ReportType": [
+            "CSV"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "ReportType",
+              "value_count": 1,
+              "values": [
+                "CSV"
+              ]
+            }
+          }
+        ],
+        "step_count": 3
+      },
+      "verified": {
+        "id": 904,
+        "title": "Dashboard - Reports - Verify Ticket Type Summary CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "ReportType": [
+            "CSV"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "ReportType",
+              "value_count": 1,
+              "values": [
+                "CSV"
+              ]
+            }
+          }
+        ],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-905",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 905,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 905,
+        "title": "Web - Dashboard - Reports - Password Used Summary report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 905,
+        "title": "Dashboard - Reports - Verify Password Used Summary CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-906",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 906,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 906,
+        "title": "Web - Dashboard - Reports - Seller stats report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 906,
+        "title": "Dashboard - Reports - Verify Seller Stats CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-907",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 907,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 907,
+        "title": "Web - Dashboard - Reports - Ticket scan history report CSV",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 907,
+        "title": "Dashboard - Reports - Verify Ticket Scan History Report CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-908",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 908,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 908,
+        "title": "Web - Dashboard - Reports - Ticket scan history report PDF",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 908,
+        "title": "Dashboard - Reports - Verify Ticket Scan History Report PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-909",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 909,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 909,
+        "title": "Web - Dashboard - Reports - Employee scan history report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 909,
+        "title": "Dashboard - Reports - Verify Employee Scan History Report PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-910",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 910,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 910,
+        "title": "Web - Dashboard - Reports - Seller Cash Out Report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 910,
+        "title": "Dashboard - Reports - Verify Seller Cash Out Report PDF contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-911",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 911,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 911,
+        "title": "Web - Dashboard - Reports - Discount Creation report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 911,
+        "title": "Dashboard - Reports - Verify Discount Creation Report CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-912",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 912,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 912,
+        "title": "Web - Dashboard - Reports - Holds Stats report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 912,
+        "title": "Dashboard - Reports - Verify Holds Stats CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-913",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 913,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 913,
+        "title": "Web - Dashboard - Reports - Event/Product Inventory report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 913,
+        "title": "Dashboard - Reports - Verify Event/Product Inventory Report CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-914",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 914,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 914,
+        "title": "Web - Dashboard - Reports - Member report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "memberships"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 4
+      },
+      "verified": {
+        "id": 914,
+        "title": "Dashboard - Reports - Verify Member Report CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "memberships"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-915",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 915,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 915,
+        "title": "Web - Dashboard - Reports - Member history report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "memberships"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 4
+      },
+      "verified": {
+        "id": 915,
+        "title": "Dashboard - Reports - Verify Member History Report CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "memberships"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-916",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 916,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 916,
+        "title": "Web - Dashboard - Reports - Member Benefit Usage report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "memberships"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 4
+      },
+      "verified": {
+        "id": 916,
+        "title": "Dashboard - Reports - Verify Member Benefit Usage Report CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "memberships"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-920",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 920,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 920,
+        "title": "Web Dashboard - Reports - Verify Member Seating Report CSV",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "assigned-seating",
+          "dashboard",
+          "memberships"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      },
+      "verified": {
+        "id": 920,
+        "title": "Dashboard - Reports - Verify Member Seating Report CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "assigned-seating",
+          "dashboard",
+          "memberships"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-917",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 917,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps",
+        "params"
+      ],
+      "before": {
+        "id": 917,
+        "title": "Web - Dashboard - Reports - Verify Waitlist Subscribers Report Generation and Content",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "waitlists"
+        ],
+        "params": {
+          "ReportFormat": [
+            "CSV"
+          ],
+          "EventFilter": [
+            "SpecificEvent",
+            "AllEvents"
+          ],
+          "StatusFilter": [
+            "Pending",
+            "Fulfilled",
+            "Any"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "ReportFormat",
+              "value_count": 1,
+              "values": [
+                "CSV"
+              ]
+            }
+          },
+          {
+            "type": "single",
+            "item": {
+              "title": "EventFilter",
+              "value_count": 2,
+              "values": [
+                "SpecificEvent",
+                "AllEvents"
+              ]
+            }
+          },
+          {
+            "type": "single",
+            "item": {
+              "title": "StatusFilter",
+              "value_count": 3,
+              "values": [
+                "Pending",
+                "Fulfilled",
+                "Any"
+              ]
+            }
+          }
+        ],
+        "step_count": 6
+      },
+      "verified": {
+        "id": 917,
+        "title": "Dashboard - Reports - Verify Waitlist Subscribers Report CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "waitlists"
+        ],
+        "params": {
+          "EventFilter": [
+            "SpecificEvent",
+            "SelectedEvents"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "EventFilter",
+              "value_count": 2,
+              "values": [
+                "SpecificEvent",
+                "SelectedEvents"
+              ]
+            }
+          }
+        ],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-918",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 918,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 918,
+        "title": "Web - Dashboard - Reports - Reselling Submissions Report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 1
+      },
+      "verified": {
+        "id": 918,
+        "title": "Dashboard - Reports - Verify Reselling Submissions Report CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-919",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 919,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps",
+        "params"
+      ],
+      "before": {
+        "id": 919,
+        "title": "Web - Dashboard - Reports - Generate and Verify Donations History Report",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "donations",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "Currency": [
+            "CAD",
+            "USD"
+          ],
+          "ReportFormat": [
+            "CSV",
+            "PDF"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "Currency",
+              "value_count": 2,
+              "values": [
+                "CAD",
+                "USD"
+              ]
+            }
+          },
+          {
+            "type": "single",
+            "item": {
+              "title": "ReportFormat",
+              "value_count": 2,
+              "values": [
+                "CSV",
+                "PDF"
+              ]
+            }
+          }
+        ],
+        "step_count": 10
+      },
+      "verified": {
+        "id": 919,
+        "title": "Dashboard - Reports - Verify Donations History CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "donations",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "Currency": [
+            "CAD",
+            "USD"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "Currency",
+              "value_count": 2,
+              "values": [
+                "CAD",
+                "USD"
+              ]
+            }
+          }
+        ],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-3832",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 3832,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 3832,
+        "title": "Web - Dashboard - Reports - Gift Card Recipient Report CSV",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web",
+          "gift-card"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 4
+      },
+      "verified": {
+        "id": 3832,
+        "title": "Dashboard - Reports - Verify Gift Card Recipient Report CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web",
+          "gift-card"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-921",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 921,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 921,
+        "title": "Web - Dashboard - Reports - Marketing Campaign Detail Report CSV",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "CampaignFilter": [
+            "SingleCampaign",
+            "MultipleCampaigns"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "CampaignFilter",
+              "value_count": 2,
+              "values": [
+                "SingleCampaign",
+                "MultipleCampaigns"
+              ]
+            }
+          }
+        ],
+        "step_count": 7
+      },
+      "verified": {
+        "id": 921,
+        "title": "Dashboard - Reports - Verify Marketing Campaign Detail CSV contents",
+        "suite_id": 101,
+        "priority": 1,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": {
+          "CampaignFilter": [
+            "SingleCampaign",
+            "MultipleCampaigns"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "CampaignFilter",
+              "value_count": 2,
+              "values": [
+                "SingleCampaign",
+                "MultipleCampaigns"
+              ]
+            }
+          }
+        ],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "SPT-922",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 922,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 922,
+        "title": "Web - Dashboard - Reports - Marketing Campaign Detail Report PDF",
+        "suite_id": 101,
+        "priority": 2,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard"
+        ],
+        "params": {
+          "ReportFormat": [
+            "PDF"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "ReportFormat",
+              "value_count": 1,
+              "values": [
+                "PDF"
+              ]
+            }
+          }
+        ],
+        "step_count": 6
+      },
+      "verified": {
+        "id": 922,
+        "title": "Dashboard - Reports - Verify Marketing Campaign Detail PDF contents",
+        "suite_id": 101,
+        "priority": 2,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard"
+        ],
+        "params": {
+          "ReportFormat": [
+            "PDF"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "ReportFormat",
+              "value_count": 1,
+              "values": [
+                "PDF"
+              ]
+            }
+          }
+        ],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "SPT-4393",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 4393,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 4393,
+        "title": "Dashboard - Report - Generate Ticket Credit Usage",
+        "suite_id": 101,
+        "priority": 2,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 6
+      },
+      "verified": {
+        "id": 4393,
+        "title": "Dashboard - Reports - Update ticket credit usage after one redemption",
+        "suite_id": 101,
+        "priority": 2,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 8
+      }
+    },
+    {
+      "label": "SPT-4798",
+      "action": "update",
+      "ok": true,
+      "http_status": 200,
+      "updated_case_id": 4798,
+      "selected_fields": [
+        "title",
+        "description",
+        "preconditions",
+        "postconditions",
+        "steps"
+      ],
+      "before": {
+        "id": 4798,
+        "title": "Dashboard - Reports - Generate Custom Consent Items report CSV",
+        "suite_id": 101,
+        "priority": 2,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard"
+        ],
+        "params": {
+          "EventFilter": [
+            "AllEvents",
+            "SpecificEvent"
+          ],
+          "ConsentType": [
+            "Clickwrap",
+            "Browserwrap"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "EventFilter",
+              "value_count": 2,
+              "values": [
+                "AllEvents",
+                "SpecificEvent"
+              ]
+            }
+          },
+          {
+            "type": "single",
+            "item": {
+              "title": "ConsentType",
+              "value_count": 2,
+              "values": [
+                "Clickwrap",
+                "Browserwrap"
+              ]
+            }
+          }
+        ],
+        "step_count": 6
+      },
+      "verified": {
+        "id": 4798,
+        "title": "Dashboard - Reports - Verify Custom Consent Items CSV contents",
+        "suite_id": 101,
+        "priority": 2,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard"
+        ],
+        "params": {
+          "EventFilter": [
+            "AllEvents",
+            "SpecificEvent"
+          ],
+          "ConsentType": [
+            "Clickwrap",
+            "Browserwrap"
+          ]
+        },
+        "parameters": [
+          {
+            "type": "single",
+            "item": {
+              "title": "EventFilter",
+              "value_count": 2,
+              "values": [
+                "AllEvents",
+                "SpecificEvent"
+              ]
+            }
+          },
+          {
+            "type": "single",
+            "item": {
+              "title": "ConsentType",
+              "value_count": 2,
+              "values": [
+                "Clickwrap",
+                "Browserwrap"
+              ]
+            }
+          }
+        ],
+        "step_count": 6
+      }
+    },
+    {
+      "label": "TC-1",
+      "action": "create",
+      "ok": true,
+      "http_status": 200,
+      "created_case_id": 5514,
+      "verified": {
+        "id": 5514,
+        "title": "Dashboard - Reports - Verify Base Ticket Revenue Report PDF contents",
+        "suite_id": 101,
+        "priority": 0,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "dashboard",
+          "reports"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 5
+      }
+    },
+    {
+      "label": "TC-2",
+      "action": "create",
+      "ok": true,
+      "http_status": 200,
+      "created_case_id": 5515,
+      "verified": {
+        "id": 5515,
+        "title": "Dashboard - Reports - Verify Event Settlement Report PDF contents",
+        "suite_id": 101,
+        "priority": 0,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "dashboard",
+          "reports"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 4
+      }
+    },
+    {
+      "label": "TC-3",
+      "action": "create",
+      "ok": true,
+      "http_status": 200,
+      "created_case_id": 5516,
+      "verified": {
+        "id": 5516,
+        "title": "Dashboard - Reports - Email Event Summary above the direct-download limit",
+        "suite_id": 101,
+        "priority": 0,
+        "type": 1,
+        "behavior": 1,
+        "layer": 0,
+        "tags": [
+          "reports",
+          "dashboard",
+          "web"
+        ],
+        "params": [],
+        "parameters": [],
+        "step_count": 7
+      }
+    }
+  ]
+}

@@ -53,3 +53,9 @@ Mask Customer data in evidence. Never run a real payout or alter settlement entr
 **Business risk:** the UI sale is correct but finance sees incorrect totals, omits transactions, pays twice, or exports misleading values.
 
 **Automation:** Playwright actual download/content assertions for a small deterministic ledger; backend financial projection/report/settlement tests for broad permutations. A report smoke test cannot prove payout logic. Production payouts remain out of scope without explicit authority. Source route: B12, B20, B8–B11.
+
+## Current Reports coverage
+
+2026-10-16: [[03 Test Cases/Reports/reports-qase-test-cases|Reports case coverage]] now contains **43 enhanced Qase cases and three new cases (SPT-5514–5516)**, published to Reports suite 101 and verified by full readback. Cases name report-specific fields, supported formats, file columns and source-record checks. The new cases cover conditional Base Ticket Revenue/Event Settlement PDFs and the 61-event email boundary; SPT-900 covers the 60-event direct download. Waitlist and Donations definitions were corrected to the source-supported controls/formats.
+
+Suite 101 has 53 direct cases; held discount-count case SPT-890 and the duplicate/shared-workflow candidates remain unchanged. These are published definitions, **not executed report, delivery or reconciliation results**. Use the linked note for current flags, exact setup, source evidence and deferred checks.

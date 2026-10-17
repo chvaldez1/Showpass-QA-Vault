@@ -1,0 +1,120 @@
+{
+  "approved": true,
+  "receiptPath": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/qase-suite-apply.json",
+  "operations": [
+    {
+      "action": "create",
+      "key": "custom_fees",
+      "previewId": -1,
+      "payload": {
+        "title": "Custom Fees",
+        "parent_id": 1010
+      }
+    },
+    {
+      "action": "create",
+      "key": "fee_settings",
+      "previewId": -2,
+      "payload": {
+        "title": "Fee Settings",
+        "parent_id": 1010
+      }
+    },
+    {
+      "action": "create",
+      "key": "payment_authorization",
+      "previewId": -3,
+      "payload": {
+        "title": "Payment Details and Authorization",
+        "parent_id": 1157
+      }
+    },
+    {
+      "action": "create",
+      "key": "shipping_fulfillment",
+      "previewId": -4,
+      "payload": {
+        "title": "Shipping & Fulfillment",
+        "parent_id": 1157
+      }
+    },
+    {
+      "action": "update",
+      "key": "organization_name",
+      "suiteId": 181,
+      "payload": {
+        "title": "Organization"
+      },
+      "expectedBefore": {
+        "title": "Organizer Info",
+        "parent_id": 78
+      }
+    },
+    {
+      "action": "update",
+      "key": "emails_under_branding",
+      "suiteId": 523,
+      "payload": {
+        "parent_id": 1165
+      },
+      "expectedBefore": {
+        "title": "Emails",
+        "parent_id": 181
+      }
+    },
+    {
+      "action": "update",
+      "key": "deliverables_under_branding",
+      "suiteId": 1170,
+      "payload": {
+        "parent_id": 1165
+      },
+      "expectedBefore": {
+        "title": "Deliverables",
+        "parent_id": 181
+      }
+    },
+    {
+      "action": "update",
+      "key": "upselling_under_modules",
+      "suiteId": 440,
+      "payload": {
+        "parent_id": 1161,
+        "title": "Event Upselling"
+      },
+      "expectedBefore": {
+        "title": "Web Dashboard - Organizer info - Event Upsell Settings",
+        "parent_id": 181
+      }
+    },
+    {
+      "action": "update",
+      "key": "refunds_under_settings",
+      "suiteId": 1091,
+      "payload": {
+        "parent_id": 1157
+      },
+      "expectedBefore": {
+        "title": "Customer Refunds",
+        "parent_id": 181
+      }
+    },
+    {
+      "action": "update",
+      "key": "email_customization_label",
+      "suiteId": 749,
+      "payload": {
+        "title": "Customization"
+      },
+      "expectedBefore": {
+        "title": "Email Customization",
+        "parent_id": 523
+      }
+    }
+  ],
+  "approval": {
+    "userReply": "yes",
+    "recordedAt": "2026-10-16T19:46:34.970Z",
+    "scope": "Exact 25 case operations and 10 suite operations in the /manage/ publication preview"
+  }
+}

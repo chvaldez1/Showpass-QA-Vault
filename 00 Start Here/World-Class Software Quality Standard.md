@@ -73,6 +73,7 @@ Apply the universal authority model locally as follows:
 Local workflow bindings:
 
 - Test design and Qase-ready case generation: [[06 Prompts/Showpass QA Test Case Generator]]
+- Existing Qase coverage comparison with case-first output: [[06 Prompts/Showpass Qase Gap Analysis]]
 - Interactive browser and release execution: [[06 Prompts/Interactive Browser Release Testing]]
 - Qase writing format: [[05 Tooling/Qase Test Case Writing Rules]]
 - Qase reads and writes: [[05 Tooling/qasectl]]
@@ -152,6 +153,21 @@ List applicable:
 - Loading, empty, success, error, disabled, and stale states
 - API calls, jobs, callbacks, webhooks, emails, notifications, exports, and reports
 - Permissions, ownership gates, feature flags, plans, and client variants
+
+### Preserve Access During Page Migrations
+
+For a replacement page, embedded page, or navigation change, inventory the **business functions available before the change**, including functions moved outside the new page. Comparing only the new sidebar or form cannot establish completeness.
+
+Use the existing coverage ledger, with one row per affected function:
+
+| Business Function | Previous Visible Path | Actual Supported Starting Page | Replacement Visible Path | Role / Flag | Case / Evidence / Status |
+| --- | --- | --- | --- | --- | --- |
+
+- Start from where users actually arrive after sign-in or organization selection. If organizers still land in `/dashboard/`, prove the path from that shell; a standalone `/manage/` menu cannot substitute for it.
+- Follow visible links to the owning screen for the same organization. Record navigation access separately from direct URL access and from the screen's save/behavior checks. A working deep link proves neither discoverability nor a navigation pass.
+- Account for supported old/new rollout states and roles when they change available paths. Trace wrapper menus, embedded navigation, redirects and feature flags together; a route mapping in code is not evidence that users have a link to it.
+- A moved business function is not out of scope merely because another screen owns it. Its replacement navigation remains in migration scope; deeper behavior may be deferred separately with a reason. Label missing links Failed when reproduced, or Blocked/Unverified when evidence is unavailable.
+- Include a focused navigation regression for important moved functions, especially fees/taxes, payouts, refunds, permissions and customer communications. Run from the actual landing page before opening direct URLs for diagnosis.
 
 ### State-Space Model
 
@@ -430,6 +446,8 @@ Each automated target maps to a proof target and coverage-ledger row. Selectors,
 ### Release-ready
 
 Blocking gaps are resolved or explicitly accepted. High-risk user and data paths are covered or intentionally deferred. Known failures have severity and release classification. The team can explain what is covered, what is not, and why.
+
+For page/navigation migrations, every previously supported in-scope business function has a reachable replacement from the supported user starting page, or an explicit approved removal. Missing access to a critical function blocks a readiness claim even if its destination loads directly. Source-only navigation coverage remains unexecuted.
 
 Release recommendations must be one of:
 

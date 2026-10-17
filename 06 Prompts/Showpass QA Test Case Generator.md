@@ -8,7 +8,7 @@ tags:
 
 # Showpass QA Test Case Generator
 
-Generate source-backed, Qase-ready manual cases or compare existing Qase coverage with current behavior. Optimize for useful proof and repeatable execution; case count alone is not a coverage goal.
+Generate source-backed, Qase-ready manual cases. For comparison with existing Qase coverage, use [[06 Prompts/Showpass Qase Gap Analysis]]. Optimize for useful proof and repeatable execution; case count alone is not a coverage goal.
 
 ## Canonical Relationship
 
@@ -23,7 +23,7 @@ Use [[00 Start Here/Showpass QA Handbook/00 Index|Showpass QA Master Handbook]] 
 | Request | Flow | Qase access |
 | --- | --- | --- |
 | New cases, feature/regression coverage, Jira-derived cases, PR QA plan | [[#Test Case Generator Flow]] | None |
-| Gaps, duplicate analysis, whether existing coverage is enough | [[#Read / Gap Analysis Flow]] | Read only |
+| Gaps, duplicate analysis, whether existing coverage is enough | [[06 Prompts/Showpass Qase Gap Analysis]] | Read only |
 | Review/enhance exact existing case IDs | Exact-ID Review in [[05 Tooling/qasectl]] | Read named cases; broader search only for requested gap/duplicate analysis or a proposed new case |
 
 Neither flow authorizes Qase writes. Prepare a dry-run preview and obtain explicit confirmation of the exact write scope before apply, following the Qase guide. Multi-case writes use its batch-plan script and readback verification.
@@ -99,6 +99,8 @@ For Dashboard `/manage/` pages, apply [[03 Test Cases/Test Cases by Feature#Dash
 
 Verify current navigation definitions and use an already-open relevant browser to enrich labels/state when available. Record the visible path, source/route evidence, owning feature folder, and existing or proposed Qase suite together. Use the same grouping for inventories, cases, gaps, and minimum execution sets. Keep cross-screen journeys in one owning group and reference other touchpoints. Navigation grouping is not a reason to duplicate equivalent cases or move existing Qase suites.
 
+For replacement pages and legacy embeds, apply [[00 Start Here/World-Class Software Quality Standard#Preserve Access During Page Migrations]]. Inventory old business functions before reviewing the new controls, and prove their replacement paths from the user's actual landing page. Include a focused navigation proof target for important moved functions; a working direct URL or standalone new menu does not cover access from the retained Dashboard shell.
+
 ## Already-Open Codex Browser
 
 The user's standing preference is to use an already-open, relevant Codex browser to improve generation and gap analysis. Follow the browser rules in `AGENTS.md` and the selected runtime's exposed APIs.
@@ -140,17 +142,7 @@ Before adding cases, compare actions, expected results, starting state, and risk
 
 ## Read / Gap Analysis Flow
 
-1. Read [[05 Tooling/qasectl]]. Use exact-ID reads for a bounded review; for broad gaps, prefer one complete bulk snapshot under `/private/tmp` and local filtering. Reuse a snapshot only when project, scope, retrieval time, and completeness are known. Refresh after relevant Qase changes. Fetch all pages through the reported total; a failed/truncated read cannot establish absence.
-2. Search saved titles, tags, suites, descriptions, parameters, and steps using feature names, UI labels, route aliases, shared behavior and supported clients. Read full details for final candidates. Record project, time, filters, scanned/matching totals, and IDs reviewed. A title/tag match is a candidate, not coverage proof.
-3. Inspect backend and frontend behavior and selected handbook paths. Trace existing Playwright configs/helpers/assertions when automation is relevant; filenames and test discovery alone cannot prove coverage or absence.
-4. Compare each proof target, entry path, required combination and final assertion against actual Qase fields. Classify **Adequate definition**, **Partial/weak**, **Missing**, **Stale/conflicting**, **Duplicate candidate**, or **Unknown**. These describe definitions, not execution. Keep execution evidence/status separate.
-5. Build a decision table, grouped by owning UI page for Dashboard work:
-
-| UI Page / Proof Target | Source-Backed Requirement | Existing SPT IDs / Actual Assertions | Coverage Assessment | Risk / Evidence | Recommendation |
-| --- | --- | --- | --- | --- | --- |
-
-6. Prefer **Keep** or **Enhance** a suitable case over creating another. Capture its preservation baseline: purpose, supported platforms/views, parameters, scenarios, useful assertions, suite/tags and step count. Explain every proposed removal/narrowing; never silently repurpose it. Recommend **New** only for distinct proof that does not fit clearly. Mark duplicates for review without deletion.
-7. Draft full Qase-ready replacements/additions for prioritized in-scope gaps; reference adequate cases instead of reproducing them. If requested breadth exceeds the drafted set, account for the rest explicitly. Record specific access/evidence blockers as Unknown/Blocked rather than asserting no coverage. Save all analysis and final drafts in the same canonical note. Do not write to Qase.
+Use [[06 Prompts/Showpass Qase Gap Analysis]] as the dedicated owner. It compares actual existing coverage and delivers focused Qase-ready cases first, with compact analysis/evidence afterward. This heading remains for existing links; do not use the generation report layout for gap-analysis output.
 
 ## Vault Output Target
 
@@ -181,4 +173,4 @@ Tuning reference: [Playwright PR #458](https://github.com/showpass/showpass-play
 
 ## Agent Reminder
 
-Select the correct flow, prove expectations from source, reuse relevant context, account for all declared scope, and write only distinct, executable cases. Use the open relevant browser to improve accuracy without turning drafting into unrequested mutations. Keep one maintained note and make unknowns explicit.
+Route gap analysis to [[06 Prompts/Showpass Qase Gap Analysis]]. For generation, prove expectations from source, reuse relevant context, account for all declared scope, and write distinct, focused cases. Use the open relevant browser to improve accuracy without turning drafting into unrequested mutations. Keep one maintained note and make unknowns explicit.

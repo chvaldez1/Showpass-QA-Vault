@@ -15,6 +15,8 @@ status: Local review draft; not executed or pushed
 
 ## Existing coverage and migration gap
 
+Current specialist legacy coverage: [[03 Test Cases/Check In/check-in-qase-test-cases|Legacy Check In — suite 184 cases and gaps]]. This adds backend-first admission coverage; it does not resolve the historical native destination gap below.
+
 Use [Check In — suite 184](https://app.qase.io/project/SPT?suite=184), SPT-1663–1665/1671 and Order form's SPT-3270. Preserve the selected event/occurrence when following its entry; verify scan permissions separately from Manage Events.
 
 **Blocked for native destination parity:** current event page registration is RoutePlaceholderPage. Do not call the event-scoped destination complete because the shared Check In page works. Real scan/admission and hardware checks stay in the specialist suite; no check-in data is changed by this analysis.

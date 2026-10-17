@@ -653,15 +653,34 @@ async function applyBatchOperation(operation) {
 }
 
 async function runBatchPlan({ planPath, apply }) {
+  const plan = JSON.parse(fs.readFileSync(planPath, "utf8"));
+  if (apply && plan.dryRunOnly) {
+    throw new Error("This batch is preview-only; resolve real suite IDs in a separate approved apply plan first");
+  }
+  if (apply && plan.receiptPath && fs.existsSync(plan.receiptPath)) {
+    throw new Error("Batch receipt already exists; reconcile completed and in-flight operations before retrying");
+  }
   const operations = readBatchPlan(planPath);
   const results = [];
+  const receipt = { mode: "batch-apply", operation_count: operations.length, results };
+  const saveReceipt = () => {
+    if (apply && plan.receiptPath) {
+      fs.writeFileSync(plan.receiptPath, JSON.stringify(receipt, null, 2) + "\n");
+    }
+  };
 
   for (const operation of operations) {
+    if (apply && plan.receiptPath) {
+      receipt.in_flight = { label: operation.label, action: operation.action, caseId: operation.caseId };
+      saveReceipt();
+    }
     results.push(
       apply
         ? await applyBatchOperation(operation)
         : await dryRunBatchOperation(operation)
     );
+    delete receipt.in_flight;
+    saveReceipt();
   }
 
   return {

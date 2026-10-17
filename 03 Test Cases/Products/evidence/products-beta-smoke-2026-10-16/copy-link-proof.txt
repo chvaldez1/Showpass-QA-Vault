@@ -1,0 +1,5 @@
+Observed 2026-10-16 during beta Products smoke checks:
+FAN EXPO LANYARD (2171) → Copy product link
+Success toast: Product link copied.
+Clipboard URL: https://beta.showpass.com/o/megacon-orlando-2/categories/2575/?id=2171
+Original clipboard had no items; restored to empty text. No public checkout opened.

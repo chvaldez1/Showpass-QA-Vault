@@ -1,0 +1,27 @@
+{
+  "mode": "local-parser-only",
+  "definitions": 14,
+  "new_candidates": [
+    "TC-66",
+    "TC-67",
+    "TC-68",
+    "TC-69",
+    "TC-70",
+    "TC-71",
+    "TC-72",
+    "TC-73",
+    "TC-74",
+    "TC-75",
+    "TC-76",
+    "TC-77"
+  ],
+  "proposed_updates": [
+    "SPT-65",
+    "SPT-4742"
+  ],
+  "held_update": "SPT-4742",
+  "step_rows": 57,
+  "parameters_preserved_for_SPT_65": true,
+  "qase_writes": 0,
+  "product_mutations": 0
+}
