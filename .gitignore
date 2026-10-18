@@ -19,3 +19,13 @@ Thumbs.db
 07 Personal Notes/Personal Notes/
 
 assets/
+
+# Generated QA snapshots and publication exports (keep temporary output outside the vault)
+/03 Test Cases/**/evidence/**/*.json
+/03 Test Cases/**/evidence/**/*snapshot*.txt
+/03 Test Cases/**/evidence/**/*before*.txt
+/03 Test Cases/**/evidence/**/*source*.txt
+/03 Test Cases/**/evidence/**/frozen-publication-source.md
+/03 Test Cases/**/evidence/**/publication-source.md
+/03 Test Cases/**/evidence/**/approved-publication-preview.md
+/99 Archive/Cleanup/*.json

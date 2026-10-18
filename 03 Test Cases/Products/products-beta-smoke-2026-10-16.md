@@ -9,6 +9,9 @@ tags:
 
 # Products beta smoke checks — 2026-10-16
 
+> [!note] Generated attachments removed
+> Generated snapshots, JSON exports and frozen publication copies were deleted on 2026-10-17 at the user’s request. Published case IDs, recorded results and test definitions remain in this note. Read Qase again before preparing future changes.
+
 ## Result
 
 **Earlier smoke-pass conclusion withdrawn.** Initial run: **15:43–15:48 PDT, 2026-10-16**. The sold variant had an editable Price field during that run; I did not resolve its price-lock eligibility before reporting a pass. **Release recommendation: Decision blocked by unresolved sold-price lock eligibility, plus missing creation/edit/duplication persistence and purchase/stock proof.** Navigation and filter observations below remain valid; they do not establish that the price protection works.
@@ -42,7 +45,7 @@ No saved-price-change defect is confirmed. The editable sold-price control below
 
 ![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/24-sold-price-restored.png|400]]
 
-*Same product · original USD 5.00 restored without saving. Control-state evidence: [[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/sold-price-control.json]].*
+*Same product · original USD 5.00 restored without saving. Control-state evidence: sold-price-control.*
 
 **Source rule checked:** Backend `EnablePriceChangesMixin.get_enable_price_changes` returns `not item.has_price_lock or item.venue.price_tiers_enabled`. The nested product serializer exposes that result. The product configuration service rejects a changed price when `has_price_lock` is true and `price_tiers_enabled` is off. Frontend Inventory disables Price only when `enable_price_changes === false`. A Sold number alone does not establish those configuration values. Next evidence needed: establish both actual values for this organization/variant and compare the deployed response with the rendered control; test saving only on an approved product under the required configuration.
 
@@ -186,7 +189,7 @@ All rows below are **Browser-verified only**, with the specific limit stated. Ea
 
 **Copy product link — Browser-verified only.** FAN EXPO LANYARD showed “Product link copied.” and returned `https://beta.showpass.com/o/megacon-orlando-2/categories/2575/?id=2171`, matching its visible name link. Original clipboard restored to empty text. No public purchase page was opened. Evidence: [[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/copy-link-proof.txt]].
 
-**Runtime error signal — Browser-verified only.** The bounded captured console error list returned `[]` near the end of the run. This is not a network audit or proof of zero backend errors. Evidence: [[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/console-errors.json]].
+**Runtime error signal — Browser-verified only.** The bounded captured console error list returned `[]` near the end of the run. This is not a network audit or proof of zero backend errors. Evidence: console-errors.
 
 ## Not executed
 

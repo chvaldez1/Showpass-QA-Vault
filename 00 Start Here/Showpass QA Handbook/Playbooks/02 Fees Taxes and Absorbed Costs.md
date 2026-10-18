@@ -26,6 +26,8 @@ Choose currency, gateway/method, pricing mode, actual Venue/Event/item inheritan
 
 Use [[00 Start Here/Showpass QA Handbook/03 Evidence and Expected Results|money worksheet]]. Expected values must come from known configuration/business rules, not the calculator under test.
 
+Apply [[00 Start Here/World-Class Software Quality Standard#Service-Fee Revenue Through the Transaction Lifecycle|service-fee revenue protection]] to the selected purchase and independent adjustments. Explicitly prove Showpass receives the fee it is owed and retains or returns it under the actual policy, including organizer-absorbed fees. Separate processing costs and organizer/custom fees from Showpass service-fee earnings; do not clear this check using the customer total alone.
+
 ## Organizer saves; Customer purchases
 | Step Action | Data | Expected Result |
 | --- | --- | --- |

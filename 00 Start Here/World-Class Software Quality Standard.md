@@ -290,6 +290,45 @@ A planned validation error must not hide a second unexpected toast, console erro
 
 In-memory UI state is not persistence proof. Reopen, reload, switch away and back, poll, or re-read through another supported surface.
 
+### Financial and Core Transaction Gates
+
+Treat prices, fees, taxes, discounts, commissions, credits, refunds, payments and sellable inventory as high-risk behavior. Include the item and rate-card create/update/save workflows needed to configure and sell them. A broken setup or Save action can prevent sales or leave the wrong financial rules in effect.
+
+For each applicable gate below, define the expected result from source and the actual organization, item, role and configuration before execution. Track clean success separately from invalid input, cancellation, failure and recovery. Do not require unrelated financial scenarios for a purely visual scope; record why a gate is not applicable.
+
+| Required gate | Minimum proof |
+| --- | --- |
+| Sold-item price and fee protection | Establish the actual sale/lock state and configuration governing edits; verify the required disabled controls and saved protection. Preserve existing purchases and their historical amounts. A possible tiered-pricing or flag exception remains a hypothesis until its actual value and supported behavior are verified. |
+| Create/update an item | With supported permissions and valid data, create or update the intended item, reopen it and verify the exact saved fields and variants; related items remain unchanged. Opening the form does not prove this workflow. |
+| Create/update rate cards | Save and reopen the rate card, verifying its amount, payer, item/payment/channel scope, conditions and precedence. Separately prove that the applicable purchase uses the expected rule; a saved card alone does not prove fee calculation. |
+| Purchase successfully | Complete a clean purchase through each affected supported entry point; prove the intended order, usable items and independently calculated amount, with the expected payment records. A payment-method rejection expected by the scenario is not a successful-purchase failure. |
+| Prevent duplicate charging | Repeated submission, refresh, retry, delayed completion and repeated callbacks must not collect more than the intended amount or create duplicate orders/items. Compare unique payment references and final states; account explicitly for legitimate split payments or installments. A timeout is not evidence that charging failed. |
+| Prevent overselling | Prove finite capacity, exact variant/seat ownership and reservation/release rules, including controlled last-unit contention when affected. Accepted purchases must not exceed sellable stock or consume it twice. A displayed sold counter alone is insufficient. |
+| Save correctly | Verify valid changes persist after a fresh read. Rejected/failed saves must not show false success, leave unintended partial changes, lose protected existing values or cause duplicate records on recovery. |
+| Preserve financial outcomes | When affected, independently reconcile fees, taxes, discounts, commissions, credits, refunds, earnings and inventory through supported post-purchase changes and final reporting. Verify who pays and receives each amount, with actual currency and rounding rules. |
+| Protect service-fee revenue | Apply [[#Service-Fee Revenue Through the Transaction Lifecycle]] to prove the correct fee is collected, allocated, retained or returned at every affected stage. A successful purchase or correct customer total cannot clear this gate without the expected Showpass fee/earnings evidence. |
+
+**Decision rule:** A confirmed failure of an applicable required gate is **No-Go** for that financial/core transaction scope. Missing setup, unverified exceptions, unsubmitted risky actions or absent persistence/payment/stock evidence make the decision **Decision blocked by named missing evidence**. Do not turn either result into an overall smoke pass because navigation, layout or other checks passed. Report individual successful assertions without weakening the unresolved gate. Do not silently downgrade or accept a financial risk; record any explicit user-directed release override while retaining the failed or unresolved QA result.
+
+Follow suspicious money-related observations through: establish the actual rule and configuration, exercise the permitted behavior safely, check fresh saved/downstream state, and record the result. If evidence or safe data is unavailable, name that exact gap promptly. This gate does not expand mutation authorization; reuse the authorized test-data scope and preserve existing customer orders and financial history.
+
+### Service-Fee Revenue Through the Transaction Lifecycle
+
+Missing, reduced, misallocated or unintentionally refunded service fees are financial failures even when checkout succeeds and the customer total looks correct. Derive each fee's expected amount, payer, recipient and retention/refund treatment from the applicable saved rules and original transaction. Separate Showpass service fees, payment-processing fees/costs, organizer/custom fees and fee taxes; one class's correct total does not prove another class's revenue.
+
+| Stage | Required fee proof |
+| --- | --- |
+| Purchase | Calculate the applicable service fee independently, including rate-card inheritance/overrides, eligibility, quantity, fee base, currency and rounding. Compare the collected amount with saved fee allocation and Showpass earnings. Customer-paid and organizer-absorbed variants must charge the correct party; absorption must not silently remove an owed fee. |
+| Exchange | Follow the original sale, exchange adjustment and replacement together. Establish which original fees remain, which may return, and which replacement/additional fees are due under the actual policy. Prove correct additional payment or credit and final fee allocation, without missing earned fees or charging the same fee twice. Check supported equal-, higher- and lower-value replacements when their treatment differs. |
+| Refund | Cover supported full, partial and repeated partial refunds. Independently establish returned versus retained service fees, fee taxes and who bears any refunded fee or retained processing cost. Reconcile actual payment return/credit with original and adjustment records and final earnings; do not return a protected fee, withhold it twice or take it from the wrong party. |
+| Void or cancellation | Verify the action's actual payment and fee policy separately from item invalidation. Prove expected retention/reversal and final allocation; neither zero fees nor automatic full retention is assumed from the action name. |
+| Discounts, packages, credits and installments | Check affected fee bases, selected parent/child items, funding methods and collection timing. A zero-price child, discounted item, credit-funded order or later installment must not silently omit a fee that is due or collect it again contrary to the rule. |
+| Failure, recovery and final reporting | Decline, timeout, retry, repeated callback and adjustment recovery must leave exactly the intended fee outcome. Verify final saved fees, earnings and applicable report/settlement records at the supported completion deadline; separate legitimate pending/deferred recognition from lost revenue. No repeated fee charge, duplicate recognition or disappearing allocation. |
+
+Record original fees, additional fees, retained fees, returned fees, explicit waivers/credits and pending/deferred amounts per fee class and responsible party, with linked transaction references. Reconcile them using the actual accounting contract; do not invent one universal gross-payment equation. Preserve an untouched order for comparison where useful. An observed zero or missing fee requires verified policy/configuration/timing evidence explaining it.
+
+Apply the [[#Financial and Core Transaction Gates]] decision rule: a confirmed unintended fee loss, excess fee charge, wrong-party allocation or forbidden reversal is No-Go for the affected scope. Missing fee breakdown, inaccessible earnings or unverified treatment blocks the decision. Saving a rate card, observing a receipt or publishing a Qase case is not proof of fee revenue protection.
+
 ### Manual Steps Must Be Executable
 
 - Write from the real actor's perspective: customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user.
@@ -406,7 +445,7 @@ Use these confidence labels:
 
 Do not:
 
-- Treat severity as automatic blocker status.
+- Treat severity as automatic blocker status. Apply the explicit [[#Financial and Core Transaction Gates]] decision rule to failures of those required business outcomes.
 - Claim a cross-type result proves same-type behavior.
 - Claim backend failure from a client-side enabled button.
 - Preserve a finding after later evidence disproves it.
@@ -446,6 +485,8 @@ Each automated target maps to a proof target and coverage-ledger row. Selectors,
 ### Release-ready
 
 Blocking gaps are resolved or explicitly accepted. High-risk user and data paths are covered or intentionally deferred. Known failures have severity and release classification. The team can explain what is covered, what is not, and why.
+
+Apply [[#Financial and Core Transaction Gates]] before a financial/core transaction readiness or smoke conclusion. Deferred or unverified required gates do not qualify for an overall pass; an explicit release override does not change the underlying QA result.
 
 For page/navigation migrations, every previously supported in-scope business function has a reachable replacement from the supported user starting page, or an explicit approved removal. Missing access to a critical function blocks a readiness claim even if its destination loads directly. Source-only navigation coverage remains unexecuted.
 

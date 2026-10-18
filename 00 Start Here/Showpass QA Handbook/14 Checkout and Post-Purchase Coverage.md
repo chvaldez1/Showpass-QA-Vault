@@ -31,6 +31,8 @@ Use this checklist to design the selected journey, not to require every feature 
 
 Start with rows A–E for every paid journey; inspect the remaining rows for applicability. Add any changed consumer not listed here. The linked walkthroughs contain the detailed operations; this inventory prevents their omission from the overall test design.
 
+For fee-bearing journeys, apply [[00 Start Here/World-Class Software Quality Standard#Service-Fee Revenue Through the Transaction Lifecycle]] across purchase and the selected independent Exchange, Refund, Void/cancellation and recovery branches. Compare expected Showpass fees and final earnings as well as customer totals; a successful payment must not hide lost or misallocated service fees.
+
 | Outcome | Actionable check and final proof | Follow-up walkthrough |
 | --- | --- | --- |
 | A. One payment and one saved sale | Preserve the first basket/order/payment references. Match actual provider outcome and amount to the saved order. Distinguish authorization, capture and pending states. Refresh/reopen through supported recovery; no additional payment or sale. | [[00 Start Here/Showpass QA Handbook/Playbooks/01 Payments and Orders\|Payments]] |

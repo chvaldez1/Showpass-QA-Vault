@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 
-// A suite batch changes only its declared titles/parents; it never deletes suites.
+// A suite batch changes only its declared title, parent or description; it never deletes suites.
 const args = process.argv.slice(2);
 const planPath = args[args.indexOf("--batch-plan") + 1];
 if (!args.includes("--batch-plan") || !planPath) {
@@ -44,13 +44,14 @@ for (const operation of plan.operations) {
   const { action, key, suiteId, payload } = operation;
   if (!["create", "update"].includes(action) || !key) throw new Error("Invalid suite operation");
   const fields = Object.keys(payload ?? {});
-  if (!fields.length || fields.some(field => !["title", "parent_id"].includes(field))) {
+  if (!fields.length || fields.some(field => !["title", "parent_id", "description"].includes(field))) {
     throw new Error(`Unsupported fields for ${key}`);
   }
   if ("parent_id" in payload && (!Number.isInteger(payload.parent_id) || payload.parent_id <= 0)) {
     throw new Error(`Invalid parent for ${key}`);
   }
   if (payload.title !== undefined && !payload.title.trim()) throw new Error(`Empty title for ${key}`);
+  if (payload.description !== undefined && typeof payload.description !== "string") throw new Error(`Invalid description for ${key}`);
   if (action === "update" && (!Number.isInteger(suiteId) || suiteId <= 0)) throw new Error(`Invalid suite ID: ${key}`);
   if (action === "create" && suiteId) throw new Error(`Create cannot supply suite ID: ${key}`);
   const before = action === "update" ? await request(`/suite/${project}/${suiteId}`) : null;
@@ -73,7 +74,7 @@ for (const operation of plan.operations) {
   for (const field of fields) {
     if (verified[field] !== payload[field]) throw new Error(`Suite readback mismatch: ${key}.${field}`);
   }
-  row.verified = { id: verified.id, title: verified.title, parent_id: verified.parent_id };
+  row.verified = { id: verified.id, title: verified.title, parent_id: verified.parent_id, ...selected(verified, fields) };
   row.status = "verified";
   save();
 }

@@ -13,6 +13,8 @@ Use one feature folder for each test plan, Qase draft, gap analysis, or executio
 
 ## Feature Index
 
+- **Abandoned Carts**
+  - [[03 Test Cases/Abandoned Carts/legacy-abandoned-carts-qase-test-cases|Legacy Abandoned Carts — Suite 102 Review]]
 - **Admin Actions**
   - [[03 Test Cases/Admin Actions/admin-actions-test-cases|Admin Actions Qase Test Cases]]
 - **Authentication**
@@ -42,6 +44,8 @@ Use one feature folder for each test plan, Qase draft, gap analysis, or executio
 - **Organizations**
   - [[03 Test Cases/Organizations/organization-settings-qase-test-cases|Organization Settings — Qase-Ready Cases]]
   - [[03 Test Cases/Organizations/organization-registration-qase-gap-analysis|Organization Registration — Qase-Ready Cases]]
+- **Payouts**
+  - [[03 Test Cases/Payouts/payouts-qase-test-cases|Finance — Payouts Base Cases]]
 - **Payments**
   - [[03 Test Cases/Payments/square-test-cases|Square Terminal Test Cases]]
 - **Products**

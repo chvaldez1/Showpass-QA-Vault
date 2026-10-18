@@ -12,6 +12,8 @@ status: Source-informed guidance; execution evidence recorded per release
 
 ## Build expected results that can catch a wrong system
 
+Apply [[00 Start Here/World-Class Software Quality Standard#Financial and Core Transaction Gates]] whenever scope affects money or the item/rate-card saving and inventory needed to sell. Verify the actual configuration behind price/fee protections, then use the worksheets below for independent expected amounts and stock. A confirmed required-gate failure is No-Go; an unverified exception or missing saved/payment/stock proof blocks the decision. Loaded screens and saved case definitions cannot clear these gates.
+
 ### Money worksheet
 
 Prepare this from the saved configuration and authoritative pricing/refund rules, not from the displayed total. Use the actual currency and rounding rules; distinguish per-unit, per-item-group, and per-order amounts.
@@ -31,6 +33,8 @@ Prepare this from the saved configuration and authoritative pricing/refund rules
 Example arithmetic **only**, not a universal Showpass formula: two $30 items with a $2 customer-paid fee each, no tax/discount/credit, should collect $64. If a separate $1 per-item fee is organizer-absorbed, the customer can still pay $64 while two $1 costs must appear in the agreed allocation. The customer total alone cannot detect those missing costs. Fill in real rules before using this example as a test.
 
 Do not sum both a package price and its allocated child values as additional revenue. Do not count gift-card purchase money again as new external cash on redemption. Compare collected cash, credits, fees, tax, earnings, and realization on their own defined bases rather than inventing one universal conservation formula.
+
+For service fees, apply [[00 Start Here/World-Class Software Quality Standard#Service-Fee Revenue Through the Transaction Lifecycle]]. Keep the original sale, every adjustment and replacement linked; record each fee class's expected original/additional/retained/returned/waived/pending amounts and the party charged or credited. Customer cash return and Showpass fee earnings require separate evidence. A fee-bearing order with a correct customer total can still fail this check.
 
 ### Recipient worksheet
 

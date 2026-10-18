@@ -18,6 +18,9 @@ status: Published 29 new cases and 2 updates; 2 revisions held; admission not ex
 
 Use ordinary Dashboard navigation and select the correct organization before each run. **Scan** records admission or product pickup; **Return/Undo** reverses that record, not a payment refund. A **preset** is a named saved item selection. Keep physical devices and camera tests separate from a typed barcode in a browser. Platform/View tables are execution selections, not native parameters; no full Cartesian matrix is implied.
 
+> [!note] Generated attachments removed
+> Generated snapshots, JSON exports and frozen publication copies were deleted on 2026-10-17 at the user’s request. Published case IDs, recorded results and test definitions remain in this note. Read Qase again before preparing future changes.
+
 ## Case index
 
 | Area | Existing cases | Published additions |
@@ -1493,7 +1496,7 @@ No Qase case or suite was deleted or moved. All 31 published writes target exist
 
 **Duplicate check before publication:** complete pre-write SPT snapshot at **2026-10-16 16:52:49 UTC / 09:52:49 PDT**, **1,936 unique cases / 20 pages**. Local full-field Check In/scan/admission/Will Call discovery matched **171 candidates**. Reviewed actual fields/assertions of relevant neighboring cases; Box Office/native/mobile flows retain their distinct clients. No existing exact-title duplicate was found for the creates. Past-event matches SPT-130/2151/2160/2172/2632/3438/3496/5065/5066/5069/5070 target other account/event/Transactions flows, not the two legacy selectors now covered by SPT-5501.
 
-**Evidence:** [Publication verification and case mapping](evidence/qase-publication-2026-10-16.json). The original local labels above identify the approved drafts; the case headings now use their assigned Qase IDs. The temporary applied batch plan is a historical record and must not be rerun to create these cases again.
+**Evidence:** Publication verification and case mapping. The original local labels above identify the approved drafts; the case headings now use their assigned Qase IDs. The temporary applied batch plan is a historical record and must not be rerun to create these cases again.
 
 > [!info]- Sources, query completeness and execution evidence
 > **Backend authority:** [[01 Repositories/Backend - web-app]], revision `b5f397a0438910435e0d537f47e12d6064d7e019`; tracked working tree clean when checked. These are local source expectations, not an identified deployed demo build.

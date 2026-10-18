@@ -165,6 +165,9 @@ Reviewable evidence and screenshots:
 9. Screenshots supplement rather than replace CSV parsing, fresh persistence checks, downstream verification, console evidence, or source-backed reasoning.
 
 Execution order:
+
+Apply [[00 Start Here/World-Class Software Quality Standard#Financial and Core Transaction Gates]] before execution and before reporting a smoke result. Name the applicable money, item/rate-card saving, purchase, duplicate-charge and stock proof targets. Verify actual exceptions and configuration; a suspected financial protection must be resolved or explicitly blocked. A read-only run can pass individual UI assertions while the financial/core transaction decision remains blocked. Existing authorization and data-safety boundaries still apply.
+
 1. Prove a clean successful path independently of retry or recovery coverage.
 2. Execute Critical and Major cases first.
 3. Continue through the remaining applicable cases because the goal is release readiness, not only priority smoke coverage.
@@ -291,7 +294,7 @@ Human verification — no guessing:
 
 Release decision:
 1. Distinguish functional correctness, usability findings, fixture-blocked coverage, and unsubmitted risks.
-2. Do not assign release-blocker status merely from severity labels.
+2. Do not assign release-blocker status merely from severity labels. Apply the canonical [[00 Start Here/World-Class Software Quality Standard#Financial and Core Transaction Gates]]: confirmed required-gate failures are No-Go; missing proof blocks the decision. Do not soften either into an overall smoke pass.
 3. Preserve my explicit blocker/non-blocker classification.
 4. After testing and requested human checks are complete, provide exactly one recommendation:
    - Go;

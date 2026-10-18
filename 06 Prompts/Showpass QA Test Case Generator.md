@@ -64,6 +64,8 @@ Build a Proof Target Map. Each case must protect a distinct outcome or materiall
 
 Use [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]] when incident calibration helps prioritize. Money, admission, ownership, customer data, final order state, and recovery deserve strong proof. A one-off script, content change, printer request, or support workaround warrants broad regression coverage only when source reveals reusable product risk. If intent is unresolved, record the exact question and continue independent known work without inventing cases.
 
+Apply [[00 Start Here/World-Class Software Quality Standard#Financial and Core Transaction Gates]] to applicable scope. Include executable proof targets for price/fee protections, valid item and rate-card create/update/save, clean purchase, duplicate-charge prevention and stock limits. Record actual configuration exceptions and independent expected amounts. Separate case definitions from executed proof; missing required evidence must remain blocked in any readiness conclusion.
+
 ## Branch / PR Scope Gate
 
 For a supplied PR/branch or requested diff-based coverage:

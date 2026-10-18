@@ -5,10 +5,2047 @@ tags:
   - qa/test-cases
   - qase
   - organizer
-status: Finance cases and migrated-page folders published and verified; prior coverage retained; product execution pending
+status: Published and verified; 15 migration cases added and eight cases updated; execution pending
 ---
 
 # Organization Settings — Qase-ready cases
+
+> [!note] Generated attachments removed
+> Generated snapshots, JSON exports and frozen publication copies were deleted on 2026-10-17 at the user’s request. Published case IDs, recorded results and test definitions remain in this note. Read Qase again before preparing future changes.
+
+## Embedded Organization — migration coverage and suite alignment, 2026-10-17
+
+**Result:** published **15 new cases, SPT-5680–5694**, and updated **eight existing cases**. Full readback verified all fields, parameters and both case moves. Suite1162 is now **Enabled modules → Transfers**; no new suite was created. All21 visible menu destinations have existing owners (19 beneath Organization181 and two reused Finance owners1180/1181). The remaining migration risks below are not executed passes or a claim of release completeness.
+
+**Scope/intent:** protect the same organization’s existing business functions and saved choices through the embedded Dashboard, using the legacy functions as the migration baseline. Visible fields, saved configuration, permission boundaries and external/DNS results have separate proof targets. The iframe establishes navigation/wording only; earlier Angular finance cases remain Angular requirements in their Finance owners. We did not execute saves, purchases, uploads, previews, DNS checks, verification jobs or deletions.
+
+### Published case index
+
+| Label | Owning group / existing suite | Focus | Decision |
+| --- | --- | --- | --- |
+| SPT-4009 | Settings → Enabled modules (1161) | Save enabled modules and their Dashboard access | Updated; readback verified |
+| SPT-5432 | Settings → Enabled modules → Transfers (published placement) (1162) | Reject an invalid organization transfer limit | Updated; readback verified |
+| [SPT-5680](https://app.qase.io/case/SPT-5680) (TC-135) | Settings → Enabled modules (1161) | Keep module switches locked on the Essential plan | Created; readback verified |
+| [SPT-5681](https://app.qase.io/case/SPT-5681) (TC-136) | Settings → General (1158) | Open a page from the embedded Organization menu | Created; readback verified |
+| [SPT-5682](https://app.qase.io/case/SPT-5682) (TC-137) | Integrations → Domains (1176) | Reject an unsupported or already registered custom domain | Created; readback verified |
+| [SPT-5683](https://app.qase.io/case/SPT-5683) (TC-138) | Integrations → Domains (1176) | Verify ownership of a custom domain | Created; readback verified |
+| [SPT-5684](https://app.qase.io/case/SPT-5684) (TC-139) | Integrations → Domains (1176) | Connect a verified custom domain to a website | Created; readback verified |
+| [SPT-5685](https://app.qase.io/case/SPT-5685) (TC-140) | Integrations → Domains (1176) | Block website connection until domain ownership is verified | Created; readback verified |
+| [SPT-5686](https://app.qase.io/case/SPT-5686) (TC-141) | Integrations → Domains (1176) | Require the exact domain deletion confirmation | Created; readback verified |
+| [SPT-5687](https://app.qase.io/case/SPT-5687) (TC-142) | Integrations → Domains (1176) | Delete an unused custom domain | Created; readback verified |
+| [SPT-5688](https://app.qase.io/case/SPT-5688) (TC-143) | Integrations → Domains (1176) | Keep a domain unverified without a matching TXT record | Created; readback verified |
+| SPT-5533 | Settings → General (1158) | Preserve access to financial settings after migration | Updated; readback verified |
+| SPT-5454 | Settings → General (1158) | Restrict settings to the permitted employee | Updated; readback verified |
+| SPT-5139 | Settings → Enabled modules → Transfers (published placement) (1162) | Save organization transfer limits | Refactored; preservation map below |
+| SPT-5421 | Settings → Contact (1159) | Save contact details | Updated; readback verified |
+| SPT-5424 | Settings → Business Schedule (1160) | Save weekly business hours | Updated; readback verified |
+| [SPT-5689](https://app.qase.io/case/SPT-5689) (TC-144) | Branding → Profile (1166) | Reject an invalid public-profile link | Created; readback verified |
+| [SPT-5690](https://app.qase.io/case/SPT-5690) (TC-145) | Integrations (1172) | Save or clear an organization Workday field | Created; readback verified |
+| [SPT-5691](https://app.qase.io/case/SPT-5691) (TC-146) | Integrations (1172) | Discard unsaved organization Workday changes | Created; readback verified |
+| [SPT-5692](https://app.qase.io/case/SPT-5692) (TC-147) | Integrations (1172) | Reject HTML in an organization Workday field | Created; readback verified |
+| [SPT-5693](https://app.qase.io/case/SPT-5693) (TC-148) | Integrations (1172) | Keep organization Workday settings reachable after migration | Created; readback verified |
+| SPT-5449 | Integrations → Analytics (1173) | Save organization analytics settings, including the minimum role | Updated; preserved the original save case |
+| [SPT-5694](https://app.qase.io/case/SPT-5694) (TC-150) | Integrations → Analytics (1173) | Prevent Analytics editing without Manage Organization Info | Created; readback verified |
+
+### SPT-4009: Dashboard - Organization - Save enabled modules and their Dashboard access
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Save enabled modules and their Dashboard access
+
+**Description:** Save one module choice and verify its matching Dashboard entry. Run Module and SavedState separately: Enabled = the selected switch is on and its mapped feature entry is available; Disabled = it is off and that entry is absent. Preserve the other six module choices.
+
+| Module | Additional employee permission | Dashboard entry to inspect |
+| --- | --- | --- |
+| Events | Manage Events | Manage Events |
+| Guestlists | Check-in Guestlists | Guestlists |
+| Capacity Counters | Use Capacity Counters | Capacity Counters |
+| Incidents | View Incident Details | Incidents |
+| Memberships | Manage Memberships | Memberships |
+| Exchanges | Use Box Office and Administer Transactions | Box Office → Exchanges; inspect More… on a narrow view |
+| Group Sales | Manage Group Sales | Group Sales |
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* Use a Professional or Premium organization reserved for these checks, with no active customer operations because disabling modules can remove employee and customer access. Record all module states and related form settings.
+* The employee also has the permission listed for Module and has completed its required authentication. Memberships requires membership_access on. For Exchanges, keep Events enabled and Exchange visibility = Box Office + Public; do not perform an exchange.
+* Prepare the selected module in the opposite state to SavedState. Record the feature entry before changing it so a missing employee permission is not mistaken for a module restriction.
+
+**Postconditions:**
+
+* Restore the original module choice and any setup-only exchange visibility, save and reopen to verify the original access. Do not create, sell or exchange an item.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer, employee-permissions
+
+**Parameters:**
+
+Module: Events, Guestlists, Capacity Counters, Incidents, Memberships, Exchanges, Group Sales
+SavedState: Enabled, Disabled
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Enabled modules. |  | The selected module’s switch and recorded current state appear. |
+| Change only Module to SavedState and select Save. | Description maps the switch and expected access. | The module change saves successfully. |
+| Leave and reopen Enabled modules. |  | The selected switch retains SavedState; the other module choices remain unchanged. |
+| Open the Dashboard menu and inspect the mapped feature entry; for Exchanges inspect Box Office’s Exchanges action. | Module mapping in Description. | Enabled makes the mapped entry available; Disabled hides it. Do not use a direct address to bypass a missing entry. |
+| Return to Organization Info → Enabled modules. |  | The saved module selection remains unchanged after inspecting its feature entry. |
+
+### SPT-5432: Dashboard - Organization - Reject an invalid organization transfer limit
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Reject an invalid organization transfer limit
+
+**Description:** Reject a missing or zero transfer limit without changing any saved organization settings. Run LimitSetting and InvalidLimit separately. InvalidLimit Empty = clear the selected field; Zero = enter 0. LimitSetting Ticket = Ticket transfer limit; Product = Product transfer limit; MembershipGroup = Membership group transfer limit.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* Record all three saved transfer limits. All other Enabled modules settings are valid before starting; change only the selected transfer field.
+
+**Postconditions:**
+
+* No transfer setting changes.
+
+**Priority:** Medium
+
+**Tags:** dashboard, organizer, edge-case
+
+**Parameters:**
+
+LimitSetting: Ticket, Product, MembershipGroup
+InvalidLimit: Empty, Zero
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Enabled modules and find Transfers. |  | Ticket transfer limit, Product transfer limit and Membership group transfer limit display their saved values. |
+| Enter the selected InvalidLimit in the field mapped to LimitSetting. | Description mapping. | The selected input is entered or prevented by the control. |
+| Attempt Save without changing any other setting. |  | The form requires a whole number of at least 1 and does not report a successful invalid save. |
+| Reload Enabled modules without saving. |  | All three recorded valid transfer limits and other settings remain saved. |
+
+### SPT-5533: Dashboard - Organization - Preserve access to financial settings after migration
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Preserve access to financial settings after migration
+
+**Description:** Start on Dashboard and open Organization Info. Run Function separately using the embedded menu below. Verify the business function and its recorded settings remain reachable in the same organization; a direct address or opening another navigation shell does not pass. This is navigation and visible-state coverage, not a saved financial change.
+
+| Function | Embedded menu choice | Content to check |
+| --- | --- | --- |
+| CustomFees | Custom Fees | Existing custom fee/tax definitions and rate cards; Add and Calculator |
+| FeePayers | Fee Settings | Processing Fee Settings and Showpass Fee Settings, including customer-pays and absorb choices |
+| TaxAndStatement | Fee Settings | Sales tax number, Sales tax exempt and Statement descriptor |
+| RefundPolicy | Legal | Default refund policy |
+| PaymentDetails | Payment Details and Authorization | Currency-appropriate banking fields and the existing authorization state |
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* Employee also has **Manage Transactions** for CustomFees, FeePayers and TaxAndStatement, or **Manage Bank Account** for PaymentDetails. Required authentication is complete.
+* Use a supported CAD or USD organization without a parent, or a child allowed to edit its payout information. Record its name and the selected Function’s prior settings without copying banking values into screenshots or comments.
+
+**Postconditions:**
+
+* No saved settings change. A setup owner restores a rollout choice changed solely to prepare this run.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer, fees-taxes
+
+**Parameters:**
+
+Function: CustomFees, FeePayers, TaxAndStatement, RefundPolicy, PaymentDetails
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Start on Dashboard, select the recorded organization and open Organization Info. |  | General shows the same organization name within Dashboard. |
+| Use the embedded settings menu to open the page mapped to Function. | Function mapping in Description; do not type a destination address. | The owning page opens in the retained Dashboard for the same organization. |
+| Inspect the mapped content and recorded settings without editing or saving. |  | The original business function and saved values are available; a missing menu link or missing control is a failed migration result. |
+| Use the settings menu to return to General. |  | The same organization remains selected. |
+
+### SPT-5454: Dashboard - Organization - Restrict settings to the permitted employee
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Restrict settings to the permitted employee
+
+**Description:** An employee without Manage Organization Info must not edit organization settings through a menu or a copied settings-page link. Run SettingsPage separately: General = organization details; Contact = contact information and address; EnabledModules = module selections and all three transfer limits. A permitted employee prepares the comparison and checks saved values afterward. This proves visible access restrictions, not direct-request permission enforcement.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* Use an employee who can sign in to the organization but lacks **Manage Organization Info**, **Manage Transactions** and full administrator access. The employee must not inherit organization-editing permission from another role.
+* A separate employee with **Manage Organization Info** records the selected page’s saved values and privately copies its page link. For EnabledModules, record Ticket transfer limit, Product transfer limit and Membership group transfer limit.
+
+**Postconditions:**
+
+* No organization settings change; do not alter either employee’s permissions during this case.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer, employee-permissions
+
+**Parameters:**
+
+SettingsPage: General, Contact, EnabledModules
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Sign in to Dashboard as the restricted employee and inspect Organization navigation. |  | The selected SettingsPage is not offered for editing. |
+| Open the selected page link copied during setup. | SettingsPage mapping in Description. | The restricted employee cannot use an editor or save organization settings. |
+| As the permitted employee, reopen the selected page without editing it. |  | The recorded saved values remain unchanged; all transfer limits remain unchanged for EnabledModules. |
+
+### SPT-5139: Dashboard - Organization - Save organization transfer limits
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Save organization transfer limits
+
+**Description:** Save one organization-level transfer default and retain the other two defaults. Run LimitSetting and SavedLimit separately: Ticket = Ticket transfer limit; Product = Product transfer limit; MembershipGroup = Membership group transfer limit. SavedLimit Minimum = 1; Higher = 3. These defaults control the number of allowed transfers; an actual customer transfer and item-specific overrides are separate outcomes.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* Use an organization reserved for these changes with no active transfer activity because default changes can affect items that inherit them. Record all three transfer defaults.
+* The selected LimitSetting starts at a value different from the selected SavedLimit input; the other Enabled modules fields are valid.
+
+**Postconditions:**
+
+* Restore the selected transfer default and verify all three original values after reopening.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer
+
+**Parameters:**
+
+LimitSetting: Ticket, Product, MembershipGroup
+SavedLimit: Minimum, Higher
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Enabled modules and find Transfers. |  | All three recorded transfer defaults appear. |
+| Enter SavedLimit only in the field mapped to LimitSetting. | LimitSetting and SavedLimit mappings in Description. | The selected field accepts the whole number; the other two values remain unchanged. |
+| Select Save, leave the page and reopen Enabled modules. |  | The exact selected value remains saved and both other transfer defaults retain their originals. |
+
+### SPT-5421: Dashboard - Organization - Save contact details
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Save contact details
+
+**Description:** Save contact information or communication preferences on Contact. Run ContactEdit separately: Information = enter the controlled phone number and mapped email addresses below, keeping both communication choices unchanged; Preferences = reverse both Receive product updates and system notifications from Showpass and Allow customers to email you, keeping every recorded contact/address field unchanged. This proves saved choices, not delivery of messages.
+
+For Information: Primary email and Customer support email use the first controlled inbox; Accounting email and AR/AP emails use the second controlled inbox; Phone number uses the controlled phone number.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* Use an organization whose contact information and communication preferences may be changed without affecting active customer messages. Record every Contact field, address and both communication choices.
+* Have two inbox addresses and one phone number controlled by the organization; record the exact inputs. For Preferences, the organization already has a valid saved Customer support email so turning customer contact on can be saved without changing that field.
+
+**Postconditions:**
+
+* Restore only the changed contact fields or preferences, save and reopen to verify the originals.
+
+**Priority:** Medium
+
+**Tags:** dashboard, organizer
+
+**Parameters:**
+
+ContactEdit: Information, Preferences
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Contact. |  | Phone number, Primary email, both communication choices, Customer support email, Accounting email, AR/AP emails, address fields and Save appear. |
+| Apply the selected ContactEdit change. | Input mapping in Description. | Only the selected information or preferences are changed in the form. |
+| Select Save, leave Contact and reopen it. |  | Every selected edit persists exactly; Information leaves both choices unchanged, and Preferences leaves every recorded contact/address value unchanged. |
+
+### SPT-5424: Dashboard - Organization - Save weekly business hours
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Save weekly business hours
+
+**Description:** Save weekly hours or the public business-hours visibility choice. Run ScheduleEdit separately: WeeklyHours = Monday Closed off, Opens 09:00, Closes 17:00, Staff bookings 4, Web bookings 2; Sunday Closed on; keep other days and the visibility switch unchanged. Visibility = reverse only Show business hours on organizer profile and keep every day’s hours, Closed and booking limits unchanged. Hours are organization-local; record the organization timezone and use a different computer timezone for one selected run.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* Use an organization whose schedule and public-hours visibility may be changed without affecting active bookings. Record all seven days, booking limits, organization timezone and Show business hours on organizer profile.
+
+**Postconditions:**
+
+* Restore the recorded schedule or visibility choice, save and reopen to verify restoration.
+
+**Priority:** Medium
+
+**Tags:** dashboard, organizer
+
+**Parameters:**
+
+ScheduleEdit: WeeklyHours, Visibility
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Business Schedule. |  | All seven days, Closed, times for open days, Staff bookings, Web bookings, the public-hours switch and Save appear. |
+| Apply the selected ScheduleEdit change. | Exact mapping in Description. | WeeklyHours shows Monday’s entered hours/limits and hides Sunday’s time fields; Visibility changes only its switch. |
+| Select Save, leave Business Schedule and reopen it. |  | The selected edit persists exactly in organization-local time; all fields excluded by that run retain their recorded values. |
+
+### SPT-5449: Dashboard - Organization - Save organization analytics settings
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Save organization analytics settings
+
+**Description:** Save organizer analytics using approved sandbox destinations. Google Tag Manager is conditional. Saving tracking IDs does not prove delivery of analytics events. Run the page and permission contexts below in desktop and narrow mobile Dashboard views.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+Run each AccessContext separately. The editor-only runs preserve the legacy/backend minimum permission; loss of access in EmbeddedEditor is a migration failure under that baseline.
+
+| AccessContext | Required employee permissions | Page setup and visible navigation |
+| --- | --- | --- |
+| StandardBoth | Manage Organization Info and Manage Integrations | New Organization page: Dashboard → Organization → Integrations → Analytics; preserves the existing new-page scenario |
+| LegacyEditor | Manage Organization Info; no Manage Integrations | Legacy tabs: Dashboard → Organization Info → Analytics; organization enable_organization_settings_nextjs_embed off, no employee preview selected |
+| EmbeddedEditor | Manage Organization Info; no Manage Integrations | Embedded settings: Dashboard → Organization Info → settings menu → Analytics; organization enable_organization_settings_nextjs_embed on |
+
+**Preconditions:**
+
+* Use an employee with exactly the permissions listed for AccessContext and no unrestricted administrator override. A setup owner prepares the mapped page version before execution; do not change permissions or rollout settings during the case.
+* Use an organization whose settings may be changed without affecting active sales or customer messages. Record the fields being changed.
+* Have approved sandbox Facebook Pixel and matching Conversions API token, Google Analytics 4 Measurement ID and Google Ads ID. If `google_tag_manager_flag` is on for the organization, have its sandbox GTM ID. Keep credentials out of screenshots and run comments.
+
+**Postconditions:**
+
+* Restore the recorded settings, save, and reopen to confirm restoration.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer
+
+**Parameters:**
+
+AccessContext: StandardBoth, LegacyEditor, EmbeddedEditor
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Analytics through the visible navigation mapped to AccessContext. | Use the AccessContext table in Description. | Facebook Pixel, Facebook Conversions API access token, Google Analytics 4 and Google Ads appear and are editable; Google Tag Manager appears only with its flag on. |
+| Enter the approved sandbox analytics values. | Prepared sandbox values. | Values match their required formats and the matching Pixel/token pair is used. |
+| Select the Analytics form’s Save or Save Changes. |  | A success message appears without granting any additional employee permission. |
+| Leave the page and reopen Analytics using the same visible menu. |  | The saved editable fields retain the approved values. If GTM is hidden, its saved configuration has not been cleared. |
+
+### SPT-5680: Dashboard - Organization - Keep module switches locked on the Essential plan
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Keep module switches locked on the Essential plan
+
+**Description:** Inspect the seven module switches on an Essential-plan organization. The restriction must be visible and apply to every offered module without changing saved settings. This checks the form restriction; it does not establish server-side permission enforcement.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* Use an organization on the Essential plan. Membership access is enabled so Memberships is offered. Record the saved enabled/disabled state of Events, Guestlists, Capacity Counters, Incidents, Memberships, Exchanges and Group Sales.
+
+**Postconditions:**
+
+* Do not change the organization’s plan, membership access or saved module selections.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer, edge-case
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info, then choose Enabled modules from the settings menu. |  | The Essential-plan explanation says to contact Showpass support to unlock module changes. |
+| Inspect each of the seven module switches and try to change a switch using the pointer or keyboard. |  | Every offered module switch is disabled and retains its recorded state. |
+| Leave and reopen Enabled modules without saving. |  | All recorded module states remain unchanged. |
+
+### SPT-5681: Dashboard - Organization - Open a page from the embedded Organization menu
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Open a page from the embedded Organization menu
+
+**Description:** Start from Organization Info in Dashboard, then open the selected page through its menu. Verify the page stays inside Dashboard and the same organization remains selected. General is the starting control. Run Page separately. Additional permissions and flags below apply only to the selected run.
+
+| Page | Menu choice and page heading | Additional permission or organization flag |
+| --- | --- | --- |
+| Contact | Contact | None |
+| BusinessSchedule | Business Schedule | None |
+| EnabledModules | Enabled modules | None |
+| ShippingFulfillment | Shipping & Fulfillment | enable_shipping_fulfillment_settings on |
+| CheckoutConsent | Checkout Consent | enable_custom_consent_configuration on |
+| Suborganizations | Suborganizations | None; an unavailable explanation is valid for a non-parent organization |
+| Identity | Identity | Manage Events |
+| Profile | Profile | None |
+| Messaging | Messaging | None |
+| Customization | Customization | Manage Events |
+| PostEvent | Post-Event | thank_you_emails_flag on |
+| DigitalWallets | Digital Wallets | Manage Events |
+| TicketSettings | Ticket settings | Manage Events |
+| Analytics | Analytics | Manage Integrations |
+| ApiAllowlist | API allowlist | None |
+| Domains | Domains | enable_custom_domains on |
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* Prepare the additional permission/flag listed for Page; complete any authentication required by that employee permission before starting. Record the selected organization’s name from General.
+* A setup owner records one recognizable saved value, list row or explicit empty/unavailable state on the selected page. No role, organization or feature flag is changed during execution.
+
+**Postconditions:**
+
+* Leave General open with no unsaved changes.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer
+
+**Parameters:**
+
+Page: Contact, BusinessSchedule, EnabledModules, ShippingFulfillment, CheckoutConsent, Suborganizations, Identity, Profile, Messaging, Customization, PostEvent, DigitalWallets, TicketSettings, Analytics, ApiAllowlist, Domains
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| From Dashboard, open Organization Info and inspect General. |  | The recorded organization name appears inside the retained Dashboard. |
+| Open the settings menu and choose the menu choice mapped to Page. | Page mapping in Description. | The mapped page heading and its recorded content appear; loading placeholders resolve without a blank panel or access error. |
+| Inspect the page without editing, saving, sending a preview, or selecting a state-changing action. |  | The selected page remains inside the retained Dashboard, with its recorded content available. |
+| Use the settings menu to return to General. |  | The original organization name remains selected. |
+
+### SPT-5682: Dashboard - Organization - Reject an unsupported or already registered custom domain
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Reject an unsupported or already registered custom domain
+
+**Description:** Run RejectedDomain separately: Empty = leave Domain blank; InvalidHostname = bad_domain; Reserved = events.showpass.com; AlreadyRegistered = the recorded active hostname already registered to this organization. The attempted addition must not create another entry or report success.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* The organization-scoped enable_custom_domains flag is on. Use only a subdomain controlled by this organization; record its exact hostname and existing domain list.
+* For AlreadyRegistered, select an existing active custom-domain entry owned by this organization and record its hostname. Do not use another organization’s hostname.
+
+**Postconditions:**
+
+* Leave all original domain and website settings unchanged.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer, edge-case
+
+**Parameters:**
+
+RejectedDomain: Empty, InvalidHostname, Reserved, AlreadyRegistered
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Domains and select Add domain. |  | Domain, Add domain and Cancel appear. |
+| Enter the selected RejectedDomain input and attempt Add domain. | Input mapping in Description. | A required, hostname, reserved-domain or already-in-use error explains the selected rejection; no successful addition is reported. |
+| Cancel the form, leave Domains and reopen it. |  | The recorded domain list is unchanged; the attempted input has no new entry. |
+
+### SPT-5683: Dashboard - Organization - Verify ownership of a custom domain
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Verify ownership of a custom domain
+
+**Description:** Recognize a matching ownership TXT record for an existing custom domain and retain Verified after reopening. A TXT record is the DNS text entry used to prove control of the domain. The automatic check or Check verification may complete recognition; this case proves ownership status, not which check wins. It does not prove website routing or HTTPS readiness.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* The organization-scoped enable_custom_domains flag is on. Use only a subdomain controlled by this organization; record its exact hostname and existing domain list.
+* Select an existing unverified custom domain with no website connection and no matching TXT record. The hostname is unused by live visitors. An authorized DNS owner can publish the exact TXT entry shown by Showpass and confirm that public DNS returns it.
+* Record the existing DNS entries. Preserve unrelated records and the recorded custom-domain entry.
+
+**Postconditions:**
+
+* Retain the owned test domain and TXT entry with the DNS owner’s approval; do not delete unrelated DNS records or claim that removing the TXT automatically resets saved verification.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Domains, select the recorded hostname and open Verification. |  | How to verify your domain shows the TXT Type, Host / Name and value for this hostname. |
+| Have the authorized DNS owner publish that exact TXT entry and confirm the record has propagated. | Use the full host shown by Showpass, accounting for a DNS provider that appends the root domain. | Public DNS returns the matching Showpass ownership value at the displayed host. |
+| Reopen Verification and select Check verification if it is still offered. |  | The domain reaches Verified and reports that it is ready for connections, rather than only showing an accepted request. |
+| Leave the detail page and reopen the same domain. |  | Verified persists for the same hostname; no website has been connected. |
+
+### SPT-5684: Dashboard - Organization - Connect a verified custom domain to a website
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Connect a verified custom domain to a website
+
+**Description:** Save the connection from one verified custom domain to one existing website in the same organization. Reopening must show the exact selected website. This proves the saved connection; public DNS routing and HTTPS are separate outcomes.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* The organization-scoped enable_custom_domains flag is on. Use only a subdomain controlled by this organization; record its exact hostname and existing domain list.
+* Select a verified custom domain that is not connected to any website and is unused by live visitors. Record its hostname.
+* Use an existing active, unpublished website in the same organization with no custom domain and no active customers. Record its name. The organization-scoped enable_custom_websites flag is on so its website settings are available.
+
+**Postconditions:**
+
+* From the domain’s Website page, use Disconnect and confirm removal of only this test connection. Reopen both settings pages to verify their original unconnected state. Keep the domain and website records.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Domains, select the recorded domain and choose Website. |  | Website connection offers Choose a website. |
+| Select the recorded website from Choose a website. | Recorded website name. | Website connected appears and the connected card names that website. |
+| Leave Domains and reopen the same domain’s Website page. |  | The exact website remains connected; the hostname is unchanged. |
+| Open the connected website’s settings using its link without saving. |  | The same recorded website identifies the selected custom domain; no other website has been substituted. |
+
+### SPT-5685: Dashboard - Organization - Block website connection until domain ownership is verified
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Block website connection until domain ownership is verified
+
+**Description:** An unverified custom domain must explain the ownership requirement before offering a website connection. Following Go to verification must return to the same domain’s ownership instructions.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* The organization-scoped enable_custom_domains flag is on. Use only a subdomain controlled by this organization; record its exact hostname and existing domain list.
+* Select an existing unverified custom domain with no matching TXT record and no connected website. Record its hostname; do not publish DNS records during this check.
+
+**Postconditions:**
+
+* Leave the domain unverified and unconnected.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer, edge-case
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Domains, select the recorded domain and choose Website. |  | An ownership-verification warning appears; no usable Choose a website control is offered. |
+| Select Go to verification. |  | Verification opens for the same hostname and shows its ownership instructions. |
+| Return to Website without checking verification or changing DNS. |  | The verification requirement remains and no website has been connected. |
+
+### SPT-5686: Dashboard - Organization - Require the exact domain deletion confirmation
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Require the exact domain deletion confirmation
+
+**Description:** Run ConfirmationInput separately: Empty = leave the field empty; Lowercase = delete; Typo = DELET. Each input must keep Permanently delete disabled. Leaving the page must preserve the record; this is separate from cancelling the Add domain form.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* The organization-scoped enable_custom_domains flag is on. Use only a subdomain controlled by this organization; record its exact hostname and existing domain list.
+* Select an existing custom domain with no connected website, no live visitors and no pending configuration work. Record its hostname and saved verification state. The domain must not be removed in this case.
+
+**Postconditions:**
+
+* Do not enter the valid DELETE confirmation or submit permanent deletion.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer, edge-case
+
+**Parameters:**
+
+ConfirmationInput: Empty, Lowercase, Typo
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Domains, select the recorded hostname and choose Delete. |  | The page warns deletion is permanent and asks for the exact word DELETE. |
+| Enter ConfirmationInput in Type DELETE to confirm. | Input mapping in Description. | Permanently delete remains disabled for the selected input. |
+| Use Back to return to Domains, then reopen the recorded entry. |  | The same domain and verification state remain; no deletion occurred. |
+
+### SPT-5687: Dashboard - Organization - Delete an unused custom domain
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Delete an unused custom domain
+
+**Description:** Remove only an explicitly approved, unused custom-domain record after entering the exact confirmation. The domain list must no longer contain that hostname; other domains, websites and API allowlist entries must remain.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* The organization-scoped enable_custom_domains flag is on. Use only a subdomain controlled by this organization; record its exact hostname and existing domain list.
+* Use a domain created solely for this check, with no website connection, live traffic, payment-domain use, public DNS records, pending verification work or other dependent configuration. Record its hostname and the original domain and API allowlist lists.
+* The setup owner explicitly approves permanent removal of this exact domain. Do not use a customer’s active domain or an entry shared with another test.
+
+**Postconditions:**
+
+* Retain the deletion evidence. Do not recreate or delete unrelated domains as cleanup.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer, edge-case
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Domains, select the recorded hostname and choose Delete. |  | The correct hostname and permanent-deletion warning identify the approved record. |
+| Enter DELETE, then select Permanently delete for that hostname. | DELETE | The deletion completes and returns to Domains. |
+| Reload Domains and compare the list with the recorded original. |  | Only the approved domain is absent; every other domain remains. |
+| Open API allowlist and inspect its recorded entries without editing. |  | The original API allowlist entries remain unchanged. |
+
+### SPT-5688: Dashboard - Organization - Keep a domain unverified without a matching TXT record
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Keep a domain unverified without a matching TXT record
+
+**Description:** Run TxtSetup separately: Missing = the displayed verification host has no TXT record; WrongValue = it has one owner-approved TXT value that differs from Showpass’s displayed ownership value. Check verification must report that the ownership record was not found and leave the domain unverified.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* The organization-scoped enable_custom_domains flag is on. Use only a subdomain controlled by this organization; record its exact hostname and existing domain list.
+* Select an existing unverified domain with no website connection and no live visitors. Record its exact displayed verification host and required value.
+* An authorized DNS owner prepares the selected TxtSetup and confirms public DNS returns that state before the run. For WrongValue, use ownership-check-does-not-match as the sole value at that verification host; preserve unrelated DNS records.
+
+**Postconditions:**
+
+* Have the DNS owner restore only the verification-host TXT entries changed for setup. Leave the domain and unrelated DNS records intact.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer, edge-case
+
+**Parameters:**
+
+TxtSetup: Missing, WrongValue
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Domains, select the recorded hostname and open Verification. |  | Ownership instructions are shown and the domain is not Verified. |
+| Select Check verification once after the DNS owner confirms TxtSetup. | TxtSetup mapping in Description. | The page reports the TXT record was not found; it does not report ownership verified or enable a website connection. |
+| Leave and reopen the same domain’s Verification and Website pages. |  | The domain remains unverified and Website still requires ownership verification. |
+
+### SPT-5689: Dashboard - Organization - Reject an invalid public-profile link
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Reject an invalid public-profile link
+
+**Description:** Reject a malformed website or social link while retaining the saved profile. Run ProfileLink separately: Website = Website; Facebook = Facebook; Twitter = X / Twitter; Instagram = Instagram. Enter not-a-url in only the selected field.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO).
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on, and Organization Info opens the embedded settings menu. A setup owner prepares this state before execution; do not change rollout or preview choices during the case.
+* Record all saved Profile fields. The selected ProfileLink currently contains a valid URL, and every other field is valid.
+
+**Postconditions:**
+
+* No saved profile changes.
+
+**Priority:** Medium
+
+**Tags:** dashboard, organizer, edge-case
+
+**Parameters:**
+
+ProfileLink: Website, Facebook, Twitter, Instagram
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Profile. |  | The selected website/social-link field shows its recorded URL. |
+| Replace only ProfileLink with not-a-url and attempt Save. | ProfileLink mapping in Description. | A URL error prevents a successful save; unrelated fields are not changed. |
+| Reload Profile without saving. |  | The recorded original link and all other Profile fields remain saved. |
+
+### SPT-5690: Dashboard - Organization - Save or clear an organization Workday field
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Save or clear an organization Workday field
+
+**Description:** Change one organization-level Workday field and confirm the exact value after reopening the form. Run each Field with each SavedValue: Updated enters the mapped replacement; Cleared removes all text. This gives 44 field/state runs. For every run, start with a non-empty saved value different from the mapped replacement and leave the other 21 fields unchanged. The second group of fields supplies defaults that Ticket Type, Event and Product settings can override; this case checks the organization form only.
+
+| Field | Visible Workday label | Updated value |
+| --- | --- | --- |
+| TransactionMemo | Transaction Memo | Organization memo 2 |
+| CompanyReferenceIdType | Company Reference ID Type | CompanyId2 |
+| CompanyReferenceId | Company Reference ID | COMPANY2 |
+| BankAccountReferenceIdType | Bank Account Reference ID Type | BankAccountId2 |
+| BankAccountReferenceId | Bank Account Reference ID | BANKREF2 |
+| TransactionId | Transaction ID | TRANSACTION2 |
+| JournalSource | Journal Source | JOURNAL2 |
+| BpComment | BP Comment | Organization comment 2 |
+| ResourceCategoryReferenceIdType | Resource Category Reference ID Type | ResourceCategoryId2 |
+| ResourceCategoryReferenceId | Resource Category Reference ID | RESOURCE2 |
+| LedgerAccountReferenceIdParentIdType | Ledger Account Reference ID Parent ID Type | LedgerParentId2 |
+| LedgerAccountReferenceIdParentId | Ledger Account Reference ID Parent ID | PARENT2 |
+| LedgerAccountReferenceIdType | Ledger Account Reference ID Type | LedgerAccountId2 |
+| LedgerAccountReferenceId | Ledger Account Reference ID | 4102 |
+| RevenueCategoryReferenceIdType | Revenue Category Reference ID Type | RevenueCategoryId2 |
+| RevenueCategoryReferenceId | Revenue Category Reference ID | REVENUE2 |
+| WorktagFundId | Worktag Fund ID | FUND2 |
+| WorktagCostCenterReferenceId | Worktag Cost Center Reference ID | COST2 |
+| WorktagGiftReferenceId | Worktag Gift Reference ID | GIFT2 |
+| WorktagGrantId | Worktag Grant ID | GRANT2 |
+| WorktagProgramId | Worktag Program ID | PROGRAM2 |
+| WorktagProjectId | Worktag Project ID | PROJECT2 |
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO). Use an employee without an unrestricted administrator override.
+* The organization uses the legacy Organization Info tabs: enable_organization_settings_nextjs_embed is off for the organization and the employee has not selected the new preview.
+* The organization’s ordinary workday_integration_enabled setting is on. Use an organization reserved for these checks with no active sales, scheduled Workday exports or connected accounting activity, because these defaults can affect later accounting records.
+* The setup owner has approved the replacement references in the Description table for this organization. These are accounting-reference text values, not bank-account numbers or credentials. Record all 22 original Workday values and the current Whitelist Domains list before execution.
+* Before each run, the setup owner has saved a non-empty value different from the mapped replacement in Field; record that starting value.
+
+**Postconditions:**
+
+* Restore all 22 original Workday values, save, and reopen to confirm restoration. Do not trigger a Workday export.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer
+
+**Parameters:**
+
+Field: TransactionMemo, CompanyReferenceIdType, CompanyReferenceId, BankAccountReferenceIdType, BankAccountReferenceId, TransactionId, JournalSource, BpComment, ResourceCategoryReferenceIdType, ResourceCategoryReferenceId, LedgerAccountReferenceIdParentIdType, LedgerAccountReferenceIdParentId, LedgerAccountReferenceIdType, LedgerAccountReferenceId, RevenueCategoryReferenceIdType, RevenueCategoryReferenceId, WorktagFundId, WorktagCostCenterReferenceId, WorktagGiftReferenceId, WorktagGrantId, WorktagProgramId, WorktagProjectId
+SavedValue: Updated, Cleared
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Integrations and find Workday. |  | All 22 mapped fields show their saved values; Workday’s Save Changes is disabled before editing. |
+| Change only the selected Field. | Updated: enter its mapped replacement. Cleared: remove all text. | The selected input matches SavedValue and Workday’s Save Changes becomes available. |
+| Select Save Changes in the Workday section. |  | The organization settings save successfully. |
+| Reload and reopen Integrations → Workday. |  | Field retains the exact replacement or is empty for Cleared; all other Workday fields and Whitelist Domains remain unchanged. |
+
+### SPT-5691: Dashboard - Organization - Discard unsaved organization Workday changes
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Discard unsaved organization Workday changes
+
+**Description:** Change an organization-level Workday field, then reload without saving. The saved reference must remain unchanged. Run one Field at a time using its mapped replacement, which must differ from its original saved value.
+
+| Field | Visible Workday label | Updated value |
+| --- | --- | --- |
+| TransactionMemo | Transaction Memo | Organization memo 2 |
+| CompanyReferenceIdType | Company Reference ID Type | CompanyId2 |
+| CompanyReferenceId | Company Reference ID | COMPANY2 |
+| BankAccountReferenceIdType | Bank Account Reference ID Type | BankAccountId2 |
+| BankAccountReferenceId | Bank Account Reference ID | BANKREF2 |
+| TransactionId | Transaction ID | TRANSACTION2 |
+| JournalSource | Journal Source | JOURNAL2 |
+| BpComment | BP Comment | Organization comment 2 |
+| ResourceCategoryReferenceIdType | Resource Category Reference ID Type | ResourceCategoryId2 |
+| ResourceCategoryReferenceId | Resource Category Reference ID | RESOURCE2 |
+| LedgerAccountReferenceIdParentIdType | Ledger Account Reference ID Parent ID Type | LedgerParentId2 |
+| LedgerAccountReferenceIdParentId | Ledger Account Reference ID Parent ID | PARENT2 |
+| LedgerAccountReferenceIdType | Ledger Account Reference ID Type | LedgerAccountId2 |
+| LedgerAccountReferenceId | Ledger Account Reference ID | 4102 |
+| RevenueCategoryReferenceIdType | Revenue Category Reference ID Type | RevenueCategoryId2 |
+| RevenueCategoryReferenceId | Revenue Category Reference ID | REVENUE2 |
+| WorktagFundId | Worktag Fund ID | FUND2 |
+| WorktagCostCenterReferenceId | Worktag Cost Center Reference ID | COST2 |
+| WorktagGiftReferenceId | Worktag Gift Reference ID | GIFT2 |
+| WorktagGrantId | Worktag Grant ID | GRANT2 |
+| WorktagProgramId | Worktag Program ID | PROGRAM2 |
+| WorktagProjectId | Worktag Project ID | PROJECT2 |
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO). Use an employee without an unrestricted administrator override.
+* The organization uses the legacy Organization Info tabs: enable_organization_settings_nextjs_embed is off for the organization and the employee has not selected the new preview.
+* The organization’s ordinary workday_integration_enabled setting is on. Use an organization reserved for these checks with no active sales, scheduled Workday exports or connected accounting activity, because these defaults can affect later accounting records.
+* The setup owner has approved the replacement references in the Description table for this organization. These are accounting-reference text values, not bank-account numbers or credentials. Record all 22 original Workday values and the current Whitelist Domains list before execution.
+
+**Postconditions:**
+
+* No saved configuration changes.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer
+
+**Parameters:**
+
+Field: TransactionMemo, CompanyReferenceIdType, CompanyReferenceId, BankAccountReferenceIdType, BankAccountReferenceId, TransactionId, JournalSource, BpComment, ResourceCategoryReferenceIdType, ResourceCategoryReferenceId, LedgerAccountReferenceIdParentIdType, LedgerAccountReferenceIdParentId, LedgerAccountReferenceIdType, LedgerAccountReferenceId, RevenueCategoryReferenceIdType, RevenueCategoryReferenceId, WorktagFundId, WorktagCostCenterReferenceId, WorktagGiftReferenceId, WorktagGrantId, WorktagProgramId, WorktagProjectId
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Integrations and find Workday. |  | The recorded original values appear. |
+| Replace only Field with its mapped value; leave Save Changes untouched. | Field mapping in Description. | The draft value appears and Workday’s Save Changes becomes available. |
+| Reload the page; if asked about unsaved changes, choose to leave without saving. |  | The page reloads without a successful-save confirmation. |
+| Reopen Integrations → Workday. |  | All 22 Workday fields and Whitelist Domains match their recorded saved values. |
+
+### SPT-5692: Dashboard - Organization - Reject HTML in an organization Workday field
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Reject HTML in an organization Workday field
+
+**Description:** Attempt to save HTML in one organization-level Workday field. Each of the 22 fields uses the same text-only rule; run each Field separately. A rejected submission must not change any saved Workday value.
+
+| Field | Visible Workday label |
+| --- | --- |
+| TransactionMemo | Transaction Memo |
+| CompanyReferenceIdType | Company Reference ID Type |
+| CompanyReferenceId | Company Reference ID |
+| BankAccountReferenceIdType | Bank Account Reference ID Type |
+| BankAccountReferenceId | Bank Account Reference ID |
+| TransactionId | Transaction ID |
+| JournalSource | Journal Source |
+| BpComment | BP Comment |
+| ResourceCategoryReferenceIdType | Resource Category Reference ID Type |
+| ResourceCategoryReferenceId | Resource Category Reference ID |
+| LedgerAccountReferenceIdParentIdType | Ledger Account Reference ID Parent ID Type |
+| LedgerAccountReferenceIdParentId | Ledger Account Reference ID Parent ID |
+| LedgerAccountReferenceIdType | Ledger Account Reference ID Type |
+| LedgerAccountReferenceId | Ledger Account Reference ID |
+| RevenueCategoryReferenceIdType | Revenue Category Reference ID Type |
+| RevenueCategoryReferenceId | Revenue Category Reference ID |
+| WorktagFundId | Worktag Fund ID |
+| WorktagCostCenterReferenceId | Worktag Cost Center Reference ID |
+| WorktagGiftReferenceId | Worktag Gift Reference ID |
+| WorktagGrantId | Worktag Grant ID |
+| WorktagProgramId | Worktag Program ID |
+| WorktagProjectId | Worktag Project ID |
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO). Use an employee without an unrestricted administrator override.
+* The organization uses the legacy Organization Info tabs: enable_organization_settings_nextjs_embed is off for the organization and the employee has not selected the new preview.
+* The organization’s ordinary workday_integration_enabled setting is on. Use an organization reserved for these checks with no active sales, scheduled Workday exports or connected accounting activity, because these defaults can affect later accounting records.
+* Record all 22 original Workday values and the current Whitelist Domains list before execution.
+
+**Postconditions:**
+
+* No saved configuration changes; leave no unsaved HTML text in the form.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer, edge-case
+
+**Parameters:**
+
+Field: TransactionMemo, CompanyReferenceIdType, CompanyReferenceId, BankAccountReferenceIdType, BankAccountReferenceId, TransactionId, JournalSource, BpComment, ResourceCategoryReferenceIdType, ResourceCategoryReferenceId, LedgerAccountReferenceIdParentIdType, LedgerAccountReferenceIdParentId, LedgerAccountReferenceIdType, LedgerAccountReferenceId, RevenueCategoryReferenceIdType, RevenueCategoryReferenceId, WorktagFundId, WorktagCostCenterReferenceId, WorktagGiftReferenceId, WorktagGrantId, WorktagProgramId, WorktagProjectId
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Integrations and find Workday. |  | The original saved values appear. |
+| Replace only Field with the supplied HTML text. | `<b>Blocked</b>` | The selected input contains the supplied text. |
+| Select Save Changes in the Workday section. |  | The change is rejected and no successful-save confirmation appears. |
+| Reload without saving and reopen Integrations → Workday. |  | All 22 saved Workday values and Whitelist Domains remain unchanged. |
+
+### SPT-5693: Dashboard - Organization - Keep organization Workday settings reachable after migration
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Keep organization Workday settings reachable after migration
+
+**Description:** From the ordinary Dashboard landing page, find the organization-level Workday settings after Organization Info switches to its embedded settings menu. Compare the 22 labels and values against the saved legacy baseline recorded during setup. A direct address or a fee-card Workday section cannot replace the organization-level settings. This case verifies access and retained values without saving.
+
+| Field | Visible Workday label |
+| --- | --- |
+| TransactionMemo | Transaction Memo |
+| CompanyReferenceIdType | Company Reference ID Type |
+| CompanyReferenceId | Company Reference ID |
+| BankAccountReferenceIdType | Bank Account Reference ID Type |
+| BankAccountReferenceId | Bank Account Reference ID |
+| TransactionId | Transaction ID |
+| JournalSource | Journal Source |
+| BpComment | BP Comment |
+| ResourceCategoryReferenceIdType | Resource Category Reference ID Type |
+| ResourceCategoryReferenceId | Resource Category Reference ID |
+| LedgerAccountReferenceIdParentIdType | Ledger Account Reference ID Parent ID Type |
+| LedgerAccountReferenceIdParentId | Ledger Account Reference ID Parent ID |
+| LedgerAccountReferenceIdType | Ledger Account Reference ID Type |
+| LedgerAccountReferenceId | Ledger Account Reference ID |
+| RevenueCategoryReferenceIdType | Revenue Category Reference ID Type |
+| RevenueCategoryReferenceId | Revenue Category Reference ID |
+| WorktagFundId | Worktag Fund ID |
+| WorktagCostCenterReferenceId | Worktag Cost Center Reference ID |
+| WorktagGiftReferenceId | Worktag Gift Reference ID |
+| WorktagGrantId | Worktag Grant ID |
+| WorktagProgramId | Worktag Program ID |
+| WorktagProjectId | Worktag Project ID |
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permission: **Manage Organization Info** (VP_MANAGE_VENUE_INFO), without Manage Integrations or an unrestricted administrator override. This is the legacy minimum permission for the organization Workday form.
+* Use the same Workday-enabled organization on both sides of the migration. A setup owner records all 22 organization-level Workday labels and saved values from legacy Organization Info → Integrations → Workday, then prepares enable_organization_settings_nextjs_embed on for the organization. Do not change rollout settings during execution.
+* Start signed in on Dashboard with that organization selected. Keep accounting references out of shared screenshots and comments.
+
+**Postconditions:**
+
+* No data changes. A missing visible path is an unsuccessful migration result; record the missing business function without using a direct address as a workaround.
+
+**Priority:** High
+
+**Tags:** dashboard, organizer
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| From Dashboard, open Organization Info through its menu. |  | The embedded settings open for the selected organization. |
+| Open the organization settings menu and inspect the Integrations choices for access to the organization Workday settings. |  | A visible choice or clearly labelled section leads to the organization-level Workday settings without requiring another permission or a typed address. |
+| Follow the visible choice to the organization Workday settings. |  | All 22 fields listed in Description are available for the same organization; fee-card or event settings do not substitute for them. |
+| Compare the saved values with the recorded legacy baseline without editing. |  | Every organization Workday value is retained and the employee can access the editing controls. |
+
+### SPT-5694: Dashboard - Organization - Prevent Analytics editing without Manage Organization Info
+
+**Publication status:** published and full-field readback verified on 2026-10-17; not executed.
+
+**Title:** Dashboard - Organization - Prevent Analytics editing without Manage Organization Info
+
+**Description:** An employee with Manage Integrations can view the embedded Analytics page but cannot edit organization settings. Verify disabled fields, no Save action, and no exposure of the saved Facebook Conversions API access token. The bank-account permission in setup is needed to enter the Dashboard Organization Info wrapper; it does not grant Analytics editing.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Integrations** (VP_MANAGE_INTEGRATIONS) and **Manage Bank Account** (VP_MANAGE_BANK_ACCOUNT). The employee does not have Manage Organization Info or an unrestricted administrator override; complete any required account authentication.
+* The organization-scoped enable_organization_settings_nextjs_embed flag is on. An organization editor has recorded the saved Analytics values and set an approved sandbox Conversions API token; do not place that token in screenshots or comments.
+* An organization editor with Manage Organization Info and Manage Integrations is available to check the saved values after the restricted employee’s attempt. Use separate signed-in sessions.
+
+**Postconditions:**
+
+* No saved settings or employee permissions change.
+
+**Priority:** High
+
+**Tags:** dashboard, analytics, employee-permissions
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| As the restricted employee, open Dashboard → Organization Info and choose Analytics from the settings menu. |  | Analytics opens with a notice that editing requires organization settings permission. |
+| Try to edit Google Analytics 4 and inspect the form’s save controls. | Attempt to type G-TEST12345 without changing any permission. | Analytics inputs are disabled and there is no Save action. |
+| Inspect Facebook Conversions API access token without copying its content. |  | The saved token value is not shown to this employee. |
+| As the organization editor in the separate session, reload Analytics for the same organization. |  | All saved Analytics values remain unchanged. |
+
+## Migration coverage and duplicate decisions
+
+“Existing” identifies a case definition, not a passed test. All newly published and updated definitions are **Manual-only / not executed**. Source-only, conditional, partial and blocked work below remains open.
+
+| Visible page / retained function | Existing suite | Reuse / candidate IDs | Coverage decision and limits |
+| --- | --- | --- | --- |
+| Settings → General | 1158 | 5418/5419/5420/5454–5458 | Base details, name/timezone validation, privacy, unsaved edits, organization isolation and rollout entry. Enhance 5454 for Modules; reuse 5457 for the General entry. |
+| Settings → Contact | 1159 | 5421–5423 | Contact/address saves and required/invalid contact input. Enhance 5421 to save both communication choices while preserving the original information-only run. |
+| Settings → Business Schedule | 1160 | 5424–5429 | Weekly hours and exception add/edit/delete/cancel/date rejection. Enhance 5424 to cover the public-hours switch without duplicating the weekly save. |
+| Settings → Enabled modules | 1161 | 4009 (reuse from 78), 5430/5431/4826; TC-135 | Seven module choices, organizer options, exchange settings and inventory. Enhance/move 4009; Essential locking is new. Billing-module tests 935/4037/4912 are different records and outcomes. |
+| Enabled modules → Event upselling | 440 under1161 | 3172–3177/3179/3180/3182 | Existing enabled/disabled, assigned seating dependency and selected/default events. Reuse this suite; it is a section on the current form, not another sidebar page. |
+| Enabled modules → Transfers | 1162, currently Ticketing under1157 | 5139 (refactor/move), 5432 (enhance) | Reuse/rename/reparent the existing suite; no new Transfers suite. Cover all three saved limits and Empty/Zero rejection; 5454 owns restricted access. |
+| Settings → Shipping & Fulfillment | 1183 | 4884 | Existing controls, messages, enable/disable threshold, destination selection and validation. Held TC-19–23/51 overlap it and remain held; no companion creation without preserving its original assertions. |
+| Settings → Checkout Consent | 1163 | 5433–5439 | Existing create/edit/status/reorder/conflict/required input/preview. Current organization had no items; inspected the unsaved Add form and closed it. Cancel-with-edited-copy and request recovery remain open focused edges. |
+| Settings → Payment Details and Authorization | 1182 | 1650/1653/1654/5530; 5533 navigation | Existing valid save, account restrictions, incomplete authorization and delivery. Bank fields and disabled Agree and Save were inspected only. Do not duplicate these in Finance/Payouts. |
+| Settings → Legal | 1164 | 5440–5443; 5533 navigation | Terms, missing URL, conditional payment-plan terms and refund policy. Reuse the refund-policy case with both entries; do not create another legacy refund-text case. |
+| Settings → Suborganizations | 1175 | 5459/5460; Register182 | Parent list/link and unavailable state. Non-parent explanation was observed. Registration lifecycle remains owned by Register; no duplicate registration suite. |
+| Embedded alias → Custom Fees; canonical owner Finance | 1180 under1010 | 5118/5517–5525/5532/5663–5674/5677–5679; 5533 navigation | Existing 26-case Angular business baseline stays in Finance. The embedded alias/table was observed; new-form mutation execution is not claimed. TC-136 excludes this overlapping navigation run. |
+| Embedded alias → Fee Settings; canonical owner Finance | 1181 under1010 | 5526–5529/5534/5675/5676; 5533 navigation | Existing seven-case Angular baseline. Both payer selectors are present in the current embed; enhance 5533’s stale unmapped-payer wording. No duplicated Finance suite under Organization. |
+| Branding → Identity | 744 | 4124/4125/4127/4335/5463–5470; 4132 related delivery | Existing first/existing save, fonts, optional clearing, validation, deletion guard and upload size. Will Call/Pick up is already in 4124 and 5463; no new pickup-label case. Sender delivery differs from saved Identity fields. |
+| Branding → Profile | 1166 | 5444; TC-144 | Existing saved website/descriptions/socials; new malformed-link rejection, parameterized across four fields. Current four URL validators were traced. |
+| Branding → Messaging | 1167 | 5445/5446 | Existing checkout/subscription save and subscription line-break rejection. Public rendering/delivery remains separate proof; no second form-save case. |
+| Branding → Emails → Customization | 749 under523 | 3617/3619–3621/3626/4087/4148/4836/4837 | Existing email types, preview, validation and fallback/deletion. Do not create eight more template-save cases. Earlier source/wording corrections in this note remain applicable. |
+| Branding → Emails → Post-Event | 1169 under523 | 5447; 3619 template/delivery | Organization-wide switch, three messages and promotion/review choices. Template delivery is a different result. Disabled-state retention and scheduled delivery still require controlled execution. |
+| Branding → Deliverables → Digital Wallets | 1179 | 4742/5502–5513; native case65 reused | Existing first/update/reset, image variants, invalid upload, crop retry/cancel, separate save actions, organization/permission guards. Capitalization differs from UI only; no duplicate suite or replacement case. |
+| Branding → Deliverables → Ticket settings | 1171 | 5448 | Existing message and three correctly sized images saved/reopened. Generated PDFs and ticket-page-specific invalid/clear-image edges are not established by the saved-form case; kept as open scope rather than calling the whole page tested. |
+| Integrations → Analytics | 1173 | 5449 (enhance)/5450; TC-150 | Reuse all-field valid save and invalid GA4. New minimum-role save checks legacy and embedded access; new denied-editor case covers disabled fields and withheld token. The minimum-role expectation conflicts with the current menu gate; not executed. |
+| Integrations → Workday (legacy organization form) | 1172 | TC-145–148; 5531 navigation baseline | All 22 fields: replacement/clearing (44 parameter runs), unsaved discard and HTML rejection. Separate replacement-access proof. Current embedded destination not found; legacy saves and exports have not been executed. |
+| Integrations → API allowlist | 1174 | 5451–5453 | Existing add/remove/invalid URL. Separate from custom-domain hosting, TXT ownership and website connection; no duplicated domain test here. |
+| Integrations → Domains | 1176 | 5461/5462; TC-137–143 | Reuse the suite. Add only missing rejection, ownership success/missing record, saved website connection/unverified guard, exact-delete guard and unused-record removal. DNS routing/SSL, disconnect recovery and concurrent ownership changes remain separate unexecuted work. |
+
+### Duplicate review and preservation
+
+- **Reuse instead of creating:** module behavior →4009; saved transfer defaults →5139; transfer validation →5432; settings restriction →5454; moved financial/refund/payment navigation →5533; contact/preferences →5421; weekly hours/visibility →5424. TC-17 and held inventory/shipping alternatives remain unpublished.
+- **Removed proposed duplicate runs:** TC-136 excludes General (entry case5457) and Custom Fees/Fee Settings/Legal/Payment Details (migration case5533). Its 16 Page values cover only the other embedded destinations. Page changes are parameters, not 16 new cases.
+- **Preserve case4009:** all seven original Module choices and both checked/unchecked outcomes remain, with actual save/reopen and mapped Dashboard entry checks added. The parameter name changes from Module to be tested to Module; no original value is removed.
+- **Preserve case5432:** original Ticket × Empty/Zero remains; Product and MembershipGroup are added. Its step entry changes to the current Enabled modules form. Platform/View remain Dashboard Desktop/Mobile.
+- **Preserve case5454:** General and Contact stay covered as separate SettingsPage runs; EnabledModules adds the transfer-editing restriction. This is visible access coverage, not an invented direct-request security pass.
+- **Preserve case5533:** all five Function values remain. Payer selectors now have an observed embedded destination; the prior description’s unmapped-control statement is not carried forward as a current finding.
+- **Preserve case5449:** retain the original StandardBoth new-page run, all four unconditional analytics inputs, conditional GTM and hidden-value retention, approved sandbox Pixel/token pairing, cleanup and Desktop/Mobile views. Add LegacyEditor/EmbeddedEditor as AccessContext values; do not create a second analytics save case.
+- **Preserve case5421/5424:** Information and WeeklyHours retain their original input and unchanged-field checks. Preferences and Visibility add the previously untested switches without weakening those original runs.
+
+| Original case5139 responsibility | Retained owner after the proposed split |
+| --- | --- |
+| Save an allowed organization transfer default and reload | Refined5139; all three fields with Minimum1/Higher3, no new competing happy-path case |
+| Invoice sync accepted/completed/failed outcome | Existing5055 success;5058 failure/recovery;5059 cancellation result |
+| Trigger approved invoice sync | Existing5055; repeated submission remains5060 |
+| Restricted employee cannot use either action | Enhanced5454 EnabledModules run; existing5057 Intellitix eligibility contexts |
+
+The approved5139 split/refactor is published and readback verified. The original expected results are misaligned with their actions; their meaningful outcomes are assigned above instead of copied into another broad case. Source/API permission enforcement beyond these visible flows remains a separate proof target.
+
+The new domain cases do not duplicate5461/5462 (empty/add),5451–5453 (API allowlist),4981 (published calendar behavior), or authentication-domain cases. Essential module locking is distinct from plan upgrade/registration and billing-module records. Profile invalid-link rejection is distinct from5444’s valid save. Shared opening, reload and cleanup steps alone do not make cases duplicates.
+
+The five new integration cases and one existing-case enhancement have distinct proof targets. TC-145 saves/clears the organization’s 22 Workday fields; TC-146 discards unsaved text; TC-147 checks server-backed HTML rejection; TC-148 proves Dashboard access after migration. None duplicates fee-card5674, event5078 or5531’s legacy tab visibility. The 5449 enhancement adds StandardBoth, LegacyEditor and EmbeddedEditor runs while preserving all original fields, sandbox safeguards, hidden-GTM retention and both views. TC-150 tests the denied edit and withheld token, not invalid-ID5450 or general settings5454. Workday field names are parameters rather than 22 separately published tests. No new successful all-analytics-field save case was added.
+
+### Retained functions and unresolved migration risks
+
+| Previous function / state | Current destination or evidence | Status / missing proof |
+| --- | --- | --- |
+| Legacy Low Inventory Display; Ticketing; Event Upselling | Enabled modules → Inventory display / Transfers / Event upselling | Accounted for by reused4826, repaired5139/5432 and440; no duplicate standalone page suite is needed. |
+| Organization-level Workday integration setup | Legacy Integrations conditionally renders venue_financial_management_form and transaction_financial_management_form when workday_integration_enabled is on. No corresponding Organization sidebar destination or organization-form caller was found in current frontend source. | **Drafted TC-145–148 / not executed.** Legacy field behavior now has explicit tests; TC-148 starts from Dashboard and fails if the function has no visible replacement. A Workday-enabled execution organization is still required. No replacement route was invented. Case5674 is fee-card metadata and5078 is event setup; neither covers these organization fields. Reuse integration owner1172. |
+| Analytics access for an organization editor without Manage Integrations | Legacy Analytics tab requires Manage Organization Info; current menu adds Manage Integrations. Existing5449 requires both. | **Drafted SPT-5449 enhancement; TC-150 / not executed.** Enhanced SPT-5449 preserves the legacy/backend minimum role; its Embedded run conflicts with the current menu gate and requires product-expectation review before release sign-off. TC-150 separately tests read-only access and token withholding. No restricted-role session was used; this is not a reproduced defect. |
+| Customer refunds and payment-plan terms | Source-gated Customer refunds page; existing1091 subtree and5442 | Source-accounted / conditional execution pending. Customer refunds was absent from this organization’s menu; do not remove its suite. Prepare the actual flags/configuration before a navigation pass. |
+| Sender and membership batch emails | Identity owns visible sender/background fields;4132 still owns actual email behavior. Membership batch email863 belongs to its sending workflow. | Retain750 and1017, even though they are not separate current menu entries.4132’s old Sender address and From Email expectation need the earlier source correction before execution; no new sender test is added. |
+| Registration and public organization functions | Register182; root354/355; Suborganizations1175 links to registration for parents | Keep existing suites/cases. They are related workflows, not missing or duplicate entries in the 21-page menu. |
+| Successful purchase, fees/revenue, transfers, public profiles, generated PDF/wallet, delivery, refunds and DNS/HTTPS | Existing owning Core/checkout/delivery cases and explicit page limits above | **Deferred downstream execution.** Saved settings/navigation do not prove money, inventory, email delivery, generated documents, CNAME routing or a usable HTTPS website. No financial release claim. |
+| Save failure, stale session/role, simultaneous edits and recovery | Source guards and the existing ownership/permission cases are references, not full execution | **Manual-only / named controlled setup required.** No fault was injected and no production/customer data was changed. |
+
+### Approved Qase placement — applied and verified
+
+1. Suite1162: keep the same ID; rename **Ticketing → Transfers** and change parent **Settings1157 → Enabled modules1161**. Case5432 stays in1162.
+2. Case4009: move **Dashboard78 → Enabled modules1161** with its enhanced definition; no duplicate module case.
+3. Case5139: refactor with the preservation map above and move **Organization181 → Transfers1162**. Existing Intellitix cases stay in Transactions - Intellitix1047.
+4. Keep Finance1180/1181 under Finance1010. Their embedded Organization menu links are aliases of the same features, not another suite hierarchy.
+
+Published TC-135–148 and TC-150 as SPT-5680–5694; updated4009,5139,5421,5424,5432,5449,5454,5533. The user explicitly approved this exact scope. No suite/case was deleted and no earlier held draft was promoted. The original reviewed definitions are retained in the frozen publication source.
+
+### Integration limits and execution accounting
+
+The five new integration cases and the 5449 enhancement are not executed. TC-145 has 22 fields × Updated/Cleared = 44 field/state runs; TC-146 and TC-147 each have 22 one-field runs. Enhanced 5449 has three AccessContext runs. Desktop/mobile remain view contexts, not additional Qase cases. Workday-off visibility reuses5531’s conditional Integrations expectation; an explicit off-state run is still manual-only. Export inheritance/precedence, actual Workday processing, accounting reconciliation, failed-request recovery, other-organization access and stale-role enforcement are deferred to controlled integration/backend execution. Field round trips do not prove downstream accounting.
+
+### Approved publication scope — published and verified
+
+The approved Organization migration batch completed **15 creates, 8 existing-case updates and one suite change**. This table is the exact reviewed scope; earlier held drafts and completed publications are excluded. Case updates select Title, Description, Preconditions, Postconditions, tags, parameters, steps and suite only; existing type, behavior, layer and priority remain unchanged. Creates use the values shown in their complete case definitions. No deletion or live product action is included.
+
+| Label / existing ID | Action | Qase title | Suite | Tags | Parameters | Steps |
+| --- | --- | --- | --- | --- | --- | --- |
+| SPT-4009 | Update | Dashboard - Organization - Save enabled modules and their Dashboard access | 1161 | dashboard, organizer, employee-permissions | Module: Events, Guestlists, Capacity Counters, Incidents, Memberships, Exchanges, Group Sales; SavedState: Enabled, Disabled | 5 |
+| SPT-5432 | Update | Dashboard - Organization - Reject an invalid organization transfer limit | 1162 | dashboard, organizer, edge-case | LimitSetting: Ticket, Product, MembershipGroup; InvalidLimit: Empty, Zero | 4 |
+| [SPT-5680](https://app.qase.io/case/SPT-5680) (TC-135) | Create | Dashboard - Organization - Keep module switches locked on the Essential plan | 1161 | dashboard, organizer, edge-case | None | 3 |
+| [SPT-5681](https://app.qase.io/case/SPT-5681) (TC-136) | Create | Dashboard - Organization - Open a page from the embedded Organization menu | 1158 | dashboard, organizer | Page: 16 values; full mapping in case | 4 |
+| [SPT-5682](https://app.qase.io/case/SPT-5682) (TC-137) | Create | Dashboard - Organization - Reject an unsupported or already registered custom domain | 1176 | dashboard, organizer, edge-case | RejectedDomain: Empty, InvalidHostname, Reserved, AlreadyRegistered | 3 |
+| [SPT-5683](https://app.qase.io/case/SPT-5683) (TC-138) | Create | Dashboard - Organization - Verify ownership of a custom domain | 1176 | dashboard, organizer | None | 4 |
+| [SPT-5684](https://app.qase.io/case/SPT-5684) (TC-139) | Create | Dashboard - Organization - Connect a verified custom domain to a website | 1176 | dashboard, organizer | None | 4 |
+| [SPT-5685](https://app.qase.io/case/SPT-5685) (TC-140) | Create | Dashboard - Organization - Block website connection until domain ownership is verified | 1176 | dashboard, organizer, edge-case | None | 3 |
+| [SPT-5686](https://app.qase.io/case/SPT-5686) (TC-141) | Create | Dashboard - Organization - Require the exact domain deletion confirmation | 1176 | dashboard, organizer, edge-case | ConfirmationInput: Empty, Lowercase, Typo | 3 |
+| [SPT-5687](https://app.qase.io/case/SPT-5687) (TC-142) | Create | Dashboard - Organization - Delete an unused custom domain | 1176 | dashboard, organizer, edge-case | None | 4 |
+| [SPT-5688](https://app.qase.io/case/SPT-5688) (TC-143) | Create | Dashboard - Organization - Keep a domain unverified without a matching TXT record | 1176 | dashboard, organizer, edge-case | TxtSetup: Missing, WrongValue | 3 |
+| SPT-5533 | Update | Dashboard - Organization - Preserve access to financial settings after migration | 1158 | dashboard, organizer, fees-taxes | Function: CustomFees, FeePayers, TaxAndStatement, RefundPolicy, PaymentDetails | 4 |
+| SPT-5454 | Update | Dashboard - Organization - Restrict settings to the permitted employee | 1158 | dashboard, organizer, employee-permissions | SettingsPage: General, Contact, EnabledModules | 3 |
+| SPT-5139 | Update | Dashboard - Organization - Save organization transfer limits | 1162 | dashboard, organizer | LimitSetting: Ticket, Product, MembershipGroup; SavedLimit: Minimum, Higher | 3 |
+| SPT-5421 | Update | Dashboard - Organization - Save contact details | 1159 | dashboard, organizer | ContactEdit: Information, Preferences | 3 |
+| SPT-5424 | Update | Dashboard - Organization - Save weekly business hours | 1160 | dashboard, organizer | ScheduleEdit: WeeklyHours, Visibility | 3 |
+| [SPT-5689](https://app.qase.io/case/SPT-5689) (TC-144) | Create | Dashboard - Organization - Reject an invalid public-profile link | 1166 | dashboard, organizer, edge-case | ProfileLink: Website, Facebook, Twitter, Instagram | 3 |
+| [SPT-5690](https://app.qase.io/case/SPT-5690) (TC-145) | Create | Dashboard - Organization - Save or clear an organization Workday field | 1172 | dashboard, organizer | Field: 22 values; full mapping in case; SavedValue: Updated, Cleared | 4 |
+| [SPT-5691](https://app.qase.io/case/SPT-5691) (TC-146) | Create | Dashboard - Organization - Discard unsaved organization Workday changes | 1172 | dashboard, organizer | Field: 22 values; full mapping in case | 4 |
+| [SPT-5692](https://app.qase.io/case/SPT-5692) (TC-147) | Create | Dashboard - Organization - Reject HTML in an organization Workday field | 1172 | dashboard, organizer, edge-case | Field: 22 values; full mapping in case | 4 |
+| [SPT-5693](https://app.qase.io/case/SPT-5693) (TC-148) | Create | Dashboard - Organization - Keep organization Workday settings reachable after migration | 1172 | dashboard, organizer | None | 4 |
+| SPT-5449 | Update | Dashboard - Organization - Save organization analytics settings | 1173 | dashboard, organizer | AccessContext: StandardBoth, LegacyEditor, EmbeddedEditor | 4 |
+| [SPT-5694](https://app.qase.io/case/SPT-5694) (TC-150) | Create | Dashboard - Organization - Prevent Analytics editing without Manage Organization Info | 1173 | dashboard, analytics, employee-permissions | None | 4 |
+
+Suite1162 keeps its ID: rename Ticketing to Transfers; move Settings1157 → Enabled modules1161. Case4009 moves Dashboard78 →1161; case5139 moves Organization181 →1162. The5139 preservation map above retains the unrelated Intellitix responsibilities in existing cases. The Workday replacement-path gap and Analytics role conflict remain unexecuted migration requirements after publication.
+
+**Approved and completed:** the user replied ‘Yes, publish this batch’. Both reusable batch commands completed; fresh readback verified23 cases /83 step rows and the suite change. All15 new titles appear once. The project now has2,158 cases and317 suites; the other2,135 pre-existing cases are unchanged apart from ordering/timestamps excluded from the comparison.
+
+### Publication receipts and remaining limits
+
+* **Created:** SPT-5680–5694 (local mapping in the published case index).
+* **Updated:** SPT-4009,5139,5421,5424,5432,5449,5454,5533; unrelated metadata was preserved.
+* **Suite:**1162 renamed Ticketing → Transfers and moved Settings1157 → Enabled modules1161. Case4009 moved78 →1161;5139 moved181 →1162.
+* **Verification:** full-field comparisons covered Title, Description, Preconditions, Postconditions, tags, parameters, suite and every step; create metadata and retained update metadata also matched. Sixteen definitions have parameters. No duplicate title was introduced and no case/suite was deleted.
+* **Not executed:** Workday replacement-path access, the Analytics minimum-role conflict, and all previously stated downstream or controlled-failure proof remain open. Publication does not resolve those risks or execute a product test.
+
+Full publication verification · Case receipt · Suite receipt · Saved case fields · Frozen reviewed source.
+
+### Evidence and execution limits
+
+**Definition review:** the reusable parser preserved every declared parameter, including the two-parameter cases. The case preview contains 15 creates and 8 existing-case proposals (23 definitions / 83 step rows); the separate suite preview reuses1162. The pre-publication 2,143-case /317-suite snapshot completed at 2026-10-17 22:52:26 UTC; the final readback contains2,158 cases /317 suites and completed at22:53:42 UTC. No exact-title duplicate was found; related full-case responsibilities and overlap removals are documented above. Earlier note bodies and publication records remain intact. The initial review checks validate definitions and placement proposals; the publication receipt above verifies the applied records. Neither establishes executed product behavior. Review checks · Full case fields and parameters · Read-only case preview.
+
+- Reused the complete SPT project snapshot from this session, refreshed for the final duplicate check; completeness and retrieval time are in the linked metadata. Organization181 has 33 descendants /137 cases in the review baseline; Finance contributes33 cases and4009 is reused from78. Suite membership, full fields of matching cases, parameters and useful assertions were compared; case existence is not execution proof.
+- Browser: beta.showpass.com, organization1721, original Dashboard wrapper with the Organization settings iframe. All21 menu entries were opened. Read loaded identity/wallet/ticket/payment/custom-fee forms and the non-parent/empty-list states; inspected Add consent item and Add domain without submitting. Closed both forms and an incidental support window without entering or sending anything. Returned to General. No saved preference, flag, organization/role, banking authorization or other product data was changed.
+- Backend revision **b5f397a0438910435e0d537f47e12d6064d7e019**; frontend revision **7e527b0285349e5d9537731f97f09b414001778c**. Backend working tree was clean. Local source is not proof of deployment parity or every conditional state.
+
+> [!info]- Sources and review evidence
+> Backend: venues/api/user_based/{serializers,viewsets}.py; venues/models/venue_management/venue.py and allowlist_domains.py; venues/constants/employment.py and integrations.py; venues/api/venue_based/{serializers,viewsets}/domains.py; venues/services/domains/{custom_domain_verification,domain_verification}.py; websites/api/venue_based/{websites,serializers/websites}.py; main/templates/venues/settings/edit-organization.html and the conditional Workday form includes (22 labels, including Worktag Project ID); financials/services/financial_management/financial_management_integration_service.py (supported keys, string values and HTML rejection); core/models/validators.py; main/static/src/dashboard/venues/controllers/EditOrganizationController.js; main/templates/navigation/dashboard/side-menu.html; main/static/src/core/venues/models.js; box_office/staff/box-office-list.html.
+>
+> Frontend: organization/hooks/useOrganizationSidebarRoutes.ts; constants/organization-config.ts and organization-finance-config.ts; branding/constants/branding-config.ts; integrations/constants/integrations-config.ts; constants/organization-{modules,transfer}-form-fields.ts; settings/modules/ui/{pages/ModulesOverviewPage,components/ModulesSelector}.web.tsx; utils/organization-{modules,core,schedule}-utils.ts; branding/ui/pages/ProfilePage.web.tsx; suborganizations/ui/{pages/SuborganizationsPage,components/SuborganizationsContent}.web.tsx; domains/constants/domains-config.ts; DomainsOverviewPage/DomainVerificationPage/DomainConnectionPage/DomainDeletePage; AddDomainModal; useDomainConnection/useDomainVerification; DomainHeaderActions/ConnectedDomainCard/VerificationInstructions; hooks/useOrganizationVenueSettingsMutation.ts; integrations/analytics/ui/pages/AnalyticsPage.web.tsx (disabled fields, permission notice, no Save without organization permission). Handbook: forms/communication playbook, permission setup and senior migration/integration passes; canonical preserve-access and financial proof gates applied.
+>
+> Organization baseline · Suite baseline · Owner map · Reviewed case data · Pre-review note preserved.
+
+## Earlier reviews and publication records — retained
+
+The material below preserves the earlier baselines, IDs, source findings and publication receipts. The proposals above do not retroactively change those Qase records or their execution status.
+
+
+
+## Angular Financial Settings — component review, 2026-10-17
+
+**Scope confirmed by the user:** review **Angular/legacy behavior** at Organization Info → Financial Settings. Organize cases as **Finance → Custom Fees (1180)** and **Finance → Fee Settings (1181)**, matching the /manage/ hierarchy. That hierarchy is filing, not an instruction to test or rewrite steps for the new forms. The preview banner and replacement forms are outside this review.
+
+**Published and verified:** created only the **17 approved Angular finance candidates, SPT-5663–SPT-5679**, with all 11 parameter sets retained. Added 15 to Custom Fees (1180) and two to Fee Settings (1181), bringing those suites to **26 + 7 = 33 cases**. The original 16 cases are unchanged. Steps still test legacy Financial Settings; folder organization follows /manage/. Remaining gaps are listed after the cases. No Showpass settings were saved and no product tests were executed.
+
+### Published case index
+
+| Qase case (original draft) | Folder | Test title | Parameters |
+| --- | --- | --- | --- |
+| [SPT-5663](https://app.qase.io/case/SPT-5663) (TC-118) | Finance → Custom Fees (1180) | Cancel a new custom fee or tax | Type: Fee, Tax |
+| [SPT-5664](https://app.qase.io/case/SPT-5664) (TC-119) | Finance → Custom Fees (1180) | Rename a custom fee or tax | Type: Fee, Tax |
+| [SPT-5665](https://app.qase.io/case/SPT-5665) (TC-120) | Finance → Custom Fees (1180) | Rename a rate card | DescriptionInput: Ordinary, MaximumLength |
+| [SPT-5666](https://app.qase.io/case/SPT-5666) (TC-121) | Finance → Custom Fees (1180) | Cancel only a rate-card description edit | None |
+| [SPT-5667](https://app.qase.io/case/SPT-5667) (TC-122) | Finance → Custom Fees (1180) | Save rate-card item selections | ItemSelection: TicketOnly, ProductOnly, MembershipOnly, Mixed, TaxOnFeeOnly |
+| [SPT-5668](https://app.qase.io/case/SPT-5668) (TC-123) | Finance → Custom Fees (1180) | Save a rate-card payment method | PaymentChoice: Cash, Card, Other |
+| [SPT-5669](https://app.qase.io/case/SPT-5669) (TC-124) | Finance → Custom Fees (1180) | Clear in-person payment choices when switching to online only | RemovedMethod: Cash, Other |
+| [SPT-5670](https://app.qase.io/case/SPT-5670) (TC-125) | Finance → Custom Fees (1180) | Save who pays an individual rate card | Type: Fee, Tax; SavedState: On, Off |
+| [SPT-5671](https://app.qase.io/case/SPT-5671) (TC-126) | Finance → Custom Fees (1180) | Save the reporting-only tax percentage on a fee | None |
+| [SPT-5672](https://app.qase.io/case/SPT-5672) (TC-127) | Finance → Custom Fees (1180) | Show duplicate rate-card warnings | None |
+| [SPT-5673](https://app.qase.io/case/SPT-5673) (TC-128) | Finance → Custom Fees (1180) | Cancel adding a rate card | None |
+| [SPT-5674](https://app.qase.io/case/SPT-5674) (TC-129) | Finance → Custom Fees (1180) | Save Workday fields on an organization fee card | None |
+| [SPT-5675](https://app.qase.io/case/SPT-5675) (TC-130) | Finance → Fee Settings (1181) | Discard unsaved legacy financial settings | None |
+| [SPT-5676](https://app.qase.io/case/SPT-5676) (TC-131) | Finance → Fee Settings (1181) | Show commission controls only to a Showpass administrator | AccountType: OrganizerEmployee, ShowpassAdministrator |
+| [SPT-5677](https://app.qase.io/case/SPT-5677) (TC-132) | Finance → Custom Fees (1180) | Calculate custom fees and taxes from the legacy page | ItemType: Ticket, Product |
+| [SPT-5678](https://app.qase.io/case/SPT-5678) (TC-133) | Finance → Custom Fees (1180) | Select the matching payment rules in the legacy calculator | PaymentScenario: OnlineCard, InPersonCard, InPersonCash, InPersonOtherSelected, InPersonOtherExcluded |
+| [SPT-5679](https://app.qase.io/case/SPT-5679) (TC-134) | Finance → Custom Fees (1180) | Keep the two financial save actions separate | SaveTarget: Definition, Page |
+
+## Finance → Custom Fees — published Angular cases
+
+### SPT-5663: Dashboard - Finance - Custom Fees - Cancel a new custom fee or tax
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Cancel a new custom fee or tax
+
+**Description:** Discard a newly added, unsaved definition and its first rate card. Run Type separately: Fee = Host Fee with Fee Amount 2.00 and Fee Percentage 5; Tax = GST with Tax Rate 5. Both use Ticket, Online, Card and Customer Pays on. Cancel Editing removes only the draft; it must not create a saved definition.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* Record all saved definitions and card counts; there is no existing definition with the selected Type/name.
+
+**Postconditions:**
+
+* Leave the original saved fee list unchanged.
+
+**Priority:** Medium
+
+**Tags:** dashboard, fees-taxes
+
+**Parameters:**
+
+Type: Fee, Tax
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings and select Add new custom fee or tax. |  | One unsaved definition and its first card appear. |
+| Choose Type and enter the mapped name, charge and selections. | Type mapping in Description. | Only the unsaved draft contains the entered values. |
+| Select Cancel Editing on the new definition. |  | The draft disappears; the recorded saved definitions remain. |
+| Reload Financial Settings. |  | No definition or card from the cancelled draft exists. |
+
+### SPT-5664: Dashboard - Finance - Custom Fees - Rename a custom fee or tax
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Rename a custom fee or tax
+
+**Description:** Change the Name on an existing organization-level definition while keeping its type, active state and rate cards. Run Type separately: Fee = change Host Fee to Artist Fee; Tax = change GST to VAT. Fee Name choices are Host Fee, Artist Fee, Facility Fee, Environmental Fee, Green Fee, Promoter Fee 1–5, Processing Fee, Cost Insurance and Freight Fee, Handling Fee, Ticket Fee and Parking Fee. Tax choices are GST, LST, HST, PST, QST, VAT, TAX, LET, Admissions Tax and Sales Tax.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* Select the mapped organization-level definition, with one saved card and no lower-level overrides; record its full values.
+
+**Postconditions:**
+
+* Restore the original Name and verify it after reloading.
+
+**Priority:** Medium
+
+**Tags:** dashboard, fees-taxes
+
+**Parameters:**
+
+Type: Fee, Tax
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings and select the definition’s edit icon. |  | Type and Name show the recorded values; the Name choices match the selected Type. |
+| Select the mapped replacement Name and select the definition’s Save. |  | The definition is saved under the selected new name. |
+| Reload and reopen the definition. |  | Its new name persists; Type, Enabled, card count, amounts and selections are unchanged. |
+
+### SPT-5665: Dashboard - Finance - Custom Fees - Rename a rate card
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Rename a rate card
+
+**Description:** Change only a saved rate-card description using its pencil, Change and the definition’s Save. Run DescriptionInput separately: Ordinary = Online ticket rate; MaximumLength = exactly 84 letters, recorded before entry. The Angular input limit is 84 characters; the backend field’s larger limit does not make longer Angular input a supported run.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* Select a saved Fee definition with two cards whose descriptions differ from the chosen text. Record both descriptions and all values.
+
+**Postconditions:**
+
+* Restore the original first-card description, save and verify it after reload.
+
+**Priority:** Medium
+
+**Tags:** dashboard, fees-taxes
+
+**Parameters:**
+
+DescriptionInput: Ordinary, MaximumLength
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings, edit the definition, expand the first card and select the pencil beside its description. |  | A description input with Change and Cancel Edit appears. |
+| Enter DescriptionInput and select Change. |  | The card heading displays the new description in the unsaved definition. |
+| Select the definition’s Save, reload and reopen it. |  | Only the first card’s description changes; the second card and every charge and selection retain their recorded values. |
+
+### SPT-5666: Dashboard - Finance - Custom Fees - Cancel only a rate-card description edit
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Cancel only a rate-card description edit
+
+**Description:** Use Cancel Edit beside a description without discarding a different unsaved amount in the same card. Cancel Edit and Cancel Editing have separate responsibilities.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* Select a saved Fee card whose Fee Amount differs from 9.00; record its description, amount and other values.
+
+**Postconditions:**
+
+* No saved card value was changed.
+
+**Priority:** Medium
+
+**Tags:** dashboard, fees-taxes
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings, edit the definition and expand the card; enter Fee Amount 9.00 without saving. |  | The unsaved amount is 9.00. |
+| Select the description pencil, enter Unsaved card name, then select Cancel Edit. |  | The original description returns while the unsaved amount remains 9.00. |
+| Select Cancel Editing on the definition, then reload and reopen it. |  | The original description and original amount remain saved. |
+
+### SPT-5667: Dashboard - Finance - Custom Fees - Save rate-card item selections
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Save rate-card item selections
+
+**Description:** Edit only Item Type and verify the selected set after a fresh reopen. Run ItemSelection separately: TicketOnly = Fee, Ticket; ProductOnly = Fee, Product; MembershipOnly = Fee, Membership; Mixed = Fee, Ticket + Product + Membership; TaxOnFeeOnly = Tax, Fee. Ticket and Product appear for both types; Membership appears when the Memberships module is enabled, and Fee appears only on Tax cards.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* Select an organization-level definition/card of the type mapped by ItemSelection, with a recorded saved item set different from that run’s target; record its charge, payment and platform choices.
+* MembershipOnly and Mixed require the organization’s Memberships module enabled; no module change is part of execution.
+
+**Postconditions:**
+
+* Restore the original Item Type selections and verify them after reload.
+
+**Priority:** High
+
+**Tags:** dashboard, fees-taxes
+
+**Parameters:**
+
+ItemSelection: TicketOnly, ProductOnly, MembershipOnly, Mixed, TaxOnFeeOnly
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings, edit the recorded definition and expand its card. |  | Item Type choices match the card’s Type and the organization’s Memberships module. |
+| Select exactly the mapped Item Type choices and select the definition’s Save. | Clear the other Item Type choices. | The save completes for the selected item set. |
+| Reload and reopen the same card. |  | Only the mapped item set remains selected; its amount, platform, payment and Customer Pays values are unchanged. |
+
+### SPT-5668: Dashboard - Finance - Custom Fees - Save a rate-card payment method
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Save a rate-card payment method
+
+**Description:** Save a successful payment-method selection, including a named Other method. Run PaymentChoice separately: Cash = select Cash only; Card = select Card only; Other = select Other only and exactly one named method recorded during setup. Purchase Platform stays In-Person in all runs.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* Select a Fee card with In-Person selected and a different payment-method selection from the chosen run; record all original values.
+* For Other, the organization has two named Other payment methods. Record the first alphabetically as the target and the second as an unselected control.
+
+**Postconditions:**
+
+* Restore the original payment selections and verify them after reload.
+
+**Priority:** High
+
+**Tags:** dashboard, fees-taxes
+
+**Parameters:**
+
+PaymentChoice: Cash, Card, Other
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings, edit the definition and expand the card. |  | Cash and Card choices are available; Other is available for the prepared Other run. |
+| Choose PaymentChoice; for Other choose only the recorded target named method. |  | The intended payment selection appears without changing the charge or platform. |
+| Select the definition’s Save, reload and reopen the card. |  | The selected method persists; Other retains only the target subtype, and all unrelated card values remain unchanged. |
+
+### SPT-5669: Dashboard - Finance - Custom Fees - Clear in-person payment choices when switching to online only
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Clear in-person payment choices when switching to online only
+
+**Description:** Remove In-Person from a saved card that also permits Online. Run RemovedMethod separately: Cash = start with Card + Cash; Other = start with Card + Other and one named Other method. Removing In-Person must remove unsupported payment choices and their hidden subtype selections.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* Select a Fee card with Online and In-Person selected and the payment set mapped by RemovedMethod. The Other run requires one saved named subtype. Record all values.
+
+**Postconditions:**
+
+* Restore the original platform and payment selections, including the recorded Other subtype when applicable, and verify them after reload.
+
+**Priority:** High
+
+**Tags:** dashboard, fees-taxes, edge-case
+
+**Parameters:**
+
+RemovedMethod: Cash, Other
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings, edit the definition and expand the card. |  | Both platforms and the recorded payment choices appear. |
+| Clear In-Person, leaving Online selected. |  | Only Card remains a payment choice; Cash/Other and the named Other selections are cleared. |
+| Select the definition’s Save, reload and reopen the card. |  | Online and Card are saved; neither unsupported method nor an Other subtype returns. |
+
+### SPT-5670: Dashboard - Finance - Custom Fees - Save who pays an individual rate card
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Save who pays an individual rate card
+
+**Description:** Change Customer Pays on one rate card independently of the organization’s Processing Fees and Showpass Fees switches. Run Type = Fee or Tax and SavedState = On or Off separately. On means the customer pays this card; Off means the organization absorbs it. This proves saved configuration, not a completed charge or refund.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* Select a definition/card of Type with Customer Pays initially opposite to SavedState. Record its full card, a second card and both organization-level Customer Pays switches.
+
+**Postconditions:**
+
+* Restore the target card’s original Customer Pays state and verify it after reload.
+
+**Priority:** High
+
+**Tags:** dashboard, fees-taxes
+
+**Parameters:**
+
+Type: Fee, Tax
+SavedState: On, Off
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings, edit the definition and expand the target card. |  | The recorded per-card Customer Pays value appears. |
+| Set that card’s Customer Pays to SavedState and select the definition’s Save. |  | The selected card saves without using page-level Save Changes. |
+| Reload Financial Settings and reopen the card. |  | The selected value persists; the other card and both organization-level switches retain their original values. |
+
+### SPT-5671: Dashboard - Finance - Custom Fees - Save the reporting-only tax percentage on a fee
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Save the reporting-only tax percentage on a fee
+
+**Description:** Save Tax Percentage on a Fee card when the organization uses the legacy reporting setting. It is reporting-only tax metadata; this case does not claim that it adds another customer tax.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* The organization’s ordinary tax_on_fees setting is off. Do not change it during execution.
+* Select a Fee card with saved Tax Percentage 0; record its fee amount, percentage, item/payment/platform selections and Customer Pays.
+
+**Postconditions:**
+
+* Restore Tax Percentage 0 and verify after reload.
+
+**Priority:** High
+
+**Tags:** dashboard, fees-taxes
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings, edit the definition and expand the Fee card. |  | Tax Percentage and its internal-reporting help appear; Taxes on Fees is absent. |
+| Set Tax Percentage to 5 and select the definition’s Save. |  | The card saves the reporting value. |
+| Reload and reopen the same card. |  | Tax Percentage is 5; all recorded charges and selections are unchanged. |
+
+### SPT-5672: Dashboard - Finance - Custom Fees - Show duplicate rate-card warnings
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Show duplicate rate-card warnings
+
+**Description:** Show the Angular warning for two saved rate cards with identical settings but different descriptions, then remove that warning by changing one charge. The warning is not a claim that duplicate cards are prohibited by the API.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* Use a saved Fee definition with exactly two organization-level cards identical in every saved selection and amount except their descriptions. Both are Ticket/Online/Card, Fee Amount 2.00, Fee Percentage 0 and Customer Pays on; they have no overrides or custom tax links. Record both descriptions.
+
+**Postconditions:**
+
+* Restore the second amount to 2.00 only if the setup owner requires the original duplicate setup; keep the definition out of active sales.
+
+**Priority:** High
+
+**Tags:** dashboard, fees-taxes, edge-case
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings and inspect the two cards. |  | A duplication warning identifies the matching other card descriptions. |
+| Edit the definition, expand the second card, change only Fee Amount to 3.00 and select the definition’s Save. |  | The edited card saves with a distinct amount. |
+| Reload and reopen the definition. |  | The duplicate warning is absent; the first card retains 2.00 and the second retains 3.00. |
+
+### SPT-5673: Dashboard - Finance - Custom Fees - Cancel adding a rate card
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Cancel adding a rate card
+
+**Description:** Add a new rate card to a saved definition, then cancel the definition edit. The original card and definition must remain, with no new card saved.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* Select a saved Fee definition with exactly one card; record its description and values.
+
+**Postconditions:**
+
+* No saved definition or card has changed.
+
+**Priority:** Medium
+
+**Tags:** dashboard, fees-taxes
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings, edit the definition and select Add Rate Card. |  | A new editable card appears under the same definition. |
+| Set the new card to Product, Online, Card, Fee Amount 3.00 and Fee Percentage 0; select Cancel Editing. |  | The original saved card remains and the unsaved new card disappears. |
+| Reload and reopen the definition. |  | Exactly the original unchanged card remains. |
+
+### SPT-5674: Dashboard - Finance - Custom Fees - Save Workday fields on an organization fee card
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Save Workday fields on an organization fee card
+
+**Description:** Save the conditional Workday fields on an organization-level card without changing its charge or applicability. Use the visible Angular labels shown in the table; these IDs are accounting references, not login credentials.
+
+| Angular field | Input |
+| --- | --- |
+| Ledger Account Reference ID | 4100 |
+| Work Tag Fund ID | FUND1 |
+| Work Tag Cost Centere Reference ID | COST1 |
+| Resource Category Reference ID | CAT1 |
+| Resource Category Reference ID Type | TYPE1 |
+| Work Tag Program ID | PROGRAM1 |
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* The organization’s ordinary workday_integration_enabled setting is on; use organization-level fee cards without ticket/product price locks. Do not change the integration setting during execution.
+* The setup owner has approved these accounting-reference values for the selected card, which is not used in exports or active sales. Record its original six references and full rate card.
+
+**Postconditions:**
+
+* Restore all original references and verify them after reload; no Workday export or authentication change is performed.
+
+**Priority:** High
+
+**Tags:** dashboard, fees-taxes
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings, edit the definition and expand the recorded card. |  | All six Workday fields from Description are available. |
+| Enter the mapped values and select the definition’s Save. |  | The card saves without changing its fee, tax or selection values. |
+| Reload and reopen the card. |  | All six exact references are retained and the recorded charge and applicability remain unchanged. |
+
+### SPT-5677: Dashboard - Finance - Custom Fees - Calculate custom fees and taxes from the legacy page
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Calculate custom fees and taxes from the legacy page
+
+**Description:** Use Calculate Fees on the legacy Financial Settings tab and verify independently calculated line amounts and Customer Pays. Run ItemType separately: Ticket or Product. For an item price of 20, Host Fee 2.00 + 5% = 3.00; GST on the item at 5% = 1.00; GST on Host Fee at 5% = 0.15; the prepared flat Showpass fee = 1.00; processing and other fees/taxes = 0. Customer Pays must equal 25.15. This is a read-only preview, not a purchase or service-fee revenue pass.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* The organization’s tax_on_fees setting is on. An authorized setup owner has prepared and recorded the exact applicable saved rate cards before execution: Host Fee 2.00 + 5% for Ticket and Product, In-Person/Cash; GST 5% for Ticket, Product and Fee; GST linked to Host Fee; all custom charges passed to the customer.
+* For both selected item types and In-Person/Cash, the applicable saved internal Showpass card is flat 1.00 with 0%; processing cards and internal tax-on-fee charges are 0. No other custom or internal card applies and no fee is absorbed. The setup owner verifies these inputs from the saved rate cards, not from a calculator result.
+
+**Postconditions:**
+
+* Leave all rate cards unchanged; no order, payment or payout was created.
+
+**Priority:** High
+
+**Tags:** dashboard, fees-taxes
+
+**Parameters:**
+
+ItemType: Ticket, Product
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings and select Calculate Fees. |  | The dialog offers Item Price, Item Type, Purchase Platform, Payment Type and Calculate; this legacy item list contains Ticket and Product. |
+| Enter Item Price 20, choose ItemType, In-Person and Cash, then select Calculate. |  | The request completes and a Breakdown appears without saving a rate card or starting checkout. |
+| Compare the line amounts with the independent arithmetic in Description. |  | Host Fee is 3.00, item GST 1.00, GST on Host Fee 0.15 and Showpass Fee 1.00; Customer Pays is 25.15. |
+| Close the calculator and reopen it. |  | No fee definition or card has changed; a fresh dialog is ready for another preview. |
+
+### SPT-5678: Dashboard - Finance - Custom Fees - Select the matching payment rules in the legacy calculator
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Select the matching payment rules in the legacy calculator
+
+**Description:** Change Purchase Platform and Payment Type in the legacy calculator and verify matching custom fees. Run PaymentScenario separately using the table. Only the listed custom card applies for that scenario; the internal Showpass fee is flat 1.00 and all other internal/custom fees and taxes are 0, so expected Customer Pays equals Item Price 20 plus that custom fee plus 1.00.
+
+| PaymentScenario | Purchase Platform | Payment Type | Other subtype | Custom fee | Customer Pays |
+| --- | --- | --- | --- | --- | --- |
+| OnlineCard | Online | Card | Not shown | 3.00 | 24.00 |
+| InPersonCard | In-Person | Card | Not shown | 3.00 | 24.00 |
+| InPersonCash | In-Person | Cash | Not shown | 2.00 | 23.00 |
+| InPersonOtherSelected | In-Person | Other | First recorded named method | 4.00 | 25.00 |
+| InPersonOtherExcluded | In-Person | Other | Second recorded named method | 0.00 | 21.00 |
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* An authorized setup owner has recorded three applicable saved customer-paid Ticket fee cards: flat 3.00 for Online + In-Person/Card; flat 2.00 for In-Person/Cash; flat 4.00 for In-Person/Other restricted to the first of two recorded named methods. All percentages are 0 and no tax applies.
+* For those scenarios, the saved internal Showpass card is flat 1.00 with 0%; processing, other internal fees and internal taxes are 0, and no fee is absorbed. These expected inputs are confirmed from the saved cards before opening the calculator.
+
+**Postconditions:**
+
+* Leave all saved rate cards and payment-method definitions unchanged.
+
+**Priority:** High
+
+**Tags:** dashboard, fees-taxes
+
+**Parameters:**
+
+PaymentScenario: OnlineCard, InPersonCard, InPersonCash, InPersonOtherSelected, InPersonOtherExcluded
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings and select Calculate Fees. |  | The legacy calculator opens. |
+| Set Item Price 20, Item Type Ticket and the mapped Purchase Platform and Payment Type. Select the mapped named method when the Other Payment Type field appears. | PaymentScenario table in Description. | Online offers Card only; In-Person offers Cash, Card and Other, with the named selector shown for Other. |
+| Select Calculate and review the Breakdown. |  | Only the matching custom fee is included; the excluded named method adds no Other fee, and Customer Pays equals the mapped independent total. |
+| Close the dialog without changing any fee configuration. |  | No rate card, order or payment has been created or edited. |
+
+### SPT-5679: Dashboard - Finance - Custom Fees - Keep the two financial save actions separate
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Custom Fees - Keep the two financial save actions separate
+
+**Description:** Edit a page-level Sales Tax Number and an existing fee amount before using only one save action. Run SaveTarget separately: Definition = select Save inside the custom-fee definition, so only the fee amount is saved; Page = select page-level Save Changes, so only Sales Tax Number is saved. A fresh reload determines which change actually persisted.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* Select an existing Fee card with Fee Amount 2.00 and record every other card value. Record the organization’s Sales Tax Number and choose a different approved non-live number of at most 32 characters.
+
+**Postconditions:**
+
+* Restore only the value committed by the selected save action, using its own save control, and verify both original values after reload.
+
+**Priority:** High
+
+**Tags:** dashboard, fees-taxes, edge-case
+
+**Parameters:**
+
+SaveTarget: Definition, Page
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings and enter the approved different Sales Tax Number without saving. |  | Only the page-level number is staged. |
+| Edit the recorded fee card and change only Fee Amount from 2.00 to 3.00 without saving. |  | Both edits are visible and remain unsaved. |
+| Use only the save action mapped by SaveTarget, then reload and reopen Financial Settings. | Do not use the other save action. | Definition retains amount 3.00 and the original tax number; Page retains the new tax number and original amount 2.00. |
+
+## Finance → Fee Settings — published Angular cases
+
+### SPT-5675: Dashboard - Finance - Fee Settings - Discard unsaved legacy financial settings
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Fee Settings - Discard unsaved legacy financial settings
+
+**Description:** Discard unsaved page-level financial edits by reloading. Save Changes controls the organization fields; opening or cancelling a rate-card editor must not silently save them.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Use an organization reserved for these checks with no active sales or selling items, because organization fees may affect all later sales. Record the original definition, card and page settings before changing them.
+* Record Sales Tax Number and the organization’s Processing Fees Customer Pays switch; choose a different non-live number no longer than 32 characters.
+
+**Postconditions:**
+
+* No organization setting or rate card has changed.
+
+**Priority:** High
+
+**Tags:** dashboard, fees-taxes, edge-case
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings. |  | The recorded saved values appear and Save Changes is initially disabled. |
+| Change Sales Tax Number and reverse Processing Fees Customer Pays without selecting Save Changes. |  | The unsaved values appear and Save Changes becomes available. |
+| Reload the page and reopen Financial Settings. |  | The recorded original number and switch state return; neither unsaved change is saved. |
+
+### SPT-5676: Dashboard - Finance - Fee Settings - Show commission controls only to a Showpass administrator
+
+**Publication status:** Published and verified in Qase; Angular/legacy only; execution pending.
+
+**Title:** Dashboard - Finance - Fee Settings - Show commission controls only to a Showpass administrator
+
+**Description:** Inspect administrator-only commission fields while leaving ordinary financial controls available to a permitted employee. Run AccountType separately: OrganizerEmployee = a non-administrator with the listed permissions, commission fields absent; ShowpassAdministrator = a Showpass administrator, Credit Sales and Cash Sales commission fields present.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: **Manage Organization Info** (VP_MANAGE_VENUE_INFO) and **Manage Transactions** (VP_MANAGE_FINANCIALS).
+* The organization uses the Angular/legacy Organization Info tabs, with enable_organization_settings_nextjs_embed off and no new-preview selection. It uses configured fees.
+* Prepare the selected AccountType in the same organization. OrganizerEmployee is a non-administrator; ShowpassAdministrator has Showpass administrator status. Record the current commission values using an authorized setup owner.
+
+**Postconditions:**
+
+* Leave both accounts’ roles and all saved organization values unchanged.
+
+**Priority:** High
+
+**Tags:** dashboard, fees-taxes, employee-permissions
+
+**Parameters:**
+
+AccountType: OrganizerEmployee, ShowpassAdministrator
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Organization Info → Financial Settings as AccountType. |  | Processing Fees, Showpass Fees, Sales Tax Number and Custom Statement Descriptor remain available. |
+| Inspect the Seller Commission area. |  | Only ShowpassAdministrator sees the administrator notice, Credit Sales and Cash Sales amount inputs, per-ticket help and Learn More link; OrganizerEmployee sees none of those administrator controls. |
+| Leave without editing or saving. |  | No commission or other financial value changes. |
+
+## Angular component coverage — existing cases and remaining gaps
+
+**Reading the status:** “Existing” means an explicit Qase definition was read, not that its test passed. The newly published cases are **Manual-only / not executed**. “Partial” and “Blocked” are open gaps. Every row refers to the legacy Financial Settings tab; `/manage/` names identify only the owning Qase folder.
+
+| Legacy section / control or state | Existing case / proposed gap case | Coverage decision and limits |
+| --- | --- | --- |
+| Financial Settings tab, permitted entry and missing Manage Transactions | SPT-5525; SPT-5531 legacy navigation | Existing. The tab requires Manage Transactions; page-level saves additionally need Manage Organization Info. The direct new-page step in SPT-5525 is outside this Angular review and is not evidence for legacy saving. |
+| Configured-fee component gate | Configured fee_structure branch in legacy template | Source-accounted. The inspected organization shows configured fees. The non-configured branch has no custom-fee component; selecting a prepared organization for that branch remains Blocked, not a passed alternative form. |
+| Processing Fees → Customer Pays; Showpass Fees → Customer Pays; both On/Off directions | SPT-5526 | Existing. Independent switch persistence is explicit. Neither an actual card charge nor absorbed-fee refund behavior was executed. |
+| Sales Tax Number and Sales Tax Exempt, both saved exemption states | SPT-5527 | Existing base save/reopen. Blank, maximum 32 and 33-character rejection remain Partial; they are not proven by “at most 32” setup. No false claim that exemption removes all taxes. |
+| Custom Fees & Taxes summary, existing definitions and first create | SPT-5118; SPT-5517 | Existing. Read-only summaries show item types, platform, payment, amount/tax and Customer Pays. Empty list is source-only and remains a missing prepared-state check; do not delete fees to create it. |
+| Add new custom fee or tax, Type Fee/Tax and type-specific Name choices | SPT-5118; SPT-5663/SPT-5664 | Existing create plus new cancel/name coverage. Processing Fee is a Name, not a third Type. Cancel of a new unsaved definition is distinct from cancel of an existing card. |
+| Saved definition Name, Enabled, inline edit and whole-definition Cancel Editing | SPT-5520; SPT-5519; SPT-5664 | Existing Enabled outside edit saves immediately; existing-card Cancel Editing is covered. New rename proves Name persistence. Tax→Fee conversion when referenced by another fee remains Blocked on controlled data and expected failure handling; no unexecuted source concern is labelled a defect. |
+| Definition inactive while hide_disabled_fees off/on | SPT-5520 off-state setup | Partial. The off branch is covered by definition; enabled hide_disabled_fees filters inactive list entries and needs its own controlled run. Do not infer disabled entries are deleted. |
+| Add Rate Card; multiple independent cards; cancel the new card | SPT-5518; SPT-5673 | Existing second-card success; new unsaved-add cancellation. Distinct starting state from SPT-5519’s edit of an existing amount. |
+| Card expand/collapse, description heading, pencil, Change, Cancel Edit | SPT-5517 expands; SPT-5665/SPT-5666 | New description persistence and local cancellation; SPT-5665 includes 84 characters. Backend description allows 128 while Angular has ng-maxlength 84. Blank/85-character save behavior remains Blocked because the anchor Save path does not visibly check child-form validity. Do not invent a guaranteed server rejection. |
+| Item Type Ticket, Product, conditional Membership and Tax-only Fee | SPT-5118/5518; SPT-5667 | Base Ticket/Product plus explicit selection-set runs and source-gated Membership/Tax Fee. Membership off visibility is source-accounted but not live executed. Empty item selections are not assumed invalid: the model allows empty arrays. |
+| Purchase Platform Online, In-Person and both | SPT-5118/5521; SPT-5668/SPT-5669 | Existing single-platform setup plus new persistence and automatic payment cleanup when In-Person is removed. |
+| Payment Type Card/Cash/Other; named Other choices; no named Other selected | SPT-5521; SPT-5668/SPT-5669 | Existing missing-subtype rejection; new successful selection and clearing. An organization with no Other options, hidden/empty payment choices when all platforms are cleared, and direct-request subtype ownership remain open prepared-state/API checks. |
+| Fee Amount, Fee Percentage and Tax Rate, including fractional tax | SPT-5118/5517 | Existing numeric success and tax 6.125. Zero/negative/missing/precision boundaries remain Partial. UI ng-min is not proof that the independent save anchor or backend rejects every invalid input. The stored percentage field limit is not casually relabelled as a 100%-display maximum. |
+| Card Customer Pays, customer/organizer direction and separation from organization defaults | SPT-5670 | New saved On/Off for Fee and Tax. Existing organization payer case SPT-5526 does not cover this per-card switch. |
+| Tax Percentage when tax_on_fees off, reporting-only help | SPT-5671 | New conditional legacy field save. This is not an extra checkout-tax charge. The setting is ordinary organization configuration, not a feature flag. |
+| Taxes on Fees when tax_on_fees on; existing selected tax retained | SPT-5532 | Existing attach/save/reopen. Removal, multiple selected taxes, incompatible/self/wrong-organization direct requests and changes while a tax is referenced remain open controlled cases. Backend and UI candidate rules must be checked separately. |
+| Duplicate-card warning and referenced card descriptions | SPT-5672 | New saved duplicate/nonduplicate warning transition. This is a warning, not an invented uniqueness rejection. |
+| Delete one of two cards, Yes delete, cancel card/definition deletion, delete definition | SPT-5522/5523/5524 | Existing. Permanent deletion is not executed in this review. The last-card Delete Rate Card action is hidden by the template when only one card exists; that explicit guard should be added to SPT-5522’s final check. Cancel of a staged confirmed deletion also remains a separate gap. |
+| Conditional Workday fields: Ledger Account Reference ID, Fund, Cost Center, Resource Category, Reference ID Type, Program | SPT-5674 | New saved organization-card references. Hidden when workday_integration_enabled is off by source; enabling the integration, credential handling, actual exports and locked item-level metadata remain outside this form check. |
+| Card/definition own Save versus page Save Changes | SPT-5118 distinguishes buttons; SPT-5679 | New dual-draft isolation case. Definitions/cards and organization fields use different save paths. Never infer that one button saves every visible draft. |
+| Calculate Fees → open/close; Item Price; Item Type Ticket/Product; Calculate; Breakdown and Customer Pays | SPT-5677 | New custom-fee-dialog case with independent arithmetic. SPT-3586 is for the different Internal Fees calculator and is related coverage, not a direct replacement for this legacy dialog. |
+| Calculator Online versus In-Person; Card/Cash/Other; named subtype; matching/excluded card | SPT-5678 | New mapped scenarios include a deliberately excluded named method. No Membership/Donation/Gift Card option is invented for this legacy calculator; its item menu supports Ticket/Product. |
+| Calculator absorbed item price / Org Pays group, tax-on-fee labels, zero-valued lines | Legacy template/controller; related SPT-3586 | Partial: source branches accounted for; SPT-5677/SPT-5678 prove customer-paid configurations only. Prepared absorbed fees and independently derived net price are still needed. Zero-valued lines are omitted by the controller, not proven by a visible zero row. |
+| Calculator invalid/blank/negative price, loading, error, stale breakdown, retries and close during calculation | Source request validation and controller; no equivalent focused case found | Blocked controlled-state proof. Read-only Calculate returned a Breakdown in this session, but no invalid or fault request was submitted. Old output must not be assumed cleared or relabelled after a failed request; source does not establish that recovery contract. |
+| Refund Policy textarea, 0/512 counter, save and reopen | **SPT-5443 in Legal (1164)** | Existing Angular Entry=Legacy explicitly covers this field. Keep it at its `/manage/` owning folder; do not copy it into Fee Settings. Empty/512/paste limit, public Help & Info rendering and actual refunds remain Partial. |
+| Custom Statement Descriptor, minimum 5, maximum 14, blank fallback, unsupported character | SPT-5528/5529 | Existing base and negative definitions. Explicit 15-character paste/truncation, all supported special characters and provider sync after save remain gaps; do not claim card-statement delivery from field persistence. |
+| Seller Commission Credit/Cash defaults and retained item override | SPT-5534 | Existing administrator positive case with both SaleType runs. New SPT-5676 supplies ordinary-employee absence. Zero/blank/negative/decimal commission values and product-attribute override propagation remain Partial. |
+| Administrator notice, per-ticket help and Learn More link | SPT-5534; SPT-5676 | Visibility/source destination accounted for. The external help article was not opened or treated as financial proof; link destination navigation remains a minor unexecuted check. |
+| Save Changes initially disabled, dirty form, unsaved reload, saved fields and separate save scope | SPT-5526–5529/5534; SPT-5675/SPT-5679 | Existing valid persistence; new discard and isolation. Saving/error/retry/double-submit outcomes require controlled responses. A transient enabled Save Changes after a cancelled draft is not claimed to be a persisted defect. |
+| No Manage Organization Info but financial access; organization switch; logout/session expiry; cross-organization record IDs | SPT-5525 is only the absent-financial-tab role | Partial/Blocked. Exact role combinations, same-page organization switching and API target enforcement need their own scoped cases; General-page SPT-5456 cannot automatically cover finance or custom-card mutations. No role, organization or login state was changed live. |
+| Organization-level rates inherited by event/ticket/product; overrides, price locks, future sales and callback sync | Related SPT-3165/3166/3168/3169; SPT-5534 override | Downstream Manual-only/Blocked execution; source schedules rate-card/configured-field work. Save/reopen cannot prove job completion, stable historical charges or all override ownership. Event/product owning-screen controls are not invented on this organization page. |
+| Financial gates: actual sales, fees/Showpass earnings, duplicate charge, oversell, Refund/Void/Exchange, settlement | Existing Core rate-card/fee-breakdown cases are related only | Deferred controlled downstream execution and reconciliation. Calculator math and saved definitions are not passes for money movement, revenue, inventory or fulfillment. No purchase, refund, payout, provider call or customer-credit change was made. |
+
+### Evidence and preservation for this Angular review
+
+**Live inspection:** beta.showpass.com, legacy Organization Info, organization ID 1721, Financial Settings. The visible form included administrator commission fields, but employee permission grants were not independently audited. Opened a new unsaved Fee/Tax draft, existing tax and fee cards, the description edit controls, Other’s conditional named selector, and Calculate Fees. Cancelled edits and returned to the same legacy page with **Save Changes disabled**. No Save, active-state switch, delete confirmation, organization switch or preview opt-in was submitted. A temporary navigation to a replacement route was abandoned when the user clarified scope; no replacement-form interaction or test result is included here.
+
+The read-only calculator returned line items for its existing saved rates at price 10, including the Host Fee, item GST, GST on Host Fee and internal fee/tax lines. This is evidence that the dialog and result areas rendered in this session, **not an independently reconciled fee calculation or executed Qase pass**. The Membership-off, tax_on_fees-off, Workday-on, no-fees, restricted-role and network-failure states were reviewed in source and were not created live.
+
+**Qase evidence:** reused the complete SPT read from **2026-10-17 16:16:02–16:16:13 UTC**: **2,126 unique cases / 22 pages; 317 suites / 4 pages**, stable totals and IDs checked. Read all fields of all **16 scoped cases**: 5118, 5517–5529, 5532, 5534. Full-field local search for custom fees, rate cards, fee calculators, tax/descriptor/commission/absorption terms produced **73 related cases**; SPT-5443 (refund text), SPT-3586 (Internal Fees calculator), and Core rate-card/price-lock cases were compared for actual responsibility before drafting. No new draft title duplicates the complete snapshot; different dialogs and child-versus-page save/cancel responsibilities remain separate.
+
+**Source reviewed:** backend `b5f397a0438910435e0d537f47e12d6064d7e019`, clean checkout. The Angular source is in web-app: `apps/main/templates/venues/settings/edit-organization.html`, the `custom-fees-settings-component` templates, `CustomFeesSettings.js`, `CustomFee.js`, `RateCard.js`, `CustomFeeCalculatorController.js`, and `EditOrganizationController.js`. Behavior/permissions come from `financials/api/venue_based/{viewsets,serializers}/fees.py`, `financials/services/fees/fee_value_configuration_policy.py`, `financials/models/fee_management/{base,venue_fees,venue_fee_values}.py`, `core/models/abstract/fees.py`, `venues/models/venue_management/venue.py`, and the venue permission map. Frontend replacement code was initially consulted under the mistaken scope and is **excluded from this Angular review’s proof and authored steps**.
+
+**Preserved:** all pre-existing case bodies, IDs, tags, parameters, navigation assertions and historical source notes remain unchanged. The 17 approved candidates **SPT-5663–SPT-5679** were created as **SPT-5663–SPT-5679**: 15 in Custom Fees1180 and two in Fee Settings1181, with 11 parameterized cases. No existing case or suite was updated, moved or deleted in this publication. These candidates do not silently close the explicit Partial/Blocked rows above. No product tests or automation suites were executed.
+
+Full 16-case baseline · Related definitions · Preserved pre-review note.
+
+**Pre-publication validation:** all 17 cases parse through the documented Qase helper, including all 11 parameter sets; folder totals are 15 Custom Fees and two Fee Settings. No exact-title duplicates were found among the 2,126 cases in the saved project snapshot. The component ledger records overlapping behavior and remaining gaps separately. Earlier case bodies are unchanged. Evidence: parser and duplicate review.
+
+### Duplicate review — 2026-10-17
+
+**Pre-publication decision: retain all 17 finance candidates; no duplicate case purpose was identified.** Compared their setup, parameters, actions and principal expected results against each other and the 16 existing cases in suites 1180/1181. Screened the complete 2,126-case snapshot using execution-field aliases and relevant tags, yielding 90 related candidates. This is a review of the new finance candidates, not a claim that every unrelated case in Qase is duplicate-free.
+
+| Closest overlap | Why the cases remain separate |
+| --- | --- |
+| SPT-5663/SPT-5673 and SPT-5519 | Cancel a new definition, cancel a new card under a saved definition, and cancel edits to an existing card retain different records. |
+| SPT-5666 and SPT-5519 | Local description Cancel Edit must retain the other unsaved amount; whole-definition Cancel Editing discards it. |
+| SPT-5670 and SPT-5526 | One custom card’s Customer Pays differs from organization-wide Showpass/processing payer switches. |
+| SPT-5671 and SPT-5532 | Reporting Tax Percentage with tax_on_fees off differs from selecting Taxes on Fees with it on. |
+| SPT-5675/SPT-5679 and SPT-5517/5527 | Discarding both unsaved edits, saving only one of two independently edited areas, and an ordinary saved edit prove different outcomes. |
+| SPT-5676 and SPT-5534 | Role-based commission visibility differs from administrator commission saving. |
+| SPT-5677/SPT-5678 and SPT-3586/3808 | Legacy Custom Fees and administrator Internal Fees have different dialogs and permissions; within the legacy calculator, tax arithmetic and payment-rule matching remain distinct. |
+
+No merge or removal is needed. The 11 parameterized drafts already combine equivalent data variations; shared open/reload/cleanup steps are not separate case responsibilities. Refund-policy text remains owned by SPT-5443 and has no new duplicate. Existing cases and earlier held drafts are unchanged. All 17 responsibility decisions and comparison scope · Related search candidates. The duplicate review made no Qase changes or live form saves; the subsequent approved publication is recorded below.
+
+### Publication verification — completed, 2026-10-17
+
+Only the approved 17 candidates were created. The exact batch was dry-run before applying; Qase assigned **SPT-5663–SPT-5679**. Readback verified each Title, Description, Preconditions, Postconditions, priority, type, behavior, layer, suite, tags, parameters and every step’s action/data/expected result against the frozen reviewed content. The 16 pre-existing finance cases are unchanged, and each new title appears once in the complete 2,143-case readback. Final suite totals: **Custom Fees1180 = 26; Fee Settings1181 = 7**.
+
+The first network attempt failed before any recorded completion. A complete read confirmed all 17 titles absent before the same approved batch was retried; no duplicate was created. No product data was mutated and execution remains pending. The case definitions are published; the ledger’s open gaps remain open.
+
+Full-field verification and original-draft → Qase-ID mapping · Saved Qase case fields · Reviewed dry run · Completed publication receipt — do not rerun.
+
+## Earlier organization reviews and published cases — retained
+
+The material below is retained from earlier work. Its migrated-page discussions do not expand the current Angular-only review. Folder ownership still follows `/manage/`; manual steps for these financial cases remain on the legacy form.
+
 
 Reviewed the full Qase project and both organization-settings entry points. **Suite181 is now Organization, with three direct cases; the reviewed forms are organized beneath their migrated page folders.** Most base settings forms need explicit save/reopen coverage. Existing payouts, branding, upsell and refund cases are reused below instead of recreated.
 
@@ -2994,7 +5031,7 @@ OS: iOS, Android
 
 ### Qase publication — verified
 
-The approved destination is **Digital wallets (1179)** under **Deliverables (1170)**. The suite had zero direct cases before publication and now has **14**. All approved writes completed: **SPT-5527–77 → SPT-5502–5513**, SPT-65 enhanced and moved, and SPT-4742 moved without changing its content. [Full-content verification and preserved-field evidence](evidence/digital-wallets-2026-10-16/qase-publication-verified.json) records the readback. Do not rerun the create plan.
+The approved destination is **Digital wallets (1179)** under **Deliverables (1170)**. The suite had zero direct cases before publication and now has **14**. All approved writes completed: **SPT-5527–77 → SPT-5502–5513**, SPT-65 enhanced and moved, and SPT-4742 moved without changing its content. Full-content verification and preserved-field evidence records the readback. Do not rerun the create plan.
 
 All rows below target 1179. Tags **D** = dashboard, branding, wallet; **C** = my-orders, wallet, barcodes. Existing native parameters, priority and unrelated metadata were preserved. The table retains approved local labels and maps them to the assigned IDs.
 
@@ -3021,7 +5058,7 @@ SPT-65 changed only Description, Preconditions, Postconditions, Steps and suite_
 
 ### Preserve existing coverage when splitting SPT-4742
 
-The full fetched definitions, parameters, tags, metadata and assertions for all 13 related cases are preserved in [the read-only Qase baseline](evidence/digital-wallets-2026-10-16/qase-coverage-baseline.json). SPT-4742 content remains unchanged after its suite move. Proposed SPT-4742 title, description, setup, steps and postconditions would narrow its responsibility; the old NFCEvent × OS parameters would move to the existing SPT-65 Ticket/NFCTicket × OS runs. **Do not apply that narrowing until its full scope is explicitly approved and the blocked recovery replacement is ready.** Preserve existing priority/type/behavior/layer and unrelated metadata when preparing any eventual update. SPT-65 has priority 4 in Qase; its applied update changed only description, preconditions, postconditions, steps and suite_id, retaining its title, priority, tags and native parameters exactly.
+The full fetched definitions, parameters, tags, metadata and assertions for all 13 related cases are preserved in the read-only Qase baseline. SPT-4742 content remains unchanged after its suite move. Proposed SPT-4742 title, description, setup, steps and postconditions would narrow its responsibility; the old NFCEvent × OS parameters would move to the existing SPT-65 Ticket/NFCTicket × OS runs. **Do not apply that narrowing until its full scope is explicitly approved and the blocked recovery replacement is ready.** Preserve existing priority/type/behavior/layer and unrelated metadata when preparing any eventual update. SPT-65 has priority 4 in Qase; its applied update changed only description, preconditions, postconditions, steps and suite_id, retaining its title, priority, tags and native parameters exactly.
 
 | Original SPT-4742 assertion | Proposed home / status |
 | --- | --- |
@@ -4967,7 +7004,7 @@ Receipts: `/private/tmp/qase-emails-merge-{before,preview,journal,duplicate-revi
 
 **Readiness:** source/full-case comparison and published finance definitions are complete for this declared follow-up. All scope rows above are accounted for; deferred API, charge, delivery, integration and navigation evidence remains explicit. The approved Qase publication is complete; no saved-form or financial flow was executed. This is not a release sign-off.
 
-Local validation: **23 complete definitions (5 existing enhancements +18 new candidates),86 step rows**, standalone fields and unique titles checked with the reusable Qase parser. This was a **local parser check**, not a Qase dry run or product execution. [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/local-format-review.json|Final parsed case fields]] · [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/qase-baseline.json|Full reviewed baselines]] · [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/duplicate-review.json|Duplicate-search evidence]] · [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/qase-suite-hierarchy.json|Suite hierarchy]] · [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/browser-smoke.json|Non-saving browser record]].
+Local validation: **23 complete definitions (5 existing enhancements +18 new candidates),86 step rows**, standalone fields and unique titles checked with the reusable Qase parser. This was a **local parser check**, not a Qase dry run or product execution. Final parsed case fields · Full reviewed baselines · Duplicate-search evidence · Suite hierarchy · Non-saving browser record.
 
 
 ## Correct /manage/ folders — approved publication
@@ -5027,7 +7064,7 @@ Local validation: **23 complete definitions (5 existing enhancements +18 new can
 - SPT-4826 and4884 move only; their held local splits stay held. SPT-5139 stays unchanged pending a safe split of ticket transfers and Intellitix resync. Payouts4396/4799/4834 remain in Payouts1011. SPT-4095’s banking banner, product-specific fees and checkout calculation cases remain unchanged.
 - No existing case or suite is deleted or copied. No product setting, bank detail, agreement, email, fee calculation, charge or payout is submitted by this publication.
 
-Evidence: [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/qase-publication-preview.json|frozen exact scope]] · [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/qase-case-dry-run.json|case dry run]] · [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/qase-suite-dry-run.json|suite dry run]] · [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/qase-publication-baseline.json|current full before-state]].
+Evidence: frozen exact scope · case dry run · suite dry run · current full before-state.
 
 The user explicitly confirmed this exact preview under [[05 Tooling/qasectl#Ambiguous Or Bulk Request Guard|the bulk-write rule]]. It is applied; **do not rerun any create batch**.
 
@@ -5047,5 +7084,5 @@ Published **five case enhancements,18 new cases (SPT-5517–5534) and two moves 
 
 - Updated existing IDs **5118,1650,1653,1654,5443**; moved **4826** to1161 and **4884** to1183 without changing their content. Payouts1011 retains4396/4799/4834. Existing suite IDs and child cases were preserved during the parent/title changes.
 - Full post-publication snapshots: **1998 unique cases /20 pages** and **316 suites /4 pages**. Text, complete steps, native parameters, tags, selected metadata and requested suite/parent IDs matched. Each new case ID/title appears once. No case or suite was deleted or copied.
-- [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/qase-publication-verified.json|Full verification results]] · [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/qase-post-publication-cases.json|Retained full case fields]] · [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/qase-post-publication-suites.json|Final suite hierarchy]] · [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/qase-case-apply.json|Case apply receipt]] · [[03 Test Cases/Organizations/evidence/legacy-tabs-finance-2026-10-16/qase-suite-apply.json|Suite apply receipt]].
+- Full verification results · Retained full case fields · Final suite hierarchy · Case apply receipt · Suite apply receipt.
 - **Execution pending:** these are saved Qase definitions and structure checks, not passed financial or UI tests. SPT-5526/5533 retain the unresolved migrated Customer Pays controls/access requirement. No product setting, agreement, fee, banking record, charge, email or payout was submitted.

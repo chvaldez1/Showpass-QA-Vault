@@ -22,6 +22,8 @@ status: Source-informed walkthrough; not an executed test result
 
 Record original Customer, amounts, fees/taxes, provider, item validity, seat/Inventory, and credit balance. Bind refund policy and exact refund-type/paid-Void/Exchange permissions. Manage Events alone does not grant these. Extra authorization may apply.
 
+Apply [[00 Start Here/World-Class Software Quality Standard#Service-Fee Revenue Through the Transaction Lifecycle|service-fee revenue protection]] independently to Refund, Void and Exchange. Link the original, adjustment and replacement records; calculate which fees are retained, returned or newly due and which party bears them. For full/partial/repeated refunds and equal/higher/lower exchanges where supported, verify customer money and final Showpass earnings separately. Fee retention is policy-specific; do not assume all service fees are refundable or nonrefundable. Missing fee evidence blocks the decision; confirmed unintended loss or excess collection is No-Go for the affected scope.
+
 ## 1. Refund
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
