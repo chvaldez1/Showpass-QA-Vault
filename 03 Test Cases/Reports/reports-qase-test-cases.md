@@ -5,10 +5,14 @@ tags:
   - qa/test-cases
   - qase
   - reports
-status: Published to Qase and readback verified; product execution pending
+status: Published report cases retained; two local page-smoke drafts not pushed; desktop smoke recorded separately
 ---
 
 # Reports — Qase-ready cases and coverage gaps
+
+**Page smoke follow-up — 2026-10-21:** Added **two local, unpushed cases** for the migrated Reports page and builder, compared with the genuine legacy page: TC-100 (saved-list access/search/filtering) and TC-101 (builder access and two report-type previews). Neither creates a report or generates a file. Existing SPT-4795 covers the page broadly but combines filtering and mutating row actions; SPT-4796/5124 combine builder CRUD and delivery. Keep those definitions and the report-specific regression cases; this smaller smoke does not claim they passed.
+
+**Execution follow-up — 2026-10-21:** [[03 Test Cases/Reports/reports-beta-smoke-2026-10-21|New Reports desktop smoke and unique-control audit]] saved/reopened two owned definitions and completed Event Summary CSV and Product Summary PDF generation. The extended form audit inspected all 40 types / 47 supported format combinations and found three Major gaps: Product Summary PDF lacks Product Attributes, Event Summary PDF lacks Ticket Types, and Transactions lacks Select all invoices. Financial reconciliation and mobile remain unexecuted; no whole-case or release pass. Corrected TC-101: Event Summary **CSV** has Events without a Ticket Types selector; **PDF** has a source-defined special Ticket Types checklist even though the generic catalog omits that field. The new page's missing checklist is a defect, not an unsupported expectation. Product Attributes is likewise a Product Summary **PDF** special control. These are local draft corrections; no Qase write.
 
 **A case per report is useful when it proves that report’s actual selectors, supported format and file contents.** At baseline, suite 101 contained 50 cases; 33 descriptions used generic boilerplate and 23 cases had only one generic generation step. The result below is **43 published existing-case enhancements, two new conditional-report cases and one focused over-limit email case**. All 46 definitions were saved to Reports (101) and read back in full. Suite 101 now contains 53 direct cases. No case was deleted or moved, and no live report was saved, generated, emailed or scheduled during this work.
 
@@ -27,6 +31,8 @@ Click a case heading below to read one report’s standalone setup, field list, 
 
 | Report / behavior | Existing case or local draft | Why it earns a separate execution |
 | --- | --- | --- |
+| Page smoke: reach and search saved reports | [[#TC-100: Dashboard - Reports - Open and search saved reports\|TC-100 — not pushed]] | Two existing saved reports; search, type filter, no-results, clear and row-menu access; no report mutation |
+| Builder smoke: legacy functions remain reachable | [[#TC-101: Dashboard - Reports - Preview report builder controls\|TC-101 — not pushed]] | Event Summary CSV/PDF and Product Summary PDF previews; zero files generated |
 | Itemized Sales Report (CSV/PDF) | [[#SPT-880: Itemized Sales Report\|SPT-880]] | The selected sale and adjustment records are included, the other-event control is excluded, and line values and totals match the recorded ledger |
 | Settlement Report (CSV/PDF) | [[#SPT-881: Settlement Report\|SPT-881]] | Only sales attached to the selected settlement invoices appear; Settlement Date and proceeds agree with those saved payouts, and the unselected settlement is absent |
 | Advance Report (CSV/PDF) | [[#SPT-882: Advance Report\|SPT-882]] | Only the selected advance’s financial rows appear; Advance Date and the advance amount match its saved invoice |
@@ -74,6 +80,114 @@ Click a case heading below to read one report’s standalone setup, field list, 
 | Discount Usage Stats | SPT-890 held | Retain item/basket × normal/refund/void counts until the oracle conflict is resolved. |
 | Event Summary CSV at 60 events | [[#SPT-900: Event Summary CSV at 60 events\|SPT-900]] | Exact-limit direct download with complete event rows. |
 | Event Summary CSV above 60 events | [[#SPT-5516: Event Summary CSV above 60 events\|SPT-5516]] | Automatic controlled-recipient selection and actual email/file completion. |
+
+## Reports → Saved reports — page smoke (not pushed)
+
+### TC-100: Dashboard - Reports - Open and search saved reports
+
+**Title:** Dashboard - Reports - Open and search saved reports
+
+**Description:**
+
+Verify that an employee can reach Reports through the organizer’s navigation, find the same saved reports after migration, and use search and the report-type filter. This is a page check: opening an action menu does not execute an action.
+
+Compare the same organization and employee in the genuine legacy view and the migrated view. Route evidence: legacy `/dashboard/reports/`; migrated `/manage/reports/`. A legacy address displaying the migrated page is not a legacy comparison.
+
+| Page version | Where saved reports and their controls appear |
+| --- | --- |
+| Legacy | Saved report cards and name/type filters are below Generate Custom Report. |
+| Migrated | Reports opens the saved report table; Create report opens the separate builder. The table shows Report, Format, Updated, Delivery and a row action menu. |
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+Run once on desktop. Repeat at a narrow supported mobile view when it is part of the migration’s release scope; the same controls must remain reachable without overlapping each other.
+
+**Preconditions:**
+
+* The employee has Manage Reports permission.
+* Use the same organization in both views. Have one saved Event Summary report and one saved Product Summary report with different recorded names that do not contain one another. Record their formats, delivery settings and last-updated values before the migrated run; do not create reports just for this smoke if suitable reports already exist.
+* The effective enable_product_summary_report_type flag is on for this organization/employee in both views.
+* Genuine legacy access and migrated access have already been prepared. For legacy, enable_reports_nextjs_embed is off and the employee has not opted into the Reports preview. If the preview banner is available, use its prepared legacy choice before recording the baseline. Do not change rollout flags during this case.
+* Choose a search string absent from every saved report name and record it. Keep all saved reports unchanged throughout the case.
+
+**Tags:** dashboard, reports
+
+**Parameters:** None
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| From the organizer landing page, open Reports through navigation in each prepared view and locate the recorded reports. | Same employee, organization and two recorded reports | Both reports remain accessible; the migrated page finishes loading and shows their recorded name, type, format and delivery with a Create report action. Updated values represent the same saved times despite display-format differences. |
+| Search for the recorded Event Summary report’s exact name. | Recorded Event Summary name | The matching report appears and the differently named Product Summary report is excluded. |
+| Clear the name search and filter by Product Summary. | Report type Product Summary | Only Product Summary saved reports appear; the Event Summary control is excluded. |
+| Clear the type filter and search for the recorded unmatched string. | Recorded unmatched string | A clear no-results message replaces report results; there is no stuck loader or page error. |
+| Clear the search and inspect the recorded report’s action menu on the migrated page without selecting an action. | Recorded report’s delivery setting | The original reports return; Edit, Clone and Delete are reachable, with Download for a direct-download report or Send email for an email report. Closing the menu leaves the report unchanged. |
+
+**Postconditions:**
+
+* Clear the page filters and leave the original report definitions, delivery settings and update times unchanged. No report was saved, generated, sent or deleted.
+
+## Reports → Create report — page smoke (not pushed)
+
+### TC-101: Dashboard - Reports - Preview report builder controls
+
+**Title:** Dashboard - Reports - Preview report builder controls
+
+**Description:**
+
+Verify that the migrated Reports page still lets an employee reach the builder and use the main controls available on the legacy page. Preview two report types and change format without saving or generating. This checks form access and conditional controls; it does not establish export contents or financial accuracy.
+
+Route evidence: legacy `/dashboard/reports/` contains Generate Custom Report; migrated `/manage/reports/` exposes Create report, which opens `/manage/reports/create/`.
+
+| Form area | Legacy wording | Migrated wording |
+| --- | --- | --- |
+| Report details | Report Name, Report Type, Format | Report name, Report type, Format |
+| Date controls | Filter By Date Range, Preset, Start Date, End Date | Date range, Start, End |
+| Delivery controls | Email Report, Email Recipients, Report Frequency | Email recipients, Frequency, Email delivery time |
+| Submit actions | Save, Save + Generate Report | Save, Save and generate |
+
+| Representative preview | Expected scope and format controls |
+| --- | --- |
+| Event Summary, CSV | Events and CSV column selection. |
+| Event Summary, PDF | Events, the selected event's Ticket Types checklist, and PDF-supported summary fields and choices. |
+| Product Summary, PDF | Products and Product Attributes replace event selectors; PDF-supported fields are available. |
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+Run once on desktop. Repeat at a narrow supported mobile view when it is part of the migration’s release scope. Record the organization and computer timezones; this smoke verifies usable date controls, not date-boundary calculations.
+
+**Preconditions:**
+
+* The employee has Manage Reports permission in the same organization for both prepared page versions.
+* The effective enable_product_summary_report_type flag is on for the organization/employee in both views.
+* Genuine legacy access and migrated access have already been prepared. For legacy, enable_reports_nextjs_embed is off and the employee has not opted into the Reports preview; no rollout flag is changed during this case.
+* Record one selectable event with at least one ticket type and one selectable product with a variant. Existing records are sufficient; no sales, orders or reports need to be created.
+* Record the existing saved report names. Use the name Reports page smoke plus the current date/time only in the unsaved form. Do not select Save or either generation action.
+
+**Tags:** dashboard, reports
+
+**Parameters:** None
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Reports through organizer navigation. Inspect Generate Custom Report in legacy; on the migrated page choose Create report. Compare the report-type choices and the form areas listed in Description. | Same organization, employee and effective report flags | The builder is reachable in both views; legacy report choices and the listed name, format, scope, date, delivery and submit functions remain available. Label/layout differences do not make a function unreachable. |
+| Enter the unsaved report name, choose Event Summary and CSV, and select the recorded event. Open the column and date controls, then close them without submitting. | Recorded event; leave recipients empty and Frequency One Time | The event selection is usable; CSV columns and date controls open correctly, and the entered name remains shown. |
+| Change Format to PDF and inspect Ticket Types for the selected event. | Event Summary, PDF; recorded event's ticket type | The event's ticket types can be selected, with PDF-supported inventory and financial choices. |
+| Choose Product Summary and PDF, then select the recorded product and open Product Attributes. | Recorded product and its variant | Product and variant choices belong to the selected organization/product; event selectors are replaced by the product controls, and PDF-supported fields are available. |
+| Leave through Reports navigation without saving, then inspect the saved list. | Original saved report names; unsaved smoke name | The employee returns to Reports; existing reports are unchanged and no report with the unsaved smoke name was created. |
+
+**Postconditions:**
+
+* Leave the original saved reports and source records unchanged. No report file, export job, email or recurring schedule was requested.
 
 ## Reports → Generate Custom Report
 
@@ -2929,7 +3043,7 @@ Select 61 events for Event Summary CSV and prove the completed report reaches th
 
 ### Retained non-saving browser checks
 
-Already-open **demo** legacy Reports tab, signed-in display **Christian Valdez**, selected organization **Calgary Outlaws**. The menu includes Reports. The form initially selected Event Summary; no saved reports were listed. Read-only selections checked Transactions, Waitlist Subscribers Report, Donations History and Event Audit; no event, customer or organization was changed. Waitlist showed Events/Ticket Types without status/date controls, Donations showed CSV/date controls without an in-form venue selector, and Event Audit showed XLSX without Columns/date controls. Event Summary was restored. Save, Save + Generate Report, Download, Delete, email and scheduling were never submitted. [Retained form text](evidence/reports-2026-10-16/browser-smoke.txt).
+Already-open **demo** legacy Reports tab, signed-in display **Christian Valdez**, selected organization **Calgary Outlaws**. The menu includes Reports. The form initially selected Event Summary; no saved reports were listed. Read-only selections checked Transactions, Waitlist Subscribers Report, Donations History and Event Audit; no event, customer or organization was changed. Waitlist showed Events/Ticket Types without status/date controls, Donations showed CSV/date controls without an in-form venue selector, and Event Audit showed XLSX without Columns/date controls. Event Summary was restored. Save, Save + Generate Report, Download, Delete, email and scheduling were never submitted.
 
 **Readiness:** report-specific source comparison and approved Qase publication are complete; the held contradiction and deferred execution remain explicit. Saved definitions and field verification are not an executed report result or release sign-off.
 
@@ -3008,3 +3122,30 @@ This completed publication followed [[05 Tooling/qasectl#Ambiguous Or Bulk Reque
 - Unrelated metadata was checked against the baseline: priority, type, behavior, layer, tags, suite, custom fields, status and unchanged parameters. Held SPT-890/893/895/4050/4795/4796/5124 were read back unchanged.
 - Full verification results · full published and held case fields · apply receipt.
 - **Execution remains pending:** publishing Qase definitions did not generate files, reconcile financial totals, send email, schedule reports or establish production readiness. The source contradiction in SPT-890 remains held.
+
+## Page smoke review — 2026-10-21
+
+**Recommended scope:** TC-100 + TC-101 only for page smoke: two saved records, two report types previewed, one CSV/PDF format transition and no generation. A separate generation smoke may execute one selected report’s actual case when its exact setup is ready; no need to execute every report type. A one-event sample does not pass SPT-900’s 60-event boundary. Saved output content, financial reconciliation and report-type-specific selectors/formats remain their own regression obligations.
+
+**Current Qase finding:** SPT-4795 is existing page/list coverage, not an absence of all page tests. Its six steps bundle filters and four row actions; five expected-result fields are empty. SPT-4796 bundles create/edit/clone, save/download/email and two formats; SPT-5124 overlaps and misaligns some actions/results. No existing assertions, parameters, IDs or suite placement were removed. The proposed smoke has a different, deliberately non-saving purpose: quickly establish page usability and access parity across the legacy and migrated entry paths. Navigation/list/filter steps overlap the broader cases as the necessary smoke subset; do not count both as independent proof of the same behavior. All other claims from the earlier publication remain historical.
+
+| Proof target | Decision | Remaining work |
+| --- | --- | --- |
+| Reach Reports from the organizer landing page and find existing saved reports | TC-100, local draft | Execute on the actual rollout; a direct /manage/ address alone does not establish access preservation. |
+| Saved report search/type/clear/no-results and visible row actions | TC-100, local draft; overlaps the safe subset of SPT-4795 | Page smoke only; no Edit/Clone/Delete/Download/Send email execution. |
+| Builder reachable after the page layout changes | TC-101, local draft | Legacy form is inline; Next.js list → Create report. |
+| Effective report-type catalogue still reachable | TC-101, local draft | Compare picker choices under matching flags; do not generate every type or assume a fixed 38/40 count for beta. |
+| Basic event/product scope, CSV/PDF switching, columns and date/delivery control access | TC-101, local draft | Only named previews; other type-specific branches remain in their existing cases. |
+| Empty organization, multi-page lists, restricted employee/cross-organization access, invalid-input submission, pending/error/retry states | Deferred from these two smoke cases | Separate setup/proof needed; no whole-page completeness claim. |
+| Save/reopen, clone independence, deletion, actual download/email/scheduling and timezone boundary correctness | Existing broader/regression scope retained; not executed here | Page-preview results cannot substitute for these effects. |
+| Financial figures and service-fee earnings in actual exports | Existing financial gates retained | Independent source-record reconciliation remains required for financial release confidence. |
+
+**Query completeness:** One fresh read-only SPT snapshot from 2026-10-21T21:10:34.623Z through 2026-10-21T21:10:49.872Z: **2,218 unique cases, 23 pages; 317 unique suites, 4 pages**, stable totals and successful responses. Suite 101 has **53 direct cases and no child suites**. Filtered full title, description, prerequisites, postconditions, tags, parameters and step data across the project for Reports suite and /manage/reports, /dashboard/reports, saved reports, report builder and reports page aliases. There were no page-route/wording matches outside suite 101 under those filters; unrelated wording remains a search limitation. Read the full SPT-4795, 4796 and 5124 definitions as page candidates and retained their responsibilities. The supplied Qase URL’s case=5572 is the unrelated seating case; Reports suite 101 is the intended scope. Temporary snapshot and filter output remain under /private/tmp; no new evidence folder was added to the vault.
+
+**Source revisions:** Backend bda0dd85f003b598c587c806f0df93a9e2eb86d6; frontend bda3539bbab30d0215a2156d2153b4ed8b041ba6. No PR or diff was supplied. Backend sources: apps/reports/dashboard/views.py; apps/core/dashboard_preview.py; apps/reports/api/venue_based/viewsets.py (Manage Reports, report-name search and exact type filter); apps/main/templates/dashboard/reports/index.html; apps/main/static/src/dashboard/reports/landing.js. Frontend: dashboard/constants/dashboard-routes/reports.ts; features/reports/ui/pages/SavedReportsPage.web.tsx and ReportBuilderPage.web.tsx; saved-reports header/filter/columns components; report-builder form, details, delivery and submit components; report-builder-field-config-utils.ts and report-constants-utils.ts. Both clients use the venue-scoped saved report API. Selected handbook: Reports Exports Earnings and Payouts, especially known source data, actual file proof, saved-filter persistence and authorization.
+
+**Rollout evidence:** The backend legacy Reports entry is guarded by Manage Reports. enable_reports_nextjs_embed on selects the migrated iframe regardless of preview preference. With it off, show_reports_nextjs_banner plus the employee’s venue-specific preview preference can still select the new page. Genuine legacy requires embed off and no effective preview opt-in (or banner off). Preserve actual navigation access in the migrated run; do not compare the same migrated implementation twice by changing only the address. The smoke does not itself authorize changing rollout flags or employee access.
+
+**Execution and write status:** Source-backed drafts only. No browser session was inspected for this request; current beta deployment, role, organization, loading/layout behavior and outcomes are unverified. No report was saved, generated, emailed, scheduled, cloned or deleted, and Qase remains unchanged. Source review and local parser checks are definition evidence, not executed smoke or a release pass.
+
+**Local format review:** TC-100 and TC-101 each passed the reusable Qase parser with complete standalone fields, five action/data/expected-result rows and no native parameters. No apply plan or Qase write was prepared.

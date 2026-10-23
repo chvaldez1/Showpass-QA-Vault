@@ -1332,6 +1332,13 @@ AreaShape: StandingGA, CircleGA
 
 ### SPT-5572: Dashboard - Seating - Align selected map elements
 
+> [!note] Feasibility review — 2026-10-21
+> Read only the full live SPT-5572 case; no other Qase cases or suites were queried. The six commands are implemented in the current Next.js builder (frontend bda3539bba; backend bda0dd85f0), but the published instructions need clarification. The menu requires at least two selected layout objects of the same target family (rows/tables/GA, or sections); it does not align individual seats. Right-click an already-selected object to preserve the group, then open the **Align** submenu. Right-clicking empty canvas does not open this menu; right-clicking an unselected object replaces the selection and can hide alignment commands.
+>
+> A concrete supported run is **Build → Select → Rows, tables, and GA**, with two differently sized, staggered Standing / GA areas in one section. Hold Shift and drag a box from empty canvas around those two areas, leaving the control outside; right-click one selected area → **Align** → the chosen command. Use a single event or recurring parent, since the current host blocks recurring-child map editing. The existing six parameter values, edge/center assertions, size/label preservation, Save/reopen and unselected control remain relevant; this clarification does not remove them.
+>
+> Source chain: assigned-seating-builder/ui/canvas/commands/canvas-command-registry.ts (location/section families, minimum count 2, mutation lock); CanvasContextMenu.web.tsx (Align submenu); canvas-context-menu-target.ts (right-click preserves only an already-selected target); interaction/use-assigned-seating-canvas-events.ts (Shift selection); constants/assigned-seating-builder-canvas-edit-scope.ts (Rows, tables, and GA); ui/workbench/commands/execute-canvas-command.ts (alignment deltas become multi-object moves); translation/backend/serializers/document-diff-to-v3-payload.ts and web-app/apps/venues/api/venue_based/serializers/space_builder_v3.py (saved transforms). These are local source findings, not proof of deployed behavior. Existing implementation tests were read, not run. No browser, alignment, save or live map mutation was executed in this review. Qase remains unchanged; classify this as **source-supported, instructions need clarification, live execution pending**.
+
 **Publication status:** Published to Qase on 2026-10-17; created as SPT-5572 (formerly TC-357); Next.js; not executed.
 
 **Title:** Dashboard - Seating - Align selected map elements

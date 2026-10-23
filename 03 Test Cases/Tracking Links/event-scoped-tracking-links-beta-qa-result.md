@@ -59,11 +59,11 @@ Qase coverage was updated after approval. See [[03 Test Cases/Tracking Links/eve
 
 **Current migrated page — actual result:**
 
-![[03 Test Cases/Tracking Links/evidence/event-scoped-tracking-links-beta-review-2026-07-29/09-event-link-type-leaks-venue-wide-options.png]]
+![[99 Archive/QA Evidence/Tracking Links/event-scoped-tracking-links-beta-review-2026-07-29/09-event-link-type-leaks-venue-wide-options.png]]
 
 **Legacy event page — expected option scope:**
 
-![[03 Test Cases/Tracking Links/evidence/event-scoped-tracking-links-beta-review-2026-07-29/10-legacy-event-link-type-options-user-evidence.png]]
+![[99 Archive/QA Evidence/Tracking Links/event-scoped-tracking-links-beta-review-2026-07-29/10-legacy-event-link-type-options-user-evidence.png]]
 
 **Source confirmation:** The shared migrated filter supplies all user-generated types in `showpass-frontend/packages/core/src/app-contexts/dashboard/features/tracking-links/ui/sidebar/Filters.web.tsx`. The legacy event page restricted the options in `web-app/apps/main/static/src/dashboard/tickets/controllers/EventManage.js`.
 
@@ -73,25 +73,25 @@ Qase coverage was updated after approval. See [[03 Test Cases/Tracking Links/eve
 
 The direct-create modal displayed `SUPER DUPER FOOD FESTIVAL - CODEX TEST` as read-only and did not show a Link Type selector.
 
-![[03 Test Cases/Tracking Links/evidence/event-scoped-tracking-links-beta-review-2026-07-29/03-review-link-ready-to-create.png]]
+![[99 Archive/QA Evidence/Tracking Links/event-scoped-tracking-links-beta-review-2026-07-29/03-review-link-ready-to-create.png]]
 
 ### Link creation — Passed
 
 The success notification and the unique review description appeared together after creation.
 
-![[03 Test Cases/Tracking Links/evidence/event-scoped-tracking-links-beta-review-2026-07-29/04-created-success-and-event-list.png]]
+![[99 Archive/QA Evidence/Tracking Links/event-scoped-tracking-links-beta-review-2026-07-29/04-created-success-and-event-list.png]]
 
 ### Persistence after reload — Passed
 
 The same tracking-link card remained after a fresh browser reload.
 
-![[03 Test Cases/Tracking Links/evidence/event-scoped-tracking-links-beta-review-2026-07-29/05-persisted-after-fresh-reload.png]]
+![[99 Archive/QA Evidence/Tracking Links/event-scoped-tracking-links-beta-review-2026-07-29/05-persisted-after-fresh-reload.png]]
 
 ### Custom type and event-only export — Passed
 
 Selecting **Custom** kept the new card visible. The downloaded CSV contained one Venue/Custom row for the selected event and no row from another event.
 
-![[03 Test Cases/Tracking Links/evidence/event-scoped-tracking-links-beta-review-2026-07-29/08-custom-filter-keeps-preserved-event-link.png]]
+![[99 Archive/QA Evidence/Tracking Links/event-scoped-tracking-links-beta-review-2026-07-29/08-custom-filter-keeps-preserved-event-link.png]]
 
 CSV proof: [[03 Test Cases/Tracking Links/evidence/event-scoped-tracking-links-beta-review-2026-07-29/06-event-scoped-export.csv|Event-scoped export]]
 
@@ -99,7 +99,7 @@ CSV proof: [[03 Test Cases/Tracking Links/evidence/event-scoped-tracking-links-b
 
 The new short URL opened the exact selected public event.
 
-![[03 Test Cases/Tracking Links/evidence/event-scoped-tracking-links-beta-review-2026-07-29/07-public-link-targets-selected-event.png]]
+![[99 Archive/QA Evidence/Tracking Links/event-scoped-tracking-links-beta-review-2026-07-29/07-public-link-targets-selected-event.png]]
 
 ### Copy — Passed by human verification
 
@@ -117,7 +117,7 @@ The user selected **Copy**, pasted the URL into a browser, and confirmed that th
 
 The preserved card remains available for independent review:
 
-![[03 Test Cases/Tracking Links/evidence/event-scoped-tracking-links-beta-review-2026-07-29/11-final-preserved-review-state.png]]
+![[99 Archive/QA Evidence/Tracking Links/event-scoped-tracking-links-beta-review-2026-07-29/11-final-preserved-review-state.png]]
 
 ## Not Executed
 

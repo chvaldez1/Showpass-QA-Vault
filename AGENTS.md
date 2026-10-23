@@ -2,6 +2,30 @@
 
 Use this vault as a QA-first workspace for test creation, QA analysis, and automation planning.
 
+## Clear, Everyday Language
+
+The user should be able to understand each response on the first read. Apply this to chat replies, progress updates, findings, reports and test cases.
+
+- Use natural, everyday wording. Assume the user knows Showpass but may not know software engineering or QA jargon.
+- Give as much detail as the answer needs. Do not force short answers or remove useful explanation just to reduce length.
+- Start with the answer, then explain it in a sensible order. Connect each point to the situation being discussed.
+- Describe what someone does, what happens and why it matters. Name the actual ticket, product, membership, employee or customer instead of using abstract labels.
+- Replace technical terms with a concrete example whenever possible. If a technical term is necessary, explain it when first used.
+- Keep sentences easy to follow, with one main idea each. Avoid packing several conditions or qualifications into one sentence.
+- Make test results clear: say "we tested this and it passed," "we have a test case but haven't run it," "we need to add a test," or "we confirmed a bug," as appropriate.
+- Explain the actual business impact before calling a gap important. State when it matters only for certain venues or setups.
+- Keep code details, commands and commit hashes in supporting notes unless they help answer the user's question. Preserve necessary evidence, uncertainty and required QA checks.
+- Before sending, reread the response for wording that makes the user translate it into ordinary language. Rewrite those parts.
+
+Examples:
+
+| Avoid | Prefer |
+| --- | --- |
+| Concurrent redemption can violate entitlement limits | Two employees scanning the same ticket at the same time could let it be used twice |
+| Persisted state must be verified | Refresh the page and check that the change was saved |
+| Execution gaps remain | We have test cases for these checks, but we haven't run them yet |
+| Validate benefit isolation | Using one membership benefit must leave the member's other benefits unchanged |
+
 ## Canonical QA Standard
 
 Read and apply [[00 Start Here/World-Class Software Quality Standard]] for QA scope, testing intent, proof targets, state-space modeling, coverage accounting, evidence, data safety, finding classification, human verification, readiness gates, and release decisions.
@@ -98,6 +122,10 @@ Agents should keep work aligned with this folder contract:
 - Reference repo paths instead of copying large code snippets.
 - Prefer checklists, short workflows, and focused QA notes.
 - Capture behavior, risks, test cases, and automation candidates.
+- Clean up temporary files you create yourself. Keep scratch scripts, intermediate exports, downloaded inspection copies and other disposable working files under `/private/tmp` where practical, and track their exact paths. When they are no longer needed, use `rm` to delete those specific files, remove obsolete references, and verify cleanup before finishing. Do not leave cleanup for the user or use broad deletion patterns in shared temporary folders. Preserve user-owned files, maintained tools, final deliverables, necessary evidence and files still needed for active work; explain any temporary files deliberately retained and why.
+- Keep large files and generated binary files out of Git by default, including images, videos, archives and bulky exports. Commit or push one only when the requested work genuinely requires that file in the repository, and explain why it is needed. Use a narrow file-specific exception when necessary; do not weaken ignore rules for an entire evidence folder or add disposable working files.
+- Keep screenshots and other image evidence local under `99 Archive/QA Evidence/<feature>/<run-slug>/`. Link or embed their vault-relative archive paths in the active test note. They stay out of Git unless a specific file is necessary under the rule above. When relocating images, preserve the files and update current references; do not rewrite Git history.
+- Routine browser text dumps are temporary working files: save them under `/private/tmp` and delete them with `rm` once the useful findings are recorded and the dumps are no longer needed. Remove obsolete links. Retain a raw capture only when it provides necessary proof unavailable in the report, screenshots or actual outputs, and explain why. This cleanup does not include user-provided files, screenshots, CSV/PDF outputs or other necessary evidence.
 - Account for every declared in-scope control, state, validation, mutation, side effect, and cleanup path as covered, manual-only, deferred, not applicable, or blocked with evidence.
 - Update notes only when they make QA work easier to repeat.
 - When appending or revising notes, preserve existing user edits, links, IDs, headings, and surrounding content unless the user explicitly asks to remove or rewrite them.

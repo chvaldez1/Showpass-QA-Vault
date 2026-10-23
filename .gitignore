@@ -20,7 +20,22 @@ Thumbs.db
 
 assets/
 
+# Images stay local by default; necessary repository assets need a narrow exception.
+/99 Archive/QA Evidence/
+*.[pP][nN][gG]
+*.[jJ][pP][gG]
+*.[jJ][pP][eE][gG]
+*.[wW][eE][bB][pP]
+*.[gG][iI][fF]
+*.[sS][vV][gG]
+*.[aA][vV][iI][fF]
+*.[hH][eE][iI][cC]
+*.[bB][mM][pP]
+*.[tT][iI][fF]
+*.[tT][iI][fF][fF]
+
 # Generated QA snapshots and publication exports (keep temporary output outside the vault)
+*.inspect.ndjson
 /03 Test Cases/**/evidence/**/*.json
 /03 Test Cases/**/evidence/**/*snapshot*.txt
 /03 Test Cases/**/evidence/**/*before*.txt

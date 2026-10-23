@@ -158,9 +158,22 @@ Default to the minimum prerequisites needed to execute the case. When the user a
 - Verify that the proposed receipt, report, or Admin field actually exposes the required values. Do not prescribe reading a hidden or nonexistent component field. Name unavailable financial evidence as Blocked outside the execution fields; do not present an incomplete recipe as runnable Qase coverage.
 - Older purchases can use different calculation rules. State required purchase timing and compatibility, and preserve orders and financial records after execution rather than deleting them as cleanup.
 
+### Case Strength Review
+
+Apply these questions while choosing data and reviewing each case. Use the answers to improve Preconditions, Steps and Expected Results; do not add another required report or repeat the questions inside Qase fields.
+
+1. **What specific mistake would this case catch?** Name the wrong business result. Choose actions and assertions that would expose it. For a bug regression, use starting data that distinguishes the reported mistake from the intended behavior; when comparing old and fixed versions, keep the relevant starting conditions equivalent.
+2. **Does the starting data actually expose that mistake?** State the essential conditions and how to establish or check them. A sold-product price-lock case needs a completed sale and the actual configuration governing the lock. An unsold product cannot prove that rule. Do not invent restrictions or configuration exceptions.
+3. **Could the test appear to pass for an unrelated reason?** Remove other causes of the same result. For an exhausted membership allowance, establish an active membership, eligible event access, a valid scan window and the required employee permissions. Require the supported allowance-specific feedback and verify no admission or allowance change. A generic rejection alone does not prove the allowance rule. If the cause cannot be distinguished with available evidence, record the missing proof.
+4. **What should still work or remain unchanged?** Select a nearby valid example or unaffected record when it would catch a realistic mistake. For example, prove the sold variant remains protected and an eligible unsold variant remains editable, only where source confirms that behavior. Keep separate cases when the actions or principal results differ; do not append unrelated checks to every case.
+
+When the result depends on a job, webhook, counter or cache refresh, verify the dependency in source and define how completion will be observed. Put essential supported preparation in the case and technical operating details in supporting notes. For a report-generation case, request acceptance alone does not prove that the file was generated with the expected contents. Missing setup or completion evidence remains Blocked rather than an invented runnable step.
+
+Keep this review focused on the requested scope. Reuse existing proof where suitable; it does not require a new case for every question or authorize creating data, running jobs or executing tests.
+
 ### Copy-to-Qase Review Gate
 
-Before delivering, read each case without the surrounding note. Can a product-team member tell **what must exist, how to prepare it, what to do, and what should happen**? Remove shared-setup references, unnecessary environment/identity constraints, draft-to-draft commentary, and duplicate cleanup. Check that every stated field, flag, permission, route, and outcome has evidence or an explicit unresolved status outside the case. A Qase-ready label must mean the case fields are already complete.
+Before delivering, apply [[#Case Strength Review]], then read each case without the surrounding note. Can a product-team member tell **what must exist, how to prepare it, what to do, and what should happen**? Remove shared-setup references, unnecessary environment/identity constraints, draft-to-draft commentary, and duplicate cleanup. Check that every stated field, flag, permission, route, and outcome has evidence or an explicit unresolved status outside the case. A Qase-ready label must mean the case fields are already complete.
 
 When the user corrects the workflow or simplifies setup, review the entire case: Description, parameter mapping, Preconditions, Steps, Data, Expected Results, and Postconditions, plus surrounding test-data and execution notes. Remove stale assumptions everywhere, update numbered stopping points, and preserve the requested behavioral coverage. Updating only the entry step or mentioning the correction in a final reply is not enough.
 

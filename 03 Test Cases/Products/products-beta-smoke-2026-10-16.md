@@ -39,11 +39,11 @@ No saved-price-change defect is confirmed. The editable sold-price control below
 
 **Actual result:** Price is enabled and accepts 5.01 even though Sold is 2. This editable state was already observed during the initial smoke, and the follow-up confirms it accepts input. No Save was selected. Its 5.00 value was restored. Because the tiered-pricing exception has not been checked, this is not yet a confirmed business-rule violation or backend bypass. SPT-5389 remains unexecuted against its required `price_tiers_enabled=false` setup; no new Qase case is needed.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/23-sold-price-editable-unsaved.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/23-sold-price-editable-unsaved.png|400]]
 
 *Beta `/manage/products/2171/inventory/` · follow-up 2026-10-16 · Sold 2 and locally entered USD 5.01; not saved.*
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/24-sold-price-restored.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/24-sold-price-restored.png|400]]
 
 *Same product · original USD 5.00 restored without saving. Control-state evidence: sold-price-control.*
 
@@ -57,133 +57,133 @@ All rows below are **Browser-verified only**, with the specific limit stated. Ea
 
 **Navigation, list and restoration — Browser-verified only.** Build → Products → All products reaches the current list. Four products remain visible after returning from Details; final search blank, Hide archived products, All categories and All products for Box office visibility.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/21-final-restored.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/21-final-restored.png|400]]
 
 *Beta `/manage/products/` · 15:48:03 PDT · observed result as described above.*
 
 **Product-name search — Browser-verified only.** FAN EXPO LANYARD returns only that product, ID 2171, with 2 / 10000 sold.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/01-search-match.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/01-search-match.png|400]]
 
 *Beta `/manage/products/` · 15:44:27 PDT · observed result as described above.*
 
 **Unmatched search — Browser-verified only.** no-such-product-smoke-20261016 shows No products found and a Clear action. Clearing restores the list.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/02-search-empty.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/02-search-empty.png|400]]
 
 *Beta `/manage/products/` · 15:44:34 PDT · observed result as described above.*
 
 **Category filter — Browser-verified only.** Products shows no matches; FAN EXPO Merch restores its four products. This verifies the observed category subsets, not every category association.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/03-category-empty.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/03-category-empty.png|400]]
 
 *Beta `/manage/products/` · 15:44:40 PDT · observed result as described above.*
 
 **Hidden Box office filter — Browser-verified only.** With FAN EXPO Merch selected, Hidden in box office shows test and ULTIMATE FAN MERCHANDISE.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/04-hidden-box-office.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/04-hidden-box-office.png|400]]
 
 *Beta `/manage/products/` · 15:45:03 PDT · observed result as described above.*
 
 **Visible Box office filter — Browser-verified only.** With FAN EXPO Merch selected, Visible in box office shows EVENT POSTER and FAN EXPO LANYARD. The selected product’s checked Staff Box Office setting agrees with its inclusion.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/05-visible-box-office.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/05-visible-box-office.png|400]]
 
 *Beta `/manage/products/` · 15:45:08 PDT · observed result as described above.*
 
 **Category management — Browser-verified only.** Manage categories opens; Manage associated products expands four reorder handles for FAN EXPO Merch; Close modal dismisses it. No name, ordering or Save changes action used.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/06-categories.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/06-categories.png|400]]
 
 *Beta `/manage/products/` · 15:45:22 PDT · observed result as described above.*
 
 **Duplicate confirmation and dismissal — Browser-verified only.** Duplicate product for FAN EXPO LANYARD names the correct source and explains independent inventory and retained settings. Cancel returns focus to its trigger; reopening and Escape also dismisses it. Create copy was never selected.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/07-duplicate-confirmation.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/07-duplicate-confirmation.png|400]]
 
 *Beta `/manage/products/` · 15:45:26 PDT · observed result as described above.*
 
 **Details entry — Browser-verified only.** Edit product opens FAN EXPO LANYARD with its name, FAN EXPO Merch category, description editor, image and Save. Back returns to Products. No input changed.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/22-details.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/22-details.png|400]]
 
 *Beta `/manage/products/2171/basic-info/` · 15:48:16 PDT · observed result as described above.*
 
 **Inventory display — Browser-verified only.** One Size is Published with Sold 2, Inventory 10000, Purchase Limit 20, blank SKU and Price USD 5.00. The 2 / 10000 count agrees with the list. No change made during the initial display check. Price-lock eligibility was not resolved; see PL-01 above for the later unsaved-edit check.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/08-inventory.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/08-inventory.png|400]]
 
 *Beta `/manage/products/2171/inventory/` · 15:45:50 PDT · observed result as described above.*
 
 **Availability display — Browser-verified only.** Venue Page, Staff Box Office and event checkout are enabled; event scope is Include for all items. Membership checkout is off, and product status is Published. No switch changed.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/09-availability.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/09-availability.png|400]]
 
 *Beta `/manage/products/2171/availability/` · 15:46:00 PDT · observed result as described above.*
 
 **Fulfillment dependency — Browser-verified only.** Will Call/Pick Up is selected; Electronic Ticket and Standard Shipping are off. Transfers is disabled with its Electronic Ticket explanation. Exclude PDF is visible and unchecked. No delivery change made.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/10-fulfillment.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/10-fulfillment.png|400]]
 
 *Beta `/manage/products/2171/fulfillment/` · 15:46:05 PDT · observed result as described above.*
 
 **Communications entry — Browser-verified only.** Customer-message editor, its custom-confirmation explanation and internal notification recipients load for the selected product. No content or recipients changed.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/11-communications.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/11-communications.png|400]]
 
 *Beta `/manage/products/2171/communications/` · 15:46:15 PDT · observed result as described above.*
 
 **Finance lock display — Browser-verified only.** An existing-sales warning appears; Processing Fee, Showpass Fee and seller commission inputs are disabled. Organization defaults say Absorb Processing Fee and Absorb Showpass Fee. This does not test server enforcement.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/12-finance.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/12-finance.png|400]]
 
 *Beta `/manage/products/2171/finance/` · 15:46:23 PDT · observed result as described above.*
 
 **Custom fees access and lock display — Browser-verified only.** Custom fees opens from the visible product navigation. Sales Tax shows an organization-default 6.5% customer-paid rate for Ticket/Product, Online/In-Person, Cash/Card. Add is disabled with the locked-financial-settings explanation. Calculator was not used.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/13-custom-fees.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/13-custom-fees.png|400]]
 
 *Beta `/manage/products/2171/custom-fees/` · 15:46:29 PDT · observed result as described above.*
 
 **Statistics and chart mode — Browser-verified only.** Stats & Info shows Products Sold 2 and Total Revenue USD 7.02, with One Size 2 sold / USD 7.02. Quantity changes the chart heading to Variant Quantity; Revenue restores it. Sales count agrees with Inventory/list; revenue calculation is not independently reconciled.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/14-stats-quantity.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/14-stats-quantity.png|400]]
 
 *Beta `/manage/products/2171/stats-info/` · 15:46:40 PDT · observed result as described above.*
 
 **Create entry and return — Browser-verified only.** Create product opens a blank starter form with Product Name, Category, Variant Name and Price. Back exits without submission. Required-field validation and successful saving were not executed.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/15-create-entry.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/15-create-entry.png|400]]
 
 *Beta `/manage/products/create/` · 15:47:02 PDT · observed result as described above.*
 
 **Desktop layout: 1280 × 900 — Browser-verified only.** Four cards, stock summaries and all four per-card actions fit without overlap; the filter sidebar is readable.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/16-desktop-1280.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/16-desktop-1280.png|400]]
 
 *Beta `/manage/products/` · 15:47:10 PDT · observed result as described above.*
 
 **Compact layout: 861 × 900 — Browser-verified only.** Cards form two columns; stock and four action icons fit. The responsive filter drawer opens and closes.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/17-compact-861.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/17-compact-861.png|400]]
 
 *Beta `/manage/products/` · 15:47:17 PDT · observed result as described above.*
 
 **Mobile layout: 390 × 844 — Browser-verified only.** Cards use one column and the header/action icons fit. This is a resized browser viewport, not a physical-device execution.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/18-mobile-390.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/18-mobile-390.png|400]]
 
 *Beta `/manage/products/` · 15:47:20 PDT · observed result as described above.*
 
 **Mobile duplicate confirmation — Browser-verified only.** The EVENT POSTER confirmation fits the mobile viewport, with readable wording, Close, Create copy and Cancel. Cancel dismisses it; no copy created.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/19-mobile-duplicate.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/19-mobile-duplicate.png|400]]
 
 *Beta `/manage/products/` · 15:47:25 PDT · observed result as described above.*
 
 **Mobile search and Clear — Browser-verified only.** Toggle filters opens a drawer. Searching FAN EXPO LANYARD and closing it shows only the matching card with an active-filter indicator. Reopen → Clear restores all four products.
 
-![[03 Test Cases/Products/evidence/products-beta-smoke-2026-10-16/20-mobile-search.png|400]]
+![[99 Archive/QA Evidence/Products/products-beta-smoke-2026-10-16/20-mobile-search.png|400]]
 
 *Beta `/manage/products/` · 15:47:39 PDT · observed result as described above.*
 

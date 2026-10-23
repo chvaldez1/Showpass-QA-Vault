@@ -1,5 +1,0 @@
-Browser tab: 2, Title: "Products · Showpass", URL: "https://beta.showpass.com/manage/products/".
-The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
-+		282 container Filters, ID: tooltip::rfv::content
-+			283 text Filters
-The focused UI element is 220 button Toggle filters

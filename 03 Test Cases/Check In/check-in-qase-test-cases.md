@@ -5,14 +5,339 @@ tags:
   - qa/test-cases
   - check-in
   - qase
-status: Published 29 new cases and 2 updates; 2 revisions held; admission not executed
+status: Published and verified three additions plus three enhancements on 2026-10-22; admission not executed
 ---
 
 # Legacy Check In — Qase-ready coverage
 
+**Strengthening published — 2026-10-22:** Created **SPT-5759/5760/5761** and enhanced **SPT-1670/1671/1672** after approval of the exact six-case batch. Full-field readback verified **6 writes / 26 step rows** at **11:06:12 MDT**. Existing clients, scenarios and useful assertions are retained. These are published definitions, not executed admission results.
+
+**New-page smoke — 2026-10-22:** [[03 Test Cases/Check In/check-in-beta-new-page-smoke-2026-10-22|Initial beta execution and preserved review data]] records successful named single-day/recurring ticket and product flows on the **new embedded page**, including duplicate rejection, wrong-event rejection, saved History and product Return/re-scan. It is a separate adapted browser run; legacy Qase prerequisites and execution statuses were not changed. Remaining coverage is listed in that run note.
+
+| Action | Case | Qase folder | Main proof |
+| --- | --- | --- | --- |
+| Created | [SPT-5759](https://app.qase.io/case/SPT-5759) | Check In (184) | Product-only barcode pickup persists once |
+| Created | [SPT-5760](https://app.qase.io/case/SPT-5760) | Check In → Membership (185) | Disabled/Expired member cannot consume access |
+| Created | [SPT-5761](https://app.qase.io/case/SPT-5761) | Check In → Membership (185) | Enforced event capacity blocks an otherwise eligible member |
+| Enhanced | SPT-1670 | Check In → Membership (185) | Generated ticket identity, one admission and duplicate rejection |
+| Enhanced | SPT-1671 | Check In → Membership (185) | Membership access changes only the covered event's count/history |
+| Enhanced | SPT-1672 | Check In → Membership (185) | A one-entry daily allowance is consumed once and not below zero |
+
+The three enhancements retain their current titles, tags, parameters and folders. Only Description, Preconditions, Steps and Postconditions were updated. The before-state and verified readback are saved temporarily for comparison. Race/retry, daily reset, security and stale-permission proof remain explicitly unresolved below.
+
+## Published additions — 2026-10-22
+
+### SPT-5759: Dashboard - Check In - Pick up a product using its barcode without selecting an event
+
+**Title:** Dashboard - Check In - Pick up a product using its barcode without selecting an event
+
+**Description:**
+
+Apply only a product, enter a purchased variant's barcode and verify one saved pickup. This tests the barcode path rather than the row's Scan button. No event or ticket type should be needed to collect a purchased product.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: Scan Tickets and Select Items to Scan.
+* Use the legacy Check In page: enable_check_in_nextjs_embed is off, with no preview opt-in for this employee and organization.
+* Have two paid, unused single-use items from a product variant reserved for pickup testing. Record product/variant names, barcodes, statuses and successful pickup histories. Keep the second item unchanged.
+
+**Tags:** dashboard, check-in
+
+**Parameters:** None
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Check In → SELECT TICKETS/PRODUCTS. Clear any event or ticket-type selection and select only the recorded product, then Continue. | Product and its purchased variants | Product-only selection is applied. |
+| Select Products. | Recorded variant | Its purchased items are available. |
+| Enter the first item's barcode in the search box and press Enter. | Reserved product barcode | A successful pickup identifies that product and variant. |
+| Refresh and open the item's History; compare the second item's state. | Recorded baseline histories | Exactly one new pickup persists on the first item; the second item remains unused with unchanged history. |
+
+**Postconditions:**
+
+* Preserve the reserved item and pickup history for review. A permitted setup owner may Return only this test pickup; do not issue a payment refund.
+
+### SPT-5760: Dashboard - Check In - Reject access from an inactive member
+
+**Title:** Dashboard - Check In - Reject access from an inactive member
+
+**Description:**
+
+Present a membership code for a member whose saved status is Disabled or Expired. A member's remaining allowance must not grant entry while their membership is inactive. Run each MemberStatus separately.
+
+| MemberStatus | Preparation |
+| --- | --- |
+| Disabled | An authorized setup owner opens the selected member in Admin → Members, saves status Disabled and verifies it after reopening |
+| Expired | An authorized setup owner uses Admin → Members → Expire member(s) on the selected member and verifies the saved status is Expired |
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: Scan Memberships and Select Items to Scan.
+* Use the legacy Check In page: enable_check_in_nextjs_embed is off, with no preview opt-in for this employee and organization.
+* Membership access is enabled for the organization. Have a member reserved for this case in MemberStatus, with exactly one event-access benefit for the selected event/type, one unused admission and no issued tickets for that event. Record the complete membership QR value and the saved status.
+* A setup owner can read this member in Admin → Members, Membership benefit accesses and Member activity histories. Record Used = 0, Total = 1 and existing Scan In history; inactive members are omitted from the Check In list, so use Admin for the final comparison.
+
+**Tags:** dashboard, check-in, memberships
+
+**Parameters:**
+
+MemberStatus: Disabled, Expired
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Check In → SELECT TICKETS/PRODUCTS. Select the member benefit's event and ticket type, then Continue → Memberships. | Recorded event/type | Membership check-in uses the intended event-access scope. |
+| Choose Scan In in Member Scan Mode. | Inactive member | The page is ready for an admission attempt. |
+| Enter the membership barcode and press Enter. | MemberStatus's prepared member | Access is rejected and no successful admission is shown. |
+| Have the setup owner reopen this member, their Membership benefit access and Member activity histories in Admin. | Recorded member and benefit | Used remains 0 of 1, no new Scan In is saved, and the member remains in the prepared status. |
+
+**Postconditions:**
+
+* Leave the member in the prepared inactive state. No admission, scan-out, refund or membership-status change is performed by this case.
+
+### SPT-5761: Dashboard - Check In - Reject membership admission when enforced event capacity is reached
+
+**Title:** Dashboard - Check In - Reject membership admission when enforced event capacity is reached
+
+**Description:**
+
+A membership event-access benefit can enforce the linked ticket type's inventory limit. Once its membership admission count has reached that limit, another active member must not enter even if their individual membership still has an unused scan.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: Scan Memberships and Select Items to Scan.
+* Use the legacy Check In page: enable_check_in_nextjs_embed is off, with no preview opt-in for this employee and organization.
+* Membership access is enabled for the organization. An authorized setup owner has prepared a ticket type with inventory 1 and an event-access benefit with Enforce inventory limit enabled. One other member reserved for this case already has one admission against that type; verify Event Scan Accesses → Total In = 1 after refreshing. No other employee should scan this type during the case.
+* Have a separate active member with exactly one access to that event/type, no transfer in progress, no issued tickets for that event, Used = 0 and Total = 1. Record the complete membership QR value and Member Activity History. Use members and an event reserved for these checks; do not fill capacity with real attendee admissions.
+
+**Tags:** dashboard, check-in, memberships
+
+**Parameters:** None
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Check In → SELECT TICKETS/PRODUCTS. Apply the linked event and ticket type, then Continue → Memberships. | Capacity-limited event/type | Only the intended event-access scope is active. |
+| Choose Member Scan Mode → Scan In. Enter the active member's complete membership code and press Enter. | Active member with unused allowance | Admission is rejected because the ticket-type inventory limit has been reached. |
+| Refresh. Open the member's information icon → Member Details; open the benefit's information icon → Member Activity History. | Recorded baselines | Used remains 0 of 1, Event Scan Accesses → Total In remains 1, and no new Scan In is saved for this member. |
+
+**Postconditions:**
+
+* The member's unused allowance remains available. Do not change capacity, return another member's admission or issue a financial adjustment as part of this case.
+
+## Published enhancements to existing membership cases — 2026-10-22
+
+These are **Enhance** changes, not replacements for unrelated cases. The current descriptions have no Platform/View table; the saved tables make the existing Dashboard scope explicit. No native mobile, Box Office or customer scope is removed. SPT-1670 retains general-admission batch and membership-generated tickets plus duplicate rejection. SPT-1671 retains eligible and ineligible events. SPT-1672 retains accepted first use and rejected repeat use. All three currently have no parameters; that remains unchanged.
+
+### SPT-1670: Verify ticket generated from GA batch can be checked in
+
+**Title:** Dashboard - Check In - Verify ticket generated from GA batch can be checked in
+
+**Description:**
+
+Check in an unused ticket issued by a batch and confirm the correct event, ticket and customer are recorded once. A general admission ticket has no assigned seat. Repeat the same barcode to verify it cannot admit a second attendee. Run each listed ticket source separately with a fresh ticket; this uses the issued ticket barcode, not the membership QR.
+
+| Ticket source | Required issued item |
+| --- | --- |
+| General admission batch | One issued, unused, single-use general admission ticket |
+| Membership ticket batch | One issued, unused, single-use ticket from a member's issue-ticket benefit |
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: Scan Tickets and Select Items to Scan.
+* Use the legacy Check In page: enable_check_in_nextjs_embed is off, with no preview opt-in for this employee and organization.
+* A permitted setup owner has completed the selected batch. Select an issued ticket in Paid/unused state, within its allowed scan period and with no transfer in progress; a queued batch alone is not sufficient.
+* Record that ticket's event, ticket type, customer, barcode and History, plus the event/type's Checked In and Remaining totals. Use an order reserved for admission checks, and record a second unused ticket that must stay unchanged. No other employee should scan the selected type during this case.
+
+**Tags:** check-in
+
+**Parameters:** None
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Check In → SELECT TICKETS/PRODUCTS. Select the issued ticket's event and type, then Continue → Tickets. | Recorded event and type | The issued ticket is in the selected event/type. |
+| Enter the issued ticket barcode in the search box and press Enter. | Recorded barcode | Admission succeeds for the recorded event, ticket type and customer. |
+| Refresh, expand the customer's folder and open the ticket's information icon → History. | Recorded totals and History | The ticket is Used with exactly one new pickup; Checked In increases by 1 and Remaining decreases by 1. |
+| Close the details, enter the same barcode and press Enter again. | Same issued ticket | The employee is told the ticket has already been scanned; no second successful admission is shown. |
+| Refresh and reopen History; compare the second ticket. | Both recorded tickets | The first ticket still has exactly one new pickup and the same totals; the second ticket remains unused with unchanged History. |
+
+**Postconditions:**
+
+* Retain the issued ticket, batch association and admission history for review. A permitted setup owner may Return only this case's pickup; do not refund the membership or regenerate the batch.
+
+### SPT-1671: Verify event scan access membership
+
+**Title:** Dashboard - Check In - Verify event scan access membership
+
+**Description:**
+
+Use an active member's event-access benefit to enter the covered event, then present the same membership at an event outside that benefit. Confirm the successful admission persists only on the covered event and rejection changes no other access. Event access consumes the member's allowance directly; it is separate from scanning a ticket issued by a membership batch.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: Scan Memberships and Select Items to Scan.
+* Use the legacy Check In page: enable_check_in_nextjs_embed is off, with no preview opt-in for this employee and organization. Membership access is enabled for the organization.
+* Have an active member reserved for this case with no transfer in progress and exactly one event-access benefit for a recorded event/type: Used = 0 and Total = 2. Its enforced inventory limit, if enabled, must have space for one admission. Keeping one unused entry after the successful scan distinguishes wrong-event rejection from an exhausted personal allowance.
+* Record the member's complete membership QR value, username and Member Activity History. Select a second event/type in the same organization for which this member has no access; record that event's Event Scan Accesses → Total In. This member has no daily-access benefit or issued tickets for either event, so another entitlement cannot mask the membership result. No other employee should scan either type during the case.
+
+**Tags:** check-in, memberships
+
+**Parameters:** None
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Check In → SELECT TICKETS/PRODUCTS. Clear other selections and select only the covered event/type, then Continue → Memberships → Member Scan Mode → Scan In. | Covered event and type | Membership scanning uses the covered event only. |
+| Enter the member's complete membership code and press Enter. In Member Details choose the covered benefit, set the count to 1 and select Scan In. | Recorded member | One admission succeeds for the intended member and covered event/type. |
+| Refresh. Open the member's information icon → Member Details and the benefit's information icon → Member Activity History. | Recorded member and benefit | Used is 1 of 2 and exactly one new Scan In is saved for the covered event. |
+| Close the dialogs. In SELECT TICKETS/PRODUCTS replace the covered event/type with only the second event/type, then Continue → Memberships. Enter the same membership code and press Enter. | Event not covered by this membership | Access is rejected and no successful admission to that event is shown. |
+| Refresh and compare the second event's Total In; reselect the covered event and reopen Member Details → Member Activity History. | Recorded event totals and member | The second event's Total In is unchanged; the covered benefit stays Used = 1 of 2 with only the one saved Scan In. |
+
+**Postconditions:**
+
+* Retain the member's one successful admission for review. A permitted setup owner may Scan Out only that admission after evidence is captured; do not refund or disable the membership.
+
+### SPT-1672: Verify daily scan access membership
+
+**Title:** Dashboard - Check In - Verify daily scan access membership
+
+**Description:**
+
+Use an active member's daily-access benefit with a one-entry allowance. The first Scan In must use the allowance; another Scan In during the same operating period must be rejected without adding history or making the allowance negative. Record the organization's timezone and today's opening/closing schedule, including exceptions, and finish both attempts before its next closure/reset. A daily allowance reset follows the organization's closing schedule; do not assume it happens at midnight.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| Dashboard | Mobile |
+
+**Preconditions:**
+
+* Employee permissions: Scan Memberships and Select Items to Scan.
+* Use the legacy Check In page: enable_check_in_nextjs_embed is off, with no preview opt-in for this employee and organization. Membership access is enabled for the organization.
+* Have an active member reserved for this case with no transfer in progress and exactly one daily-access benefit: Used = 0 and Total = 1. Record the membership group/level, username, complete membership QR value and existing Member Activity History.
+* Record the organization's timezone and its current opening/closing schedule and exceptions. Run while it is open with enough time for both attempts before closure; no other employee should scan or Scan Out this member during the case.
+
+**Tags:** check-in, memberships
+
+**Parameters:** None
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open Dashboard → Check In → SELECT TICKETS/PRODUCTS. Clear event/type selections; on Memberships select the recorded group and level, then Continue → Memberships → Member Scan Mode → Scan In. | Daily-access membership group and level | The intended member's daily access is available without an event selection. |
+| Enter the member's complete membership code and press Enter. | Recorded member | The first daily admission succeeds for that member and benefit. |
+| Refresh. Open the member's information icon → Member Details and the benefit's information icon → Member Activity History. | Starting Used = 0, Total = 1 | Used is 1 of 1, no allowance remains, and exactly one new Scan In is saved. |
+| Close the dialogs and enter the same membership code and press Enter again before the recorded closure/reset. | Same member, same operating period | The second admission is rejected because the member has used all available access. |
+| Refresh and reopen Member Details → Member Activity History. | Recorded allowance and history | Used remains 1 of 1 and exactly one new Scan In exists for the case; the rejected attempt adds none. |
+
+**Postconditions:**
+
+* Retain the exhausted allowance and history for review. A permitted setup owner may Scan Out only this case's admission before closure; do not change the organization's schedule or the member's limit to clear the result.
+
+## Publication verified — 2026-10-22
+
+The reusable batch script applied the approved six operations and read them back. An additional full-field check compared Title, Description, Preconditions, Postconditions, Steps, suite, tags and parameters against the approved cases. Existing-case title, suite, tags, parameter structure, priority, type, behavior and layer also matched the pre-write baseline. **All six passed verification; no cases or suites were moved or deleted.**
+
+| Original draft / existing ID | Saved Qase case | Suite | Tags | Parameters | Step rows |
+| --- | --- | --- | --- | --- | --- |
+| TC-30 | [SPT-5759](https://app.qase.io/case/SPT-5759) | 184 | dashboard, check-in | None | 4 |
+| TC-31 | [SPT-5760](https://app.qase.io/case/SPT-5760) | 185 | dashboard, check-in, memberships | MemberStatus: Disabled, Expired | 4 |
+| TC-32 | [SPT-5761](https://app.qase.io/case/SPT-5761) | 185 | dashboard, check-in, memberships | None | 3 |
+| SPT-1670 | [SPT-1670](https://app.qase.io/case/SPT-1670) | 185 | check-in | None; unchanged | 4 → 5 |
+| SPT-1671 | [SPT-1671](https://app.qase.io/case/SPT-1671) | 185 | check-in, memberships | None; unchanged | 4 → 5 |
+| SPT-1672 | [SPT-1672](https://app.qase.io/case/SPT-1672) | 185 | check-in, memberships | None; unchanged | 4 → 5 |
+
+The temporary apply receipt records each completed operation and blocks accidental replay. The earlier preview-only plan remains separate. No live Check In, Return, Scan Out or other admission mutation was executed.
+
+## Remaining critical proof targets — not established by publication
+
+| Priority gap | Current coverage / decision | Required proof and execution limit |
+| --- | --- | --- |
+| Concurrent scan of the same single-use ticket, or the last remaining permitted admission | SPT-5473 is sequential. Mobile SPT-2046 has a related multi-device NFC case, not a Dashboard race case. New Dashboard + controlled-backend target needed. | Two controlled sessions plus authoritative history/count. One admission must persist. Also inspect what each employee is told: source can suppress a duplicate history while returning success, so HTTP success alone does not prove safe gate feedback. Timing-controlled setup is not prepared; not executed. |
+| Lost response after commit and retry | Mobile SPT-4919 covers its own offline queue, not Dashboard request recovery. New single-use recovery target needed. | Independently determine whether the first admission committed; reconcile retry, refreshed history and counts. Do not promise idempotency for multi-scan/unlimited scans: separate deliberate scans are valid there, and no retry-token contract was established. Controlled response-loss setup is missing; no live failure injection. |
+| Stale / static barcode security for NFC-only events | Mobile SPT-2043/3999/4927 have actual assertions for their clients. No equivalent explicit Dashboard case found. | Add a clean current-code success and separate rejected static/expired-code checks through the supported Dashboard scanner path; verify no admission on rejection. Device type changes validation and must be bound to real hardware or the ordinary non-NFC path. No spoofed trusted scanner identity and no physical-device pass claimed. |
+| Membership daily reset and timezone | The published SPT-1672 enhancement pins first/repeated use to one operating period with explicit counters. A distinct reset test remains Blocked; it is not established by that case. | Record venue timezone, opening/closing schedule and exceptions. Source reset runs for closed venues, not an assumed universal midnight reset. Verify allowance restores after the actual reset and does not reset early. Controlled schedule/time setup not prepared. |
+| Server permission / ownership / stale employee access | SPT-5495/5496 cover page/control access; SPT-5474 covers a wrong-organization code. These do not prove denied direct mutations or revocation while open. | Backend/API denied ticket History and membership access changes; other organization must remain unchanged. Membership endpoints require Scan Memberships independently of ticket scanning. Need controlled employees/sessions; no permission changes or mutation probes executed. |
+| Membership transfer-in-progress / explicit non-active states beyond Disabled/Expired | SPT-1667/1671 use generic ineligible wording; SPT-5760 handles two named statuses only. Prefer a distinct focused extension rather than treating all invalid states as covered. | MembershipAccessScanService rejects transfer_in_progress and non-Active membership state. Bind supported transfer/status setup and actual histories; existing member tickets may have their own validity rules. |
+| Completed ownership changes, invalid return and redemption-only types | SPT-5475 covers pending transfer only; SPT-3366 covers completed transfer at My Orders; source rejects non-redeemable/credit-only items and negative scan counts. | Link/strengthen source-specific end-to-end admission assertions, preserving existing clients. Do not duplicate ownership cases or treat hidden old barcodes as an actual rejected scan. |
+
+### Comparison with external generated plan — 2026-10-22
+
+Reviewed the 50-scenario inventory and full fields for business candidates in /Users/christianvaldez/Downloads/qa-testing-20260921-v3/previews/check-in-2026-10-22/plan.json against our saved full Qase definitions, the six verified writes above, current backend/new frontend source and today's smoke evidence. No fresh Qase search, Qase write or live browser action was performed for this comparison. This is a comparison ledger, not newly published or executed coverage.
+
+| External scenario | Business outcome worth adding or strengthening | Our current coverage / decision |
+| --- | --- | --- |
+| QA-026 | A supported card-swipe/alternate ticket code admits the same intended item once; normalization must not reject a valid attendee or admit another item. | Explicit coverage gap: typed ordinary barcodes and shared order/customer codes are covered; physical scanners were deferred, but wrapped card input / trailing-plus barcode handling has no focused Dashboard case. Backend scan tests accept assigned card codes and swiped trailing-plus values; the new parser also recognizes supported card formats. |
+| QA-045 | Undo the selected membership Scan In or Scan Out, restoring the full original quantity and the correct benefit's counts/history; unrelated accesses stay unchanged. | Strengthen known deferral: SPT-4915 covers scan-out, access choice and limits, but has no explicit Undo assertion. The earlier ledger already defers My History Undo. Row Return and today's product Return do not establish membership Undo. New frontend reverses the saved action using history.scanCount. |
+| QA-046 | Close the multiple-membership-benefit chooser without consuming any benefit, then select one and consume only that benefit. | Missing explicit cancellation assertion: SPT-4915 covers confirming a selected membership access. SPT-5491 covers cancelling the ticket/order/customer-code chooser, which is a different membership action path. Split cancellation from success when drafting. |
+| QA-040 | Reopen a saved preset after its referenced event is deleted; preserve any surviving scope and never replace the missing selection with unrelated inventory. | Strengthen coverage: preset CRUD and incomplete/duplicate titles are covered. Invalid/foreign preset IDs were already deferred; saved preset behavior after underlying event deletion is not explicit. Backend test verifies deleted event IDs are removed; new preset loading must be checked separately. Use an event with no orders for safe deletion setup. |
+| QA-033 | After an actual unavailable/failed scan request, the station releases loading and admits the next eligible attendee, without false success or extra saved admission. | Dedicated recovery case missing. Today's wrong-event rejection → valid recurring admission proves recovery from ordinary validation rejection only. Network/save failure is unexecuted; lost-response-after-commit remains the separately recorded recovery gap. |
+
+Already covered or deliberately recorded as deferred: normal/duplicate/blocked-state scans, wrong event/organization/type, finite/unlimited scans, package ambiguity, order/customer-code selection and cancellation, product pickup, and ordinary membership eligibility. Empty-selection safety belongs with SPT-5482 plus API validation; do not equate no selected ticket types with invalid product-only pickup, which passed on the new page. Stale rows after a filter change were already observed in today's run and remain an unsubmitted scope risk.
+
+The external plan's QA-050 explicitly blocks the newer frontend's internal coverage and relies on legacy templates/controller; it is generation-only, not evidence of new-page execution. Its NFC expectation needs exact event/barcode/device/switch setup: the backend scanner-device guard is bypassed for rotating metadata or the configured bypass switch, and the new typed-code path differs from row/shared-code actions. Do not turn it into a universal Web App rejection assertion.
+
+Source anchors: backend tickets/tests/api/venue/ticket_items/test_api_venue_based_ticket_item_scan.py:306–322; tickets/tests/api/venue/check_in/test_presets.py:163–174; tickets/api/venue_based/serializers/ticket_items.py:229–245; memberships/models/benefits.py:485–535. Frontend features/check-in/domain/check-in-code-parsers.ts; hooks/useCheckInScannerInput.ts; hooks/useCheckInPresetSelectionLoader.ts; ui/pages/CheckInPage.web.tsx:401–426. Revisions remain the backend/frontend SHAs recorded in today's smoke note. Source/tests were read, not executed.
+
+**Read/comparison completeness — 2026-10-22:** One fresh complete SPT snapshot, 16:57:26–16:57:49 UTC (**10:57:49 MDT**), contains **2,221 unique cases / 23 pages and 317 unique suites / 4 pages**, with stable totals and no truncated pages. Local suite-tree filtering still finds **34 cases in 184 + 5 in 185**. Broad local filtering uses full title/description/setup/steps/parameters/tags, including barcode/check-in/admission, concurrency/recovery, membership state, ownership and product-code aliases. A focused race/reset/revocation/barcode-security scan found **54 discovery matches**, not 54 fully reviewed cases. This pass reviewed complete fields for **1667/1670/1671/1672/4915/5473/5477/5496** and related **2046/3999/4919/4927**, alongside the previously reviewed critical definitions. The snapshot includes full steps; no title-only absence claim or extra per-case read was needed for discovery. Readback during the update dry-run is separate. Temporary files are under /private/tmp. This snapshot preceded the approved publication; no admission execution occurred.
+
+**Duplicate/preservation decisions:** SPT-5759 submits a product barcode without selecting events; SPT-5499's row Scan does not exercise that lookup. SPT-5760's named inactive states and SPT-5761's exhausted shared event capacity do not appear explicitly in the five existing Membership cases. SPT-4915 keeps its scan-out, access-choice and multi-count responsibilities. SPT-1667 remains unchanged with all four ScanSource values; its ExternalScanCode parameter needs a source-path resolution before an enhancement is safe: the backend accepts scan_code when allow_member_scan_codes is on, but this legacy controller passes barcode and only invokes membership fallback from membership/universal/order paths. A raw assigned code's usable legacy route was not established. No parameter is silently removed, and no live failure is claimed. SPT-1665/5151 remain held.
+
+**Preserved baseline decisions from 2026-10-21:**
+
+| Critical business outcome | Existing Qase definition | Decision |
+| --- | --- | --- |
+| Admit the correct unused paid ticket exactly once, persist history and counters | SPT-1664; row action SPT-5499 | Keep; both entry paths matter |
+| Reject repeat admission without extra successful history | SPT-5473 | Keep; sequential duplicate coverage is not concurrency proof |
+| Reject unknown / other event / excluded type / other organization codes | SPT-5474 | Keep; endpoint ownership remains separate |
+| Reject refunded, voided and pending-transfer tickets | SPT-5475 | Keep; completed transfer/resale invalidation needs end-to-end strengthening with existing ownership cases |
+| Enforce scanning window and scan allowance | SPT-5476 / 5478 / 5479 | Keep; exact clock/DST boundaries remain controlled-backend work |
+| Undo admission correctly without payment refund | SPT-5477 | Keep; return-at-zero and stale repeat return remain extensions |
+| Shared order/customer code affects only selected eligible items; Cancel changes none | SPT-5489 / 5490 / 5491 | Keep |
+| Package code admits the correct child and rejects ambiguous child scope | SPT-5497 / 5498 | Keep |
+| Deny unauthorized page access and restrict selectors/preset management | SPT-5495 / 5496 | Keep; do not substitute for API denial or permission-revocation proof |
+| Product pickup through the row Scan button | SPT-5499, ItemType Product | Keep; product-only barcode submission is now SPT-5759 |
+| Membership code sources, generated tickets, eligible event access, daily access, scan-out and limits | SPT-1667 / 1670 / 1671 / 1672 / 4915 in suite 185 | Keep; explicit inactive member and enforced event capacity are now separate SPT-5760/5761 |
+
+**Sources rechecked:** backend bda0dd85f003b598c587c806f0df93a9e2eb86d6. Ticket lifecycle locking, second validation and histories: apps/tickets/models/ticket_lifecycle/ticket.py:1118–1245; ticket item scan and History API permissions: apps/tickets/api/venue_based/viewsets/ticket_items.py:180 and :479; validation: apps/tickets/api/venue_based/serializers/check_in.py:135. Product barcode client path: apps/main/static/src/dashboard/tickets/controllers/TicketsCheckIn.js:697/:789 and core/tickets/models.js:916. Membership status/capacity: apps/memberships/services/access/membership_access_scan.py:80–204 and models/benefits.py:439–535; member status names: constants/members.py; membership API permissions: api/venue_based/viewsets/benefits.py:128; daily reset: services/access/reset_daily_membership_scan_usage.py. Barcode validation: tickets/services/scan/services/processor.py and ticket_retrieval.py. Also checked legacy Member Details / Member Activity History templates, Membership benefit access Admin and member status actions, daily access statistics and scan-code serializer/client mapping. Existing backend test definitions were inspected but **no tests were run**. Selected handbook: Delivery Check-In Transfers and Resale, membership access guidance and canonical concurrency/evidence gates.
+
+**Readiness:** Published definitions and source analysis only; publication is not admission execution. Product-only barcode remains a source-backed integration risk, not a reproduced bug. Valid attendees being rejected, duplicate/unauthorized admission or exceeded allowance/capacity would be critical business failures if confirmed. No such live outcome was executed or claimed here. On 2026-10-22 the already-open beta legacy page and its Membership group/level filter labels were inspected without applying selections or submitting a barcode; the Events filter tab was restored. The organization and effective role were not exposed in that modal and were not verified, so this is wording evidence only.
+
 **Target:** [Check In, suite 184](https://app.qase.io/project/SPT?suite=184), under Dashboard (78). Scope is the **legacy `/dashboard/events/check-in/` page and its backend behavior**. No Next.js pages or frontend repository were inspected for this request. Browser inspection is smoke evidence only; **web-app owns expected eligibility, validation, permissions and saved results**.
 
-**Published:** [Check In suite 184](https://app.qase.io/project/SPT?suite=184) now contains **34 direct cases**. Created **SPT-5473–5501** (29 cases) and updated **SPT-1663/1664** after explicit approval. Full-field readback verified all **31 writes / 99 step rows**. Proposed revisions **SPT-1665/5151 remain held**; SPT-5123 and all five membership cases in suite 185 are unchanged. Publication is not execution.
+**Published baseline — 2026-10-16 (before the 2026-10-22 additions above):** [Check In suite 184](https://app.qase.io/project/SPT?suite=184) now contains **34 direct cases**. Created **SPT-5473–5501** (29 cases) and updated **SPT-1663/1664** after explicit approval. Full-field readback verified all **31 writes / 99 step rows**. Proposed revisions **SPT-1665/5151 remain held**; SPT-5123 and all five membership cases in suite 185 are unchanged. Publication is not execution.
 
 **Important limits:** Product-only preset creation has a backend/legacy-UI mismatch; product-only typed barcode scanning has a second source integration risk. Existing duplicate/wrong-code assertions from SPT-1664 are preserved in the separately published SPT-5473/5474; these were created before SPT-1664 was narrowed. The date-range case is corrected from event start time to event end time. These drafts are not a production-readiness claim; scanning, saving presets and exports were not executed.
 
@@ -1421,7 +1746,7 @@ No Qase case or suite was deleted or moved. All 31 published writes target exist
 
 ### Evidence conflicts requiring attention
 
-1. **Product-only preset Save — source mismatch with matching live disabled-button observation.** In Calgary Outlaws on demo, select only Calgary Outlaws Hat and enter `Coverage review — unsaved`. Save Preset stays disabled with “Please select at least one complete filter set…” although the explanation lists products + attributes. No save was submitted. Backend accepts product attributes; legacy completeness validation omits products. The unsaved control restriction is confirmed, while end-to-end save failure is **not executed**. Keep Product in SPT-1665 and hold the update; do not add an event to make it pass. [Evidence](evidence/ui-coverage-2026-10-16/product-only-preset-disabled.png).
+1. **Product-only preset Save — source mismatch with matching live disabled-button observation.** In Calgary Outlaws on demo, select only Calgary Outlaws Hat and enter `Coverage review — unsaved`. Save Preset stays disabled with “Please select at least one complete filter set…” although the explanation lists products + attributes. No save was submitted. Backend accepts product attributes; legacy completeness validation omits products. The unsaved control restriction is confirmed, while end-to-end save failure is **not executed**. Keep Product in SPT-1665 and hold the update; do not add an event to make it pass. [Evidence](../../99%20Archive/QA%20Evidence/Check%20In/ui-coverage-2026-10-16/product-only-preset-disabled.png).
 2. **Product-only typed barcode — source-backed integration risk, not executed.** Legacy normal scanning sends a comma-joined ticket-type string; with only products it is empty. `ScanTicketValidation` rejects a provided empty `permittedTypeIDs`, before product pickup can occur. Verify actual request serialization and deployed response in an isolated non-customer scan run before filing it as a reproduced bug. SPT-5499 exercises the distinct row Scan path.
 3. **Date-range expectation — existing definition disagrees with source.** SPT-1663 expects starts-within-range; legacy code sends end-time bounds. The proposed revision documents actual behavior, without treating browser smoke as boundary proof.
 4. **SPT-5151 scanner selection — unresolved existing responsibility.** Preserve the live case until the relevant client/scope is established. A legacy page lacking the same control does not authorize dropping its existing regression intent.
@@ -1442,14 +1767,14 @@ No Qase case or suite was deleted or moved. All 31 published writes target exist
 | Hat selection produced Large and Medium purchase groups marked Hold; expanding one showed No tickets found | Product groups and empty expanded-group state inspected. These are unsuitable proof records for paid pickup/Return or Details/History; no Scan was pressed and no claim is made that holds count as issued inventory. |
 | A selected ended September 2026 event returned No results found in Tickets | Actual empty purchased-results state inspected; absence of results is not evidence of missing admission logic or a defect. |
 | Memberships filter exposes Select Membership Groups / Select Membership Levels; Member Scan Mode offers Scan In / Scan Out | Reuse membership cases in suite 185. Both download buttons were disabled in Memberships mode. No member scan/mode change submitted. |
-| At 390 × 844 the dialog scrolls to Reset/Continue and full-screen opens then CLOSE FULLSCREEN exits | Partial layout smoke only. Help message initially overlapped Reset and was dismissible. [Filter actions](evidence/ui-coverage-2026-10-16/mobile-filter-actions.png), [full-screen](evidence/ui-coverage-2026-10-16/mobile-fullscreen.png). No paid-row mobile check-in was executed. |
+| At 390 × 844 the dialog scrolls to Reset/Continue and full-screen opens then CLOSE FULLSCREEN exits | Partial layout smoke only. Help message initially overlapped Reset and was dismissible. [Filter actions](../../99%20Archive/QA%20Evidence/Check%20In/ui-coverage-2026-10-16/mobile-filter-actions.png), [full-screen](../../99%20Archive/QA%20Evidence/Check%20In/ui-coverage-2026-10-16/mobile-fullscreen.png). No paid-row mobile check-in was executed. |
 | Date start/end inputs accept displayed text; date-picker overlays remained during attempted Search | **Inconclusive interaction**, not a confirmed product bug or end-date filtering pass. SPT-1663 remains supported by backend/legacy caller source; live range results and exact timezone/boundary behavior are unverified. |
 
 **Not executed:** admission/Return/Undo, typed product barcode request, persisted preset create/edit/delete/reload, duplicate-title response, completed exports, denied-role/API checks, details from an issued item, shared-code chooser, package scans, concurrent/recovery paths and physical hardware. No suitable issued paid item or saved preset was established during this read-only pass; those definitions remain planned.
 
 **Parser check:** all 33 definitions / 108 step rows passed the reusable local Qase parser after these edits. This validates structure, not product behavior or current Qase uniqueness.
 
-**Final state and cleanup:** cleared unsaved title/date/selection fields with Reset and Continue, returned to Tickets and empty selection, closed full-screen, dismissed the help message, and reset the temporary viewport override. [Final empty selection](evidence/ui-coverage-2026-10-16/final-empty-selection.png). No persistent product test data was created or changed during the UI pass; subsequent Qase publication is recorded below.
+**Final state and cleanup:** cleared unsaved title/date/selection fields with Reset and Continue, returned to Tickets and empty selection, closed full-screen, dismissed the help message, and reset the temporary viewport override. [Final empty selection](../../99%20Archive/QA%20Evidence/Check%20In/ui-coverage-2026-10-16/final-empty-selection.png). No persistent product test data was created or changed during the UI pass; subsequent Qase publication is recorded below.
 
 ### Qase publication — verified 2026-10-16
 
@@ -1517,7 +1842,7 @@ No Qase case or suite was deleted or moved. All 31 published writes target exist
 >
 > **Historical Qase completeness:** one complete SPT project snapshot at **2026-10-16 16:04:19 UTC / 09:04:19 PDT**; **1,936 records, 1,936 unique IDs, 20 pages**, stable reported total. Originally saved under `/private/tmp/qase-check-in-legacy-cases-all.json` with page responses alongside; those temporary files did not survive the restart. The recorded comparison remains historical evidence, not a fresh Qase read. The fresh pre-publication snapshot above resolved duplicate checking for the added past-event case, now SPT-5501. Full-field local keyword filter `check.?in|scan.?out|multi.?scan|admission|scan ticket|will.?call|checkin.preset|scan.?code` yielded **171 candidates**; those are discovery matches, not 171 fully reviewed cases. Compared full setup, native parameters, steps/assertions, tags and suites for direct cases **1663/1664/1665/5123/5151** and named specialist candidates **1667/1670/1671/1672/4915/3270/3269/897/1257/1258**. Mobile cases were client-context triage, not proof of equivalent legacy behavior.
 >
-> **Original browser smoke (before the follow-up UI verification below):** already-open demo legacy page, filter dialog, event/type selection and empty/no-results screens only. [Smoke screenshot](evidence/legacy-check-in-smoke.png). Organization identity, exact role, saved orders and deployed source revision were not established. No barcode was submitted, admission/return executed, preset saved/deleted, export generated, flag changed, or Next.js page used. Client filter selection is smoke evidence; it is not a server mutation or a completed scan.
+> **Original browser smoke (before the follow-up UI verification below):** already-open demo legacy page, filter dialog, event/type selection and empty/no-results screens only. [Smoke screenshot](../../99%20Archive/QA%20Evidence/Check%20In/legacy-check-in-smoke.png). Organization identity, exact role, saved orders and deployed source revision were not established. No barcode was submitted, admission/return executed, preset saved/deleted, export generated, flag changed, or Next.js page used. Client filter selection is smoke evidence; it is not a server mutation or a completed scan.
 >
 > **Readiness:** source trace and case definitions only. All production readiness, financial correctness, actual admission, recovery and device outcomes remain unexecuted until their named runs supply saved-state evidence. Deferred rows are explicit gaps, not covered by the case count.
 

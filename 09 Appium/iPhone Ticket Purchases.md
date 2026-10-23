@@ -28,9 +28,9 @@ Start with [[09 Appium/Showpass Mobile App]] to build and launch the app. [[09 A
 
 The user-provided **Mobile** and **Mobile Box Office** rate cards each show the same card calculation: item $20.00 + host fee $1.00 + PST $1.00 + PST on host fee $0.05 + Showpass fee $2.24 + payment processing fee $1.01 + PST on service fees $0.16 = **$25.46**. The Box Office card also lists cash $20.00 and complimentary/free $0.00; these are separate payment methods outside this first card test.
 
-**Mobile:** ![[09 Appium/attachments/comic-con-adult-mobile-rate.png|600]]
+**Mobile:** ![[99 Archive/QA Evidence/Appium/attachments/comic-con-adult-mobile-rate.png|600]]
 
-**Mobile Box Office:** ![[09 Appium/attachments/comic-con-adult-mobile-box-office-rate.png|600]]
+**Mobile Box Office:** ![[99 Archive/QA Evidence/Appium/attachments/comic-con-adult-mobile-box-office-rate.png|600]]
 
 These screenshots establish the supplied rate-card expectation, not a completed checkout or saved transaction. The user separately confirmed Event availability, test mode, and account access. The account fixture is defined in Playwright's `fixtures/staticData/venue-users.ts` and used by `STRIPE_SYSTEM_PAYMENT_INTENT`; the repository search did not establish a Comic Con fixture or organization mapping, so the installed-app run must assert the selected Venue and Event before paying. The older Playwright **TA event for system gateway (payment intent)** fixture is not the Event for this case. [Stripe's test-card guide](https://docs.stripe.com/testing) identifies the selected 4242 Visa as a test card and requires test API keys for test-card use.
 

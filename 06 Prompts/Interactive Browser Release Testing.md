@@ -7,31 +7,137 @@ tags:
   - release-readiness
 aliases:
   - Deep Browser QA Prompt
+  - Browser Smoke Testing
 ---
 
 # Interactive Browser Release Testing
 
-Use this prompt for release-oriented exploratory testing in the in-app browser. The preferred invocation points to one canonical test note under `03 Test Cases/`; the workflow derives everything else it safely can from that note, its links, the open browser, and the vault.
+Use this workflow to test in the in-app browser. Choose a focused smoke check to find important problems quickly, or a deep review of the declared release scope. Reuse the current session, source knowledge and existing test notes.
+
+The reusable QA tester entrypoint is `$showpass-qa-tester`, installed in the user's Codex skills. This note maintains its detailed browser execution rules; [[06 Prompts/Example - Browser Testing]] provides copyable skill requests.
 
 ## Canonical Relationship
 
 Read [[00 Start Here/World-Class Software Quality Standard]] first. It defines the shared coverage contract, evidence rules, complex-control decomposition, data safety, finding classification, readiness gates, and release vocabulary.
 
-Use [[06 Prompts/Showpass QA Test Case Generator]] before this prompt when source-backed test cases or a coverage plan still need to be created. This browser workflow executes and extends that declared coverage; it does not replace the design standard.
+Reuse relevant cases from [[06 Prompts/Showpass QA Test Case Generator]] when available. A focused smoke check can start from the requested page without first generating a full test suite. Trace the selected behavior in source and use the relevant handbook sections. Creating cases and comparing Qase coverage remain separate tasks.
+
+## Standard for Every Run: Plan → Test → Evidence
+
+Act as the QA tester responsible for carrying the requested checks through to a clear result. The user supplies the goal and any necessary boundaries. Resolve known details from the conversation, source, existing notes and the authorized browser session. Choose useful checks, execute them, investigate failures and preserve proof. Ask the user to perform a check only when their access, judgment, physical device or independent reproduction is actually needed.
+
+### 1. Show the Plan
+
+Before the first browser test action, share a short plan in chat. Record the same plan in the single run note; reuse existing case IDs when available. A task stated in one sentence is enough to begin; a separate generated test suite is optional.
+
+State the environment, requested page/version, signed-in or signed-out state, selected Organizer when applicable, and the important exclusions. Identify any session or saved-data changes. For each selected check, use:
+
+| Check | Starting page / record / state | What I will do | Expected result and proof |
+| --- | --- | --- | --- |
+
+Keep the chat plan readable. For a deep review, summarize groups of checks and link their full scope in the run note. For a focused quest, name the actual pages and variations selected, and why they matter. A version-bump request does not require inventing feature changes: inspect the supplied exact diff when present, then select affected behavior and useful regression checks. State when the deployed version is unknown.
+
+**Default: show the plan, then execute the requested checks within the existing authorization.** The plan is visible before testing; it is not an extra approval request. Do not add a waiting period or ask for the same permission again. If the user says `Plan only` or `Wait for my approval`, stop after the reviewable plan and wait. Ask a targeted question when a missing fact or an action outside the authorized scope genuinely blocks a check; continue independent authorized checks meanwhile.
+
+### 2. Test and Follow Through
+
+Execute the selected checks in risk order using the relevant source rules and handbook guidance. Establish the required starting state before judging the result. An unavailable browser capability or missing test record is a named gap, not a reason to silently substitute another check or claim success.
+
+Investigate suspicious results safely. Check whether the failure repeats and whether the actual configuration explains it. Finish other independent checks when a finding does not prevent them. If new evidence changes the plan, briefly explain the change and update the same note. Expanding into a new feature or an unapproved data change requires its own scope decision.
+
+### 3. Bring Back Evidence
+
+Use the plan's check names or IDs in the results table so the user can match each intention to its outcome:
+
+| Check | Result | What actually happened | Evidence | Not run / remaining work |
+| --- | --- | --- | --- | --- |
+
+Say `Tested and passed`, `Confirmed bug`, `Inconclusive` or `Not run` in the user-facing result. Retain the canonical coverage status and reason in the same row or linked detail. Pair every pass or confirmed bug with the relevant screenshot, file, saved record, downstream result or named human verification. Include the environment, page/state and capture time in the evidence caption. Required mutation and financial proof still applies.
+
+Maintain one canonical run note under `03 Test Cases/<feature>/`; update an existing matching note first. Store screenshots and other images locally under `99 Archive/QA Evidence/<feature>/<run-slug>/`, which is excluded from Git. Embed their vault-relative archive paths beside the result they support. Keep images and other large generated files out of Git by default; follow `AGENTS.md` for a justified exception when a specific file is required in the repository. Other durable evidence may remain in the note's `evidence/<run-slug>/` folder, subject to the vault's existing ignore rules. Keep credentials and unnecessary personal data out of evidence. A final screenshot supports the visible final state; it cannot alone prove that no data flashed earlier, that an API denied access, or that a background job completed.
+
+Finish with the most important result, the table, any reproducible bugs, the highest-priority unfinished checks, and the release recommendation for the declared scope. State what data or session state changed and what was restored or preserved. Keep supporting source detail collapsed. Follow the shared evidence and finding rules below; do not create another report that repeats the same results.
+
+### Example Quest: Signed-Out Dashboard Access
+
+Goal: `Open protected dashboard pages directly while signed out. Confirm no protected data appears.`
+
+- Trace the relevant frontend access checks and backend authorization. Select exact pages from the requested scope that exercise meaningfully different access paths, including a sensitive page. State what the sample leaves untested; it does not prove every dashboard page or endpoint is protected.
+- Use an already-signed-out session or a supported separate test session when available and authorized. Another tab may share the same login. Do not call it signed out without checking. Preserve the user's working session; if signing it out or clearing its stored data is necessary and outside the user's permission, ask about that specific change.
+- Open each selected protected URL directly and reload it. Observe the page while it loads as well as its final state. Check for the source-defined login/access response and for customer, order, sales, financial or other protected content appearing before it. A redirect alone is insufficient proof. Direct URLs belong in these test steps because direct access is the behavior under test.
+- Use supported browser evidence to check responses or the loading sequence when available. If the available tool cannot observe an early data flash, initial response or protected API response, name that limit. Report only the visible checks actually proven; leave the stronger no-data-exposure conclusion unverified when necessary. Do not turn source review into an executed security pass.
+- Save the checked URLs, verified session state, observed loading/final results and evidence. If protected data appears, preserve only the minimum safe proof and stop exploring those records. Report the exposure and continue only checks that do not increase it. Do not submit forms, trigger jobs or modify Qase as part of this quest.
+
+## Choose the Depth
+
+| Request | What to do | What the result means |
+| --- | --- | --- |
+| Smoke test, quick browser check, or what should I test first? | Select the most important business checks and execute them within the authorized data boundaries. | Evidence for those specific checks, with important untested behavior named. |
+| Deep review, release readiness, or execute this full test note | Execute the declared cases and applicable control, state, error, keyboard and responsive checks. | A release recommendation for the declared scope, supported by the complete coverage accounting. |
+
+Do not silently turn a smoke check into a full-page audit. Do not narrow an explicit full-review request into a smoke check. For an unspecified browser-testing request, state the chosen depth and scope briefly, then proceed using the user's context.
+
+## Focused Smoke Check
+
+1. **Confirm the starting point once.** Reuse the matching open tab. Identify the environment, selected Organizer, employee role and requested page version. When the user requests the new page, test that page; use legacy source to understand business rules and migration risks. Compare legacy UI only when that comparison is in scope.
+2. **Pick checks by business impact.** Start with what an employee or customer must be able to finish. Use backend rules, frontend behavior, relevant handbook guidance and previous failures to choose the checks. Add the existing-data state most likely to expose a different result. Show a short prioritized table: `Check | Why it matters | Required setup / data change`. A handful of distinct checks is a useful starting point, not a fixed limit or permission to omit an applicable critical risk.
+3. **Prove a clean success first.** For example: save an item and reopen it; generate one representative report and inspect its contents; check in one valid ticket and verify its saved status. A page loading or a form opening proves only that observation. Use only actions authorized for the available test data; mark the success check blocked when the necessary action is outside that scope.
+4. **Choose meaningful variations.** Examples include sold versus unsold products, available versus fully used membership benefits, and reports with different filter fields. Reuse one sample only when the source shows that it proves the same behavior. Record which types and fields were actually tested; do not claim the whole family passed. For migrations, check important functions are reachable from the actual user landing page, including moved functions such as custom fees.
+5. **Add focused interaction checks.** Exercise the search, filters, row actions, validation and cancel/reopen behavior needed for the selected workflows. When desktop/mobile UX is requested, name the tested screen sizes and check key actions on both. Browser resizing does not prove a physical-device pass. Before reporting a keyboard bug, try the control with normal Tab, Enter, Space, arrows and Escape as applicable.
+6. **Follow suspicious results far enough.** Check the actual rule, record state and saved result before deciding something is a bug. A sold-item price field being editable deserves investigation even if the rest of the page looks fine. Continue independent checks after a finding; pause only the work that needs unavailable access, unsafe data changes or missing setup.
+7. **Finish with results and the next useful checks.** Account for every selected or discovered in-scope check as tested, failed, blocked, deferred or not applicable, using the canonical statuses in the note. Name important work outside the sample separately. Do not keep testing equivalent variations merely to increase the count. Do not leave selected checks unaccounted for when a time limit or missing setup prevents execution.
+
+Apply the canonical [[00 Start Here/World-Class Software Quality Standard#Financial and Core Transaction Gates|financial and core transaction rules]] in both modes. Money, fees, item/rate-card saving, purchases, duplicate charges, stock and service-fee revenue need their applicable proof. A read-only inspection cannot clear their save/payment checks. If required proof is missing, the decision for that scope remains blocked; individual UI checks can still pass. A purely visual check does not automatically require an unrelated purchase.
+
+### Keep the Run Light
+
+- Reuse the current session and verified setup; do not launch another browser, build, development server or broad automation suite just for this check.
+- Read only the source and handbook sections needed to establish the selected behavior. Do not rescan the full repository or Qase project on every browser check. Query Qase when comparison with existing cases is requested or needed for a proposed new case, following [[05 Tooling/qasectl]].
+- Observe and collect evidence in the same pass. Capture the required success, saved-state and finding evidence; avoid repeated screenshots or interactions that add no proof. One screenshot can support several clearly named observations.
+- Reuse one canonical feature/run note. A smoke check does not require separate planning, findings and summary files. Keep source details and lengthy evidence in a collapsed callout.
+- Save routine browser text dumps under `/private/tmp` while investigating. After recording the useful findings and required proof, delete redundant dumps with `rm` and remove their links. Keep a raw capture only when it supplies necessary evidence unavailable elsewhere, with its purpose stated. Preserve screenshots, real CSV/PDF outputs and user-provided files.
+- Reuse existing mutation and cleanup authorization. When it is missing, continue useful non-saving checks and name exactly which save, purchase, import or other action was not run. A smoke request alone does not authorize live data changes or Qase publication.
+
+### Smoke Results
+
+Lead with the important result in everyday language, followed by one compact table:
+
+| Priority | Check / exact item or report type | Result | Evidence or next step |
+| --- | --- | --- | --- |
+| Highest first | Name the action and relevant field or record state | Tested and passed / Confirmed bug / Inconclusive / Not run | Link the proof, or say what setup/action is missing and why it matters |
+
+For a confirmed bug, use the shared finding rules below: exact starting state, reproducible actions, expected versus actual result, impact and evidence. Say `No critical bugs found in the checks run` only when supported, and immediately name important untested checks. Do not translate that into `production ready`.
+
+End with the highest-priority remaining checks, the canonical release recommendation limited to the declared scope, and any changed/preserved data. If the user must act, follow `AGENTS.md` and the human-verification rules below: exact starting place, action, expected outcomes, data-change label and what to report. Do not ask them to repeat checks already proven.
+
+The shared authentication, safety, evidence, findings and decision rules below apply to both modes. The exhaustive interaction audit applies to the declared deep-review scope; in smoke mode, account for the child controls and states of the selected workflows without implying the rest of the page was tested.
 
 ## Quick Start
 
-This is the normal reusable prompt:
+Copyable examples: [[06 Prompts/Example - Browser Testing]].
+
+For a focused smoke check:
 
 ```text
-Use [[06 Prompts/Interactive Browser Release Testing]] to execute:
+Use $showpass-qa-tester.
+Mode: Focused smoke.
+Test the new page in the open browser. Prioritize business-critical behavior.
+Tell me what passed, any bugs, and the most important checks not run.
+```
+
+Add specific records or authorized test-data changes only when needed. The workflow should reuse known context instead of asking for it again.
+
+For a deep review of an existing test note:
+
+```text
+Use $showpass-qa-tester to execute:
 [[03 Test Cases/<feature>/<test-case-note>]]
 ```
 
 Example:
 
 ```text
-Use [[06 Prompts/Interactive Browser Release Testing]] to execute:
+Use $showpass-qa-tester to execute:
 [[03 Test Cases/Memberships/membership-benefit-seating-permissions-test-cases]]
 ```
 
@@ -64,7 +170,7 @@ When invoked with only a test-note link:
 Add only the values that differ from the test note:
 
 ```text
-Use [[06 Prompts/Interactive Browser Release Testing]] to execute:
+Use $showpass-qa-tester to execute:
 [[03 Test Cases/<feature>/<test-case-note>]]
 
 Overrides:
@@ -157,7 +263,7 @@ Reviewable evidence and screenshots:
    - the visible success result with the unique test identifier;
    - the persisted result after a fresh reload or reopen;
    - the downstream or cross-route result when applicable.
-4. Save screenshots under `03 Test Cases/<feature>/evidence/<run-slug>/` with deterministic, descriptive filenames. Do not place durable evidence only in a temporary directory or the Downloads folder.
+4. Save screenshots locally under `99 Archive/QA Evidence/<feature>/<run-slug>/` with deterministic, descriptive filenames. Keep this directory ignored by Git; a necessary repository file uses the narrow exception described in `AGENTS.md`. Do not place durable evidence only in a temporary directory or the Downloads folder. The active run note remains under `03 Test Cases/` and embeds the archive paths.
 5. Embed every screenshot in the canonical run note with an Obsidian image embed and a caption stating the route, action, expected result, observed result, and capture time.
 6. Link the screenshot files directly in the final response so the user can review them without trusting the narrative alone.
 7. Screenshots must show enough page context to identify the route or workflow and the key result. Do not crop away information needed to judge the claim.
@@ -170,12 +276,12 @@ Apply [[00 Start Here/World-Class Software Quality Standard#Financial and Core T
 
 1. Prove a clean successful path independently of retry or recovery coverage.
 2. Execute Critical and Major cases first.
-3. Continue through the remaining applicable cases because the goal is release readiness, not only priority smoke coverage.
+3. For a deep review, continue through all remaining applicable declared cases. For focused smoke, complete the selected checks and explicitly account for important behavior outside the sample; do not claim a full release review.
 4. Execute every state-distinct entry path when it carries materially different state.
 5. Cover each supported outcome only on clients that actually provide it.
 6. Mark fixture-dependent cases Manual-only, Deferred, Blocked, or Not Applicable with the exact reason and evidence needed.
 7. Do not force a scenario onto a fixture that cannot represent it.
-8. After the scripted cases, perform the product-surface and deep interaction audits below.
+8. After the scripted cases, perform the product-surface and interaction checks appropriate to the selected depth and declared scope. Keep untested controls and states explicit.
 9. Update the coverage ledger so every discovered in-scope item is accounted for.
 
 Coverage-ledger rule:
@@ -196,7 +302,7 @@ Coverage-ledger rule:
 
 Deep interaction audit:
 
-Audit every visible control a user can interact with, including:
+For deep review, audit every visible control in the declared scope. For focused smoke, apply this inventory to the selected workflows and name untested behavior. Include applicable:
 - buttons, links, tabs, menus, dropdowns, comboboxes, checkboxes, radios, toggles, steppers, text fields, numeric fields, rich-text controls, modal close controls, and footer actions;
 - disabled, enabled, loading, empty, error, saved, unsaved, dirty, and reopened states;
 - keyboard focus, Tab order, Enter, Space, Escape, arrow keys, and Shift-modified actions;
@@ -321,7 +427,7 @@ Reviewer-report deduplication:
 8. If a detailed execution note already exists, consolidate the reviewer-relevant evidence into the canonical report and replace the duplicate note with a short link to the canonical report.
 
 Final response:
-- Lead with the release recommendation.
+- For deep review, lead with the release recommendation. For focused smoke, lead with the important observed result and use the compact Smoke Results format above; include the recommendation for that limited scope.
 - Summarize confirmed findings, non-blocking findings, and blocked coverage separately.
 - State exactly what data was changed, what was cleaned up, and what was deliberately preserved for review.
 - Link the single canonical run note.

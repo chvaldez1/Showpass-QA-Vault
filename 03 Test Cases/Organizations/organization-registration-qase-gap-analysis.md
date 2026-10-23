@@ -556,10 +556,10 @@ The published definitions are not executed end to end. Existing SPT-1657 checks 
 
 > [!info]- Retained legacy screenshots
 > Desktop form:
-> ![[03 Test Cases/Organizations/assets/organization-registration/legacy-desktop.png]]
+> ![[99 Archive/QA Evidence/Organizations/organization-registration/legacy-desktop.png]]
 >
 > Mobile conditional referral field after scrolling:
-> ![[03 Test Cases/Organizations/assets/organization-registration/legacy-mobile-referral.png]]
+> ![[99 Archive/QA Evidence/Organizations/organization-registration/legacy-mobile-referral.png]]
 
 > [!warning]- Retained finding — Professional price display
 > ### F1 — Legacy Professional Price Differs from Reviewed Defaults
@@ -576,7 +576,7 @@ The published definitions are not executed end to end. Existing SPT-1657 checks 
 >
 > **Actual:** at the final step, Professional displays `2.5% + $1.6`. **Impact:** an organizer could be shown a lower fixed fee than the reviewed creation default. **Cleanup:** Back retained the unsaved details; reloading cleared them and restored Organization Check. **Release classification:** resolve the deployed pricing contract and display agreement before treating plan pricing as passed; no end-to-end financial defect or automatic release blocker is claimed.
 >
-> ![[03 Test Cases/Organizations/assets/organization-registration/legacy-plan-pricing.png]]
+> ![[99 Archive/QA Evidence/Organizations/organization-registration/legacy-plan-pricing.png]]
 
 ## Execution Selection
 

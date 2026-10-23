@@ -13,6 +13,8 @@ tags:
 
 See [[#Qase Regression Gap Analysis — 2026-09-14]] for reusable existing cases and remaining regression gaps.
 
+**Latest critical coverage review:** [[#Critical Coverage Review — 2026-10-22]] lists the missing package, mixed-order, API, hold-boundary, seating and native-sales proofs. Recommendations only; no Qase writes.
+
 ## Updated Requirements Checklist — 2026-10-01
 
 **Published means the manual case exists in Qase, not that the requirement has passed. No manual execution results are recorded here.** R01 is the fixed switch-OFF regression. Every other executable case requires switch ON in Preconditions; the ticket toggle is separate.
@@ -40,12 +42,13 @@ This list combines the Jira requirements, the source-reviewed purchase paths and
 | R17         | An ordinary checkout link without a venue-created hold attempts to add tickets when opened: reject the forced ticket and complete purchase of the available ticket without duplicates. The app abandoned-cart recovery push uses this ordinary-link rule.                           | TC-20 → [SPT-5283](https://app.qase.io/case/SPT-5283)                                                                                                                                                                                   | Published; regular tickets                                            |
 | R18         | For ticket + ticket and ticket + product packages, a forced parent blocks purchase; clearing only the parent permits the configured contents. Forced included tickets remain blocked when sold separately; actual child/product shortages still limit purchase.                     | TC-24 → [SPT-5263](https://app.qase.io/case/SPT-5263); TC-31 → [SPT-5264](https://app.qase.io/case/SPT-5264); TC-33 → [SPT-5266](https://app.qase.io/case/SPT-5266); [SPT-4832](https://app.qase.io/case/SPT-4832)                      | Published; exact client composition still needed                      |
 | R19         | In-person package sales use actual stock and issue the complete configured ticket/product contents.                                                                                                                                                                                 | TC-36 → [SPT-5269](https://app.qase.io/case/SPT-5269)                                                                                                                                                                                   | Published; Web Box Office / desktop                                   |
-| R20         | A seat with only an unavailable type cannot be selected; a shared seat permits only an available type; best-available excludes forced types; purchased seats cannot be sold again.                                                                                                  | TC-10 local; TC-11 → [SPT-5236](https://app.qase.io/case/SPT-5236); TC-12 → [SPT-5237](https://app.qase.io/case/SPT-5237); TC-17 → [SPT-5238](https://app.qase.io/case/SPT-5238); TC-32 → [SPT-5265](https://app.qase.io/case/SPT-5265) | Partly published; shared-seat label question remains                  |
-| R21         | Existing waitlist signup remains available for a forced ticket with stock, records one pending entry and does not issue a purchased ticket.                                                                                                                                         | TC-25                                                                                                                                                                                                                                   | Local draft; automatic fulfillment deferred                           |
+| R20         | A seat with only an unavailable type cannot be selected; a shared seat permits only an available type; best-available excludes forced types; purchased seats cannot be sold again.                                                                                                  | TC-10 → [SPT-5758](https://app.qase.io/case/SPT-5758); TC-11 → [SPT-5236](https://app.qase.io/case/SPT-5236); TC-12 → [SPT-5237](https://app.qase.io/case/SPT-5237); TC-17 → [SPT-5238](https://app.qase.io/case/SPT-5238); TC-32 → [SPT-5265](https://app.qase.io/case/SPT-5265) | Published; shared-seat label question remains                  |
+| R21         | Existing waitlist signup remains available for a forced ticket with stock, records one pending entry and does not issue a purchased ticket.                                                                                                                                         | TC-25 → [SPT-5756](https://app.qase.io/case/SPT-5756) | Published; allocated fulfillment is TC-37                           |
 | R22         | Add-on and upgrade offers cannot add a forced ticket or replace the available base ticket; the original ticket can still complete purchase.                                                                                                                                         | TC-21                                                                                                                                                                                                                                   | Local draft                                                           |
 | R23         | Fresh self-service kiosk selection blocks a forced ticket while an available comparison ticket completes purchase.                                                                                                                                                                  | TC-18                                                                                                                                                                                                                                   | Local draft; already-selected kiosk checkout unresolved               |
 | R24         | Refund amounts, exchange credit, fees, taxes, shipping and shipping tax remain unchanged by public sellout.                                                                                                                                                                         | TC-26 → [SPT-5286](https://app.qase.io/case/SPT-5286); TC-30 → [SPT-5289](https://app.qase.io/case/SPT-5289)                                                                                                                            | Representative checks published; full financial combinations deferred |
 | R25         | Prove refund, void, exchange, hold release and allocated-hold checkout separately for the client’s ticket + product and ticket + ticket packages.                                                                                                                                   | No package-specific lifecycle cases yet                                                                                                                                                                                                 | Gap; regular-ticket lifecycle cases do not prove this                 |
+| R26 | Join a forced-sold-out waitlist while stock remains, increase inventory through Allocate Inventory, receive the allocated offer and complete one purchase while ordinary public sales remain closed. | TC-37 → [SPT-5757](https://app.qase.io/case/SPT-5757) | Published; signup and processing have identified source risks; not executed |
 
 **Purchase entries for R01/R03:** single-day and recurring event detail, direct occurrence links, attractions (calendar, quantity first and fixed event), modal/embedded event widgets, current/legacy/attraction calendar widgets, Showpass-built website modal/separate checkout, and native customer app Explore/recurring/attraction/Saved. Record iOS and Android separately. Seating, in-person sales, carts, checkout links and holds have their separate rows above.
 
@@ -85,7 +88,11 @@ This list combines the Jira requirements, the source-reviewed purchase paths and
 | TC-15 | Mobile Box Office / POS in-person sale | [SPT-5306](https://app.qase.io/case/SPT-5306) |
 | TC-01 | Switch-OFF completed public purchase | [SPT-5307](https://app.qase.io/case/SPT-5307) |
 
-**Remaining local drafts:** TC-04, TC-08, TC-10, TC-14, TC-16, TC-18, TC-21 and TC-25. TC-27 and TC-35 are retired. Package-specific refund, void, exchange and hold coverage remains a separate gap; this upload does not close it. No manual tests were executed.
+**Remaining local drafts:** TC-04, TC-08, TC-14, TC-16, TC-18 and TC-21. TC-27 and TC-35 are retired. Package-specific refund, void, exchange and hold coverage remains a separate gap; this upload does not close it. No manual tests were executed.
+
+**Waitlist lifecycle addition — 2026-10-22:** [[#TC-37 — Join a forced-sold-out waitlist, add inventory and complete the allocated purchase|TC-37]] now drafts signup → add inventory → actual hold/email → paid purchase, with an inventory-count table. TC-25 remains signup-only. TC-25 → [SPT-5756](https://app.qase.io/case/SPT-5756) and TC-37 → [SPT-5757](https://app.qase.io/case/SPT-5757) are now published and verified; neither has an execution result recorded here.
+
+**Published — 2026-10-22:** TC-25 → [SPT-5756](https://app.qase.io/case/SPT-5756) (waitlist signup), TC-37 → [SPT-5757](https://app.qase.io/case/SPT-5757) (inventory increase through paid waitlist fulfillment), and TC-10 → [SPT-5758](https://app.qase.io/case/SPT-5758) (seat with only an unavailable ticket type). All three are in Core - Inventory (625), require the global switch ON and passed full-field readback verification. No manual test was executed.
 
 ## How to run this note
 
@@ -161,7 +168,7 @@ Evidence: backend `apps/tickets/api/serializers/general.py`, `apps/tickets/api/u
 
 ## Minimum Execution Set
 
-Run the OFF regression first: TC-01 for its public purchase entries and SPT-402 for its existing inventory/sales-surface scenarios. Then run active TC-02–TC-36 with the switch ON; skip retired TC-27 and TC-35. No active case uses the waffle switch as a parameter.
+Run the OFF regression first: TC-01 for its public purchase entries and SPT-402 for its existing inventory/sales-surface scenarios. Then run active TC-02–TC-36 with the switch ON; skip retired TC-27 and TC-35. No active case uses the waffle switch as a parameter. Include TC-37 for the requested waitlist inventory-allocation and paid-purchase lifecycle; retain TC-25 for the focused signup check. Both currently lack execution evidence.
 
 For TC-10 and TC-11, run ForcedSoldOut for every SeatEntry and InventoryEmpty at least once per distinct host family (web page, widget, native app). Run best-available selection and both positive/zero-inventory in-person cases on their listed clients with ON fixed. Keep all three TC-09 sellout reasons and TC-06 reopening after 25 minutes. Preserve cart resume, link retry, offer rejection, allocated holds, waitlist signup and inventory-return checks.
 
@@ -695,6 +702,8 @@ SelloutReason: AllForced, AllEmpty, Mixed
 * Record change/observation times and screenshots. Restore and verify the ticket checkboxes; keep the orders that consumed inventory.
 
 #### TC-10 — A seat with only a sold-out ticket type
+
+**Qase case:** [SPT-5758](https://app.qase.io/case/SPT-5758) — Core - Inventory (625). Created and read back on 2026-10-22; title, description, preconditions, postconditions, tags, parameters and all 8 steps match. No manual execution.
 
 > **Qase regression references (note only)**
 >
@@ -1509,6 +1518,8 @@ PackageShape: SingleEvent, MultipleEvents, NestedPreset, ReverseRatio
 
 #### TC-25 — Existing waitlist entry
 
+**Qase case:** [SPT-5756](https://app.qase.io/case/SPT-5756) — Core - Inventory (625). Created and read back on 2026-10-22; title, description, preconditions, postconditions, tags, parameters and all 5 steps match. No manual execution.
+
 > **Qase regression references (note only)**
 >
 > **Reusable waitlist baselines:** [Single-day signup (SPT-2880)](https://app.qase.io/case/SPT-2880), [public-calendar signup (SPT-3514)](https://app.qase.io/case/SPT-3514) and [widget-to-web signup (SPT-3520)](https://app.qase.io/case/SPT-3520). Keep the ON prerequisite and forced-sold-out setup here; later automatic fulfillment is not covered by these signup cases.
@@ -2077,6 +2088,115 @@ PackageContents: PresetTickets, CustomTickets, TicketAndProduct
 
 * Clear unpurchased items and restore ticket checkbox values. Keep completed orders and their sold inventory.
 
+### Waitlist inventory allocation and purchase — global switch ON
+
+#### TC-37 — Join a forced-sold-out waitlist, add inventory and complete the allocated purchase
+
+**Qase case:** [SPT-5757](https://app.qase.io/case/SPT-5757) — Core - Inventory (625). Created and read back on 2026-10-22; title, description, preconditions, postconditions, tags, parameters and all 19 steps match. No manual execution.
+
+**Coverage note:** Published as [SPT-5757](https://app.qase.io/case/SPT-5757). Complements TC-25's signup-only check. Related existing baselines: [SPT-4231](https://app.qase.io/case/SPT-4231), [SPT-2882](https://app.qase.io/case/SPT-2882) and [SPT-4235](https://app.qase.io/case/SPT-4235). Those cases do not explicitly retain forced public sellout throughout this flow.
+
+**Title:** Core - Waitlists - Allocate and sell a waitlisted ticket while public sales remain closed
+
+**Description:** A customer joins a waitlist while one actual ticket remains and public sales are forced closed. The organizer adds one ticket through Allocate Inventory. The customer receives a reserved purchase offer and buys one ticket; the other actual ticket remains available internally while ordinary public purchase stays closed. A pending waitlist request records interest; an allocated offer reserves a real ticket for purchase.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+| WebPublic | Desktop |
+| WebBoxOffice | Desktop |
+
+| Observation point | Total ticket limit | Pending waitlist quantity | Tickets held for this customer | Completed tickets sold | Actual tickets available to others |
+| --- | --- | --- | --- | --- | --- |
+| Before signup | 1 | 0 | 0 | 0 | 1 |
+| After signup | 1 | 1 | 0 | 0 | 1 |
+| After adding 1 and completing allocation | 2 | 0 | 1 | 0 | 1 |
+| After customer purchase | 2 | 0 | 0 | 1 | 1 |
+
+Keep **Show as sold out publicly** checked at every observation point. Pending and held states may take time to update; compare settled states after processing, not only the initial success message.
+
+**Preconditions:**
+
+* Global switch enable_force_public_sold_out is ON throughout.
+* Organizer permissions: Manage Events, Use Box Office, View Box Office Stats and Administer Transactions. Use a separate signed-in customer account with access to its email and no active cart.
+* Select a future published single-day general-admission event created for these checks, with exactly one public, on-sale regular ticket type. Set its positive Inventory limit to 1; it has no sales, holds, active carts, other waitlist subscribers, assigned seating, packages, passwords or event-wide capacity restriction.
+* The ticket has an active waitlist with signup currently open, card verification not required and a per-customer limit allowing quantity 1. The event starts more than 24 hours after the planned allocation; keep ticket sales and the waitlist open through purchase.
+* Check **Show as sold out publicly** through Manage Events → select the event → Edit → Ticket Types → edit the ticket → General → Next → Save Event. Record its original value and reopen to verify it is checked.
+* The organization has the Waitlists page available and a configured Stripe gateway for the paid purchase. Record the ticket price, applicable fees/taxes, currency and independently calculated total for quantity 1; use an approved test payment method and customer-owned contact details.
+* Record the event/type names and starting counts in Box Office. Prevent unrelated sales or waitlist processing on this event while comparing counts; only this customer will join and only one Allocate Inventory submission will be made.
+
+**Tags:** public, waitlists, tickets
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| As the customer, open the recorded public event page. | Target ticket; quantity 1 | The page offers waitlist signup while ordinary ticket purchase is unavailable. |
+| Select the waitlist action and request one place. | Quantity 1 | The signup shows the correct event, ticket type and quantity without requiring a card. |
+| Submit the required contact details to join the waitlist. | Signed-in customer-owned account | One waitlist signup confirmation is shown without an issued admission ticket. |
+| Open the customer's account → Waitlists and locate this entry. | Recorded event/type | Exactly one request is Pending for quantity 1. |
+| As the organizer, open Box Office → Sell and locate the recorded ticket type. | Starting limit 1 | Actual remaining inventory is still 1; signup has not consumed or reserved that ticket. |
+| Open Dashboard → Waitlists and locate the recorded event/type. | One pending customer only | The ticket row shows total inventory 1, one ticket in queue and no allocated hold. |
+| Open that row's actions and select Allocate Inventory. | Recorded ticket type | The Allocate Ticket Inventory dialog opens. |
+| Enter Number of tickets as 1 and leave Selection method on First In First Out. | Increase 1 | The dialog accepts the quantity. |
+| Select Continue once. | Same ticket type | The inventory allocation request is accepted for processing. |
+| Reopen the ticket row and customer entry after processing settles. | Recorded customer | Total inventory is 2, one ticket is held for this customer, no purchase is completed yet and actual available inventory is 1. |
+| As the customer, open the received waitlist purchase email. | Same account and request | The email contains a purchase offer for exactly one ticket of the requested event/type. |
+| Follow the email's purchase link before it expires. | Allocated quantity 1 | Checkout opens with the reserved ticket despite its forced public sellout. |
+| Enter the required customer details and approved payment method, and accept the displayed terms. | Recorded expected total | The order summary contains exactly one requested ticket at the expected total. |
+| Select Complete transaction once. | One paid ticket | One successful order confirms for the recorded total. |
+| Open the issued ticket from the confirmation. | New order | Exactly one usable ticket belongs to the requested event/type and customer. |
+| As the organizer, open Dashboard → Transactions and find the new order. | Confirmation reference | One completed order and one successful payment match the recorded total and ticket quantity. |
+| Reopen Dashboard → Waitlists and the ticket's Box Office inventory after processing settles. | Same event/type/customer | The request is Fulfilled, total inventory is 2, one ticket is sold, its allocation is consumed and actual remaining inventory is 1. |
+| Reopen the ticket editor through Manage Events → event → Edit → Ticket Types. | General tab | Show as sold out publicly remains checked. |
+| As a different customer without the offer link, open the ordinary public event page. | Same ticket type | Direct public ticket purchase remains unavailable despite the one remaining actual ticket. |
+
+**Postconditions:**
+
+* Keep the completed test order, ticket, payment reference and increased Inventory limit of 2 for review; leave Show as sold out publicly checked until the result has been reviewed.
+* After review, restore the recorded checkbox through Next → Save Event and reopen to verify. Retain the paid order and its inventory usage; any refund or void is a separate test, not cleanup for this successful purchase case.
+
+**Source and execution notes — not Qase fields:**
+
+* The normal expectation comes from the preserved-waitlist/controlled-hold requirements in SPW-19405. This is intended acceptance coverage, not a claim the current implementation completes it. SPD-2844 already identifies the signup mismatch; if signup fails, later steps have no valid starting entry and must remain Blocked rather than clearing the toggle or preparing a different kind of hold.
+* Backend: `apps/tickets/api/venue_based/viewsets/waitlist_viewsets.py` (`allocate_inventory`, Manage Events permission); `apps/tickets/models/event_management/event_ticket_types.py` (`increase_inventory`); `apps/tickets/services/waitlist/subscriber_processing/schedule_purchase_subscribers_on_inventory.py`; `subscriber_selection/queue_aware_waitlist_validator.py`; `subscriber_processing/utils/subscriber_purchase.py`; `purchase_single_subscriber_on_inventory.py`; `apps/tickets/api/user_based/serializers/basket_invoice_sale.py` (`clean_public_sold_out`).
+* Frontend: Dashboard waitlist `WaitlistedTicketTypes.web.tsx`, `WaitlistedTicketTypesTable.tsx`, `MakeTicketsAvailableModal.tsx`; public purchase/account waitlist paths in F1/F20. Table columns and Allocate Inventory → Allocate Ticket Inventory → Number of tickets → Selection method → Continue were verified in source, not a live browser.
+* Allocation is a second risk after signup: the purchaser changes the basket out of signup mode and validates it before creating the temporary hold. With public sellout retained, final-sale validation can reject it before the customer ever receives an offer. Verify scheduling, actual hold creation, email delivery, final payment and inventory separately; a successful allocation toast proves only the initial request.
+* Ordinary editing of Inventory and the waitlist Allocate Inventory action are separate entry points. This case deliberately uses Allocate Inventory, which increases capacity and schedules eligible subscribers. It does not assert that editing Inventory alone sends offers.
+* With multiple pending subscribers, current selection uses all actual available inventory after the increase, including inventory that already existed; it is not limited in code to only the increment. Whether the UI's entered quantity should cap allocations needs a separate expectation decision. This case uses exactly one subscriber so its expected counts are unambiguous.
+* No signup, inventory mutation, processing job, notification or payment was executed while drafting. The case was subsequently created and verified as [SPT-5757](https://app.qase.io/case/SPT-5757) on 2026-10-22. Scope is a regular GA ticket; package contents, CC-required automatic charging, offer expiry and failed-payment recovery need independent focused cases.
+
+## Critical Coverage Review — 2026-10-22
+
+**Publication update:** The review below preceded the three-case upload: TC-25, TC-37 and TC-10 are now [SPT-5756](https://app.qase.io/case/SPT-5756), [SPT-5757](https://app.qase.io/case/SPT-5757) and [SPT-5758](https://app.qase.io/case/SPT-5758) respectively. Remaining recommendations are still proposed; no case execution is implied.
+
+**Scope:** review of the complete SPT case snapshot, centered on Core - Inventory (625), for unintended public sales, blocked allocated sales, actual-stock violations and package/order integrity. This review expands beyond waitlist signup. The rows below are proposed coverage, not created cases or executed results.
+
+**Remaining additions to prioritize:** paid mixed-order success, mixed-cart rejection, separate package Refund/Void/Exchange cases, package hold release/purchase, and public API/hold-exemption boundaries. TC-10 is now published; native TC-16 remains an unpublished candidate beyond waitlists. TC-25 and TC-37 are now published waitlist coverage.
+
+| Proof target | Recommendation | Required result | Existing coverage and precise gap |
+| --- | --- | --- | --- |
+| Paid mixed-order success | New case needed | Use the client’s regular ticket, ticket + product bundle and ticket + ticket package in one paid order with public selling types open and included ticket types forced where supported. Prove one correct charge/order, exact included tickets and product units, and one inventory deduction per item. | [SPT-5230](https://app.qase.io/case/SPT-5230), [SPT-5263](https://app.qase.io/case/SPT-5263), [SPT-5266](https://app.qase.io/case/SPT-5266) use separate purchases and zero-total checkout; they do not prove the paid combined order. |
+| Mixed cart becomes publicly sold out | New case needed | Prepare an unexpired cart containing a regular ticket and a ticket + product or ticket + ticket package. Force one selling type after selection. Final submission must create no completed/partial order, issue no items and collect no completed payment for the rejected attempt. | [SPT-5304](https://app.qase.io/case/SPT-5304) covers a standalone ticket; [SPT-5267](https://app.qase.io/case/SPT-5267) covers a package by itself. [SPT-5283](https://app.qase.io/case/SPT-5283) filters ordinary link requests before purchase and excludes packages. |
+| Refund a forced package | Separate new case needed | Refund an internally sold ticket + product bundle or ticket + ticket package. Verify the selected ticket/product return and previewed money result; returned capacity stays publicly closed while the selling parent remains checked. | [SPT-3761](https://app.qase.io/case/SPT-3761) covers ordinary package refunds. [SPT-5286](https://app.qase.io/case/SPT-5286) explicitly excludes packages. |
+| Void a forced package | Separate new case needed | Void an internal package sale. Verify the affected issued items become invalid, actual ticket capacity is restored according to the package configuration, no refund is recorded by voiding, and the package stays publicly closed. | [SPT-5282](https://app.qase.io/case/SPT-5282) explicitly excludes packages; [SPT-2873](https://app.qase.io/case/SPT-2873) / [SPT-2876](https://app.qase.io/case/SPT-2876) are ordinary seated-package release outlines and do not establish forced-public behavior. |
+| Exchange a forced package | Separate new case needed | Exchange the entire internal package under a supported exchange configuration. Verify the original/replacement contents and credit, released original capacity and retained forced public sellout. | [SPT-1287](https://app.qase.io/case/SPT-1287) covers normal package exchange. [SPT-5289](https://app.qase.io/case/SPT-5289) explicitly excludes packages. |
+| Release a package hold | Separate new case needed | Release a hold containing a ticket + product or ticket + ticket package. Confirm the allocation is released once, relevant stock follows the configured release rules and the selling parent remains publicly closed. | [SPT-5287](https://app.qase.io/case/SPT-5287) is a regular-ticket hold; [SPT-2873](https://app.qase.io/case/SPT-2873) / [SPT-2876](https://app.qase.io/case/SPT-2876) do not cover product bundles or forced-public persistence. |
+| Purchase a forced package through its allocation | Separate new case needed | Use a valid venue-created package hold link. Customer purchase must deliver every allocated ticket/product once while ordinary public package selection remains blocked. | [SPT-5285](https://app.qase.io/case/SPT-5285) allocates exactly one ordinary ticket. [SPT-5269](https://app.qase.io/case/SPT-5269) sells packages directly in Box Office, not through a customer hold link. |
+| Public API cannot bypass public sellout | New backend/API case needed | With the global switch ON and actual stock remaining, ordinary public basket add/update and final purchase cannot accept a forced selling type. Preserve valid venue/allocated-hold exceptions. | [SPT-5230](https://app.qase.io/case/SPT-5230) proves ordinary visible selection; [SPT-5304](https://app.qase.io/case/SPT-5304) proves the visible existing-cart flow. No reviewed Qase case directly submits the forced public basket requests. |
+| Hold exemption cannot grant unrelated tickets | New boundary case needed; enhance the valid mixed-hold control separately | A valid allocation permits its forced held ticket, but an unrelated forced type cannot be added using that hold context. Expired/released links and quantities beyond the allocation remain blocked. A hold containing two validly allocated forced/unforced types must permit both. | [SPT-5285](https://app.qase.io/case/SPT-5285) covers one positive allocation only. [SPT-230](https://app.qase.io/case/SPT-230) covers generic limits and [SPT-4824](https://app.qase.io/case/SPT-4824) generic expiry/release; neither fixes the global switch ON with saved forced values. |
+| Internal zero-stock rejection with switch ON | TC-14 / TC-16; prioritize native TC-16 | Prove that ignoring the public restriction internally does not ignore actual stock: a fresh in-person cart cannot add an exhausted type, while a separate available comparison type can be selected. | [SPT-402](https://app.qase.io/case/SPT-402) is fixed OFF. [SPT-5305](https://app.qase.io/case/SPT-5305) / [SPT-5306](https://app.qase.io/case/SPT-5306) prove available stock only. [SPT-3295](https://app.qase.io/case/SPT-3295) has generic oversell coverage but no explicit forced-public setup or native Mobile Box Office/POS rows. |
+| Seat whose only ticket type is forced | Published: TC-10 → [SPT-5758](https://app.qase.io/case/SPT-5758) | An unsold/unreserved seat with only a forced ticket type cannot be selected; purchase of a different available seat remains possible. | [SPT-5236](https://app.qase.io/case/SPT-5236) permits a shared seat through another available type; [SPT-5237](https://app.qase.io/case/SPT-5237) uses best-available selection. Neither proves the single-type map selection boundary. |
+| Forced add-on / forced upgrade | Split TC-21 into two focused cases before publishing | For an add-on, the forced target cannot be added. For an upgrade, rejection must not remove the original ticket. The accepted base ticket must remain purchasable without issuing the target. | [SPT-3096](https://app.qase.io/case/SPT-3096) is add-on success; [SPT-3097](https://app.qase.io/case/SPT-3097) is generic event eligibility; [SPT-3743](https://app.qase.io/case/SPT-3743) is a two-step successful upgrade outline. Their setup/assertions do not prove forced-public rejection and original-item preservation. |
+
+**Lower priority / separate decisions:** TC-04 (saved toggle/count preservation) and TC-08 (discard) remain useful but are not the first additions for sales loss. TC-18 is valuable for a configured kiosk; its fresh-selection expectation is source-backed, while an already-selected kiosk cart remains a product-expectation question because purchase uses venue baskets. Generic last-unit races already have [SPT-3295](https://app.qase.io/case/SPT-3295), [SPT-2856](https://app.qase.io/case/SPT-2856) and [SPT-2451](https://app.qase.io/case/SPT-2451); add explicit switch-ON and internal-bypass runs to those suitable baselines rather than creating another generic concurrency test. Native hardware execution is required for native/POS confidence.
+
+**Qase evidence:** project SPT; complete retrieval 2026-10-22T15:56:37.186Z to 2026-10-22T15:56:53.776Z; 2218 unique cases; 31 in suite 625. Local filtering searched titles, tags, descriptions, prerequisites, parameters and steps for sold-out/public override, packages, Refund/Void/Exchange, holds, upgrades/add-ons, kiosk and stock contention. The broad sold-out/waitlist/add-on/upgrade/kiosk filter produced 260 candidates; narrower package-adjustment, hold-boundary and concurrency filters produced 36, 35 and 8 candidates respectively. Full relevant baseline payloads were reviewed; none of the cases outside suite 625 explicitly named the public-sellout switch/field/forced-public setup in the searched fields. No Qase execution results were queried.
+
+**Source evidence:** backend HEAD bda0dd85f003b598c587c806f0df93a9e2eb86d6; frontend HEAD bda3539bbab30d0215a2156d2153b4ed8b041ba6. No branch comparison or changed-file discovery. Backend: `apps/tickets/api/user_based/serializers/basket_checkout.py` (`should_apply_public_sold_out`), `basket_invoice_sale.py` (`clean_public_sold_out`), `apps/tickets/api/user_based/ticket_upsells.py` (`validated_hold_ticket_type_ids`), `apps/tickets/services/item_upgrades/ticket_upsell_eligibility.py`, `apps/tickets/services/holds/release_held_basket.py`, `apps/financials/payments/voiders.py`, `apps/financials/payments/refunders/base.py`, `apps/financials/models/invoice_management/invoice.py` (`get_exchange_amounts`). Frontend: public checkout `EventAddons/helpers/index.ts`, `eventFilters.ts`, `useCheckoutAddons.tsx`; basket `useItemGroupUpgrade.ts`, `BasketUpgradesService.ts`; seating `SeatingService.createItemTypeMap`, `SeatFactory.isSeatSoldOut`; native kiosk `SelectTicketsScreen.tsx`, `useKioskBasket.ts`.
+
+**Draft correction before any upload:** TC-21 currently uses free ticket offers. `eventFilters.ts` excludes all-free add-on events, so its AddOn preparation needs a paid eligible offer (and an approved payment method for a completed paid base order) before it can be called runnable. Preserve the existing case and its coverage until the two replacement drafts are reviewed; no Qase case was repurposed here. Package adjustment procedures also need exact client composition, supported return selection and product-restock behavior before being marked Qase-ready.
+
+**Execution status:** source/Qase-definition review only. No browser session inspected, customer signup submitted, payment/refund/void/exchange triggered, hold changed, or Qase case created/updated. The newly identified proof targets still need standalone procedures; existing local drafts remain in their original case sections.
+
 ## Qase Regression Gap Analysis — 2026-09-14
 
 **There is substantial reusable regression coverage in Qase. Keep the existing baseline cases and use the local drafts for the missing switch-specific checks and purchase paths.** This review concerns regression reuse, not whether Qase already contains the new feature tests. At the time of this read-only review, no cases were created, edited, moved or deleted; no runs or execution results were queried. Subsequently, the user authorized creation of TC-02 as [SPT-5230](https://app.qase.io/case/SPT-5230) in suite 625; the search results below describe the earlier snapshot.
@@ -2360,7 +2480,7 @@ Every row below comes from a source caller or route, not only the examples in th
 | Custom-package widgets and native in-person package combinations | F21 | Blocked supported-entry confirmation | Dashboard warns custom packages cannot be sold via widgets, while shared checkout has a custom step. Native customer webview is covered separately; native Box Office/POS package-choice/variant support is not established by generic sale tests. |
 | Nested custom packages | B18 | Not applicable: source rejects a custom child that is itself a bundle | Test supported nested preset packages; do not invent a purchasable nested-custom configuration. |
 | Exact-last-unit product boundary, shipping modes and all barcode/ratio combinations | B18/F21 | Deferred focused follow-up | Core cases use existing configured fulfillment and stock headroom; they do not prove every product-capacity boundary or delivery permutation. |
-| Active waitlist entry | B5, F1/F20 | Manual-only: TC-25 | ON forced signup with remaining inventory; confirm one pending entry and leave it during cleanup. Automatic release/payment is a separate follow-up. |
+| Active waitlist entry | B5, F1/F20 | Manual-only: TC-25; TC-37 | TC-25 covers signup only; TC-37 drafts inventory increase, allocated offer and paid fulfillment with public sellout retained. Neither is executed. |
 | Refund returns actual inventory | B10/B15, F4/F18 | Manual-only: TC-26, global ON | Compare the same refund preview before/after the field change; returned inventory stays publicly closed until the ticket checkbox is cleared. Full financial permutations remain deferred. |
 | Dashboard checkbox, persistence, clear at zero and cancel | B1–B3 | Manual-only: TC-04, TC-05, TC-08, global ON | Next + Save Event, restoration, actual count and stored value. |
 | Event-wide delayed display and one type reopened | B4/B6/B7 | Manual-only: TC-09 / TC-06 | All-forced/all-empty/mixed and inverse after 25 minutes. Extend observations to selected attraction/recurring dates during their entry runs. |

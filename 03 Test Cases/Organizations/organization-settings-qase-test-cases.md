@@ -2071,7 +2071,7 @@ Cases follow **Organization → Settings, Branding and Integrations**, with the 
 >
 > Source: [previous Financial Settings tab](/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/main/templates/venues/settings/edit-organization.html:62), [legacy-to-new tab mapping](/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/venues/dashboard/views.py:36), [wrapper rollout and permissions](/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/venues/dashboard/views.py:111), and [standalone Finance menu](/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/components/navigation/DashboardNavBarUserMenu/hooks/route-sections/finance-routes.tsx:18). The organization-scoped `enable_organization_settings_nextjs_embed` flag selects the replacement wrapper. The old tab and new Custom Fees route require `VP_MANAGE_FINANCIALS`; wrapper access also requires Manage Organization Info or bank-account permission. Local source does not establish the deployed build revision or every role's live behavior.
 >
-> Screenshots: [embedded settings without Custom Fees](evidence/beta-organization-settings-no-custom-fees.png); [direct destination and standalone Finance menu](evidence/beta-custom-fees-direct-access.png). The second image proves direct access only, not a valid workaround for the retained Dashboard journey.
+> Screenshots: [embedded settings without Custom Fees](../../99%20Archive/QA%20Evidence/Organizations/beta-organization-settings-no-custom-fees.png); [direct destination and standalone Finance menu](../../99%20Archive/QA%20Evidence/Organizations/beta-custom-fees-direct-access.png). The second image proves direct access only, not a valid workaround for the retained Dashboard journey.
 
 ## Legacy-tab audit — 2026-10-16; finance cases published
 
@@ -5115,9 +5115,9 @@ The full fetched definitions, parameters, tags, metadata and assertions for all 
 
 Already-open Codex beta session; signed-in display name Christian Valdez, selected organization **FAN EXPO Cleveland**. This identifies the inspected session, not a required reusable test record. Observed an existing design, three color fields, all ten image fields, per-section Save, Remove and the approximate preview. The recorded design had Background #f96c24, Foreground #ffffff and Label #000000; these are observations, not expected defaults.
 
-* [Saved-design desktop](evidence/digital-wallets-2026-10-16/existing-design-desktop.png): primary Logo empty, saved Icon/Strip present. No image was uploaded or cleared.
-* [Remove confirmation](evidence/digital-wallets-2026-10-16/remove-confirmation.png): title and default-branding warning visible. Cancel closed the dialog; removal was never confirmed.
-* [Narrow layout](evidence/digital-wallets-2026-10-16/mobile-layout.png): 390×844 viewport; top controls visible. Viewport override was reset; whole-page narrow usability remains unexecuted.
+* [Saved-design desktop](../../99%20Archive/QA%20Evidence/Organizations/digital-wallets-2026-10-16/existing-design-desktop.png): primary Logo empty, saved Icon/Strip present. No image was uploaded or cleared.
+* [Remove confirmation](../../99%20Archive/QA%20Evidence/Organizations/digital-wallets-2026-10-16/remove-confirmation.png): title and default-branding warning visible. Cancel closed the dialog; removal was never confirmed.
+* [Narrow layout](../../99%20Archive/QA%20Evidence/Organizations/digital-wallets-2026-10-16/mobile-layout.png): 390×844 viewport; top controls visible. Viewport override was reset; whole-page narrow usability remains unexecuted.
 * An attempted color-control fill reverted on blur; it did not establish a normal-user preview defect. No Save was selected. No organization switch, role change, purchase, deletion, generated-pass download, provider action or physical-device check was performed. The shared saved design remained unchanged.
 
 **Readiness:** case design and duplicate review completed for the page; configuration persistence, permission execution, native pass appearance and the two blocked lifecycle/failure areas remain unproven. This review does not establish production readiness. All 12 new definitions and the approved existing-case changes are published and verified; held lifecycle/recovery work remains unchanged.
@@ -6830,7 +6830,7 @@ Fresh post-write project snapshot: **1,922 cases / 1,922 unique IDs, 20 pages**,
 >
 > Browser: read-only desktop inspection on `demo.showpass.com`, authorized matching open tab. Visited General, Contact, Business Schedule, Enabled modules, Ticketing, Shipping & Fulfillment, Checkout Consent, Legal, Identity, Profile, Messaging, Post-Event and the legacy entry. Restored the original modern settings root. No form fields changed, Save selected, upload, message sent, flag changed or record mutation. Mobile, French, bank authorization, Customer refunds, custom domains and physical devices were not executed. Screenshot confirms navigation and visible General controls only.
 >
-> ![[03 Test Cases/Organizations/evidence/organization-settings-navigation-2026-10-15.png]]
+> ![[99 Archive/QA Evidence/Organizations/organization-settings-navigation-2026-10-15.png]]
 
 
 ## Suite 744 beta refresh — verified publication
@@ -6893,7 +6893,7 @@ Fresh post-write project snapshot: **1,922 cases / 1,922 unique IDs, 20 pages**,
 >
 > Beta browser: same signed-in account/organization retained. Inspected Identity, Adobe/Upload font tabs, empty font library/license control, approximate Email preview, and Digital Wallets, returning to Identity. No field values entered, file uploaded, Save/Delete selected, flag changed, email sent or Qase write applied. Narrow viewport, French, other roles/configurations and live saving were not executed.
 >
-> ![[03 Test Cases/Organizations/evidence/beta-identity-email-preview.png|700]]
+> ![[99 Archive/QA Evidence/Organizations/beta-identity-email-preview.png|700]]
 
 Local dry-run receipt: `/private/tmp/qase-branding-beta-dry-run.json`; batch plan: `/private/tmp/qase-branding-beta-batch.json`; complete snapshot: `/private/tmp/qase-branding-beta-cases-all.json`. The user approved and the plan was applied successfully; **do not rerun its create operations**. New cases have at most one native parameter; preserved SPT-4742 retains its two existing parameters. No local TC label occurs in a Qase Title. Full readback: `/private/tmp/qase-branding-beta-full-readback.json`; verification receipt: `/private/tmp/qase-branding-beta-verification.json`.
 

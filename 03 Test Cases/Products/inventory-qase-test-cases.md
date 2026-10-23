@@ -1877,7 +1877,7 @@ The user approved the exact 40-operation scope after the complete split and dry-
 >
 > **Final browser state after the initial pass:** original organization and inventory route retained, search empty, category form closed. Evidence below shows the list; the navigation drawer was used only to establish the visible hierarchy. Mobile layout and Next.js were not executed. No end-to-end defects were confirmed.
 >
-> ![[03 Test Cases/Products/evidence/inventory-list-2026-10-15.png]]
+> ![[99 Archive/QA Evidence/Products/inventory-list-2026-10-15.png]]
 
 > [!info]- Create/edit follow-up — source comparison and non-saving inspection
 > **Coverage correction:** the initial pass retained SPT-4880 as a broad definition; that was insufficient to call current create/edit coverage complete. Detailed comparison found two definition mismatches: Next.js creation is a four-field starter, and the legacy save redirects to Marketplace rather than the saved detail page. These are test-definition discrepancies, not confirmed application defects.
@@ -1890,9 +1890,9 @@ The user approved the exact 40-operation scope after the complete split and dry-
 >
 > **Observed on the already-open demo session:** opened New Product, saw Product Info, description and Display & Email Message editors, image upload, category, Exclude PDF switch, Inventory row/add action, Visibility, Delivery Method, Financial Settings and Save & Finish. Left without entering data. Opened the existing FAN EXPO T-Shirt edit screen, observed saved name/category/image and seven variants with their prices, Inventory, Purchase Limit, SKU, Sold and ordering controls. No field was changed; Save, image upload, price changes, add/remove/reorder and validation submissions were not attempted. Returned through Back to marketplace; original organization unchanged. Next.js remains source-reviewed only.
 >
-> ![[03 Test Cases/Products/evidence/inventory-create-2026-10-15.png]]
+> ![[99 Archive/QA Evidence/Products/inventory-create-2026-10-15.png]]
 >
-> ![[03 Test Cases/Products/evidence/inventory-edit-2026-10-15.png]]
+> ![[99 Archive/QA Evidence/Products/inventory-edit-2026-10-15.png]]
 
 **Readiness:** published definitions verified, with named deferred checks above; execution remains pending. **Release decision: Decision blocked by named missing evidence** for saved setup, stock reconciliation, access boundaries and the required deployed versions. This analysis does not sign off production readiness.
 
@@ -1966,9 +1966,9 @@ Categories are opened from the list’s category actions; Stats & Info belongs t
 >
 > **Execution limits:** no pagination fixture, Basic-plan organization, alternate permission account, empty organization, membership add-on gate or Workday configuration was exercised. Mobile was not exercised. Returned to the original product list with no saved values changed; screenshots retain visible UI evidence. No end-to-end failure was confirmed.
 >
-> ![[03 Test Cases/Products/evidence/products-nextjs-finance-2026-10-15.png]]
+> ![[99 Archive/QA Evidence/Products/products-nextjs-finance-2026-10-15.png]]
 >
-> ![[03 Test Cases/Products/evidence/products-nextjs-list-2026-10-15.png]]
+> ![[99 Archive/QA Evidence/Products/products-nextjs-list-2026-10-15.png]]
 
 **Renewed review format check:** all 48 full definitions in this canonical note parsed successfully using the reusable Qase parser, with unique labels and complete standalone fields, tags, parameters and expected results. This includes 21 existing-ID definitions (13 proposed refinements, 8 retained) and 27 uncreated SPT-5391–5417 definitions. Each has 2–5 steps. Parser result: `/private/tmp/qase-products-base-review-validation.json`. That read-only review prepared no apply or live product submission; approved Qase publication followed as recorded below.
 

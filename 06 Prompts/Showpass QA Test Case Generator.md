@@ -139,7 +139,7 @@ Before adding cases, compare actions, expected results, starting state, and risk
 1. Resolve the active output note, request breadth, intent, and proof targets. Fetch Jira intake or review the exact PR comparison only when applicable.
 2. Inspect backend truth → frontend paths/consumers → relevant existing assertions. Use selected handbook sections and the already-open browser as described above. Inspect source-only behavior without presenting it as executed proof.
 3. Build one scope inventory/coverage ledger including controls and child controls, states, validation, permissions, mutations, downstream effects and cleanup. Add state/combination and entry/outcome tables only where they clarify real differences.
-4. Draft standalone cases in UI/workflow order. Cover distinct risks and preserve every declared item through a case, existing reference, or explicit Manual-only, Deferred, Not applicable, or Blocked decision with reason/evidence.
+4. Draft standalone cases in UI/workflow order. Apply [[05 Tooling/Qase Test Case Writing Rules#Case Strength Review]] while choosing starting data and expected results, before accepting the draft. Cover distinct risks and preserve every declared item through a case, existing reference, or explicit Manual-only, Deferred, Not applicable, or Blocked decision with reason/evidence.
 5. Apply the Copy-to-Qase Review Gate in isolation to every case. Check parameter/run accounting, source expectations, navigation grouping, and the minimum execution set. Save in the canonical note. Do not query Qase or label this a Qase gap analysis.
 
 ## Read / Gap Analysis Flow
