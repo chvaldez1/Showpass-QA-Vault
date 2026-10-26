@@ -47,16 +47,29 @@ Investigate suspicious results safely. Check whether the failure repeats and whe
 
 ### 3. Bring Back Evidence
 
-Use the plan's check names or IDs in the results table so the user can match each intention to its outcome:
+Use [[03 Test Cases/Browser Test Report Template]] for one readable walkthrough: setup, numbered actions, **Expected**, **Actual**, and the real screenshot beneath each executed step. Give each screenshot a short environment/state/time caption. If a step or capture could not run, state the exact reason there and identify dependent steps left unrun. Source/API/helper hints belong beside the relevant step only when useful and grounded; temporary browser element numbers are not reusable selectors.
 
-| Check | Result | What actually happened | Evidence | Not run / remaining work |
-| --- | --- | --- | --- | --- |
+Each test must state **What this tests** and **Start here** before its numbered **Steps**. Name the starting screen, person, Organizer and required record state. Write concrete actions in order, naming the exact visible control, item or entered value. Expected results must say exactly what to inspect: a named message, link, field, amount or saved outcome. “Open Build” followed by “restricted actions are unavailable” is insufficient; name **All gift cards** and **Create gift card** when those are the links being assessed. Do not force an arbitrary number of steps; include the actions needed to follow the test without the chat history.
 
-Say `Tested and passed`, `Confirmed bug`, `Inconclusive` or `Not run` in the user-facing result. Retain the canonical coverage status and reason in the same row or linked detail. Pair every pass or confirmed bug with the relevant screenshot, file, saved record, downstream result or named human verification. Include the environment, page/state and capture time in the evidence caption. Required mutation and financial proof still applies.
+Keep navigation checks, direct-address checks and saved-action checks distinguishable. Explain dependencies: if access is correctly refused, dependent form actions remain unrun. When rewriting an old report, preserve the original run date, observations and evidence; label the wording update and do not turn added instructions into newly executed results. Move lengthy technical extracts into supporting notes so they do not obscure the user's actions.
 
-Maintain one canonical run note under `03 Test Cases/<feature>/`; update an existing matching note first. Store screenshots and other images locally under `99 Archive/QA Evidence/<feature>/<run-slug>/`, which is excluded from Git. Embed their vault-relative archive paths beside the result they support. Keep images and other large generated files out of Git by default; follow `AGENTS.md` for a justified exception when a specific file is required in the repository. Other durable evidence may remain in the note's `evidence/<run-slug>/` folder, subject to the vault's existing ignore rules. Keep credentials and unnecessary personal data out of evidence. A final screenshot supports the visible final state; it cannot alone prove that no data flashed earlier, that an API denied access, or that a background job completed.
+Render screenshots with standard Markdown image syntax or HTML image markup that limits display width to **600px**, preserving the original image files. Use paths relative to the report; enclose spaces in angle brackets for Markdown and URL-encode them for HTML. Use the template's clickable image example to open the full-size original. Do not put screenshots in collapsed callouts, replace them with download links, or rely only on Obsidian-specific embeds. Keeping images ignored by Git must not prevent their local display. Verify every referenced image exists and use the correct file extension. A single capture can support opening and inspecting the same screen; do not duplicate captures just to fill newly split instructions.
 
-Finish with the most important result, the table, any reproducible bugs, the highest-priority unfinished checks, and the release recommendation for the declared scope. State what data or session state changed and what was restored or preserved. Keep supporting source detail collapsed. Follow the shared evidence and finding rules below; do not create another report that repeats the same results.
+Maintain one canonical run note under `03 Test Cases/<feature>/`; reuse a matching note first. Images remain local under `99 Archive/QA Evidence/<feature>/<run-slug>/` and out of Git by default, following `AGENTS.md`. Other necessary outputs may remain beside the note under its evidence folder, subject to existing ignore rules. Keep temporary captures under `/private/tmp` and delete them after use. Never invent or substitute screenshots to fill a missing step.
+
+Show failures where they occurred, keeping Expected separate from Actual. A screenshot does not replace API, saved-state, count, downstream or cleanup proof. Record user-reported results separately from agent-executed checks. Support the stronger claim only when the available evidence establishes it.
+
+After the walkthrough, include cleanup/restored or preserved data and only useful references/open questions. **The report ends with one results table:** `Check / scenario | Status | Observed result or exact gap | Go to test`. Use Passed, Failed, Blocked and Not run; explain uncertainty in the affected row. Match the plan's check names so every selected check is accounted for. Assign stable report-local IDs (`TC-01`, `TC-02`, and so on) in the plan, clickable index, test headings and results rows. Link each result to the exact test heading and name its relevant step. Split independently assessed checks so a failed Build-menu check does not point vaguely to several Navigation steps. State the canonical release recommendation for the agreed scope before this final table. Do not create a separate evidence gallery, status dashboard or duplicate report.
+
+Before delivery, read each test without relying on the chat: could the user identify where to start, what to do, what to inspect and why it passed or failed? Rewrite any step that requires guessing. The Playwright [forced-sold-out walkthrough](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/specs/discovery/SPEC_single-day-event-forced-sold-out.md>) demonstrates concrete actions, per-step expected results, conditional unrun steps and nearby screenshots. Use that writing pattern without importing its feature setup or replacing this vault's final results table.
+
+### Jira drafts for confirmed bugs
+
+Include a copy-ready Jira draft for each distinct confirmed bug in the same run note, beside the affected test and before the final results table. Use a report-local ID such as `BUG-01`; link the affected test results and index to it. Several failed checks caused by the same issue share one draft. Inconclusive observations, unsubmitted risks and checks not run stay clearly labelled; do not turn them into confirmed bugs just to populate this section.
+
+Follow the template's format: **Title: `fix (area) | specific observed problem`**, **GIVEN**, **WHEN**, **THEN — observed**, and a separate **Expected** result. Add concise business impact, tested page/environment/date, exact test-step/evidence links, material verification limits and data safety/cleanup. State actual role permissions and configuration when needed to reproduce. Keep the draft understandable without the chat, and distinguish a visible control or opened form from a successful saved action.
+
+Reuse the detailed reproduction and screenshots already recorded under the test; do not create a second long reproduction or image gallery. Label the card **Draft only**. Drafting does not authorize creating, updating, commenting on or transitioning a Jira issue. Use the connected Atlassian Rovo tools only when the user separately requests a Jira write, following `AGENTS.md`.
 
 ### Example Quest: Signed-Out Dashboard Access
 
@@ -100,17 +113,11 @@ Apply the canonical [[00 Start Here/World-Class Software Quality Standard#Financ
 
 ### Smoke Results
 
-Lead with the important result in everyday language, followed by one compact table:
+Use the same step-by-step report format for smoke and deep runs; the selected depth changes the checks, not their readability. Start with a short important result, then the setup and walkthrough with visible screenshots. Put the Passed / Failed / Blocked / Not run table at the end, after cleanup and supporting references. Keep the main text in everyday language.
 
-| Priority | Check / exact item or report type | Result | Evidence or next step |
-| --- | --- | --- | --- |
-| Highest first | Name the action and relevant field or record state | Tested and passed / Confirmed bug / Inconclusive / Not run | Link the proof, or say what setup/action is missing and why it matters |
+For a bug, apply the finding rules below without repeating the same reproduction in another section. Say `No critical bugs found in the checks run` only when supported, and name important untested behavior. Do not turn a sample into whole-feature readiness. If the user must act, give the exact starting place, action, expected outcomes, data-change label and what to report. Do not ask them to repeat proven checks.
 
-For a confirmed bug, use the shared finding rules below: exact starting state, reproducible actions, expected versus actual result, impact and evidence. Say `No critical bugs found in the checks run` only when supported, and immediately name important untested checks. Do not translate that into `production ready`.
-
-End with the highest-priority remaining checks, the canonical release recommendation limited to the declared scope, and any changed/preserved data. If the user must act, follow `AGENTS.md` and the human-verification rules below: exact starting place, action, expected outcomes, data-change label and what to report. Do not ask them to repeat checks already proven.
-
-The shared authentication, safety, evidence, findings and decision rules below apply to both modes. The exhaustive interaction audit applies to the declared deep-review scope; in smoke mode, account for the child controls and states of the selected workflows without implying the rest of the page was tested.
+Shared safety, evidence, findings and decision rules apply to both modes. A deep review accounts for its declared control/state scope; a focused smoke report makes the sample and its limits explicit.
 
 ## Quick Start
 
@@ -264,7 +271,7 @@ Reviewable evidence and screenshots:
    - the persisted result after a fresh reload or reopen;
    - the downstream or cross-route result when applicable.
 4. Save screenshots locally under `99 Archive/QA Evidence/<feature>/<run-slug>/` with deterministic, descriptive filenames. Keep this directory ignored by Git; a necessary repository file uses the narrow exception described in `AGENTS.md`. Do not place durable evidence only in a temporary directory or the Downloads folder. The active run note remains under `03 Test Cases/` and embeds the archive paths.
-5. Embed every screenshot in the canonical run note with an Obsidian image embed and a caption stating the route, action, expected result, observed result, and capture time.
+5. Render each real screenshot directly beneath its numbered step following the template's image markup and display width of up to 600px. Keep a valid relative path and the full-size original. Include the environment, action, observed result and capture time in a short caption. Do not collapse screenshots or provide only links. If capture is unavailable, state why instead of creating a missing-image embed.
 6. Link the screenshot files directly in the final response so the user can review them without trusting the narrative alone.
 7. Screenshots must show enough page context to identify the route or workflow and the key result. Do not crop away information needed to judge the claim.
 8. Do not capture or expose passwords, tokens, payment credentials, personal data not required by the proof target, or unrelated user-owned information.
@@ -372,9 +379,9 @@ For every finding, record:
 Write every finding so a QA employee who has not seen the feature can reproduce it without reading the browser log or source code:
 1. Name the environment, role, exact starting route or screen, and a current fixture.
 2. Define any product term needed to recognize the fixture or control.
-3. Use a `Step Action | Data | Expected Result` table with one visible action per row.
+3. Put exact numbered actions and Expected/Actual results in the affected test. The copy-ready Jira draft summarizes the reproduction with GIVEN / WHEN / THEN — observed and a separate Expected result; a second Step Action table is unnecessary when it would repeat those steps.
 4. Name controls exactly as displayed in the product.
-5. Put the Actual Result after the table and identify the first step where it differs.
+5. Identify the first step where Actual differs from Expected. In the Jira draft, keep the observed problem separate from the expected behavior.
 6. Add impact, data-safety classification, and cleanup or preserved-fixture instructions.
 7. Embed the relevant screenshot immediately under the finding. If a screenshot cannot prove the result, state why and name the independent proof required.
 8. Do not expose automation mechanics such as locators, DOM state, hidden inputs, sentinels, isolated clipboards, programmatic clicks, or request interception in the manual reproduction.
@@ -411,20 +418,15 @@ Release decision:
 6. Do not call execution complete until every planned and discovered in-scope coverage-ledger row has an explicit status.
 7. Do not call a mutation covered unless persistence/downstream proof and cleanup, safe isolation, or explicit Preserve-for-review retention are accounted for.
 
-Reviewer-report deduplication:
-1. When the user asks for a concise test report, use one canonical reviewer-facing note with only:
-   - Result;
-   - Confirmed Bugs;
-   - Testing Proof;
-   - Preserved Review Data, when applicable;
-   - Not Executed.
-2. Record each confirmed bug once. Put its reproduction, actual result, impact, and screenshots in that single section.
-3. Record each screenshot or evidence file once. Do not repeat it in a separate evidence index, product-surface inventory, finding summary, and coverage ledger.
-4. Testing Proof must pair every claimed pass with its screenshot, downloaded file, persisted record, downstream result, or named human verification.
-5. Do not list an observation as a bug after human verification disproves it. If traceability matters, record one short closed-observation sentence in Result instead of retaining a second reproduction section.
-6. Use the Testing Proof and Not Executed tables as the coverage accounting when separate proof-target, product-inventory, and ledger sections would repeat the same facts.
-7. Keep planning detail, source analysis, Qase case drafts, and the chronological browser log out of the reviewer report unless the user explicitly requests them.
-8. If a detailed execution note already exists, consolidate the reviewer-relevant evidence into the canonical report and replace the duplicate note with a short link to the canonical report.
+Reviewer-report format and deduplication:
+1. Use [[03 Test Cases/Browser Test Report Template]] for setup, numbered steps with Expected/Actual and rendered screenshots, cleanup, useful references/questions, and one final results table.
+2. Record each bug at the step where it occurs; add impact and reproducible conditions there. Avoid a second copy of the reproduction or evidence.
+3. Render each evidence image once, beside its step. Use step references in the final table rather than repeating the screenshots in a separate gallery.
+4. Pair claims with actual screenshots, inspected outputs, saved records, downstream results or named human verification as required. Screenshots alone do not establish hidden outcomes.
+5. Correct disproven findings and keep the reason brief. Never rewrite the expected behavior to make a genuine failure pass.
+6. The final table can provide the coverage accounting; do not add duplicate proof-target, inventory and ledger tables when they repeat it. Keep every in-scope gap and its reason visible.
+7. Keep source detail and browser mechanics out of the manual actions. Include short source-verified helper/selector or API notes only when they help repeat a step or explain nonvisual proof.
+8. Reuse the existing canonical note. Do not migrate an unrelated or handed-off source spec without a revision request; record this run in the matching vault note instead.
 
 Final response:
 - For deep review, lead with the release recommendation. For focused smoke, lead with the important observed result and use the compact Smoke Results format above; include the recommendation for that limited scope.
@@ -443,3 +445,16 @@ Final response:
 - For destructive permission or inventory tests, prefer a disposable benefit or resource rather than removing all permissions from shared test data.
 - When a persisted result is the object the user needs to review, preserve it until the user explicitly approves cleanup; do not treat same-run deletion as evidence quality.
 - Keep the browser open on a neutral state with no unsaved changes when handing control back.
+
+
+## Maintained Sources and Adaptation
+
+The reusable report shape was traced on 2026-10-23 at local Playwright revision `d32ac168`:
+
+- [Write browser test](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/workflows/write-browser-test.md>) routes to [SPEC_TEMPLATE.md](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/specs/SPEC_TEMPLATE.md>) for setup, numbered actions, expected results, screenshots and cleanup.
+- [Browser spec lifecycle](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/standards/browser-spec-lifecycle.md>) supplies real local screenshots beneath steps, concise captions and preserving a handed-off guide.
+- [Run browser test](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/workflows/run-browser-test.md>) supplies execution, stopping dependent actions when blocked and separating tool limits from product failures. Locator/evidence and verification/reporting standards supply grounded targets and bounded retries.
+
+Adopt these reusable mechanics without copying the repository workflow wholesale. The vault retains backend-first business investigation, its canonical quality standard, the user's browser-sidebar preference, one canonical run note, ignored archive images, temporary-file cleanup, and the user's requested **final results table**. Upstream preferences against tables or vault evidence accounting do not override these local requirements.
+
+Use available integrations selectively: Jira/Confluence for the supplied acceptance context; Qase for requested coverage comparison; source/PR tools for exact changes; Datadog or Sentry for a relevant runtime failure; design tools for a supplied design comparison. Discover current tools and check access. Correlate evidence to the tested environment, time and record/request when available. Do not assume an integration is accessible, search unrelated data, query every connector, or treat a log entry as proof of an unobserved user outcome. Writes and messages require their own authorization. Integration limits block only the assertions that need them.

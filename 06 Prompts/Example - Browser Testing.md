@@ -11,6 +11,12 @@ Use `$showpass-qa-tester` to have the agent act as your QA tester in the browser
 
 Every run follows **Plan → Test → Evidence**. The agent shows its checks and expected results, executes within the allowed scope, and returns results with proof. Add `Plan only — wait for my approval` when you want a review before execution.
 
+Reports follow [[03 Test Cases/Browser Test Report Template]]: numbered steps, Expected and Actual results, screenshots visibly rendered beneath the steps, and a final Passed / Failed / Blocked / Not run table. Images remain local and ignored by Git.
+
+Each test explains **What this tests**, **Start here** and the exact **Steps**. The report names the controls and values to inspect, so you can repeat a check without the chat history. Screenshots display at up to 600px wide with full-size originals available. An edit to an older report does not count as a new test run.
+
+Confirmed bugs also receive copy-ready Jira drafts in the same report: **Title**, **GIVEN**, **WHEN**, **THEN — observed**, a separate **Expected** result, impact and evidence. This prepares the wording; it does not create Jira issues.
+
 ## On-the-Fly Quest
 
 A short request is enough; you do not need a prepared test-case note:
@@ -30,6 +36,8 @@ Do not change saved records or Qase.
 
 Return a result and supporting evidence for each check.
 State which pages, loading behavior or API checks you could not verify.
+For confirmed bugs, include a Jira draft in the report using Title,
+GIVEN / WHEN / THEN — observed, Expected, impact and evidence. Do not create Jira issues.
 ```
 
 If you have the version-bump PR, add it so the agent can inspect the exact changes. The context above is an example, not a claim that beta's deployed version has been verified.
@@ -61,6 +69,11 @@ Report what was tested and passed, confirmed bugs, uncertain results,
 and the most important checks not run, with the reason for each.
 Name the exact item, report type or field when relevant. Link supporting evidence.
 Keep the results easy to read. Do not modify Qase.
+For each test, state what it proves and where to start. Give exact numbered
+actions and name what I should see after each one. Keep Actual results and
+screenshots beside those steps, with clickable test IDs in the final table.
+Include one copy-ready Jira draft per distinct confirmed bug in the same note.
+Keep uncertain findings labelled and do not create Jira issues.
 ```
 
 Fill in the page and any necessary data boundaries. Omit optional scope details when they are already clear from the conversation. For example, name the sold and unsold products to inspect, or the event and tickets approved for check-in. Permission to inspect a page does not grant permission to save changes or complete transactions.
