@@ -39,6 +39,23 @@ Keep the chat plan readable. For a deep review, summarize groups of checks and l
 
 **Default: show the plan, then execute the requested checks within the existing authorization.** The plan is visible before testing; it is not an extra approval request. Do not add a waiting period or ask for the same permission again. If the user says `Plan only` or `Wait for my approval`, stop after the reviewable plan and wait. Ask a targeted question when a missing fact or an action outside the authorized scope genuinely blocks a check; continue independent authorized checks meanwhile.
 
+### Keep the scope and finish clear
+
+- Name the observable finishing point in the plan, such as reaching checkout without payment, saving and reopening one item, or refusing access to a protected page. Include the required cleanup. A stopping point limits the claim; reaching checkout does not prove a completed purchase.
+- For broad requests, group pages by meaningfully different customer or employee behavior. Select representative journeys and important differences, rather than running every route against every language, role and view. Account for the requested remainder explicitly. Do not use sampling to shrink an explicitly requested full review or omit an applicable critical risk.
+- Prefer the user's supplied records, ready test buttons and visible language/view controls. Check the simplest supported flow before discovering extra records through APIs or building another setup. Read source for the relevant rules and affected callers, not to turn every nearby feature into a new browser task.
+- Widen investigation when an in-scope failure blocks the selected journey or suggests harm to money, saved data, inventory or access. Explain that reason. An unrelated page, an available integration or another handbook example is not by itself a reason to expand the run.
+- Apply user corrections immediately to the active plan, report and conclusion. If the user narrows the work to public pages, cancel the pending staff-login request and remove that requirement from the remaining scope. Preserve earlier evidence with its original context; do not count it as a new run.
+- Separate known issues, unsupported/deprecated controls and new findings. Record a known issue's exact affected attempt and use a safe recovery when useful; do not repeatedly reproduce it without a new question to answer. A known failure still cannot be marked Passed or clear an unresolved financial/access gate. Withdraw a finding when the user establishes that the tested control is deprecated, retaining the reason in the note.
+
+### Check test data and cleanup before changing it
+
+- Confirm the selected record can support the intended action: sale window, available quantity, required role/flag and relevant sold/locked/used state. A public listing or `sold_out=false` does not establish that sales are currently open.
+- If the record cannot support the check, prefer a ready alternative already supplied. Avoid a long search through unrelated records; name the missing setup and continue independent in-scope work when no suitable replacement is available.
+- Before adding an item or saving a change, identify its supported removal/restoration action and record the baseline. Prefer data with quick, reversible cleanup for smoke checks. Do not add more items to solve an existing cleanup problem or repeatedly extend a reservation while investigating another feature.
+- Verify cleanup through the same host, session and purchase flow that created the change. An empty first-party checkout does not prove an embedded host's cart is empty. A quantity of zero in an unsaved picker does not prove the saved item was removed.
+- If cleanup becomes blocked, prioritize safe restoration and stop dependent mutations. Use only authorized supported actions. If a timed reservation must expire, distinguish expiry from explicit removal, verify the fresh final cart and report any unverified inventory release. Do not clear unrelated browser/session data as a shortcut.
+
 ### 2. Test and Follow Through
 
 Execute the selected checks in risk order using the relevant source rules and handbook guidance. Establish the required starting state before judging the result. An unavailable browser capability or missing test record is a named gap, not a reason to silently substitute another check or claim success.
@@ -106,10 +123,13 @@ Apply the canonical [[00 Start Here/World-Class Software Quality Standard#Financ
 
 - Reuse the current session and verified setup; do not launch another browser, build, development server or broad automation suite just for this check.
 - Read only the source and handbook sections needed to establish the selected behavior. Do not rescan the full repository or Qase project on every browser check. Query Qase when comparison with existing cases is requested or needed for a proposed new case, following [[05 Tooling/qasectl]].
-- Observe and collect evidence in the same pass. Capture the required success, saved-state and finding evidence; avoid repeated screenshots or interactions that add no proof. One screenshot can support several clearly named observations.
-- Reuse one canonical feature/run note. A smoke check does not require separate planning, findings and summary files. Keep source details and lengthy evidence in a collapsed callout.
+- Use the cheapest observation that answers the next question. Do not collect a full accessibility tree, a full DOM snapshot and a screenshot for every click. After an asynchronous action, check the expected ready state before capturing its result; a loading frame is not a final result.
+- Observe and collect evidence in the same pass. Give a coherent user action and its visible result one numbered step and one useful capture; several exact clicks may belong to that action. Keep independently assessed outcomes separate. Do not split routine waits or unchanged views into extra cases/screenshots, replay mutations for nicer images, or capture proof again just to format the report. Reuse an existing capture with an exact step reference. Keep the real screenshots rendered beside the executed steps.
+- If automation focuses a control without activating it, inspect the state and try a supported normal input such as Enter where appropriate. A coordinate/focus/tool failure is not an application bug. Do not force disabled controls or bypass validation to make a test or cleanup pass.
+- Reuse one canonical feature/run note. A smoke check does not require separate planning, findings and summary files. Put the current requested checks first in the index; keep earlier or out-of-scope observations clearly separate. Keep only useful source detail after the walkthrough, and do not hide screenshot proof in collapsed callouts.
 - Save routine browser text dumps under `/private/tmp` while investigating. After recording the useful findings and required proof, delete redundant dumps with `rm` and remove their links. Keep a raw capture only when it supplies necessary evidence unavailable elsewhere, with its purpose stated. Preserve screenshots, real CSV/PDF outputs and user-provided files.
 - Reuse existing mutation and cleanup authorization. When it is missing, continue useful non-saving checks and name exactly which save, purchase, import or other action was not run. A smoke request alone does not authorize live data changes or Qase publication.
+- Finish once the selected proof targets and required cleanup are accounted for. Report distinct important gaps without turning them into extra work automatically. Apply the canonical financial/access gates to the declared scope; a narrow smoke pass must not become a whole-release approval.
 
 ### Smoke Results
 

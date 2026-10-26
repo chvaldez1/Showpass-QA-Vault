@@ -22,6 +22,14 @@ Use an approved owned test website with the deployed SDK/embed configuration, pr
 
 Do not copy production secrets into the website or capture real Customer information. Choose one ordinary Event first; add Package, Product, Membership, or recurring date selection when those flows are affected.
 
+### Focused smoke with the widget tool
+
+When the user supplies the [Showpass Widget Testing Tool](https://spwidgettool.netlify.app/), enter their Organizer profile URL and verify the resolved SDK host and Organizer. Prefer its ready event buttons before searching for more records. Use its **Language** selector and **Embedded** checkbox for the requested variations, then launch the event again so those options apply. Check the actual host flow through the agreed finishing point and verify cleanup there.
+
+The user confirmed on 2026-10-25 that this tool's standalone **Cart** button is deprecated. Exclude that launcher from the supported smoke unless the user explicitly requests a legacy check. Continue testing applicable cart behavior through active purchase/checkout controls. Do not generalize this deprecation to all cart features.
+
+Record the same-host starting cart count and supported removal action before reserving anything. Zero in a draft picker is not removal proof. If cleanup must use reservation expiry, report and verify it explicitly. Direct widget-route checks supplement this host test; they do not replace it. Execution lessons: [[00 Start Here/Showpass QA Handbook/08 Escaped Bugs and Lessons#Browser execution lessons — public pages and widget smoke, 2026-10-25]].
+
 ## Organizer embed → Customer checkout → Venue Employee result
 
 | Step | Action | Data | Expected result |

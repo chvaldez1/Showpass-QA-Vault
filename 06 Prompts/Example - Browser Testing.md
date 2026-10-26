@@ -55,6 +55,12 @@ Prioritize business-critical behavior and realistic existing records.
 Scope:
 [New or legacy page; specific features, records or desktop/mobile checks, if relevant.]
 
+Finishing point:
+[The visible outcome that completes this check, plus cleanup.]
+Use the supplied records and ready controls first. Choose meaningful variations
+without repeating equivalent combinations. Keep known issues and deprecated
+controls separate from new bugs, and stop when the selected checks are accounted for.
+
 Allowed data changes:
 [Exact records and actions allowed for this run, plus what to restore or preserve.]
 Reuse permission already given in this conversation. If no data changes are authorized,

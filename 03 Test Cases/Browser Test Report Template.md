@@ -23,6 +23,7 @@ Give each check a report-local ID (`TC-01`, `TC-02`, and so on). Use the same ID
 - **Browser and view:** [Actual browser/sidebar and tested screen size, when verified.]
 - **Account and data:** [Signed-in/out state, Organizer, permissions, flags and records needed for this test.]
 - **Scope:** [Agreed checks, important variations and exclusions.]
+- **Finishing point:** [The observable result that completes the requested check, plus required cleanup. List relevant known issues/deprecated controls without turning them into new bug drafts.]
 - **Allowed changes:** [Permitted test-data changes, restoration and preserved review data.]
 
 ## TC-01 [Descriptive scenario name]
@@ -50,6 +51,8 @@ Give each check a report-local ID (`TC-01`, `TC-02`, and so on). Use the same ID
 2. **[Next action and target.]** [State what the previous step must have shown before this action can run. If the page should refuse access, do not imply a blocked user can still select its controls. Repeat Expected / Actual and the relevant evidence.]
 
 Keep coherent steps together. Start a separate scenario when its setup or expected outcome differs. Add source-verified selector/helper hints or a short API note only when they help repeat the test; do not expose temporary browser element indices.
+
+Use one numbered step for a coherent action and its inspectable result; name the exact clicks needed to perform it. Do not turn routine waits or repeated views into extra tests. Capture the ready result, reuse an existing screenshot when it proves the same observation, and keep independently assessed outcomes separate. Each executed step still needs its nearby real evidence or an exact reference to evidence already rendered.
 
 Use the named visible navigation when navigation was tested. Use the exact address when direct access itself is being tested. Distinguish those two paths in both steps and results. Keep technical configuration and long response extracts in supporting notes unless the step needs a particular returned value.
 
