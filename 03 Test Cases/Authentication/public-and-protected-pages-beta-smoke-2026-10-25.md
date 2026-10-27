@@ -9,13 +9,35 @@ tags:
 
 # Browser Test Report: Public pages on beta
 
-**Five public purchase flows reached checkout: seated event, supplied membership, product, general-admission ticket and custom seated package.** No payment was submitted. French is not fully translated: four public-page bug drafts below identify the affected controls. The membership widget also has an unresolved season-date difference.
+## Overview
 
-**Widget host follow-up completed:** [1859 QA CAD tested through the actual widget tool](#widget-tool-follow-up). The ready event passed in English modal and French embedded checkout. Fresh hosted checkout is empty. The standalone Cart button is deprecated and is not a bug.
+- **What worked:** Five public purchase flows reached checkout: seated event, membership, product, general-admission ticket and custom seated package. No payment was submitted.
+- **What failed:** Four confirmed public-page bugs leave application text in English after choosing French. See the bug summary below.
+- **Widget result:** The ready event reached checkout through the actual widget tool in an English modal and a French embedded view. Fresh hosted checkout was empty after cleanup.
+- **What remains uncertain:** The membership widget's season dates differ by one day from the full page. Special-link pages and other untested variations are listed in [TC-19](#tc-19-public-pages-needing-special-records-or-links). This run does not establish full release readiness.
+- **Scope:** Public pages only; no login is needed. [Earlier protected checks](#earlier-protected-checks-outside-current-scope) remain separate, outside the current recommendation. The earlier [protected Dashboard language report](protected-dashboard-english-french-beta-smoke-2026-10-25.md) is unchanged.
 
-**Current scope: public pages only**, as clarified by the user. No login is needed. Earlier protected-page observations collected before that clarification are retained in a separate section below and are not part of the public-page recommendation. The earlier [protected Dashboard language report](protected-dashboard-english-french-beta-smoke-2026-10-25.md) is unchanged.
+**Read this report:** Start with the bugs below, use the [test index](#test-index) to follow the steps and screenshots, or jump to [all results](#results).
 
-**Known issue:** the first French GA reservation returned the high-demand error. The user confirmed that it is known and is not being fixed. It is recorded as an interrupted attempt, not a new bug draft. A later English reservation and French checkout handoff worked.
+## Confirmed public-page bugs
+
+Each row is one distinct bug. Several failed checks can point to the same bug.
+
+| Bug and reproduction | Where | What went wrong |
+| --- | --- | --- |
+| [BUG-01](#bug-01-jira-draft) | Shared public controls and calendar | Search, footer headings and the calendar availability legend still contain English in French. |
+| [BUG-02](#bug-02-jira-draft) | Checkout language switch | Switching an already-open English checkout to French leaves the progress labels in English. A freshly opened French checkout worked. |
+| [BUG-03](#bug-03-jira-draft) | Membership purchase and seating | Purchase buttons, seat-selection instructions and other application labels contain English in French. |
+| [BUG-05](#bug-05-jira-draft) | Public error pages | French 404/500 pages show English explanations and recovery controls. |
+
+**Other observations:**
+
+- **Outside this scope:** BUG-04 belongs to the earlier protected checks.
+- **Known issue:** The first French general-admission reservation hit the high-demand error. A later English reservation and French checkout handoff worked. The user confirmed that the error is known and is not being fixed.
+- **Deprecated control:** The widget tool's standalone Cart button is not a bug.
+- **Unconfirmed:** The membership season-date difference needs the intended timezone rule before we can call it a bug.
+
+**Report update:** This layout update clarifies the October 25 run; it does not represent a new test run.
 
 ## Test index
 
@@ -1641,38 +1663,40 @@ Backend was used for authentication/public-data boundaries, membership seasons a
 
 ## Results
 
-**Recommendation: Decision blocked by named missing evidence for a full public-page release decision.** Five public purchase flows reached checkout, but French still has confirmed gaps. Valid special-link records and the membership date-display rule remain unverified. The supplied widget-tool host has now been tested in TC-21–TC-24; other host sites and completed payments remain unverified. The version bump’s deployed commit was not verified. No login is needed for the current public-only scope. This report supports the specific passes below, not a claim that every public branch or the release is ready.
+**Recommendation: Decision blocked by named missing evidence for a full public-page release decision.** The tested purchase flows reached checkout, but French has confirmed bugs. We still need valid special-link records and the intended membership date-display rule to resolve the blocked checks. Other host sites, completed payments and the deployed version-bump commit were not verified. The passes below apply only to the checks we ran.
 
-**Bug column:** 4 confirmed public-page bugs: [BUG-01](#bug-01-jira-draft), [BUG-02](#bug-02-jira-draft), [BUG-03](#bug-03-jira-draft) and [BUG-05](#bug-05-jira-draft). BUG-04 is the earlier protected-page issue, outside this scope. A dash means no confirmed bug is attached to that row; it does not turn an untested check into a pass.
+**Result count:** 19 Passed, 5 Failed, 4 Blocked and 1 Not run. The five failed checks relate to four distinct public bugs.
 
-| Check / scenario | Status | Bug | Observed result or exact gap | Go to test |
-| --- | --- | --- | --- | --- |
-| Homepage navigation | Passed | — | English/French homepage loads and language switch work. | [TC-01 — step 1](#tc-01-step-1) |
-| French shared labels | Failed | [BUG-01](#bug-01-jira-draft) | Search button and shared footer headings remain English. | [TC-01 — step 2](#tc-01-step-2) |
-| Discovery | Passed | — | Search, result opening, city/category browsing and French breadcrumb worked. | [TC-02 — step 1](#tc-02-step-1) |
-| Organizer profile | Passed | — | New organizer Events, Memberships and About loaded in both languages; Products/Gift Cards below. Existing event link still opens older profile. | [TC-03 — step 2](#tc-03-step-2) |
-| Seated ticket | Passed | — | Exact Dec 11 seat reached checkout at $25.99 CAD; language change kept cart; removed and empty cart verified. | [TC-04 — step 4](#tc-04-step-4) |
-| French checkout progress | Failed | [BUG-02](#bug-02-jira-draft) | Switching an open English checkout to French leaves the progress labels in English. | [TC-04 — step 5](#tc-04-step-5) |
-| Membership checkout | Passed | — | Centre Ice - Front, Section 2 Row 4 Seat 4 reached checkout at $493.81 CAD; selection removed. | [TC-05 — step 3](#tc-05-step-3) |
-| French membership controls | Failed | [BUG-03](#bug-03-jira-draft) | Membership purchase/map labels contain English. | [TC-05 — step 5](#tc-05-step-5) |
-| Product variant | Passed | — | XXL T Shirt quantity 1 reached checkout at $15.00 CAD, retained its variant in French and was removed. | [TC-06 — step 2](#tc-06-step-2) |
-| Gift-card forms | Passed | — | Gift-card forms loaded in both languages from both entry points; no submission. | [TC-07 — step 1](#tc-07-step-1) |
-| GA checkout retry | Passed | — | Retry reached GA checkout at $110.03 CAD; French cart retained it; removed afterward. | [TC-08 — step 3](#tc-08-step-3) |
-| Known reservation interruption | Blocked | Known issue | First French reservation hit the known high-demand issue. User says it is known and not being fixed; no new bug draft. | [TC-08 — step 2](#tc-08-step-2) |
-| Public account forms | Passed | — | Login, signup and password-reset forms rendered in both languages; nothing submitted. | [TC-09 — step 1](#tc-09-step-1) |
-| Support entry pages | Passed | — | Resend form and missing-refund-link message rendered in both languages; no email/refund submitted. | [TC-13 — step 1](#tc-13-step-1) |
-| Widget page loading | Passed | — | Ticket, membership, product and calendar widgets rendered directly; no host integration or completed widget purchase proved. | [TC-14 — step 1](#tc-14-step-1) |
-| Widget season dates | Blocked | Unconfirmed | Membership widget season dates differ by one day from full pages; intended timezone display rule unverified. | [TC-14 — step 2](#tc-14-step-2) |
-| French widget legend | Failed | [BUG-01](#bug-01-jira-draft) | French calendar availability legend remains English. | [TC-14 — step 3](#tc-14-step-3) |
-| Custom seated package | Passed | — | Custom package enforced 3 choices, required 3 seat assignments and reached French checkout at $77,97 CAD. Parent and three child entries removed; cart empty. | [TC-15 — step 9](#tc-15-step-9) |
-| Preset package checkout | Blocked | Setup blocked | Christmas Market package selection was rejected because sales ended; schedule not independently checked. | [TC-15 — step 1](#tc-15-step-1) |
-| Session and cleanup | Passed | — | Signed-out public session preserved; final fresh checkout empty after all five flows; French homepage restored. | [TC-16 — step 2](#tc-16-step-2) |
-| French error pages | Failed | [BUG-05](#bug-05-jira-draft) | French 404/500 core text stayed English. Pages did render. | [TC-17 — step 1](#tc-17-step-1) |
-| Suborganization form | Passed | — | Public Once application form rendered in both languages; no application submitted. | [TC-18 — step 1](#tc-18-step-1) |
-| Special public records | Blocked | — | Special-link pages still need valid owned tokens, holds or saved transactions. Product-widget and organizer-category records were resolved and checked. | [TC-19 — step 1](#tc-19-step-1) |
-| Remaining public variations | Not run | — | The supplied widget-tool host is now checked. Other host websites, physical mobile, attraction-specific setup, other equivalent discovery variants and developer endpoints remain unrun. | [TC-19 — step 3](#tc-19-step-3) |
-| Widget tool configuration | Passed | — | Correct beta SDK and 1859 QA CAD; ordinary checkout, PSP_Widget, initial cart 0. | [TC-21 — step 1](#tc-21-step-1) |
-| Mounted host calendar | Passed | — | October 30 Grounds Admission reached guest checkout at $58.51 CAD inside the actual host. | [TC-22 — step 3](#tc-22-step-3) |
-| Ready English event modal | Passed | — | Existing ticket reopened without duplication and reached checkout at $58.51 CAD. | [TC-23 — step 2](#tc-23-step-2) |
-| Ready French embedded event | Passed | — | French toggle plus Embedded checked; one ticket reached French checkout at $58.51 CAD. | [TC-24 — step 3](#tc-24-step-3) |
-| Hosted cleanup | Passed | — | Fresh hosted checkout empty; final host Cart Count 0; French and Embedded retained; no mounted frames. Product cleaned up by expiry, event tickets by quantity removal. | [TC-24 — steps 4–5](#tc-24-step-4) |
+**How to use the table:** Click a check to open its exact step and screenshot. Click a bug ID for the Jira draft. A dash means no confirmed bug is attached; a Blocked or Not run check has not passed. The [bug summary](#confirmed-public-page-bugs) lists the four distinct public bugs.
+
+| Check and step | Status | Bug | What happened |
+| --- | --- | --- | --- |
+| [Homepage navigation — TC-01 — step 1](#tc-01-step-1) | Passed | — | English/French homepage loads and language switch work. |
+| [French shared labels — TC-01 — step 2](#tc-01-step-2) | Failed | [BUG-01](#bug-01-jira-draft) | Search button and shared footer headings remain English. |
+| [Discovery — TC-02 — step 1](#tc-02-step-1) | Passed | — | Search, result opening, city/category browsing and French breadcrumb worked. |
+| [Organizer profile — TC-03 — step 2](#tc-03-step-2) | Passed | — | New organizer Events, Memberships and About loaded in both languages; Products/Gift Cards below. Existing event link still opens older profile. |
+| [Seated ticket — TC-04 — step 4](#tc-04-step-4) | Passed | — | Exact Dec 11 seat reached checkout at $25.99 CAD; language change kept cart; removed and empty cart verified. |
+| [French checkout progress — TC-04 — step 5](#tc-04-step-5) | Failed | [BUG-02](#bug-02-jira-draft) | Switching an open English checkout to French leaves the progress labels in English. |
+| [Membership checkout — TC-05 — step 3](#tc-05-step-3) | Passed | — | Centre Ice - Front, Section 2 Row 4 Seat 4 reached checkout at $493.81 CAD; selection removed. |
+| [French membership controls — TC-05 — step 5](#tc-05-step-5) | Failed | [BUG-03](#bug-03-jira-draft) | Membership purchase/map labels contain English. |
+| [Product variant — TC-06 — step 2](#tc-06-step-2) | Passed | — | XXL T Shirt quantity 1 reached checkout at $15.00 CAD, retained its variant in French and was removed. |
+| [Gift-card forms — TC-07 — step 1](#tc-07-step-1) | Passed | — | Gift-card forms loaded in both languages from both entry points; no submission. |
+| [GA checkout retry — TC-08 — step 3](#tc-08-step-3) | Passed | — | Retry reached GA checkout at $110.03 CAD; French cart retained it; removed afterward. |
+| [Known reservation interruption — TC-08 — step 2](#tc-08-step-2) | Blocked | Known issue | First French reservation hit the known high-demand issue. User says it is known and not being fixed; no new bug draft. |
+| [Public account forms — TC-09 — step 1](#tc-09-step-1) | Passed | — | Login, signup and password-reset forms rendered in both languages; nothing submitted. |
+| [Support entry pages — TC-13 — step 1](#tc-13-step-1) | Passed | — | Resend form and missing-refund-link message rendered in both languages; no email/refund submitted. |
+| [Widget page loading — TC-14 — step 1](#tc-14-step-1) | Passed | — | Ticket, membership, product and calendar widgets rendered directly; no host integration or completed widget purchase proved. |
+| [Widget season dates — TC-14 — step 2](#tc-14-step-2) | Blocked | Unconfirmed | Membership widget season dates differ by one day from full pages; intended timezone display rule unverified. |
+| [French widget legend — TC-14 — step 3](#tc-14-step-3) | Failed | [BUG-01](#bug-01-jira-draft) | French calendar availability legend remains English. |
+| [Custom seated package — TC-15 — step 9](#tc-15-step-9) | Passed | — | Custom package enforced 3 choices, required 3 seat assignments and reached French checkout at $77,97 CAD. Parent and three child entries removed; cart empty. |
+| [Preset package checkout — TC-15 — step 1](#tc-15-step-1) | Blocked | Setup blocked | Christmas Market package selection was rejected because sales ended; schedule not independently checked. |
+| [Session and cleanup — TC-16 — step 2](#tc-16-step-2) | Passed | — | Signed-out public session preserved; final fresh checkout empty after all five flows; French homepage restored. |
+| [French error pages — TC-17 — step 1](#tc-17-step-1) | Failed | [BUG-05](#bug-05-jira-draft) | French 404/500 core text stayed English. Pages did render. |
+| [Suborganization form — TC-18 — step 1](#tc-18-step-1) | Passed | — | Public Once application form rendered in both languages; no application submitted. |
+| [Special public records — TC-19 — step 1](#tc-19-step-1) | Blocked | — | Special-link pages still need valid owned tokens, holds or saved transactions. Product-widget and organizer-category records were resolved and checked. |
+| [Remaining public variations — TC-19 — step 3](#tc-19-step-3) | Not run | — | The supplied widget-tool host is now checked. Other host websites, physical mobile, attraction-specific setup, other equivalent discovery variants and developer endpoints remain unrun. |
+| [Widget tool configuration — TC-21 — step 1](#tc-21-step-1) | Passed | — | Correct beta SDK and 1859 QA CAD; ordinary checkout, PSP_Widget, initial cart 0. |
+| [Mounted host calendar — TC-22 — step 3](#tc-22-step-3) | Passed | — | October 30 Grounds Admission reached guest checkout at $58.51 CAD inside the actual host. |
+| [Ready English event modal — TC-23 — step 2](#tc-23-step-2) | Passed | — | Existing ticket reopened without duplication and reached checkout at $58.51 CAD. |
+| [Ready French embedded event — TC-24 — step 3](#tc-24-step-3) | Passed | — | French toggle plus Embedded checked; one ticket reached French checkout at $58.51 CAD. |
+| [Hosted cleanup — TC-24 — steps 4–5](#tc-24-step-4) | Passed | — | Fresh hosted checkout empty; final host Cart Count 0; French and Embedded retained; no mounted frames. Product cleaned up by expiry, event tickets by quantity removal. |

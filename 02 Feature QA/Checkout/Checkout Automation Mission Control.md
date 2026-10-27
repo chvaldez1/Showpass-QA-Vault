@@ -4,14 +4,14 @@ Persistent state for the checkout recursive automation prioritization worker.
 
 Related notes:
 - [[06 Prompts/Checkout Recursive Automation Prioritization Worker]]
-- [[02 Feature QA/Checkout Automation Worker State.json]]
-- [[02 Feature QA/Checkout Critical Path Gap Analysis]]
+- [[02 Feature QA/Checkout/Checkout Automation Worker State.json]]
+- [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
 - [[04 Automation/Checkout Automation Phase 2 Planning]]
 - [[04 Automation/Checkout Playwright Automation Review Checkpoint]]
-- [[02 Feature QA/Checkout Money Movement Risk Scoring]]
-- [[02 Feature QA/Checkout Automation Decision Queue]]
-- [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
+- [[02 Feature QA/Checkout/Checkout Money Movement Risk Scoring]]
+- [[02 Feature QA/Checkout/Checkout Automation Decision Queue]]
+- [[02 Feature QA/Checkout/Checkout Criticality From Jira Major Critical Export]]
 
 ## Current Best Answer
 
@@ -36,7 +36,7 @@ Related notes:
 
 **Incident calibration:** `assets/csv/major-critical.csv` was reviewed on 2026-07-09. Criticality now means a reusable business invariant can break, not merely that a Jira card was labeled Critical/Major. Do not force multi-day exploration once Major/Critical incident buckets stop changing the P0/P1 ranking, fixture needs, or assertion contracts.
 
-**Review checkpoint:** `P0-SATURATION-CHK-001` confirms the P0 reviewer set is structurally complete. Ranks 1-6 have reviewer-readable QA handoff fields and proof contracts, and `AUTO-CHK-008` now has a proof contract if package reporting is promoted. `PROMPT-SYNC-CHK-001` synced the reusable worker prompt to this checkpoint, and `ARTIFACT-SYNC-CHK-001` synced the reviewer-facing notes so fresh sessions do not repeat completed P0 audits. `PHASE2-GATE-SYNC-CHK-002` synced [[04 Automation/Checkout Automation Phase 2 Planning]] with `DECISION-QUEUE-SYNC-CHK-003`, so [[02 Feature QA/Checkout Automation Decision Queue]], [[04 Automation/Checkout Money Movement Automation Backlog]], and [[04 Automation/Checkout Playwright Automation Review Checkpoint]] name the same current reviewer gate. `MODE-SYNC-CHK-001` confirms the checkpoint is a planning recommendation for future Playwright work, not an implementation run. `LEVERAGE-CHK-001` adds the efficient future implementation order: shared `CheckoutResult` / `invoiceData.transaction_id` and final-state proof helpers first, then failed-payment context and entry-specific adapters. `AUTO-CHK-002` remains first, and `AUTO-CHK-008` stays review-separately unless package reporting/payout confidence is a current priority.
+**Review checkpoint:** `P0-SATURATION-CHK-001` confirms the P0 reviewer set is structurally complete. Ranks 1-6 have reviewer-readable QA handoff fields and proof contracts, and `AUTO-CHK-008` now has a proof contract if package reporting is promoted. `PROMPT-SYNC-CHK-001` synced the reusable worker prompt to this checkpoint, and `ARTIFACT-SYNC-CHK-001` synced the reviewer-facing notes so fresh sessions do not repeat completed P0 audits. `PHASE2-GATE-SYNC-CHK-002` synced [[04 Automation/Checkout Automation Phase 2 Planning]] with `DECISION-QUEUE-SYNC-CHK-003`, so [[02 Feature QA/Checkout/Checkout Automation Decision Queue]], [[04 Automation/Checkout Money Movement Automation Backlog]], and [[04 Automation/Checkout Playwright Automation Review Checkpoint]] name the same current reviewer gate. `MODE-SYNC-CHK-001` confirms the checkpoint is a planning recommendation for future Playwright work, not an implementation run. `LEVERAGE-CHK-001` adds the efficient future implementation order: shared `CheckoutResult` / `invoiceData.transaction_id` and final-state proof helpers first, then failed-payment context and entry-specific adapters. `AUTO-CHK-002` remains first, and `AUTO-CHK-008` stays review-separately unless package reporting/payout confidence is a current priority.
 
 ## Visual Snapshot
 
@@ -275,8 +275,8 @@ P1/lower packets are preserved, not deleted or pruned. Use [[06 Prompts/Checkout
 **Current best automation remains:** `AUTO-CHK-002`.  
 **CSV status:** learned and checkpointed; do not reread `assets/csv/major-critical.csv` unless a newer export is provided.  
 **Worker State status:** latest checkpoint is `ARTIFACT-SYNC-CHK-001`; every candidate has QA handoff fields plus `criticality_review`; ranks 1-6 have `proof_surface_contract`, reviewer-readable handoffs, acceptance criteria, and a shared future implementation sequence; `AUTO-CHK-008` also has a proof contract if promoted; P1 scores are normalized below 80; current decision gate is `DEC-CHK-046` through `DEC-CHK-050`.
-**Resume next with:** review [[04 Automation/Checkout Playwright Automation Review Checkpoint]], [[04 Automation/Checkout Money Movement Automation Backlog]], [[04 Automation/Checkout Automation Phase 2 Planning]], and [[02 Feature QA/Checkout Automation Decision Queue]] as the current "what to automate next" recommendation. The review checkpoint, backlog, Phase 2 Planning, decision queue, Worker State, and reusable prompt already reference `HANDOFF-AUDIT-CHK-001`, `PHASE2-GATE-SYNC-CHK-002`, `P0-SATURATION-CHK-001`, `PROMPT-SYNC-CHK-001`, and `ARTIFACT-SYNC-CHK-001`; do not repeat the handoff, saturation, ranking, assertion-contract, CSV, or broad exploration audits unless reviewer feedback or candidate content changes. If approved, use `LEVERAGE-CHK-001` as the future implementation sequence in a separate task. If resumed without reviewer changes, avoid broad exploration and keep the recommendation stable.
-**Read first after `/goal resume`:** this Mission Control note, then [[02 Feature QA/Checkout Automation Worker State.json]].  
+**Resume next with:** review [[04 Automation/Checkout Playwright Automation Review Checkpoint]], [[04 Automation/Checkout Money Movement Automation Backlog]], [[04 Automation/Checkout Automation Phase 2 Planning]], and [[02 Feature QA/Checkout/Checkout Automation Decision Queue]] as the current "what to automate next" recommendation. The review checkpoint, backlog, Phase 2 Planning, decision queue, Worker State, and reusable prompt already reference `HANDOFF-AUDIT-CHK-001`, `PHASE2-GATE-SYNC-CHK-002`, `P0-SATURATION-CHK-001`, `PROMPT-SYNC-CHK-001`, and `ARTIFACT-SYNC-CHK-001`; do not repeat the handoff, saturation, ranking, assertion-contract, CSV, or broad exploration audits unless reviewer feedback or candidate content changes. If approved, use `LEVERAGE-CHK-001` as the future implementation sequence in a separate task. If resumed without reviewer changes, avoid broad exploration and keep the recommendation stable.
+**Read first after `/goal resume`:** this Mission Control note, then [[02 Feature QA/Checkout/Checkout Automation Worker State.json]].  
 **Fresh session checkpoint:** open [[06 Prompts/Checkout Recursive Automation Prioritization Worker]], then read `resume_checkpoint`, `incident_calibration_policy`, and `candidates[].criticality_review` in Worker State before doing any new search.  
 **Do not resume by implementing tests:** this worker is planning-only; implementation stays a separate task.
 
@@ -286,12 +286,12 @@ P1/lower packets are preserved, not deleted or pruned. Use [[06 Prompts/Checkout
 - Backend first: `/Users/christianvaldez/Documents/Showpass/repos/web-app`
 - Frontend second: `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`
 - Playwright third: `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`
-- Use existing findings before new exploration: [[02 Feature QA/Checkout Critical Path Gap Analysis#2026-07-07 Open-Ended Exploration Report]]
+- Use existing findings before new exploration: [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#2026-07-07 Open-Ended Exploration Report]]
 
 ## Loop Rules
 
 - Re-rank after every useful result.
-- Update [[02 Feature QA/Checkout Automation Worker State.json]] before this file.
+- Update [[02 Feature QA/Checkout/Checkout Automation Worker State.json]] before this file.
 - Update this file last as the durable checkpoint.
 - Keep entries concise.
 - Do not modify source repos or Qase unless explicitly authorized.

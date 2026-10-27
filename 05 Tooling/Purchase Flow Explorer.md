@@ -8,12 +8,12 @@ tags:
 
 # Purchase Flow Explorer
 
-Open [the explorer](purchase-flow-explorer/index.html) to browse and visualize [[02 Feature QA/End-to-End Purchase Coverage Matrix]].
+Open [the explorer](purchase-flow-explorer/index.html) to browse and visualize [[02 Feature QA/Purchase Coverage/End-to-End Purchase Coverage Matrix]].
 
 The Markdown note remains the source of truth. These generated files are derived from it:
 
-- `02 Feature QA/End-to-End Purchase Coverage Matrix.json` - portable structured data
-- `02 Feature QA/End-to-End Purchase Coverage Matrix.browser-data.js` - browser-readable copy for direct file opening
+- `02 Feature QA/Purchase Coverage/End-to-End Purchase Coverage Matrix.json` - portable structured data
+- `02 Feature QA/Purchase Coverage/End-to-End Purchase Coverage Matrix.browser-data.js` - browser-readable copy for direct file opening
 
 The JSON uses a human-facing schema:
 

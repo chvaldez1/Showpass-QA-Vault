@@ -4,12 +4,12 @@ Automation backlog for checkout paths with high money movement, order integrity,
 
 Related notes:
 - [[06 Prompts/Checkout Recursive Automation Prioritization Worker]]
-- [[02 Feature QA/Checkout Automation Mission Control]]
+- [[02 Feature QA/Checkout/Checkout Automation Mission Control]]
 - [[06 Prompts/Checkout Money Movement Exploration Goal]]
-- [[02 Feature QA/Checkout Critical Path Gap Analysis]]
-- [[02 Feature QA/Checkout Money Movement Risk Scoring]]
+- [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis]]
+- [[02 Feature QA/Checkout/Checkout Money Movement Risk Scoring]]
 - [[04 Automation/Checkout Playwright Automation Review Checkpoint]]
-- [[02 Feature QA/Checkout Automation Decision Queue]]
+- [[02 Feature QA/Checkout/Checkout Automation Decision Queue]]
 
 ## Current Recommendation
 
@@ -88,7 +88,7 @@ Use this contract when later implementation handles P0 money-movement packets.
 ### [P0/P1/P2/P3] Candidate Title
 
 **Score:** 0/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#heading]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#heading]]\
 **Automation type:** API / E2E / integration / fixture-only  
 
 ## Why Automate
@@ -155,7 +155,7 @@ Use this contract when later implementation handles P0 money-movement packets.
 ### P0 - AUTO-CHK-002 - Duplicate Submit/Retry Creates One Paid Outcome
 
 **Score:** 96/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Duplicate / Retry / Replay Coverage Does Not Prove One Final Paid Outcome]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Duplicate / Retry / Replay Coverage Does Not Prove One Final Paid Outcome]]\
 **Automation type:** E2E assertion upgrade on existing Authorize repro harness  
 **Status:** Planning packet ready; later source implementation is outside this worker
 
@@ -225,7 +225,7 @@ Use this as the first later-implementation shape:
 ### P0 - AUTO-CHK-001 - Failed Payment No Paid Order/Tickets/Inventory
 
 **Score:** 94/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Failed Payment Is Not Proven To Avoid Paid Order, Issued Tickets, Or Inventory Consumption]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Failed Payment Is Not Proven To Avoid Paid Order, Issued Tickets, Or Inventory Consumption]]\
 **Automation type:** E2E negative final-state assertion  
 **Status:** Planning packet ready
 
@@ -284,7 +284,7 @@ Use this as the first later-implementation shape:
 ### P0 - AUTO-CHK-003 - Dashboard Transaction Total Reconciliation
 
 **Score:** 92/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Transaction Detail Total Reconciliation Is Weaker Than It Appears]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Transaction Detail Total Reconciliation Is Weaker Than It Appears]]\
 **Automation type:** E2E helper/assertion upgrade  
 **Status:** Planning packet ready
 
@@ -348,7 +348,7 @@ Use this as the first later-implementation shape:
 ### P0 - AUTO-CHK-006 - Mixed Ticket Plus Checkout Add-On Reconciliation
 
 **Score:** 91/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Mixed Ticket Plus Checkout Add-On Coverage Does Not Clearly Prove Both Fulfillment Lines]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Mixed Ticket Plus Checkout Add-On Coverage Does Not Clearly Prove Both Fulfillment Lines]]\
 **Automation type:** E2E assertion upgrade on existing product CheckoutAddOns path  
 **Status:** Planning ready
 
@@ -414,7 +414,7 @@ Detail file: `/private/tmp/qase-checkout-addon-case-details.json`.
 ### P0 - AUTO-CHK-007 - Checkout Tracking-Link Unavailable-Item Paid Outcome
 
 **Score:** 89/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Checkout Tracking-Link Unavailable-Item Pruning Is Not Proven Through Paid Order Reconciliation]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Checkout Tracking-Link Unavailable-Item Pruning Is Not Proven Through Paid Order Reconciliation]]\
 **Automation type:** E2E assertion scenario on checkout tracking link  
 **Status:** Planning ready / Proof refined
 
@@ -471,7 +471,7 @@ Use one checkout-link scenario with:
 ### P0 - AUTO-CHK-013 - Assigned Seating Payment Failure/Retry Preserves Seat Ownership
 
 **Score:** 90/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Assigned Seating Failure/Retry Seat Ownership Needs Final-State Proof]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Assigned Seating Failure/Retry Seat Ownership Needs Final-State Proof]]\
 **Automation type:** E2E failed-payment branch plus API/Dashboard seat ownership assertion  
 **Status:** Planning ready
 
@@ -543,7 +543,7 @@ Related manual coverage exists in Qase 217, 1190, and 1255, but no exact assigne
 ### P0 - AUTO-CHK-008 - Package Revenue-Realization Reporting Reconciliation
 
 **Score:** 84/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Package Revenue-Realization Reporting Reconciliation Needs Automation Proof]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Package Revenue-Realization Reporting Reconciliation Needs Automation Proof]]\
 **Automation type:** E2E purchase plus API-first reporting assertion  
 **Status:** Planning packet ready; later source implementation is outside this worker
 
@@ -601,7 +601,7 @@ Planning packet is ready. Keep lower than duplicate/failure/reconciliation P0s u
 ### P1 - AUTO-CHK-010 - Guest Checkout Claim/Connect Preserves Paid Order Ownership
 
 **Score:** 86/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P1 - Guest Checkout Claim/Connect Ownership Has Manual Coverage But No Exact Playwright Flow Found]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P1 - Guest Checkout Claim/Connect Ownership Has Manual Coverage But No Exact Playwright Flow Found]]\
 **Automation type:** E2E ownership assertion  
 **Status:** Planning ready; Qase/manual coverage exists
 
@@ -771,7 +771,7 @@ Start with one WebPublic checkout review upgrade. Add cart-summary, hold-link, t
 ### P1 - AUTO-CHK-014 - Waitlist Async Fulfillment Creates One Paid Order And Reconciled Revenue
 
 **Score:** 85/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P1 - Waitlist Async Fulfillment Final Paid Outcome Is Not Proven In Playwright]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P1 - Waitlist Async Fulfillment Final Paid Outcome Is Not Proven In Playwright]]\
 **Automation type:** E2E/API-assisted async fulfillment proof  
 **Status:** Planning ready; Qase/manual coverage exists
 
@@ -1099,7 +1099,7 @@ Promote only if one of these becomes available:
 ### P1 - AUTO-CHK-005 - Membership Event-Batch Hold-Link Checkout Reconciliation
 
 **Score:** 90/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P1 - Membership Event-Batch Hold-Link Checkout Lacks Reusable Playwright Fixture Coverage]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P1 - Membership Event-Batch Hold-Link Checkout Lacks Reusable Playwright Fixture Coverage]]\
 **Automation type:** E2E fixture + checkout assertion  
 **Status:** Fixture plan tightened; implementation is out of scope for this worker
 

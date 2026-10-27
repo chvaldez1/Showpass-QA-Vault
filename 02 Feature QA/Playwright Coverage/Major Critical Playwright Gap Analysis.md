@@ -2,7 +2,7 @@
 
 Related notes:
 - [[06 Prompts/Major Critical Jira To Playwright Gap Exhaustive Worker]]
-- [[02 Feature QA/Major Critical Playwright Gap Worker State.json]]
+- [[02 Feature QA/Playwright Coverage/Major Critical Playwright Gap Worker State.json]]
 - [[04 Automation/Major Critical Playwright Automation Candidates]]
 - [[01 Repositories/QA Automation - showpass-playwright]]
 - [[01 Repositories/Backend - web-app]]

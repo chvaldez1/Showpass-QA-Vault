@@ -173,7 +173,7 @@
     "next_step": "No ranking change. Sync Decision Queue, Automation Backlog, Phase 2 Planning, and Review Checkpoint current sections with PROMPT-SYNC-CHK-001; then keep the next action reviewer-driven."
   },
   "decision_queue": {
-    "path": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Decision Queue.md",
+    "path": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout/Checkout Automation Decision Queue.md",
     "recommended_decision": "DEC-CHK-050",
     "recommended_unblocker": "Reviewer checkpoint, automation backlog, Phase 2 Planning, and decision queue are current. No implementation unblocker is needed; use these review artifacts to approve, revise, or defer the high-value Playwright shortlist.",
     "recommended_next_planning_action": "Review REVIEW-CHK-001, HANDOFF-AUDIT-CHK-001, REVIEW-CHECKPOINT-SYNC-CHK-001, PHASE2-REVIEW-SYNC-CHK-001, PROMPT-SYNC-CHK-001, ARTIFACT-SYNC-CHK-001, and the synced automation backlog as a recommendation list, not as implemented tests. After review, approve ranks 1-6, explicitly choose whether AUTO-CHK-002 starts from the ready Authorize replay proof or a Stripe duplicate-submit proof, or explicitly promote AUTO-CHK-008 package reporting if that is a current priority.",
@@ -199,7 +199,7 @@
     "ranking_change": "none; current best remains AUTO-CHK-002 and ranks 1-6 remain the recommended Playwright batch",
     "status": "reviewer_artifacts_current",
     "synced_paths": [
-      "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Decision Queue.md",
+      "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout/Checkout Automation Decision Queue.md",
       "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Money Movement Automation Backlog.md",
       "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Automation Phase 2 Planning.md",
       "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Playwright Automation Review Checkpoint.md"
@@ -288,7 +288,7 @@
       "AUTO-CHK-008"
     ],
     "synced_paths": [
-      "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Decision Queue.md",
+      "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout/Checkout Automation Decision Queue.md",
       "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Money Movement Automation Backlog.md",
       "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Automation Phase 2 Planning.md",
       "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Playwright Automation Review Checkpoint.md"
@@ -390,7 +390,7 @@
     "timestamp": "2026-07-13",
     "id": "DECISION-QUEUE-SYNC-CHK-003",
     "type": "decision_queue_sync",
-    "target": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Decision Queue.md",
+    "target": "/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout/Checkout Automation Decision Queue.md",
     "result": "No ranking change. Decision queue should reflect HANDOFF-AUDIT-CHK-001, REVIEW-CHECKPOINT-SYNC-CHK-001, PHASE2-REVIEW-SYNC-CHK-001, and the current reviewer gate.",
     "current_decisions": [
       "DEC-CHK-046",

@@ -340,11 +340,25 @@ Apply the [[#Financial and Core Transaction Gates]] decision rule: a confirmed u
 - Assume the QA employee has access to the documented fixture but no prior knowledge of the feature.
 - Start with an exact product location: a route, dashboard area, public page, or named screen.
 - Name every visible control exactly as it appears and explain where test values come from.
-- Use a `Step Action | Data | Expected Result` table for test cases and defect reproductions that contain more than one action.
-- Keep one observable action and one observable result per row. Split a row when the person must make two decisions.
+- Use a `Step Action | Data | Expected Result` table for standalone manual/Qase-ready cases. Browser reports, Sentry investigation notes and user-facing reproduction walkthroughs use numbered actions with **Expected** and **Actual** beneath each action, following [[03 Test Cases/Browser Test Report Template]]. Do not duplicate the same walkthrough in a second action table.
+- Keep one coherent action and its inspectable result per row or numbered step. Split a step when the person must make separate decisions.
 - Do not use browser-automation language such as locator, DOM, hidden checkbox, isolated clipboard, sentinel, request interception, or programmatic click in manual instructions.
 - End with any cleanup, reset, or preserved-fixture instruction so the next QA employee does not have to infer the required final state.
 - Before calling an artifact review-ready, read every manual flow from top to bottom and confirm a QA employee can execute it without opening source code or a separate narrative note.
+
+### Executable Reproduction Handoff
+
+A reproduction must explain how the person reaches the required state, not merely name that state as a precondition.
+
+- **Account and Organizer:** Name the required Organizer and relevant access. Identify the original employee only when evidence supports it. Say whether the person's own account can exercise the same behavior, or why a specific employee matters. Distinguish shared Organizer data from personal stats. Missing access is a specific stopping condition; do not imply permission changes or impersonation are automatically authorized.
+- **Prepare the state with visible controls:** Replace instructions such as “use an unfiltered page,” “enable totals,” or “inspect the panel” with the actual navigation and control actions. Explain how to open the correct main or Event-specific screen, open a hidden filters panel, clear selected filters and show the required panel when applicable. Name the expected field values. Cover ordinary conditional controls, such as Clear appearing only when filters exist, without inventing controls or changing another person's preferences.
+- **One clear result per action:** Name exactly what must appear, disappear, finish loading or remain saved. A missing panel, a displayed zero and an empty/loading panel are different outcomes. Keep recorded server evidence separate from the visible result a person has not yet observed.
+- **Bound a timing-dependent attempt:** State what starts the observation window, how long to observe, and when to stop or avoid another request. Base the window on the actual failure or product contract, label an investigative observation limit as such, and do not present it as a universal timeout or performance requirement. A sporadic error needs an honest reproduction attempt, not an invented guaranteed trigger.
+- **Explain data effects:** Check for automatic writes even on GET requests. Separate transaction/record changes from browser filter, session or display-preference changes, and name restoration when applicable. A read-only request can still impose load; do not instruct repeated production retries to force a failure.
+- **Give a concrete response format:** For a human check, ask for the exact available outcomes, such as amounts loaded in approximately a stated duration, still blank/loading at the observation limit, an exact error message, or the named access/control blocker. Include the local time and any separately assessed adjacent result needed for correlation. Say what the person does not need to inspect and what the agent will do with the answer.
+- **Keep facts and execution honest:** Newly drafted actions remain Not run. Preserve the original run/investigation date and evidence when clarifying wording. Do not invent screenshots, claim a successful retry proves a fix, or treat a generic visible error as proof of the same server cause. Put long SQL, stack frames, IDs and source analysis after the walkthrough.
+
+Before handing the check to the user, mentally follow it from their actual starting screen. If it still requires asking “which employee?”, “which Organizer?”, “how do I clear/show that?”, “how long?”, or “what should I report?”, resolve the answer from available evidence or name that exact blocker. Do not hand the same ambiguity back as a prerequisite.
 
 ## 7. Complex Controls Must Be Decomposed
 
@@ -430,8 +444,8 @@ Every finding must include:
 Write the reproduction as an independently executable QA procedure:
 
 - Preconditions state the role, environment, exact starting page, and named fixture.
-- Numbered actions are represented in a `Step Action | Data | Expected Result` table.
-- The Actual Result is separate from the expected-results column and identifies the first step where behavior diverges.
+- Standalone manual/Qase-ready cases use a `Step Action | Data | Expected Result` table. Browser and Sentry report reproductions use numbered walkthroughs with Expected and Actual beneath each action; apply [[#Executable Reproduction Handoff]].
+- The Actual Result is separate from the expected result and identifies the first step where behavior diverges. Label unexecuted actions Not run.
 - Evidence is placed immediately beside the claim it proves. Embed visible screenshots in the canonical review note; link non-visual evidence such as CSVs or console output.
 - If the result depends on browser permissions, operating-system state, timing, or an automation-only interface, label it Inconclusive until a normal user interaction independently reproduces it.
 - If the original fixture was deleted or changed, provide a current preserved fixture or state exactly what a QA employee must create before attempting the reproduction.
@@ -460,6 +474,7 @@ Ask the user only when their judgment or independent reproduction materially cha
 - Give the exact starting location and actions.
 - Provide the exact outcomes to choose between.
 - State exactly what the user should report.
+- Follow [[#Executable Reproduction Handoff]]: explain setup actions, conditional controls, any observation limit, browser/session preference changes and exact stopping conditions. Give the user the complete first check in chat; a report link alone is not an executable handoff.
 - Wait for the answer before giving the next check.
 - Record the result in the canonical run note.
 - Explicitly list checks the user must not perform because they are destructive, already confirmed, inconclusive, or require another fixture.

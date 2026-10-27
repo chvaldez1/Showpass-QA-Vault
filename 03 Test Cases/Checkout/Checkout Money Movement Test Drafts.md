@@ -1,12 +1,12 @@
 # Checkout Money Movement Test Drafts
 
-Draft Qase/manual cases only after source-backed findings are identified in [[02 Feature QA/Checkout Critical Path Gap Analysis]].
+Draft Qase/manual cases only after source-backed findings are identified in [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis]].
 
 Related notes:
 - [[06 Prompts/Checkout Recursive Automation Prioritization Worker]]
-- [[02 Feature QA/Checkout Automation Mission Control]]
+- [[02 Feature QA/Checkout/Checkout Automation Mission Control]]
 - [[06 Prompts/Checkout Money Movement Exploration Goal]]
-- [[02 Feature QA/Checkout Money Movement Risk Scoring]]
+- [[02 Feature QA/Checkout/Checkout Money Movement Risk Scoring]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
 - [[06 Prompts/Showpass QA Test Case Generator]]
 
@@ -14,12 +14,12 @@ Related notes:
 
 | Local ID | Priority | Score | Title | Source Finding | Qase Status |
 | --- | --- | ---: | --- | --- | --- |
-| TC-CHK-001 | P0 | 96 | Checkout retry/replay creates one paid outcome | [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Duplicate / Retry / Replay Coverage Does Not Prove One Final Paid Outcome]] | Qase checked; no exact case found |
-| TC-CHK-002 | P0 | 92 | Dashboard settlement amount matches checkout total | [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Transaction Detail Total Reconciliation Is Weaker Than It Appears]] | Qase checked; partial related case found |
-| TC-CHK-003 | P0 | 94 | Failed payment creates no paid outcome | [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Failed Payment Is Not Proven To Avoid Paid Order, Issued Tickets, Or Inventory Consumption]] | Qase checked; partial related case found |
-| TC-CHK-004 | P1 | 90 | Membership hold-link checkout reconciles paid amount and entitlement | [[02 Feature QA/Checkout Critical Path Gap Analysis#P1 - Membership Event-Batch Hold-Link Checkout Lacks Reusable Playwright Fixture Coverage]] | Qase checked; partial related cases found |
-| TC-CHK-005 | P0 | 91 | Ticket plus checkout add-on reconciles both fulfillment lines | [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Mixed Ticket Plus Checkout Add-On Coverage Does Not Clearly Prove Both Fulfillment Lines]] | Qase checked; partial related cases found |
-| TC-CHK-006 | P0 | 89 | Checkout tracking link prunes unavailable items before paid order | [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Checkout Tracking-Link Unavailable-Item Pruning Is Not Proven Through Paid Order Reconciliation]] | Qase checked; partial related case found |
+| TC-CHK-001 | P0 | 96 | Checkout retry/replay creates one paid outcome | [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Duplicate / Retry / Replay Coverage Does Not Prove One Final Paid Outcome]] | Qase checked; no exact case found |
+| TC-CHK-002 | P0 | 92 | Dashboard settlement amount matches checkout total | [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Transaction Detail Total Reconciliation Is Weaker Than It Appears]] | Qase checked; partial related case found |
+| TC-CHK-003 | P0 | 94 | Failed payment creates no paid outcome | [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Failed Payment Is Not Proven To Avoid Paid Order, Issued Tickets, Or Inventory Consumption]] | Qase checked; partial related case found |
+| TC-CHK-004 | P1 | 90 | Membership hold-link checkout reconciles paid amount and entitlement | [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P1 - Membership Event-Batch Hold-Link Checkout Lacks Reusable Playwright Fixture Coverage]] | Qase checked; partial related cases found |
+| TC-CHK-005 | P0 | 91 | Ticket plus checkout add-on reconciles both fulfillment lines | [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Mixed Ticket Plus Checkout Add-On Coverage Does Not Clearly Prove Both Fulfillment Lines]] | Qase checked; partial related cases found |
+| TC-CHK-006 | P0 | 89 | Checkout tracking link prunes unavailable items before paid order | [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Checkout Tracking-Link Unavailable-Item Pruning Is Not Proven Through Paid Order Reconciliation]] | Qase checked; partial related case found |
 
 ## Qase Coverage Snapshot
 
@@ -43,7 +43,7 @@ Read-only Qase bulk scan on 2026-07-07:
 
 **Priority:** P0  
 **Risk score:** 96/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Duplicate / Retry / Replay Coverage Does Not Prove One Final Paid Outcome]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Duplicate / Retry / Replay Coverage Does Not Prove One Final Paid Outcome]]\
 **Description:**  
 Verify that a checkout path exposed to duplicate submit or replay behavior creates only one paid transaction, one order/invoice, and the expected ticket set.
 
@@ -97,7 +97,7 @@ Use `PROOF-CHK-002` as the first implementation contract: keep the first path to
 
 **Priority:** P0  
 **Risk score:** 92/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Transaction Detail Total Reconciliation Is Weaker Than It Appears]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Transaction Detail Total Reconciliation Is Weaker Than It Appears]]\
 **Description:**  
 Verify that a completed checkout's expected paid total matches the Dashboard transaction detail `Settlement amount`.
 
@@ -142,7 +142,7 @@ Use `PROOF-CHK-004` as the first implementation contract: update `TransactionPag
 
 **Priority:** P0  
 **Risk score:** 94/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Failed Payment Is Not Proven To Avoid Paid Order, Issued Tickets, Or Inventory Consumption]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Failed Payment Is Not Proven To Avoid Paid Order, Issued Tickets, Or Inventory Consumption]]\
 **Description:**  
 Verify that a failed payment returns the buyer to checkout without creating a paid order, issuing usable tickets, or consuming inventory.
 
@@ -189,7 +189,7 @@ Use `PROOF-CHK-003` as the first implementation contract: keep the first path to
 
 **Priority:** P1  
 **Risk score:** 90/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P1 - Membership Event-Batch Hold-Link Checkout Lacks Reusable Playwright Fixture Coverage]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P1 - Membership Event-Batch Hold-Link Checkout Lacks Reusable Playwright Fixture Coverage]]\
 **Description:**  
 Verify that a generated membership event-batch hold link can be purchased through public hold checkout and reconciles the paid amount, issued entitlement, and inventory or seat state.
 
@@ -235,7 +235,7 @@ Verify that a generated membership event-batch hold link can be purchased throug
 
 **Priority:** P0  
 **Risk score:** 91/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Mixed Ticket Plus Checkout Add-On Coverage Does Not Clearly Prove Both Fulfillment Lines]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Mixed Ticket Plus Checkout Add-On Coverage Does Not Clearly Prove Both Fulfillment Lines]]\
 **Description:**  
 Verify that a buyer who purchases an event ticket and adds a product during checkout receives one paid order whose confirmation/order detail includes both the base ticket and the add-on product at the expected total.
 
@@ -282,7 +282,7 @@ Use `PROOF-CHK-005` for the first Playwright implementation. Upgrade the existin
 
 **Priority:** P0  
 **Risk score:** 89/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#P0 - Checkout Tracking-Link Unavailable-Item Pruning Is Not Proven Through Paid Order Reconciliation]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#P0 - Checkout Tracking-Link Unavailable-Item Pruning Is Not Proven Through Paid Order Reconciliation]]\
 **Description:**  
 Verify that a checkout tracking link with partially unavailable configured extras and an existing basket only charges and fulfills the available remaining items.
 
@@ -334,7 +334,7 @@ Verify that a checkout tracking link with partially unavailable configured extra
 
 **Priority:** P0/P1/P2/P3  
 **Risk score:** 0/100  
-**Source finding:** [[02 Feature QA/Checkout Critical Path Gap Analysis#heading]]  
+**Source finding:** [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis#heading]]\
 **Description:**  
 
 **Preconditions:**  

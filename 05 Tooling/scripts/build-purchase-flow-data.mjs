@@ -8,13 +8,13 @@ const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const vaultRoot = path.resolve(scriptDir, "../..");
 const inputPath = process.argv[2]
   ? path.resolve(process.cwd(), process.argv[2])
-  : path.join(vaultRoot, "02 Feature QA/End-to-End Purchase Coverage Matrix.md");
+  : path.join(vaultRoot, "02 Feature QA/Purchase Coverage/End-to-End Purchase Coverage Matrix.md");
 const outputPath = process.argv[3]
   ? path.resolve(process.cwd(), process.argv[3])
-  : path.join(vaultRoot, "02 Feature QA/End-to-End Purchase Coverage Matrix.json");
+  : path.join(vaultRoot, "02 Feature QA/Purchase Coverage/End-to-End Purchase Coverage Matrix.json");
 const browserDataPath = process.argv[4]
   ? path.resolve(process.cwd(), process.argv[4])
-  : path.join(vaultRoot, "02 Feature QA/End-to-End Purchase Coverage Matrix.browser-data.js");
+  : path.join(vaultRoot, "02 Feature QA/Purchase Coverage/End-to-End Purchase Coverage Matrix.browser-data.js");
 
 function cleanInline(value) {
   return value

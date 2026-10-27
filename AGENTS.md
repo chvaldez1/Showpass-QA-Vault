@@ -44,6 +44,9 @@ Backend code is the first source of truth for behavior, schemas, APIs, permissio
 
 ## Pasted Links And Browser Use
 
+- Do not inspect or control desktop apps, native browser windows, or the desktop through computer-use tools. This includes Chrome, Dia, Slack, Obsidian, terminals, and desktop screenshots. Use filesystem tools for local source and connected integrations/APIs for service data. An instruction to investigate, test a link, or reproduce an issue does not authorize desktop-app access. Only a later explicit user instruction naming the desktop app and permitting its use can override this restriction.
+- Authorized browser work is limited to the Codex in-app browser and the standing scope below. If the required integration or API is unavailable, report that specific blocker; do not switch to a desktop app or another browser.
+- Investigate Sentry through its connected integration or read-only API. Do not open Sentry in a browser as an authentication or investigation fallback.
 - A pasted link is context, not an instruction to open the page, inspect a live session, or start browser testing.
 - Continue tracing local backend and frontend code by default. Use the URL's route, model, or record identifier to understand the user's question and locate the relevant code.
 - For test generation and gap analysis, the user's standing preference authorizes using an already-open, relevant Codex browser for read-only navigation and non-saving UI inspection. Verify the environment, role, Organization and page; use it to enrich visible wording, navigation grouping and state coverage alongside source review. Do not inspect unrelated tabs or start a new browser/session solely because a URL was pasted.
@@ -88,6 +91,7 @@ Test notes must be executable by someone with little or no Showpass knowledge:
 
 Write every manual test case for a regular person who may have little Showpass knowledge.
 
+- For browser/Sentry reproduction walkthroughs and human checks, apply [[00 Start Here/World-Class Software Quality Standard#Executable Reproduction Handoff]]. Explain how to reach the required starting state using actual controls, rather than assuming an unfiltered page, enabled panel or matching employee. Use numbered Expected/Actual steps in these reports; standalone Qase-ready cases retain their required format.
 - Use the words visible in the product. Prefer `open Manage Events`, `select Edit`, and `the saved value is still shown` over terms such as `source-backed navigation`, `state-aware surface`, `route parity`, `mapped destination`, `fixture`, `persistence boundary`, or `handoff`.
 - Titles, Descriptions, Preconditions, Steps, Data, and Expected Results must use plain language. Technical terms may remain in source notes, risk analysis, or automation notes when they are needed for accuracy.
 - Define a Showpass-specific term the first time it is needed and cannot be replaced with common wording.
@@ -109,11 +113,12 @@ Agents should keep work aligned with this folder contract:
 
 - `00 Start Here/` - orientation and basic QA workflow.
 - `01 Repositories/` - short reference notes for source repositories.
-- `02 Feature QA/` - feature-level QA notes and risk analysis.
+- `02 Feature QA/` - feature-level QA notes and risk analysis, grouped by topic. Start with `02 Feature QA/00 Index.md`; keep each report's supporting data beside it.
 - `03 Test Cases/` - manual test case templates and drafted cases.
 - `04 Automation/` - automation candidate planning.
 - `05 Tooling/` - CLI and workflow tool references.
 - `06 Prompts/` - reusable prompts and agent workflows.
+- `08 Sentry Investigations/` - Sentry error investigations and manual reproduction notes. Save these here, not under `02 Feature QA/`.
 - `99 Archive/` - old or inactive notes.
 
 ## Agent Rules
@@ -153,6 +158,7 @@ When user action or judgment is requested:
 - Explicitly say what the user does not need to inspect and why.
 - State whether the request blocks the next step and what the agent will do after receiving the answer.
 - Avoid vague handoffs such as “review the findings,” “let me know what you think,” or “confirm the behavior” without a concrete checklist and response format.
+- Give the complete first check in chat, with the exact setup/control actions, any case-specific observation window and clear outcome choices. State browser filter/display changes separately from business-record changes. A link to a report does not replace these instructions.
 
 ## Qase Workflow Rules
 

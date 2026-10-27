@@ -13,12 +13,12 @@ status: active
 Use this prompt when the P0 checkout planning loop has preserved the current top risks and you want the worker to continue into P1/P2/lower candidates.
 
 Related notes:
-- [[02 Feature QA/Checkout Automation Mission Control]]
-- [[02 Feature QA/Checkout Automation Worker State.json]]
-- [[02 Feature QA/Checkout Critical Path Gap Analysis]]
+- [[02 Feature QA/Checkout/Checkout Automation Mission Control]]
+- [[02 Feature QA/Checkout/Checkout Automation Worker State.json]]
+- [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
 - [[04 Automation/Checkout Automation Phase 2 Planning]]
-- [[02 Feature QA/Checkout Automation Decision Queue]]
+- [[02 Feature QA/Checkout/Checkout Automation Decision Queue]]
 - [[06 Prompts/Checkout Recursive Automation Prioritization Worker]]
 
 ```text
@@ -31,8 +31,8 @@ Goal:
 Create a ranked, evidence-backed continuation plan for high-value P1/P2/lower Playwright candidates. Focus on risks that improve checkout confidence without bloating the suite.
 
 Read first on every loop:
-- /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Mission Control.md
-- /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Worker State.json
+- /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout/Checkout Automation Mission Control.md
+- /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout/Checkout Automation Worker State.json
 
 Source repos:
 - Backend: [[01 Repositories/Backend - web-app]] - /Users/christianvaldez/Documents/Showpass/repos/web-app

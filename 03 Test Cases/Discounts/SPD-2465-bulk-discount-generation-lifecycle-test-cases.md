@@ -80,7 +80,7 @@ We are testing whether an organizer can generate, download, edit, and redeem ven
   - `packages/core/src/app-contexts/dashboard/features/discounts/data/services/useVenueBasedDiscountBulkOrderService.ts`
   - `packages/core/src/app-contexts/dashboard/features/discounts/data/repositories/VenueBasedDiscountBulkOrderRepository.ts`
 - Playwright workflow: `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/showpass-qa-test-case-generator.md`.
-- Vault guidance: [[06 Prompts/Showpass QA Test Case Generator]], [[05 Tooling/Qase Test Case Writing Rules]], and [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]].
+- Vault guidance: [[06 Prompts/Showpass QA Test Case Generator]], [[05 Tooling/Qase Test Case Writing Rules]], and [[02 Feature QA/Checkout/Checkout Criticality From Jira Major Critical Export]].
 
 ## Assumptions and Unknowns
 

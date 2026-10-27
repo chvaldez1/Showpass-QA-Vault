@@ -90,7 +90,7 @@ Use these exact backend names when preparing or changing the venue state for the
 - [[00 Start Here/World-Class Software Quality Standard]]
 - [[06 Prompts/Showpass QA Test Case Generator]]
 - [[05 Tooling/Qase Test Case Writing Rules]]
-- [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
+- [[02 Feature QA/Checkout/Checkout Criticality From Jira Major Critical Export]]
 
 ### Backend Source
 

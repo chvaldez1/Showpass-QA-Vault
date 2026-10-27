@@ -16,8 +16,8 @@ status: Source-informed guidance; execution evidence recorded per release
 
 - [[00 Start Here/World-Class Software Quality Standard]] — canonical quality policy.
 - [[01 Repositories/Backend - web-app]] and [[01 Repositories/Frontend - showpass-frontend]] — repository source-order and navigation guidance.
-- [[02 Feature QA/SPD Dev Support System Gap Analysis - April to September 2026]] — detailed incident/source/coverage analysis; retain its filename as the canonical analysis note.
-- [[02 Feature QA/End-to-End Purchase Coverage Matrix]] — companion entry-point/source atlas; mapped paths are not executed coverage.
+- [[02 Feature QA/Support Incidents/SPD Dev Support System Gap Analysis - April to September 2026]] — detailed incident/source/coverage analysis; retain its filename as the canonical analysis note.
+- [[02 Feature QA/Purchase Coverage/End-to-End Purchase Coverage Matrix]] — companion entry-point/source atlas; mapped paths are not executed coverage.
 - [Existing manual QA principles](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/manual-qa-principles.md>) — upstream principles, not competing vault policy.
 - [SPD-2761](https://showpass.atlassian.net/browse/SPD-2761) and [SPD-2770](https://showpass.atlassian.net/browse/SPD-2770) — directly read incident reports used for fee and native-device lessons.
 - [Critical Business E2E Tests](https://docs.superhuman.com/d/Dev-Team-Process_dYC2ikYLoK9/Critical-Business-E2E-Tests_su2b0pSE) — previously read visible regression guidance and platform/payment consideration lists. Hidden table contents were not established from the visible read.

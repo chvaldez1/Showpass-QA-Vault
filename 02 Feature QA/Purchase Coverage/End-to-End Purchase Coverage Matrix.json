@@ -3,7 +3,7 @@
   "document": {
     "title": "End-to-End Purchase Coverage Matrix",
     "description": "Answer four questions without flattening purchase into one linear journey:",
-    "sourceMarkdown": "02 Feature QA/End-to-End Purchase Coverage Matrix.md",
+    "sourceMarkdown": "02 Feature QA/Purchase Coverage/End-to-End Purchase Coverage Matrix.md",
     "generatedAt": "2026-07-17T20:31:23.808Z",
     "metadata": {
       "title": "End-to-End Purchase Coverage Matrix",
@@ -3654,7 +3654,7 @@
       "content": [
         {
           "type": "listItem",
-          "text": "[[02 Feature QA/Checkout Critical Path Gap Analysis]]"
+          "text": "[[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis]]"
         },
         {
           "type": "listItem",

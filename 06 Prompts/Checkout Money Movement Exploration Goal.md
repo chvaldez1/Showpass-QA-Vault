@@ -3,9 +3,9 @@
 Use this prompt when launching an open-ended checkout QA exploration goal focused on the highest-risk money movement paths.
 
 Related notes:
-- [[02 Feature QA/Checkout Money Movement Risk Scoring]]
-- [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
-- [[02 Feature QA/Checkout Critical Path Gap Analysis]]
+- [[02 Feature QA/Checkout/Checkout Money Movement Risk Scoring]]
+- [[02 Feature QA/Checkout/Checkout Criticality From Jira Major Critical Export]]
+- [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
 - [[03 Test Cases/Checkout/Checkout Money Movement Test Drafts]]
 
@@ -71,7 +71,7 @@ Run repeated exploration passes. For each pass:
 4. Compare against existing Playwright coverage, fixtures, factories, and Qase/manual coverage.
 5. Compare against local Major/Critical incident buckets when that could change ranking.
 6. Record gaps, unclear behavior, missing fixtures, and automation candidates.
-7. Score each finding out of 100 using [[02 Feature QA/Checkout Money Movement Risk Scoring]].
+7. Score each finding out of 100 using [[02 Feature QA/Checkout/Checkout Money Movement Risk Scoring]].
 8. Prioritize P0 and P1 items first.
 
 Avoid test bloat:

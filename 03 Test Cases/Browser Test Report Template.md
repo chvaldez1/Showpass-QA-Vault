@@ -7,7 +7,22 @@ tags:
 
 # Browser Test Report: [Behavior being tested]
 
-[One sentence describing the goal and the main observed result.]
+## Overview
+
+- **What worked:** [Main observed success and the point reached, such as checkout before payment.]
+- **What failed:** [Distinct confirmed bugs and their practical effect; do not count several failed checks as several bugs when they share one issue.]
+- **What remains unverified:** [Important blocked or unrun checks and why they matter to this scope.]
+- **Scope:** [Environment/date, requested workflow and any important boundary.]
+
+Start with the bugs below, follow a test through the [test index](#test-index), or jump to [all results](#results).
+
+## Confirmed bugs
+
+[Use one short row per distinct confirmed bug, linked to its detailed Jira draft. If none were confirmed, replace this table with that statement. Keep known issues and uncertain observations clearly labelled outside this list. Do not invent impact or severity.]
+
+| Bug and reproduction | Where | What went wrong |
+| --- | --- | --- |
+| [BUG-01](#bug-01-jira-draft) | [Named screen/control] | [Observed failure in everyday language] |
 
 ## Test index
 
@@ -31,6 +46,8 @@ Give each check a report-local ID (`TC-01`, `TC-02`, and so on). Use the same ID
 **What this tests:** [One specific outcome. Say whether this checks a visible link, opening a screen, saving a change or its later effect. Do not leave the reader to infer the goal from the title.]
 
 **Start here:** [The actual starting screen, signed-in employee/customer, selected Organizer and necessary record state. Explain where the control is if it is not obvious. Do not hide navigation or record preparation in an assumption.]
+
+Apply [[00 Start Here/World-Class Software Quality Standard#Executable Reproduction Handoff]]. Include the actions needed to reach the starting state in the steps: choosing the Organizer, opening the correct screen, showing a hidden panel or clearing existing filters when applicable and authorized. State whether the reader's own account is suitable; do not assume the original employee must be impersonated. Name a specific stop/report outcome if the required account, record or control is unavailable.
 
 ### Steps
 
@@ -59,6 +76,8 @@ Use the named visible navigation when navigation was tested. Use the exact addre
 When revising an executed report, clarify the recorded actions without inventing extra actions, clicks, screenshots or successful outcomes. Keep the run date and state when a later wording update did not rerun the tests. A newly suggested step stays Not run. One screenshot may support opening and inspecting the same screen; reference that evidence instead of duplicating it or pretending another capture exists.
 
 Before delivering, follow the steps as a reader: can they identify the starting screen, exact action, target and pass/fail check without asking what to test? Replace vague directions such as “verify access,” “check the menu” or “reload the same page” with the named page, control and expected result.
+
+For loading, timeout or delayed results, include a case-specific observation window, the action that starts it and when to stop without retrying. Distinguish a displayed zero from blank or still-loading content. Give concrete report choices and any local time needed for correlation. Explain browser filter/display-preference changes separately from transaction or other saved-record changes. Do not apply one incident's time window to every test.
 
 Give independently assessed checks their own ID and heading. For example, separate Build, Operations and Account menu checks rather than reporting one combined Navigation failure. Each results row must link to the exact test heading and name the relevant step; do not leave the reader with plain-text references such as `Dashboard navigation, 1–4`.
 
@@ -104,10 +123,11 @@ Put this results table last. Remove example rows that do not apply and preserve 
 
 [Short recommendation for the agreed scope. Keep stronger conclusions blocked when their required proof is missing.]
 
-| Check / scenario | Status | Observed result or exact gap | Go to test |
-| --- | --- | --- | --- |
-| [Executed check] | Passed | [What was proven] | [TC-01 — step 1](#tc-01-descriptive-scenario-name) |
-| [Confirmed failure, if any] | Failed | [Expected versus actual result and impact] | [TC-01 — affected step](#tc-01-descriptive-scenario-name) |
-| [Unavailable required check, if any] | Blocked | [Missing access, data or tool capability and proof needed] | [TC-01 — affected step](#tc-01-descriptive-scenario-name) |
-| [Unexecuted/out-of-scope check, if relevant] | Not run | [Reason; do not label it a failure] | [TC-01 — unrun check](#tc-01-descriptive-scenario-name) |
+Click the check name to open its exact step and evidence; click the bug ID for its Jira draft. Keep each row short and leave the full actions, values and screenshots in the walkthrough. Use a dash when no confirmed bug is attached; Blocked and Not run still mean the check has not passed.
 
+| Check and step | Status | Bug | What happened |
+| --- | --- | --- | --- |
+| [TC-01 — Executed check, step 1](#tc-01-descriptive-scenario-name) | Passed | — | [What was proven] |
+| [TC-01 — Confirmed failure, step 2](#tc-01-descriptive-scenario-name) | Failed | [BUG-01](#bug-01-jira-draft) | [Specific observed failure] |
+| [TC-01 — Required check, step 3](#tc-01-descriptive-scenario-name) | Blocked | — | [Missing access, data or tool capability; proof still needed] |
+| [TC-01 — Unrun check, step 4](#tc-01-descriptive-scenario-name) | Not run | — | [Reason it was not run] |

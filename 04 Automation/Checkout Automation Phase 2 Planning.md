@@ -10,7 +10,7 @@ status: active
 
 # Checkout Automation Phase 2 Planning
 
-Planning-only continuation for [[02 Feature QA/Checkout Automation Mission Control]].
+Planning-only continuation for [[02 Feature QA/Checkout/Checkout Automation Mission Control]].
 
 ## Phase Goal
 
@@ -914,7 +914,7 @@ For each pass, do one compact planning improvement:
 2. Tighten the automation intent, data contract, assertions, fixture needs, and review checklist.
 3. Link only source-backed evidence.
 4. Avoid expanding permutations unless they prove a different risk.
-5. Update [[02 Feature QA/Checkout Automation Worker State.json]] first and [[02 Feature QA/Checkout Automation Mission Control]] last.
+5. Update [[02 Feature QA/Checkout/Checkout Automation Worker State.json]] first and [[02 Feature QA/Checkout/Checkout Automation Mission Control]] last.
 
 ## Next Planning Tasks
 

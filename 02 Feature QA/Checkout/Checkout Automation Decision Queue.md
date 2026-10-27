@@ -10,7 +10,7 @@ status: active
 
 # Checkout Automation Decision Queue
 
-Durable planning decision list for [[02 Feature QA/Checkout Automation Mission Control]].
+Durable planning decision list for [[02 Feature QA/Checkout/Checkout Automation Mission Control]].
 
 ## Current Boundary
 

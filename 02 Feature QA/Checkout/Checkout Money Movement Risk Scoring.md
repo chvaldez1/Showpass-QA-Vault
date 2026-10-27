@@ -4,7 +4,7 @@ Use this rubric to rank checkout findings during open-ended exploration.
 
 Related prompt: [[06 Prompts/Checkout Money Movement Exploration Goal]]
 
-Related incident calibration: [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
+Related incident calibration: [[02 Feature QA/Checkout/Checkout Criticality From Jira Major Critical Export]]
 
 ## Criticality Definition
 
@@ -59,7 +59,7 @@ Use exported Major/Critical Jira cards as calibration, but classify the business
 
 | Signal | Adjustment |
 | --- | ---: |
-| Matches a recurring Major/Critical business invariant from [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]] | +5 to +10 |
+| Matches a recurring Major/Critical business invariant from [[02 Feature QA/Checkout/Checkout Criticality From Jira Major Critical Export]] | +5 to +10 |
 | Matches a real incident and has weak/no Playwright final-state proof | +5 |
 | One-off support script or data correction that fixed recurring product logic | +2 to +5 |
 | One-off support script, data move, import, config update, hardware/printer issue, or demo setup with no reusable product invariant | -5 to -15 |

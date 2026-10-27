@@ -11,9 +11,11 @@ Use `$showpass-qa-tester` to have the agent act as your QA tester in the browser
 
 Every run follows **Plan → Test → Evidence**. The agent shows its checks and expected results, executes within the allowed scope, and returns results with proof. Add `Plan only — wait for my approval` when you want a review before execution.
 
-Reports follow [[03 Test Cases/Browser Test Report Template]]: numbered steps, Expected and Actual results, screenshots visibly rendered beneath the steps, and a final Passed / Failed / Blocked / Not run table. Images remain local and ignored by Git.
+Reports follow [[03 Test Cases/Browser Test Report Template]]: a short overview, one summary row per distinct confirmed bug, a clickable test index, numbered steps with Expected and Actual results, and screenshots beneath the steps. The final table uses **Check and step / Status / Bug / What happened**, with check names linked directly to their evidence and Passed / Failed / Blocked / Not run kept clear. Images remain local and ignored by Git.
 
 Each test explains **What this tests**, **Start here** and the exact **Steps**. The report names the controls and values to inspect, so you can repeat a check without the chat history. Screenshots display at up to 600px wide with full-size originals available. An edit to an older report does not count as a new test run.
+
+Reproductions follow [[00 Start Here/World-Class Software Quality Standard#Executable Reproduction Handoff]]: explain how to select the right Organizer, prepare filters or show a required panel, state whether your account is suitable, and give a clear result and stopping point. If your involvement is needed, the agent gives one complete check in chat with exact outcome choices and what to report, rather than only linking the report.
 
 Confirmed bugs also receive copy-ready Jira drafts in the same report: **Title**, **GIVEN**, **WHEN**, **THEN — observed**, a separate **Expected** result, impact and evidence. This prepares the wording; it does not create Jira issues.
 

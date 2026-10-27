@@ -1,11 +1,11 @@
 # Checkout Playwright Automation Review Checkpoint
 
 Related notes:
-- [[02 Feature QA/Checkout Automation Mission Control]]
-- [[02 Feature QA/Checkout Automation Worker State.json]]
+- [[02 Feature QA/Checkout/Checkout Automation Mission Control]]
+- [[02 Feature QA/Checkout/Checkout Automation Worker State.json]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
 - [[04 Automation/Checkout Automation Phase 2 Planning]]
-- [[02 Feature QA/Checkout Money Movement Risk Scoring]]
+- [[02 Feature QA/Checkout/Checkout Money Movement Risk Scoring]]
 
 Status: awaiting reviewer check  
 Checkpoint: `REVIEW-CHK-001`  

@@ -6,7 +6,7 @@ Related notes:
 - [[01 Repositories/QA Automation - showpass-playwright]]
 - [[01 Repositories/Backend - web-app]]
 - [[01 Repositories/Frontend - showpass-frontend]]
-- [[02 Feature QA/Checkout Automation Mission Control]]
+- [[02 Feature QA/Checkout/Checkout Automation Mission Control]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
 
 ```text
@@ -35,8 +35,8 @@ Operating mode:
 - Convert repeated cards into business-invariant patterns.
 
 Durable outputs to create or update:
-- Worker state JSON: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Major Critical Playwright Gap Worker State.json
-- Gap report: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Major Critical Playwright Gap Analysis.md
+- Worker state JSON: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Playwright Coverage/Major Critical Playwright Gap Worker State.json
+- Gap report: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Playwright Coverage/Major Critical Playwright Gap Analysis.md
 - Automation candidates: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Major Critical Playwright Automation Candidates.md
 
 First pass:

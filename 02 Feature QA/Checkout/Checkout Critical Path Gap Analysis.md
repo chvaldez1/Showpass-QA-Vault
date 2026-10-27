@@ -4,9 +4,9 @@ Living workspace for checkout money-movement exploration.
 
 Related notes:
 - [[06 Prompts/Checkout Recursive Automation Prioritization Worker]]
-- [[02 Feature QA/Checkout Automation Mission Control]]
+- [[02 Feature QA/Checkout/Checkout Automation Mission Control]]
 - [[06 Prompts/Checkout Money Movement Exploration Goal]]
-- [[02 Feature QA/Checkout Money Movement Risk Scoring]]
+- [[02 Feature QA/Checkout/Checkout Money Movement Risk Scoring]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
 - [[03 Test Cases/Checkout/Checkout Money Movement Test Drafts]]
 
@@ -66,7 +66,7 @@ Use this to avoid bloated permutation testing. Each scenario should combine real
 
 ## Findings
 
-Use the template from [[02 Feature QA/Checkout Money Movement Risk Scoring#Finding Template]].
+Use the template from [[02 Feature QA/Checkout/Checkout Money Movement Risk Scoring#Finding Template]].
 
 ### Findings Index
 
@@ -1346,6 +1346,6 @@ Fill this during exploration when existing Playwright fixtures or factories do n
 
 ## Next Recommendations
 
-- Start with P0 override paths from [[02 Feature QA/Checkout Money Movement Risk Scoring#P0 Overrides]].
+- Start with P0 override paths from [[02 Feature QA/Checkout/Checkout Money Movement Risk Scoring#P0 Overrides]].
 - Prefer extending existing checkout/payment fixtures when they already cover setup reliably.
 - Convert only source-backed findings into [[04 Automation/Checkout Money Movement Automation Backlog]] or [[03 Test Cases/Checkout/Checkout Money Movement Test Drafts]].

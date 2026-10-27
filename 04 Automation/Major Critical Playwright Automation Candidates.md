@@ -2,8 +2,8 @@
 
 Related notes:
 - [[06 Prompts/Major Critical Jira To Playwright Gap Exhaustive Worker]]
-- [[02 Feature QA/Major Critical Playwright Gap Analysis]]
-- [[02 Feature QA/Major Critical Playwright Gap Worker State.json]]
+- [[02 Feature QA/Playwright Coverage/Major Critical Playwright Gap Analysis]]
+- [[02 Feature QA/Playwright Coverage/Major Critical Playwright Gap Worker State.json]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
 
 ## Ranked Recommendation
@@ -179,7 +179,7 @@ Automate a small number of representative invariants, not one test per Jira card
 
 **Inspected Playwright files:** `tests/core/checkout/discounts/`, `tests/core/dashboard/discounts/create-event-discount.test.ts`, checkout event configs.
 
-**Backend/frontend references:** Backend financial calculators and report tests listed in [[02 Feature QA/Major Critical Playwright Gap Analysis]].
+**Backend/frontend references:** Backend financial calculators and report tests listed in [[02 Feature QA/Playwright Coverage/Major Critical Playwright Gap Analysis]].
 
 **Recommended first Playwright proof:** One Box Office or public checkout fixture with subtotal override/no-fee/tax-on-fee rules; assert cart, invoice, transaction, and selected report totals.
 

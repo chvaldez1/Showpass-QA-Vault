@@ -5,13 +5,13 @@ Use this prompt for a persistent checkout QA worker whose live job is to answer:
 > What should we automate next to reduce the most checkout money-movement risk?
 
 Related notes:
-- [[02 Feature QA/Checkout Automation Mission Control]]
-- [[02 Feature QA/Checkout Money Movement Risk Scoring]]
-- [[02 Feature QA/Checkout Criticality From Jira Major Critical Export]]
-- [[02 Feature QA/Checkout Critical Path Gap Analysis]]
+- [[02 Feature QA/Checkout/Checkout Automation Mission Control]]
+- [[02 Feature QA/Checkout/Checkout Money Movement Risk Scoring]]
+- [[02 Feature QA/Checkout/Checkout Criticality From Jira Major Critical Export]]
+- [[02 Feature QA/Checkout/Checkout Critical Path Gap Analysis]]
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
 - [[03 Test Cases/Checkout/Checkout Money Movement Test Drafts]]
-- [[02 Feature QA/Checkout Automation Decision Queue]]
+- [[02 Feature QA/Checkout/Checkout Automation Decision Queue]]
 
 ```text
 Run the checkout recursive automation prioritization worker.
@@ -28,8 +28,8 @@ Current focus:
 - If a read-only pass finds a P1/lower gap while checking a P0 thread, record only the minimum note needed to avoid losing evidence, then return to P0 focus.
 
 Durable state:
-- Mission Control: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Mission Control.md
-- Worker State JSON: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Worker State.json
+- Mission Control: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout/Checkout Automation Mission Control.md
+- Worker State JSON: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout/Checkout Automation Worker State.json
 - Jira Major/Critical export: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/assets/csv/major-critical.csv
 
 Resume checkpoint:
@@ -63,11 +63,11 @@ Blocked-step redirect:
 - Treat `/goal blocked` as valid only when every high-value planning branch is either `Planning Ready`, low-risk duplicate, or `Planning Parked / Needs Decision`, and no defensible read-only planning target remains.
 
 Output notes:
-- Findings: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Critical Path Gap Analysis.md
+- Findings: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout/Checkout Critical Path Gap Analysis.md
 - Automation backlog: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Money Movement Automation Backlog.md
 - Phase 2 planning: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/04 Automation/Checkout Automation Phase 2 Planning.md
 - Test drafts only when useful: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/03 Test Cases/Checkout/Checkout Money Movement Test Drafts.md
-- Decision queue: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout Automation Decision Queue.md
+- Decision queue: /Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/02 Feature QA/Checkout/Checkout Automation Decision Queue.md
 
 Source repos:
 - Backend source of truth: [[01 Repositories/Backend - web-app]] - /Users/christianvaldez/Documents/Showpass/repos/web-app
