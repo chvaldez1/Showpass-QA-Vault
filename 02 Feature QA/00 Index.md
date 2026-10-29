@@ -14,6 +14,7 @@ Source reviews, coverage gaps, risk analysis, and automation planning. These not
 | Purchase Coverage | The full purchase journey and its supporting data | [[02 Feature QA/Purchase Coverage/End-to-End Purchase Coverage Matrix\|End-to-End Purchase Coverage Matrix]] |
 | Playwright Coverage | Existing automated coverage and gaps found from Major/Critical incidents | [[02 Feature QA/Playwright Coverage/Major Critical Playwright Gap Analysis\|Major Critical Playwright Gap Analysis]] |
 | Support Incidents | Lessons and system gaps from customer and employee support issues | [[02 Feature QA/Support Incidents/SPD Dev Support System Gap Analysis - April to September 2026\|SPD Dev Support System Gap Analysis — April to September 2026]] |
+| Refunds and Exchanges | Customer refund settings and exchange-access investigations | [[02 Feature QA/Refunds and Exchanges/SPW-21227-customer-refunds-block-exchanges\|SPW-21227 — customer refund setup hides exchanges]] |
 
 ## Checkout
 
@@ -39,6 +40,10 @@ Source reviews, coverage gaps, risk analysis, and automation planning. These not
 ## Support Incidents
 
 - [[02 Feature QA/Support Incidents/SPD Dev Support System Gap Analysis - April to September 2026|SPD support incident analysis — April to September 2026]]
+
+## Refunds and Exchanges
+
+- [[02 Feature QA/Refunds and Exchanges/SPW-20827-shipping-sale-and-refund-report-totals|Shipping sale and refund rows do not balance — October 29 CSV evidence and QA draft]]
 
 ## Adding a feature review
 

@@ -1,13 +1,17 @@
 ---
 title: Customer Refunds - Organizer and Venue Setup
 status: source-reviewed-not-executed
-date: 2026-10-02
+date: 2026-10-27
 tags:
   - qa/runbook
   - refunds
 ---
 
 # Organizer and Venue — set up customer refunds
+
+> [!important] Updated 2026-10-27
+> Start with [[SPW-19666-customer-self-refunds-test-cases#Current coverage review — 2026-10-27|the current page review]]. Qase and the local cases now match the reviewed repos. The approved 21 updates and 14 new cases were saved and verified; the Start Here note lists their IDs. Both Excel calculators use the current refund choices. No refunds were executed.
+
 
 Use this page **before** [[00 Customer - How to Test|the customer checks]]. An **organization** in Dashboard is the **venue** in Showpass Admin. The organization policy is one saved record for that business. Each ticket type and product has a separate **Allow customer-initiated refunds** switch. An employee refund in Transactions is a different workflow.
 
@@ -29,20 +33,25 @@ If the policy record is missing, create it in **Venue customer refund policies**
 
 ## 2. Save a simple baseline
 
-In Dashboard → Organization → Organization settings → Customer refunds, record the original values. For the first customer return, save:
+Before editing, an administrator opens **Admin → Venues → Venues**, finds the organization and enables **Customer Self Refund Settings**. This saved Admin setting is separate from the organization rollout flag and the linked policy record. With it off, the page shows a disabled notice instead of an editable form.
 
-| Visible field | Baseline value | Why |
+Open **Organization → Organization settings**, then **Customer refunds** under **Settings**. Record the original choices and save:
+
+| Field | Starting value | What it does |
 | --- | --- | --- |
-| Enable customer refund policy | On | Use the new venue policy. |
-| Customer outcome | Customers can self-refund automatically | Permit a completed customer return. |
-| Cutoff type | No cutoff | Remove timing from the first success check. |
-| After barcode delivery | Block customer refunds | Start with an unactivated/unreleased ticket. |
-| After fulfillment or shipping | Block customer refunds | Start with an unfulfilled ticket. |
-| After check-in or scan | Block customer refunds | Start with an unscanned ticket. |
-| Orders with mixed eligibility | Refund eligible items independently | Allow a one-item partial return. |
-| Enable configurable refund amounts | Off for the first basic return | Check the basic flow before trying the new amount rules. |
+| Enable customer refund policy | On | Enables the paid customer policy. |
+| Allow customer refunds for tickets | On | Permits eligible tickets to participate. |
+| Allow customer refunds for products | On only for product checks | Separate from each product’s own refund switch. |
+| Cutoff type | No cutoff | Keeps timing out of the first successful return. |
+| Allow customer refunds after barcode delivery | On for ordinary delivered-barcode checks | Prevents barcode delivery from masking another tested rule. |
+| Allow customer refunds after fulfillment or shipping | Off | Start with unfulfilled purchases. |
+| Allow customer refunds after check-in or scan | Off | Start with unscanned tickets. |
+| Orders with mixed eligibility | Refund eligible items independently | Permits selection of one eligible purchase. |
+| Automated return medium | Organizer Credit | New spending credit with this organization. Use Revert Funds for the separate original-payment case. |
+| Automated return refund type | Base refund | Excludes customer-paid fees; the fee-bearing cases cover the other refund types. |
+| Shipping refund rule | Never refund shipping | Start without shipping; separate cases exercise all four rules. |
 
-Save, reload, and verify each selected value. For the organization-form cases, use [[SPW-19667-customer-refund-policy-test-cases|SPW-19667]], starting with TC-1 (fields and save), then cutoff/validation, item switches, permission, French, and the older Organization Info entry. The page now also contains **Refund amounts**: **Enable configurable refund amounts**; when on, **Shipping refund rule** and **Refundable customer-paid fees** appear. Test those under [[SPW-19669-customer-refund-amount-rules-test-cases|SPW-19669]].
+Select Save, reload, and check the exact saved values. The three Refund amounts dropdowns stay visible with the policy off. There is no Customer outcome, configurable-amounts switch, or fee multiselect in the current form. Use the full standalone cases under [[SPW-19667-customer-refund-policy-test-cases|19667]] and [[SPW-19669-customer-refund-amount-rules-test-cases|19669]]; a saved setting is not proof of a completed refund.
 
 ## 3. Prepare a sellable item
 

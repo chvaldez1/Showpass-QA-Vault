@@ -2,13 +2,160 @@
 title: Customer Refunds - Start Here
 jira: SPW-19666
 status: source-reviewed-not-executed
-date: 2026-10-02
+date: 2026-10-27
 tags:
   - qa/runbook
   - refunds
 ---
 
 # Customer refunds — start here
+
+> [!warning] Open exchange issue — 2026-10-28
+> [[02 Feature QA/Refunds and Exchanges/SPW-21227-customer-refunds-block-exchanges|SPW-21227]] now has an updated and readback-verified Jira description with exact Venue feature flags, saved settings, event cutoff and ticket requirements. The customer Exchange button is blocked by the Venue's **Customer Self Refund Settings** value. A Web Box Office exchange server error is also reported, but its response and cause remain unverified. The user approved the Jira update on 2026-10-28; no business data was changed.
+
+
+## Current coverage review — 2026-10-27
+
+**Qase and both Excel calculators are updated.** After approval, 21 existing cases were updated and 14 focused cases created as **SPT-5798–5811**. Readback verified the published text, setup, steps, parameters, tags, and suite placement. Existing metadata and supported language/item/view coverage were preserved. No case was moved or deleted. **These are saved test cases, not executed passes.** SPT-5323 remains unchanged and withheld because its old package expectation conflicts with current source; SPT-5317 stays a separate staff-permissions case.
+
+The current form uses **Automated return medium**, **Automated return refund type**, and **Shipping refund rule**. It has no Customer outcome, configurable-amounts switch, or fee multiselect. Its three delivery/scan restrictions are on/off switches. All three money dropdowns remain editable with the organization policy off, provided the Admin gate is on.
+
+### Published Qase update — readability review
+
+**Approved, published, and verified:** 21 existing-case updates and 14 new cases. The batch dry run passed before applying the exact approved scope. The reviewed cases name the current controls, give their own setup, and keep local case labels out of Qase execution fields. Existing language, item, Desktop/Mobile, and cutoff coverage is preserved. Existing tags and unrelated metadata stay unchanged. No suite moves or deletions were made.
+
+**Two source-backed replacements were explicitly approved:** SPT-5308 replaces the retired FeeSelection parameter with current refund method/type choices while retaining every shipping rule. SPT-5310 uses the policy-off setting because Customer outcome no longer exists. SPT-5323 remains withheld; SPT-5317 is unchanged.
+
+**Not in this write:** 19669 TC-2/TC-3 remain local until separate original fee/shipping tax evidence and financial comparison can be supplied. Delayed-barcode and historical package negatives remain withheld. Other local drafts outside the table are not being published.
+
+**Excel updated:** both existing calculators now compare Base refund, Full refund excluding Showpass fees, and Full refund (Showpass fees invoiced), with a Revert Funds/Organizer Credit selector and separate shipping/tax totals. Original input prices/rates and the two rounding approaches were preserved. Calculation checks passed for the original 41.76 example, partial returns, all three shipping charge methods with equal groups, destination changes, invalid quantity, and restored inputs. Both workbooks were rendered and inspected. This checks spreadsheet calculations, not live refund, gateway settlement, or native Excel behavior.
+
+> [!info]- Exact published scope
+> Current case fields are in the linked Jira notes. Tags marked Preserved are not sent in existing-case updates. New Qase IDs are included below.
+>
+> | Action | Local draft | Suite | Title | Tags | Parameters | Steps |
+> | --- | --- | --- | --- | --- | --- | --- |
+> | Update SPT-5250 | SPW-19667 TC-1 | 1107 | Dashboard - Refunds - Review and save the organization's customer refund settings | Preserved | Language: English, French | 11 |
+> | Update SPT-5251 | SPW-19667 TC-2 | 1107 | Dashboard - Refunds - Change when customer refunds close | Preserved | Language: English, French; CutoffScenario: AbsoluteDateTime, EventHours, EventDays, ItemHours, ItemDays, NoCutoff, ManuallyClosed | 7 |
+> | Update SPT-5252 | SPW-19667 TC-3 | 1107 | Dashboard - Refunds - Reject a refund cutoff with missing or invalid details | Preserved | Language: English, French; InvalidCutoff: MissingDateTime, MissingValue, MissingUnit, ZeroValue, NegativeValue | 9 |
+> | Update SPT-5253 | SPW-19667 TC-5 | 1107 | Dashboard - Refunds - Keep a ticket or product refund choice when the organization policy changes | Preserved | Language: English, French; ItemType: TicketType, Product | 20 |
+> | Update SPT-5254 | SPW-19667 TC-7 | 1107 | Dashboard - Refunds - Let an employee edit tickets without access to organization refund settings | Preserved | None | 10 |
+> | Update SPT-5255 | SPW-19667 TC-10 | 1107 | Dashboard - Refunds - Check the starting refund settings for a new organization, ticket, and product | Preserved | Language: English, French | 6 |
+> | Update SPT-5308 | SPW-19669 TC-1 | 1107 | Dashboard - Refunds - Save shipping and fee choices | Preserved | ReturnMedium: OriginalPayment, OrganizerCredit; RefundType: Base, ExcludeShowpass, Full; ShippingRule: Never, AfterAll, Proportional, UnshippedOnly | 7 |
+> | Update SPT-5309 | SPW-19668 TC-1 | 1108 | My Orders - Refunds - Let a customer select a purchased ticket or product after refunds are enabled for it | Preserved | ItemType: TicketType, Product, StandaloneProduct, AssignedSeat, TicketPackage | 13 |
+> | Update SPT-5310 | SPW-19668 TC-2 | 1108 | My Orders - Refunds - Block a customer return when the organization policy is off | Preserved | None | 4 |
+> | Update SPT-5311 | SPW-19668 TC-3 | 1108 | My Orders - Refunds - Stop a return after the saved deadline | Preserved | CutoffScenario: Absolute, EventStart, ItemStart, ManuallyClosed | 6 |
+> | Update SPT-5312 | SPW-19668 TC-5 | 1108 | My Orders - Refunds - Block when any remaining item is ineligible - Block the entire order | Preserved | None | 3 |
+> | Update SPT-5313 | SPW-19668 TC-8 | 1108 | My Orders - Refunds - Keep another customer from opening or returning an order | Preserved | None | 4 |
+> | Update SPT-5314 | SPW-19671 TC-1 | 1108 | My Orders - Refunds - Return purchased items and receive the previewed organizer credit | Preserved | PurchaseConfiguration: TicketType, Product, StandaloneProduct, TicketAndProduct, AssignedSeat, TicketPackage | 13 |
+> | Update SPT-5315 | SPW-19671 TC-2 | 1108 | My Orders - Refunds - Refund eligible items independently - Return one ticket and keep the blocked ticket | Preserved | None | 9 |
+> | Update SPT-5316 | SPW-19671 TC-3 | 1108 | My Orders - Refunds - Stop a return if the refund deadline changes before confirmation | Preserved | None | 10 |
+> | Update SPT-5321 | SPW-19668 TC-4 | 1108 | My Orders - Refunds - Require the whole remaining order - Include every remaining purchase in the preview | Preserved | PurchaseConfiguration: TwoTicketTypes, TicketAndProduct, TwoAssignedSeats | 7 |
+> | Update SPT-5322 | SPW-19668 TC-10 | 1108 | My Orders - Refunds - Require the whole remaining order - Block the order until every remaining item allows refunds | Preserved | PurchaseConfiguration: TwoTicketTypes, TicketAndProduct | 12 |
+> | Update SPT-5324 | SPW-19671 TC-5 | 1108 | My Orders - Refunds - Require the whole remaining order - Return every remaining purchase for organizer credit | Preserved | PurchaseConfiguration: TwoTicketTypes, TicketAndProduct, TwoAssignedSeats | 13 |
+> | Update SPT-5325 | SPW-19668 TC-6 | 1108 | My Orders - Refunds - Allow customer refunds after barcode delivery - Block or allow customer refunds | Preserved | None | 12 |
+> | Update SPT-5326 | SPW-19668 TC-12 | 1108 | My Orders - Refunds - Allow customer refunds after fulfillment or shipping - Block or allow customer refunds for a fulfilled product | Preserved | None | 12 |
+> | Update SPT-5327 | SPW-19668 TC-13 | 1108 | My Orders - Refunds - Allow customer refunds after check-in or scan - Block or allow customer refunds for a checked-in ticket | Preserved | None | 12 |
+> | Created [SPT-5798](https://app.qase.io/case/SPT-5798) | SPW-19667 TC-4 | 1107 | Dashboard - Refunds - Save one customer refund rule without changing the others | dashboard, refunds | Language: English, French; PolicyChoice: TicketsAllowed, ProductsAllowed, BarcodeAllow, ShippingAllow, ScanAllow, EligibleItemsOnly, WholeRemainingOrder | 8 |
+> | Created [SPT-5799](https://app.qase.io/case/SPT-5799) | SPW-19667 TC-6 | 1107 | Dashboard - Refunds - Discard an unsaved refund setting | dashboard, refunds | None | 4 |
+> | Created [SPT-5800](https://app.qase.io/case/SPT-5800) | SPW-19667 TC-8 | 1107 | Dashboard - Refunds - Keep customer refund settings separate for two organizations | dashboard, refunds, employee-permissions | None | 10 |
+> | Created [SPT-5801](https://app.qase.io/case/SPT-5801) | SPW-19667 TC-13 | 1107 | Dashboard - Refunds - Showpass has disabled customer self-refunds | dashboard, refunds | None | 3 |
+> | Created [SPT-5802](https://app.qase.io/case/SPT-5802) | SPW-19667 TC-14 | 1107 | Dashboard - Refunds - Reject saving if Showpass disables self-refunds while the form is open | dashboard, refunds | None | 8 |
+> | Created [SPT-5803](https://app.qase.io/case/SPT-5803) | SPW-19667 TC-15 | 1107 | Dashboard - Refunds - New ticket and product defaults follow the organization policy | dashboard, refunds | PolicyState: Enabled, Disabled; ItemType: TicketType, Product | 5 |
+> | Created [SPT-5804](https://app.qase.io/case/SPT-5804) | SPW-19668 TC-14 | 1108 | My Orders - Refunds - Apply the organization ticket and product switches | my-orders, refunds | AllowedItems: Both, TicketsOnly, ProductsOnly | 6 |
+> | Created [SPT-5805](https://app.qase.io/case/SPT-5805) | SPW-19668 TC-15 | 1108 | My Orders - Refunds - Block returns when both organization item-type switches are off | my-orders, refunds | None | 4 |
+> | Created [SPT-5806](https://app.qase.io/case/SPT-5806) | SPW-19669 TC-4 | 1108 | My Orders - Refunds - Review a new amount or refund method before confirming | my-orders, refunds, edge-case | Change: ReturnMedium, RefundType | 9 |
+> | Created [SPT-5807](https://app.qase.io/case/SPT-5807) | SPW-19669 TC-5 | 1108 | My Orders - Refunds - Reject an old preview after Shipping refund rule changes | my-orders, refunds, edge-case | None | 7 |
+> | Created [SPT-5808](https://app.qase.io/case/SPT-5808) | SPW-19671 TC-4 | 1108 | My Orders - Refunds - Prevent a second return of an already refunded ticket | my-orders, refunds, post-purchase | None | 9 |
+> | Created [SPT-5809](https://app.qase.io/case/SPT-5809) | SPW-19671 TC-6 | 1108 | My Orders - Refunds - Revert Funds returns only the selected ticket or product to the original card | my-orders, refunds, payment | ItemType: Ticket, Product | 9 |
+> | Created [SPT-5810](https://app.qase.io/case/SPT-5810) | SPW-19671 TC-7 | 1108 | My Orders - Refunds - Require the whole remaining order after one ticket was already returned | my-orders, refunds, edge-case | None | 7 |
+> | Created [SPT-5811](https://app.qase.io/case/SPT-5811) | SPW-19671 TC-8 | 1108 | Dashboard - Refunds - Reject a returned ticket at check-in and admit an untouched ticket | dashboard, refunds, check-in | None | 4 |
+
+Evidence retained for the completed publication under `/private/tmp/refund-refresh-20261027/`: `qase-refresh-plan.json`, `qase-refresh-dry-run.json`, `qase-readable-review.json`, `qase-refresh-applied.json`, `qase-refresh-verification.json`, and `workbook-validation.json`. Temporary builders and preview images were removed after verification.
+
+### Start with these current cases
+
+Each linked Jira note contains the full standalone cases and setup. Labels below are local drafts, not newly assigned Qase IDs. The Organizer and Customer folders are preserved.
+
+| Visible page / purpose | Existing Qase coverage | Current local cases and decision |
+| --- | --- | --- |
+| Organization → Organization settings → Customer refunds: base form, save/reload, policy on/off | SPT-5250 | [[SPW-19667-customer-refund-policy-test-cases|19667]] TC-1 — Enhance for actual fields; preserve English/French. |
+| Cutoff: every shape, timezone, validation and recovery | SPT-5251 / 5252 | 19667 TC-2 / TC-3 — retain parameters; add required Admin gate. |
+| Automated return medium, refund type, shipping | SPT-5308 | [[SPW-19669-customer-refund-amount-rules-test-cases|19669]] TC-1 — two methods × three types × four shipping rules, 24 settings runs. Retire obsolete fee-selection and hidden-amount-control assertions with this source-backed replacement. |
+| Organization switches save independently | SPT-5798 | 19667 TC-4 — includes ticket/product switches, three restriction switches and mixed eligibility. |
+| Individual ticket/product switch survives policy changes | SPT-5253 | 19667 TC-5 — Enhance for current policy/type gates; retain both items and languages. |
+| Unsaved money choices | SPT-5799 | 19667 TC-6 — no saved change after reload. |
+| Employee lacks Manage Organization Info | SPT-5254 | 19667 TC-7 — preserve item editing and denied policy access; Admin gate on prevents a false permission pass. |
+| Two organizations keep separate values | SPT-5800 | 19667 TC-8 — deadlines, refund methods, refund types, and shipping choices stay with the correct organization. Backend request ownership is a separate API check. |
+| Initial policy and item defaults | SPT-5255 | 19667 TC-10 — policy off, organization ticket/product switches on, new individual items off; current money defaults visible. |
+| Showpass has not enabled self-refunds | SPT-5801 | 19667 TC-13 — disabled notice, no editable form or Save. |
+| Showpass disables permission while the form is open | SPT-5802 | 19667 TC-14 — rejected save leaves policy and refund method unchanged. |
+| New ticket/product defaults with policy on/off | SPT-5803 | 19667 TC-15 — four creation runs; existing item settings unchanged. |
+| Customer item selection, paid orders, variants, seats, packages | SPT-5309 | [[SPW-19668-customer-refund-eligibility-test-cases|19668]] TC-1 — preserve all five item configurations; use current gates and hidden blocked-order action. |
+| Customer returns blocked by policy off | SPT-5310 | 19668 TC-2 — replace the removed Outcome instruction with policy off; verify no Return order action or money change. |
+| Customer cutoff, mixed-order blocking and ownership | SPT-5311 / 5312 / 5313 | 19668 TC-3 / TC-5 / TC-8 — preserve their business checks; update obsolete setup and unavailable-action steps. |
+| Organization allows only tickets, only products, both, or neither | SPT-5804 / 5805 | 19668 TC-14 (three selectable combinations) / TC-15 (neither) — individual switches stay on; no conditional attempt to open an absent action. |
+| Whole remaining order preview / blocked-item recovery | SPT-5321 / 5322 | 19668 TC-4 / TC-10 — preserve item configurations; correct current controls and blocked-action behavior. |
+| Whole-order packages expected to be unselectable | SPT-5323 | **Withheld.** The old blanket negative expectation conflicts with the purchased-parent fix. Do not silently repurpose or delete it; replace with agreed supported-parent and unsupported-child-revenue checks. Local old TC-9 / TC-11 are labelled historical. |
+| Barcode, fulfillment/shipping, check-in restrictions | SPT-5325 / 5326 / 5327 | 19668 TC-6 / TC-12 / TC-13 — preserve delivered/fulfilled/checked-in preparation; use off/on switches and hidden blocked-order action. |
+| Completed Organizer Credit returns | SPT-5314 / 5315 / 5324 | [[SPW-19671-customer-self-refund-acceptance-test-cases|19671]] TC-1 / TC-2 / TC-5 — preserve item matrices and untouched purchases; current combined-return accounting replaces obsolete two-credit-record assumptions. |
+| Deadline changes during confirmation | SPT-5316 | 19671 TC-3 — preserve rejected return and unchanged credit/order proof. |
+| Already returned item cannot return again | SPT-5808 | 19671 TC-4 — published, not run; separate from staff duplicate-refund cases. Two simultaneous confirmations remain backend/integration coverage. |
+| Revert Funds returns the selected ticket or product to the original card | SPT-5809 | 19671 TC-6 — two purchase selections; original-card refund, no new Organizer Credit, companion remains paid. |
+| Whole remaining order after a prior partial return | SPT-5810 | 19671 TC-7 — already-returned ticket/value excluded; only remaining ticket is newly credited. |
+| Shipping across two successive returns | Local only | 19669 TC-2 — all four shipping rules on new two-ticket orders; no duplicate shipping. |
+| Refund type determines actual returned fees | Missing | 19669 TC-3 — six method/type combinations; original customer-paid organizer/Showpass/processing fees distinguish the choices. Financial setup/evidence must be available before execution. |
+| Refund method/type changes after preview | SPT-5806 | 19669 TC-4 — includes equal-total destination change, rejected old confirmation, refreshed preview, Cancel and no money movement. |
+| Shipping changes after preview | SPT-5807 | 19669 TC-5 — separate from destination/type change; preserves the earlier shipping-change scenario. |
+| Refunded ticket cannot admit; untouched ticket still works | SPT-5811 | 19671 TC-8 — current scan window, exact refunded barcode and a paid control; no generic rejection counted as success. |
+| Staff refund permission choices | SPT-5317 | Keep the separate Staff Refunds case; not proof of customer self-refunds. |
+
+### Minimum execution order
+
+1. Run the Organizer base form, Admin-off gate, required employee permission, initial/default choices, cutoff save/validation, settings save and unsaved reload. Run English and French where declared.
+2. Run organization ticket/product combinations and customer restriction checks using the exact paid/delivered/fulfilled/scanned records in each case; do not accept a block caused by a different disabled gate.
+3. Complete a clean Organizer Credit return and a clean original-card return. Run the six fee-bearing method/type choices and all four shared-shipping rules on independent orders with original amounts recorded first.
+4. Challenge confirmation after destination/type/shipping/deadline changes, already-returned items, prior partial return followed by whole-order mode, and another customer's/organization's access.
+5. Preserve completed financial records and restore only authorized configuration. Check returned and untouched ticket validity and the configured inventory behavior using the linked handbook; a success message or saved case is not proof of final money, admission or stock.
+
+### Remaining critical work and limits
+
+| Check | Status / exact evidence still needed |
+| --- | --- |
+| Mixed card plus credit; fully credit-funded purchase | Backend tests reviewed, not run. Add a standalone manual recipe once original credit issuance, application, and permitted balance/payment inspection are bound to the actual organization. Revert Funds can split between the original card and restored credit; it is not always a card-only refund. |
+| Absorbed fees, discounts, fractional rounding, organizer/Showpass earnings | Backend tests and handbook gates identified, not executed. The clean customer-paid-fee cases do not prove absorbed/internal allocation or settlement. A customer receiving the right total does not establish correct Showpass earnings. |
+| Older/incomplete shipping purchase data | Backend refuses an unsafe amount and asks for organizer help. Need a known untouched historical order and read-only purchase evidence; do not edit financial records to manufacture it. This is Blocked manual setup, not silent legacy fallback. |
+| Duplicate or concurrent requests; provider failure after an earlier completed refund | Backend/integration proof required. Existing UI repeated-return case is not two-request race coverage. Controlled provider failure setup is not available in this review. |
+| Square Terminal original-payment return | Current backend blocks a positive asynchronous payment refund through this customer path; Organizer Credit is a different flow. Need a legitimate supported original purchase before a manual negative can be called runnable. |
+| Delayed barcode release | [[SPW-19670-delayed-barcode-self-refund-test-cases|19670]] TC-1/TC-2 remain local; exact supported release setup is still a publication blocker. General barcode permission does not replace Admin opt-in or the saved automated-return window. |
+| Missing policy, loading error/Try again, Save/network failure | UI/source branches reviewed. Missing policy returns an empty list, which must not be confused with a genuine disabled Admin setting. A controlled failure/missing-record setup is needed; do not delete a shared policy or invent an exact error response. |
+| Free tickets, staff refunds, legacy/non-rollout venues | Separate regression controls, not covered by a paid-policy pass. Adjacent free-return SPT-3374, staff duplicate-refund SPT-4842, and gift-card staff refund SPT-3845 were read; do not duplicate their flows or assume the current policy changes those separate refund contracts. |
+| Full Admin Refund, Universal Credit, retired amount/fee fields | Not offered by this form. Backend-only authorization/read-only-field checks remain relevant; do not add them as selectable manual parameters. |
+| Legacy Organization Info embed/navigation | SPT-5531 checks the existing legacy tab entry. Local 19667 TC-11 checks saved-form equivalence; no live old-shell navigation/save was executed. Keep access proof distinct from typing a direct URL. |
+| Gift-card-funded order | Current customer amount service rejects gift-card funding; staff gift-card refund case SPT-3845 is a different workflow. A known eligible purchase and its funding proof are still needed for a standalone manual negative. |
+| Seat/inventory release and actual repurchase | Existing paid-seat variants check the return and credit but do not prove the configured restock/seat-release and a second valid purchase. Keep this as a separate manual integration proof with an owned public seat/map and the actual release policy; do not infer it from Refunded status. |
+| Invoiced Showpass fees / complete financial components | Independent expected fee allocation plus actual organizer/Showpass finance evidence required. Transactions aggregate totals alone cannot clear every accounting gate. |
+
+### Supporting source and coverage evidence
+
+> [!info]- Source revisions, scan evidence, and verification limits
+> **Testing intent:** the permitted employee can configure customer refunds without enabling unintended items, refunding the wrong amount, choosing the wrong money destination, or changing another organization. These are financial-math, money/order-state, ownership and permission risks. Confidence is high for the listed source contracts and visible English controls; execution confidence is not established.
+>
+> **Repositories actually read:** backend `/Users/christianvaldez/Documents/Showpass/repos/web-app`, develop `ac8a60123129fca71316321eb6a75345fcca51c3`; frontend `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`, develop `763a98690efcf6f6f252263ce0841e618cbd124e`. Both matched their saved origin/develop refs when inspected. No fetch, checkout, diff, branch comparison, or source edits were performed.
+>
+> * Backend: `apps/venues/api/venue_based/serializers/refunds.py`, `viewsets/refunds.py`; `apps/venues/services/customer_refunds/save_customer_refund_policy.py`; `apps/venues/models/venue_management/{venue,customer_refund_policy}.py`; `apps/venues/admin/{venue_admin,forms}.py`; `apps/financials/constants/refunds.py`; `apps/financials/services/invoice/{customer_return_eligibility,customer_return_amounts,user_invoice_return}.py`; `apps/financials/payments/refunders/base.py`; `apps/financials/models/invoice_management/invoice.py` (`can_automatically_refund`); `apps/tickets/constants/lifecycle.py` (refunded scan feedback).
+> * Source tests read, not executed: `apps/venues/api/venue_based/viewsets/tests/refunds/{test_customer_refund_policy_api,test_customer_refund_policy_gates}.py`; `apps/venues/tests/test_customer_refund_item_defaults.py`; `apps/financials/tests/{test_customer_return_eligibility,test_customer_return_amounts,test_customer_return_organizer_fees}.py`; `apps/financials/tests/services/invoice/test_customer_refund_policy_funding.py`; absorbed-fee API tests.
+> * Frontend: Customer refunds `constants/customer-refund-policy-form-fields.ts`, `utils/customer-refund-policy-utils.ts`, `ui/pages/CustomerRefundPolicyPage.web.tsx`, query service and corresponding tests; organization config and Next page permissions; My Orders `utils/order-actions/{return-order,order-action-availability}.ts`, `ui/components/OrderOptionsList.web.tsx`, return dialog and submission hook. Paths are under the documented frontend repository.
+> * Handbook actually used: index, Refunds/Voids/Exchanges, Money Credits/Gift Cards, Fees/Taxes/Absorbed Costs, Permissions/Ownership, Evidence/Expected Results and Senior QA Integration Passes; canonical Financial and Core Transaction Gates and Service-Fee Revenue Through the Transaction Lifecycle. Qase drafting follows the current writing rules and gap-analysis workflow.
+>
+> **Read-only browser enrichment:** the already-open beta Customer refunds page displayed the same current fields. The selected organization was FAN EXPO Cleveland under Fan Expo HQ USA; the displayed employee was Christian Valdez. Only menu/field inspection was performed; settings were not edited or saved. This proves visible controls, not saved values after a mutation, permission-denied roles, deployed backend revision, customer eligibility, or refund execution. Desktop apps were not accessed.
+>
+> **Qase query:** complete SPT scan on 2026-10-27 (retrieved 19:25:38 UTC), 2,254 unique cases and 360 suites. Scope includes suite 1091 and its children 1107/1108/1109, with 7/15/1 cases respectively. Candidate filtering also inspected titles, descriptions, prerequisites and step assertions for customer/self-refund, automated-return and destination/type terms. Adjacent SPT-5443 is refund-policy display text, not eligibility settings; SPT-5531 covers legacy navigation; SPT-5282 is unrelated ticket voiding. Other staff/gift-card/protection cases do not substitute for the new customer amount/destination contract. A title match alone is not counted as coverage.
+>
+> **Preservation and proposed replacements:** keep existing IDs, suite locations, language and item parameters, useful save/reload and no-money-change assertions. SPT-5308’s obsolete fee-selection parameter is replaced by the current refund type and method, preserving all four shipping rules; its Qase note requesting customer coverage is addressed by separate customer cases, not copied into execution prose. SPT-5310 needs the current policy-off title/condition. SPT-5323 remains withheld rather than silently converted from a negative to a positive package case. Earlier worksheets, user examples and publication history in the linked notes are retained as dated evidence.
+>
+> **Evidence retained while review/approval is pending:** `/private/tmp/refunds-qase-candidates-2026-10-27.json` holds the full relevant Qase baseline; `/private/tmp/refunds-local-case-review-2026-10-27.json` holds local parser verification; `/private/tmp/refunds-qase-scan-summary-2026-10-27.json` retains scan completeness and suite counts. Bulk scratch data and temporary scripts have been removed after retaining these necessary results. No Qase apply operation was prepared or run.
+
 
 This is the working order for [SPW-19495](https://showpass.atlassian.net/browse/SPW-19495) and its [SPW-19666](https://showpass.atlassian.net/browse/SPW-19666) customer-refund subtasks. Start with [[SPW-19495-acceptance-criteria|all acceptance criteria]] to see what must pass, what needs a special setup, and what remains a source or execution question. **Organization** in Dashboard and **venue** in Admin mean the same business here.
 

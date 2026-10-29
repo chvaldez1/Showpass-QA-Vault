@@ -1,0 +1,3 @@
+interface:
+  display_name: "Showpass Bug Drafter"
+  short_description: "Write a Jira-ready draft from a verified Showpass bug"

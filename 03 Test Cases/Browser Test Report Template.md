@@ -83,31 +83,25 @@ Give independently assessed checks their own ID and heading. For example, separa
 
 ### BUG-01 Jira draft
 
-[Include this block for a confirmed bug. Remove it when no bug was confirmed. Keep one draft per distinct issue beside its affected test; link other affected checks to it. Do not create a second report or duplicate the screenshots.]
+[Include this block for a confirmed bug. Remove it when no bug was confirmed. Keep one draft per distinct issue beside its affected test; link other affected checks to it. Write the Jira text from QA's observed actions and results. Keep source analysis and the full evidence/cleanup record in the surrounding report; do not copy every report field into Jira.]
 
 **Draft only — no Jira issue has been created.**
 
 **Title:** fix ([feature or area]) | [Specific observed problem]
 
-**GIVEN** [Exact employee/customer permissions, record state and configuration needed to reproduce it. Include short permission values only when relevant.]
+**GIVEN** [Only the employee/customer access, record state and configuration needed to reproduce it. Name relevant flags/settings with their scope, exact name/key and state. Do not list unused controls or assume unverified setup.]
 
 **WHEN** [The person performs the specific action, naming the starting screen and visible control.]
 
-**THEN — observed:** [What actually happens. Name the wrong page, field, amount or outcome. Do not present the desired behavior as an observed result.]
+**THEN** [What actually happens. Name the wrong page, field, amount or outcome.] [In a separate sentence, say what should happen instead. Keep actual and intended behavior distinct; label a proposed expectation when the product rule is unresolved.]
 
-**Expected:** [What should happen instead and the applicable rule. Name an unresolved product decision when it matters.]
+[Use short prose for the three GIVEN/WHEN/THEN blocks. A supporting table may follow, but must not replace the explanation in THEN or require a separate Expected section. This compact Jira format does not change the numbered Expected/Actual walkthrough above.]
 
-**Impact:** [How the observed failure affects the person or business. Do not claim an untested saved action succeeds.]
+[Use everyday wording and the verified Showpass names for actors, screens, controls, items and fields. A product-team member must understand the draft without reading code or this chat. Use Organization for the Dashboard business and Venue for its Admin record; distinguish Customer from Attendee when relevant. Keep terms such as Return order, Refund, Void and Exchange accurate to the action. Explain an unfamiliar Showpass term briefly; leave other engineering terms in the internal notes.]
 
-**Page:** [Actual tested page link.]
+[Add the actual environment/client, affected record/date, useful screenshot, exact error or report-step reference, a brief material limit, impact or cleanup only when needed. Keep source checks, paths, hashes, causal hypotheses and detailed safety/classification notes in the report. Do not imply an additional reported symptom has the same cause.]
 
-**Tested on:** [Environment, necessary Organizer/role and execution date.]
-
-**Evidence:** [Link to the exact affected TC heading and step numbers, with the existing screenshot beneath those steps.]
-
-**Verification limit:** [Relevant untested actions, uncertain cause or source-only evidence. Omit this field only when no material limitation remains.]
-
-**Data safety and cleanup:** [No data change / Changes test data / Potentially destructive; what was preserved or restored.]
+[When this is the user's own report, write their observed actions in first person rather than referring to them as "QA" or "the employee". Keep user-reported versus agent-executed evidence clear in the surrounding report.]
 
 ## Postconditions and Cleanup
 

@@ -17,7 +17,7 @@ Each test explains **What this tests**, **Start here** and the exact **Steps**. 
 
 Reproductions follow [[00 Start Here/World-Class Software Quality Standard#Executable Reproduction Handoff]]: explain how to select the right Organizer, prepare filters or show a required panel, state whether your account is suitable, and give a clear result and stopping point. If your involvement is needed, the agent gives one complete check in chat with exact outcome choices and what to report, rather than only linking the report.
 
-Confirmed bugs also receive copy-ready Jira drafts in the same report: **Title**, **GIVEN**, **WHEN**, **THEN — observed**, a separate **Expected** result, impact and evidence. This prepares the wording; it does not create Jira issues.
+For a confirmed bug, `$showpass-qa-tester` uses `$showpass-bug-drafter` to add a copy-ready Jira draft to the same report. This prepares the wording; it does not create a Jira issue.
 
 ## On-the-Fly Quest
 
@@ -38,8 +38,8 @@ Do not change saved records or Qase.
 
 Return a result and supporting evidence for each check.
 State which pages, loading behavior or API checks you could not verify.
-For confirmed bugs, include a Jira draft in the report using Title,
-GIVEN / WHEN / THEN — observed, Expected, impact and evidence. Do not create Jira issues.
+For confirmed bugs, use $showpass-bug-drafter in the report.
+Do not create Jira issues.
 ```
 
 If you have the version-bump PR, add it so the agent can inspect the exact changes. The context above is an example, not a claim that beta's deployed version has been verified.

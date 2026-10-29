@@ -2,13 +2,17 @@
 title: Delayed Barcode Customer Self-Refund Test Cases
 jira: SPW-19670
 status: source-reviewed-not-executed
-date: 2026-10-02
+date: 2026-10-27
 tags:
   - qa/test-cases
   - refunds
 ---
 
 # Delayed Barcode Customer Self-Refund Test Cases
+
+> [!important] Current-page review — 2026-10-27
+> Current manual case changes are local proposals; Qase has not been updated in this review and no purchases/refunds were executed. Start with [[SPW-19666-customer-self-refunds-test-cases#Current coverage review — 2026-10-27|the current coverage review]]. Older source notes, dated worksheets, and publication records below describe their original revisions and do not override this review.
+
 
 > [!important] Observe customer-visible release
 > Current source contains the Venue setting and My Orders behavior that the 2026-09-24 note marked absent. These cases are unexecuted and have not been sent to Qase. A generated barcode value is not proof of release; verify the customer can actually see/use the barcode. Follow [[00 Customer - How to Test]].
@@ -66,8 +70,9 @@ Use an event/ticket type configured for **delayed barcode delivery**, with its r
 
 **Preconditions:**
 
-* The organization is included in `enable_venue_policy_customer_self_refunds`. In Admin → Venue, an authorized administrator saves **Enable automated returns = on** and **Allow delayed barcode automated returns = off**, with an event outside the saved automated-return window. Record original Venue values.
-* In Showpass Admin → Venue customer refund policies, reuse the organization's policy or **Add** → select the organization in **Venue** → **Save**. An employee with **Manage Organization Info** saves policy on, automatic outcome, no cutoff, and **After barcode delivery = Allow customer refunds**. An employee with **Manage Events** turns on the ticket type's **Allow customer-initiated refunds**. Record original values.
+* In **Dashboard → Organization → Organization settings → Customer refunds**, an employee with **Manage Organization Info** saves Organizer Credit, Base refund, and Allow customer refunds for tickets on.
+* The organization is included in `enable_venue_policy_customer_self_refunds`. In Admin → Venue, an authorized administrator saves **Customer Self Refund Settings = on** and **Allow delayed barcode automated returns = off**, with an event outside the saved automated-return window. Record original Venue values.
+* In Showpass Admin → Venue customer refund policies, reuse the organization's policy or **Add** → select the organization in **Venue** → **Save**. An employee with **Manage Organization Info** saves policy on, ticket refunds on, no cutoff, and **Allow customer refunds after barcode delivery = on**. An employee with **Manage Events** turns on the ticket type's **Allow customer-initiated refunds**. Record original values.
 * The buyer has a newly paid, unscanned delayed-delivery ticket whose barcode has not yet been released. Its scheduled release occurs during this run; record the receipt and how the buyer will see the barcode.
 
 | Step Action | Data | Expected Result |
@@ -79,6 +84,7 @@ Use an event/ticket type configured for **delayed barcode delivery**, with its r
 
 **Postconditions:**
 
+* Have the administrator restore Customer Self Refund Settings to its recorded original value if it was changed for this case.
 * Keep the paid order for evidence. Restore policy, ticket, and Venue values changed for this case.
 
 ### TC-2: My Orders - Refunds - Return an eligible ticket after delayed barcode release
@@ -93,8 +99,9 @@ Use an event/ticket type configured for **delayed barcode delivery**, with its r
 
 **Preconditions:**
 
-* The organization is included in `enable_venue_policy_customer_self_refunds`. In Admin → Venue, an authorized administrator saves **Enable automated returns = on**, **Allow delayed barcode automated returns = on**, a return window that still permits this future event, and **Automated return medium = Organizer Credit**. Record original values.
-* The organization's separate customer refund policy exists. An employee with **Manage Organization Info** saves policy on, automatic outcome, no cutoff, and **After barcode delivery = Allow customer refunds**. An employee with **Manage Events** turns on the ticket type's **Allow customer-initiated refunds**. Record original values.
+* In **Dashboard → Organization → Organization settings → Customer refunds**, an employee with **Manage Organization Info** saves Organizer Credit, Base refund, and Allow customer refunds for tickets on.
+* The organization is included in `enable_venue_policy_customer_self_refunds`. In Admin → Venue, an authorized administrator saves **Customer Self Refund Settings = on**, **Allow delayed barcode automated returns = on**, a return window that still permits this future event, . Record original values.
+* The organization's separate customer refund policy exists. An employee with **Manage Organization Info** saves policy on, ticket refunds on, no cutoff, and **Allow customer refunds after barcode delivery = on**. An employee with **Manage Events** turns on the ticket type's **Allow customer-initiated refunds**. Record original values.
 * The buyer has a **new** paid, unscanned delayed-delivery ticket and its original receipt. Schedule release during the run and record the buyer's starting Organizer Credit balance.
 
 | Step Action | Data | Expected Result |
@@ -107,6 +114,7 @@ Use an event/ticket type configured for **delayed barcode delivery**, with its r
 
 **Postconditions:**
 
+* Have the administrator restore Customer Self Refund Settings to its recorded original value if it was changed for this case.
 * Preserve the paid and returned records. Restore policy, ticket, and Venue settings changed for this case.
 
 ## Risk Areas

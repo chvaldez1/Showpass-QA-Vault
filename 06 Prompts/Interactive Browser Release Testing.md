@@ -14,7 +14,7 @@ aliases:
 
 Use this workflow to test in the in-app browser. Choose a focused smoke check to find important problems quickly, or a deep review of the declared release scope. Reuse the current session, source knowledge and existing test notes.
 
-The reusable QA tester entrypoint is `$showpass-qa-tester`, installed in the user's Codex skills. This note maintains its detailed browser execution rules; [[06 Prompts/Example - Browser Testing]] provides copyable skill requests.
+The reusable QA tester entrypoint is `$showpass-qa-tester`, installed in the user's Codex skills. Use `$showpass-bug-drafter` for a verified bug. This note maintains the browser execution rules; [[06 Prompts/Example - Browser Testing]] provides copyable skill requests.
 
 ## Canonical Relationship
 
@@ -86,11 +86,13 @@ Before delivery, read each test without relying on the chat: could the user iden
 
 ### Jira drafts for confirmed bugs
 
-Include a copy-ready Jira draft for each distinct confirmed bug in the same run note, beside the affected test and before the final results table. Use a report-local ID such as `BUG-01`; link the affected test results and index to it. Several failed checks caused by the same issue share one draft. Inconclusive observations, unsubmitted risks and checks not run stay clearly labelled; do not turn them into confirmed bugs just to populate this section.
+For each distinct confirmed bug, use `$showpass-bug-drafter`. Keep its copy-ready draft beside the affected test in this run note, following [[03 Test Cases/Browser Test Report Template]]. Inconclusive observations, unsubmitted risks and checks not run stay labelled as such. A draft does not create a Jira issue.
 
-Follow the template's format: **Title: `fix (area) | specific observed problem`**, **GIVEN**, **WHEN**, **THEN — observed**, and a separate **Expected** result. Add concise business impact, tested page/environment/date, exact test-step/evidence links, material verification limits and data safety/cleanup. State actual role permissions and configuration when needed to reproduce. Keep the draft understandable without the chat, and distinguish a visible control or opened form from a successful saved action.
+Keep the Jira draft short, with three direct prose blocks: **GIVEN** the essential setup, **WHEN** the action is performed, **THEN** the observed failure followed by a separate sentence stating what should happen. Keep actual and intended results distinguishable within THEN; do not require a separate Expected section or use a table in place of the explanation. The full report's numbered Expected/Actual walkthrough remains unchanged. Name only relevant flags/settings, with their exact scope and on/off state. Source checks, code paths, hashes and causal analysis stay in the local report unless technical detail is requested. Do not fill missing QA steps or settings from code assumptions, or present a second reported symptom as the same confirmed bug. Keep the full canonical evidence, impact, safety and classification record locally.
 
-Reuse the detailed reproduction and screenshots already recorded under the test; do not create a second long reproduction or image gallery. Label the card **Draft only**. Drafting does not authorize creating, updating, commenting on or transitioning a Jira issue. Use the connected Atlassian Rovo tools only when the user separately requests a Jira write, following `AGENTS.md`.
+For the user's own report, use their voice ("I saw…"), not a third-person account such as "QA encountered…". Keep the original evidence provenance in the report so the draft does not imply the agent ran that action.
+
+Use everyday language and the actual Showpass names from the affected screen and [[00 Start Here/Showpass QA Handbook/12 Venue Client and Scenario Setup]]. Name the Customer, Attendee, Organizer or Venue Employee accurately, use Organization for the Dashboard business and Venue for its Admin record, and preserve visible screen/control/field labels. Do not substitute Refund, Void and Exchange for one another. Before delivering, read the draft as a product-team member with no code context: can they identify where to start, what to select and what is wrong? Replace jargon with the actual item, action or saved value; keep exact necessary flag keys and errors intact.
 
 ### Example Quest: Signed-Out Dashboard Access
 
@@ -403,9 +405,9 @@ For every finding, record:
 Write every finding so a QA employee who has not seen the feature can reproduce it without reading the browser log or source code:
 1. Name the environment, role, exact starting route or screen, and a current fixture.
 2. Define any product term needed to recognize the fixture or control.
-3. Put exact numbered actions and Expected/Actual results in the affected test. The copy-ready Jira draft summarizes the reproduction with GIVEN / WHEN / THEN — observed and a separate Expected result; a second Step Action table is unnecessary when it would repeat those steps.
+3. Put exact numbered actions and Expected/Actual results in the affected test. Use `$showpass-bug-drafter` for a confirmed bug; do not repeat the full walkthrough in the draft.
 4. Name controls exactly as displayed in the product.
-5. Identify the first step where Actual differs from Expected. In the Jira draft, keep the observed problem separate from the expected behavior.
+5. Identify the first step where Actual differs from Expected.
 6. Add impact, data-safety classification, and cleanup or preserved-fixture instructions.
 7. Embed the relevant screenshot immediately under the finding. If a screenshot cannot prove the result, state why and name the independent proof required.
 8. Do not expose automation mechanics such as locators, DOM state, hidden inputs, sentinels, isolated clipboards, programmatic clicks, or request interception in the manual reproduction.

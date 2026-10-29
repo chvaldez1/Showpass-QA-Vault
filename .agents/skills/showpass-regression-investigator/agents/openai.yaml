@@ -1,0 +1,3 @@
+interface:
+  display_name: "Showpass Regression Investigator"
+  short_description: "Trace a Showpass behavior difference to configuration or code"

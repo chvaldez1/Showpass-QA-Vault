@@ -2,13 +2,22 @@
 title: Customer Refund Shipping and Fee Amount Rules Test Cases
 jira: SPW-19669
 status: source-reviewed-not-executed
-date: 2026-10-07
+date: 2026-10-27
 tags:
   - qa/test-cases
   - refunds
 ---
 
 # Customer Refund Shipping and Fee Amount Rules Test Cases
+
+> [!important] Current-page review — 2026-10-27
+> **Published and verified:** the cases listed below now match Qase after the approved 21 updates and 14 creates. Required gates, current controls, item setup, and expected results were reviewed in plain language. No purchases, refunds, or scans were executed. The table is the current publication map; older dated records below are history.
+
+| Local draft | Current Qase case | Suite |
+| --- | --- | --- |
+| TC-1 | [SPT-5308](https://app.qase.io/case/SPT-5308) | 1107 |
+| TC-4 | [SPT-5806](https://app.qase.io/case/SPT-5806) | 1108 |
+| TC-5 | [SPT-5807](https://app.qase.io/case/SPT-5807) | 1108 |
 
 > [!important] Buy new orders after saving the amount settings
 > The amount controls and calculation are now present in local source. Older purchases can use the previous calculation. The cases are unexecuted; the publication section below lists which are saved in Qase. Start with [[00 Organizer and Venue - How to Test]] and [[00 Customer - How to Test]].
@@ -37,6 +46,8 @@ Published and verified **2026-10-05** after user approval in [Organizer and Venu
 ## Testing Intent
 
 ### 2026-10-07 delivery amount prediction worksheet
+
+**Workbook update, 2026-10-27:** both linked files now use the current three refund types and Automated return medium. Their original input rates and distinct rounding approaches are preserved. The arrow comparisons and old fee selectors described in the dated history below are retired. Calculation and layout checks passed; no live refund or native Excel execution was performed.
 
 **Independent spreadsheet model, 2026-10-13:** user explicitly requested a new file without using web-app behavior: [[outputs/refund-shipping-2026-10-13/Independent Refund Calculator.xlsx|Independent Refund Calculator]]. It uses editable prices, quantities, shipping and example fee rates with explicit order-total rounding and fee-base assumptions. It retains the hypothetical organizer-fee refund comparison and the missing organizer-HST withheld-display offset (0.54 for three 20.00 tickets at the example rates). It is not source-backed QA expected behavior or execution evidence. The earlier calculator is preserved as a separate version because a new file was explicitly requested.
 
@@ -86,22 +97,27 @@ Additional backend sources: `apps/venues/api/venue_based/serializers/refunds.py`
 
 ## Source-backed Behavior
 
-* The organization must be included in `enable_venue_policy_customer_self_refunds`, with its policy and **Enable configurable refund amounts** on. Compatible new ticket purchases store component values for preview and final return.
-* **Shipping refund rule** offers Never, after all items sharing the charge, proportional, and unshipped-only. Shipping already returned cannot be returned again.
-* **Refundable customer-paid fees** offers Showpass fee and Payment processing fee. Empty selection excludes both. Existing Venue **Automated return medium** still decides credit versus original payment.
-* Fee and shipping selections are read from the current policy when the customer previews/submits a return; saving a selection before purchase does not freeze that selection for the order. Purchase component amounts are saved at purchase.
-* The new component calculation is ticket-only. An older/non-itemized order may use the older amount path. With amount rules on, a product/add-on can be blocked even if its item switch is on. A changed quote must be reviewed again before confirmation.
+**Reviewed 2026-10-27 against current local develop in both repositories; see the Start Here review for exact revisions.**
+
+* The organization rollout flag and Admin **Customer Self Refund Settings** gate access. With the Admin setting off, the employee sees the disabled notice and no editable form; saving is also rejected by the backend.
+* The policy has one enable switch plus separate organization ticket and product switches. There is no Customer outcome dropdown. Individual item participation remains separate and saved values survive policy changes.
+* New policies start off, with both organization item-type switches on. New individual ticket/product defaults follow whether the policy is on; changing the policy does not rewrite existing item settings.
+* Five cutoff shapes remain supported. Absolute needs a date/time in the organization timezone; relative needs a positive whole number and Hours/Days. Switching shapes clears irrelevant details.
+* Barcode, fulfillment/shipping, and check-in restrictions are on/off switches; on allows that state but does not bypass the other eligibility checks. The three mixed-order choices are unchanged.
+* Refund amounts always shows Automated return medium (Revert Funds / Organizer Credit), Automated return refund type (three ordinary refund types), and Shipping refund rule (four choices), including while the policy is off. The old amount-enable switch and fee multiselect are retired.
+* Policy and organization money settings save together. A refused or invalid save must not update only one part. Organization permissions, ownership, and rollout checks still apply.
+* With nothing eligible, My Orders hides Return order. Current returns retain the purchased package parent; the previous blanket package-selection failure is not a current expected result. Unsupported Child-revenue packages remain blocked.
+* The current amount calculation follows the saved refund type and refund medium plus the shipping rule. A previously reviewed amount cannot be submitted after destination/type/rule changes, even if its total stays equal. Old or incomplete shipping records can require organizer assistance rather than a guessed refund.
 
 ## State-space / setup matrix
 
-| Check | Parameters and preparation | Proof |
+| Proof | Current values | What this establishes |
 | --- | --- | --- |
-| Organizer form | All 16 shipping/fee combinations in TC-1; no purchase. | Every shipping rule combined with None, ShowpassOnly, ProcessingOnly, and Both; save/reload and hidden-value retention for each. |
-| Shared shipping | TC-2: Never, AfterAll, Proportional, UnshippedOnly; a fresh two-ticket order for each. | Shipping and its tax returned once according to the rule. |
-| Customer-paid fees | TC-3: None, ShowpassOnly, ProcessingOnly, Both; two fresh orders per run. | Only originally charged selected fee classes and their taxes are included. |
-| Policy changes after preview | TC-4: ExcludeShowpassFee, ExcludeShipping; one fresh order per run and two sessions. | Old amount rejected, new amount shown, Cancel leaves payment and credit unchanged. |
-
-**Combination boundary:** TC-1 now explicitly includes every shipping/fee pair, including **Never refund shipping + Payment processing fee only**. This is full combination coverage for those two organizer controls, with configurable amounts saved on and off in every run. TC-2 isolates shipping with fees excluded, TC-3 isolates fee selection without shipping, and TC-4 checks a changed preview. They do not establish all 16 completed customer-return combinations or every tax, funding, fulfillment, discount, and package state; those interactions remain separate financial coverage.
+| Saved money controls | 2 methods × 3 refund types × 4 shipping rules | 24 settings combinations in TC-1; no purchase and no claim of 24 money-movement passes. |
+| Shared shipping | Never, AfterAll, Proportional, UnshippedOnly | TC-2 returns two identical tickets separately and checks shipping/tax once. |
+| Actual refunded fees | OriginalPayment / OrganizerCredit × Base / ExcludeShowpass / Full | TC-3 uses independent original components and six separate orders. |
+| Stale method/type | Destination changes with equal total; refund type changes with positive fees | TC-4 rejects the old confirmation and requires review. |
+| Stale shipping | Proportional → Never after preview | TC-5 excludes the original shipping/tax before any new confirmation. |
 
 ## Recommended Test Data
 
@@ -126,61 +142,64 @@ Record an independent worksheet before returning anything: order reference, tick
 
 ## Qase-ready Manual Test Cases
 
+**Current case responsibilities:** TC-1 updates existing SPT-5308 for the two refund methods, three refund types, and four shipping rules. TC-2 checks sequential shared shipping. TC-3 replaces the retired fee-selection recipe with actual refund-type and destination checks. TC-4 checks changed method/type; TC-5 preserves the changed-shipping-preview check. All are source-reviewed drafts; component-level fee/tax execution needs the original independent values and permitted finance/payment access. The dated delivery calculator above is historical and must not be treated as current selectable fee options.
+
+
 ### TC-1: Dashboard - Refunds - Save shipping and fee choices
 
-**Description:** An employee saves a shipping rule and a fee selection, then reopens Customer refunds to confirm both choices. Turning configurable amounts off hides the controls without deleting those saved choices. Run each ShippingRule with each FeeSelection: four shipping rules × four fee selections = 16 runs. No customer return is submitted in this case.
+**Description:** Save a refund method, refund type, and shipping rule. Reopening must show all three exact choices. Run every combination of refund method, refund type, and shipping rule: 24 settings combinations. This case saves settings only.
 
 | Platform | View |
 | --- | --- |
 | Dashboard | Desktop |
 
-| ShippingRule | Select under Shipping refund rule |
+| ReturnMedium | Automated return medium |
+| --- | --- |
+| OriginalPayment | Revert Funds |
+| OrganizerCredit | Organizer Credit |
+
+| RefundType | Automated return refund type |
+| --- | --- |
+| Base | Base refund |
+| ExcludeShowpass | Full refund excluding Showpass fees |
+| Full | Full refund (Showpass fees invoiced) |
+
+| ShippingRule | Shipping refund rule |
 | --- | --- |
 | Never | Never refund shipping |
 | AfterAll | Refund after all shipped items sharing the charge are refunded |
 | Proportional | Refund shipping proportionally |
 | UnshippedOnly | Refund shipping for unshipped items only |
 
-| FeeSelection | Select under Refundable customer-paid fees |
-| --- | --- |
-| None | Clear both choices. |
-| ShowpassOnly | Showpass fee only. |
-| ProcessingOnly | Payment processing fee only. |
-| Both | Showpass fee and Payment processing fee. |
-
-For example, ShippingRule = Never with FeeSelection = ProcessingOnly means save **Never refund shipping** with only **Payment processing fee** selected.
-
 **Tags:** dashboard, refunds
 
 **Parameters:**
+ReturnMedium: OriginalPayment, OrganizerCredit
+RefundType: Base, ExcludeShowpass, Full
 ShippingRule: Never, AfterAll, Proportional, UnshippedOnly
-FeeSelection: None, ShowpassOnly, ProcessingOnly, Both
 
 **Preconditions:**
 
 * Employee permission: **Manage Organization Info**.
-* Enable `enable_venue_policy_customer_self_refunds` for the selected organization.
-* In **Admin → Venues → Venue customer refund policies**, search for the organization; reuse its record, or **Add → Venue → select the organization → Save**. Record the original amount switch, shipping rule, and fee selections. No purchase is needed.
+* Enable the organization-scoped `enable_venue_policy_customer_self_refunds` flag.
+* In **Admin → Venues → Venues**, an administrator finds the organization and saves **Customer Self Refund Settings = on**. Record its original value.
+* In **Admin → Venues → Venue customer refund policies**, search for the organization; reuse its record, or **Add → Venue → select the organization → Save**. Record its original settings.
+* Record the entire form and leave Enable customer refund policy off. All three Refund amounts dropdowns must remain editable; no purchase is needed.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Open Dashboard → Organization → Organization settings → Customer refunds. | Selected organization | Refund amounts contains Enable configurable refund amounts. |
-| Turn on Enable configurable refund amounts. | | Shipping refund rule and Refundable customer-paid fees are visible. |
-| Open Shipping refund rule. | Four choices in the ShippingRule table | All four shipping choices are available. |
-| Select the shipping rule listed for ShippingRule. | ShippingRule | The selected rule is displayed. |
-| Open Refundable customer-paid fees. | | Showpass fee and Payment processing fee are available. |
-| Clear any current fee selections. | | Neither fee class is selected. |
-| Set the fee selection listed for FeeSelection. | FeeSelection; leave both clear for None. | Exactly the required fee selection is shown. |
-| Select Save. | | Customer refund policy saved appears. |
-| Reload Customer refunds. | ShippingRule and FeeSelection | The amount switch is on and both saved choices match the selected parameters. |
-| Turn off Enable configurable refund amounts. | | Shipping and fee controls are hidden. |
-| Select Save. | | Customer refund policy saved appears. |
-| Reload Customer refunds. | | The amount switch remains off and the dependent controls remain hidden. |
-| Turn on Enable configurable refund amounts without saving. | ShippingRule and FeeSelection | The previously saved shipping and fee selections are retained. |
+| Open Dashboard → Organization → Organization settings → Customer refunds. |  | All three Refund amounts dropdowns are visible while the policy is off. |
+| Select Automated return medium. | ReturnMedium | The matching refund method is shown. |
+| Select Automated return refund type. | RefundType | The matching refund type is shown; Full Admin Refund is not offered. |
+| Select Shipping refund rule. | ShippingRule | The matching shipping rule is shown. |
+| Select Save. |  | Customer refund policy saved appears. |
+| Reload Customer refunds. | ReturnMedium, RefundType, ShippingRule | All three choices remain saved and the policy remains off. |
+| Compare the rest of the form to its recorded values. |  | Ticket/product switches, cutoffs, and restrictions are unchanged. |
 
 **Postconditions:**
 
-* Restore the original amount switch, shipping rule, and fee selections; save and reopen to confirm them. No customer order was created.
+* Have the administrator restore Customer Self Refund Settings to its recorded original value if it was changed for this case.
+* Restore the original policy and Admin settings, save, and reopen to confirm. Preserve paid orders, returns, and credit/payment history.
 
 ### TC-2: My Orders - Refunds - Apply shared shipping across two returns
 
@@ -207,142 +226,184 @@ ShippingRule: Never, AfterAll, Proportional, UnshippedOnly
 **Preconditions:**
 
 * Preparing employee permissions: **Manage Organization Info**, **Manage Events**, and **Manage Transactions**; UnshippedOnly also needs **Scan Tickets** to record fulfillment.
-* Enable `enable_venue_policy_customer_self_refunds` for the organization. In **Admin → Venues → Venue customer refund policies**, find or add its record. In **Dashboard → Organization → Organization settings → Customer refunds**, save **Enable customer refund policy = on**, **Allow customer refunds for tickets = on**, **No cutoff**, all three delivery/fulfillment/check-in restrictions **Allow customer refunds**, **Refund eligible items independently**, **Enable configurable refund amounts = on**, ShippingRule's shipping choice, and **Refundable customer-paid fees = empty**. Record original values.
-* In **Admin → Venues → Venues**, find the organization and save **Automated return medium = Organizer Credit** and **Enable itemized calculations = on**. In **Dashboard → Organization → Organization settings → Shipping and fulfillment**, save **Fulfillment features enabled = on** and **Enable shipping quantity threshold = off**. Record prior values.
+* In **Admin → Venues → Venues**, an administrator finds the organization and saves **Customer Self Refund Settings = on**. Record its original value.
+* Enable `enable_venue_policy_customer_self_refunds` for the organization. In **Admin → Venues → Venue customer refund policies**, find or add its record. In **Dashboard → Organization → Organization settings → Customer refunds**, save **Enable customer refund policy = on**, **Allow customer refunds for tickets = on**, **No cutoff**, all three delivery/fulfillment/check-in restrictions **on**, **Refund eligible items independently**, ShippingRule's shipping choice, and **Automated return refund type = Base refund**. Record original values.
+* In **Dashboard → Organization → Organization settings → Customer refunds**, save **Automated return medium = Organizer Credit**. In **Admin → Venues → Venues**, save **Enable itemized calculations = on** before creating the event. In **Dashboard → Organization → Organization → Shipping & Fulfillment**, save **Fulfillment features enabled = on** and **Enable shipping quantity threshold = off**. Record prior values.
 * In **Dashboard → Build → Events → All events**, create a published single-day event at least seven days ahead with public sales open. Create a General Admission ticket priced **10.00**, inventory **10**, with **Basic info → Allow customer-initiated refunds = on**. In **Delivery & transfers → Ticket Delivery Methods**, keep **Standard Shipping** as the only method, set **Shipping & Handling Fee = 8.00**, **Fee Method = Flat rate**, and leave **Override basket delivery shipping with this ticket's shipping cost** off. Save before any sale; shipping prices lock after sales. No package, seat, discount, payment plan, gift card, or credit is included.
-* As the buyer, purchase quantity **2** with an approved refundable card payment; select **Standard Shipping** and a delivery address you control. Confirm checkout charges shipping **8.00 once**. Record both ticket barcodes, the receipt, order reference, original per-ticket tax, shipping tax, customer-paid fees, and opening Organizer Credit balance. Obtain separate tax values from the saved financial details or the authorized finance owner before calculating expected totals; a combined Tax line alone is insufficient for nonzero shipping-tax proof. The purchase must support individual ticket amounts; if it falls back to the older refund preview, stop and record that compatibility gap.
+* As the buyer, purchase quantity **2** with an approved refundable card payment; select **Standard Shipping** and a delivery address you control. Confirm checkout charges shipping **8.00 once**. Record both ticket barcodes, the receipt, order reference, original per-ticket tax, shipping tax, customer-paid fees, and opening Organizer Credit balance. Obtain separate tax values from the saved financial details or the authorized finance owner before calculating expected totals; a combined Tax line alone is insufficient for nonzero shipping-tax proof. The new purchase must support individual ticket amounts; an assistance message is not a successful shipping calculation.
 * UnshippedOnly: in **Dashboard → Transactions → Fulfillment**, find the first recorded barcode, set **Fulfillment status = Fulfilled**, select **Update → Confirm**, and reopen to confirm it. Leave the second ticket **Unfulfilled**. Keep both unscanned and untransferred; no physical shipment is required to prepare the saved fulfillment state.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | As the buyer, open Account → My Orders and open the purchased order. | Recorded order | Both recorded tickets are paid. |
-| Open Return order. | | The two tickets can be selected separately. |
+| Open Return order. |  | The two tickets can be selected separately. |
 | Select only the first recorded ticket. | First ticket from ShippingRule | Only that ticket contributes to the preview. |
 | Read the amount breakdown. | Subtotal 10.00; original per-ticket tax; first shipping/tax amounts from ShippingRule | Shipping, shipping tax, and excluded fees match the selected rule; zero shipping rows may be omitted. |
 | Record the total and destination message. | Expected total = 10.00 + original per-ticket tax + allowed shipping + allowed shipping tax | The preview equals the independently calculated total and identifies Organizer Credit. |
-| Select Next. | | Confirmation shows the same total and destination. |
+| Select Next. |  | Confirmation shows the same total and destination. |
 | Select the confirmation option acknowledging the return. | Displayed acknowledgement | Return Order becomes available. |
 | Select Return Order once. | First preview | The return succeeds. |
-| Select Done. | | The order reopens with only the first ticket returned. |
+| Select Done. |  | The order reopens with only the first ticket returned. |
 | Open Account → Credits → Organizer Credits. | Opening balance and first preview | Credit for this organization increased by exactly the first preview. |
 | Reopen the same order in My Orders and open Return order. | Remaining ticket | The returned ticket cannot be selected again. |
 | Select the remaining ticket. | Second shipping/tax amounts from ShippingRule | The preview contains only its 10.00 price, its tax, and the allowed remaining shipping/tax. |
 | Record the second total. | Second independently calculated total | Shipping already returned is not included again; UnshippedOnly does not release the fulfilled ticket's excluded share. |
-| Select Next. | | Confirmation matches the second preview. |
-| Select the acknowledgement. | | Return Order becomes available. |
+| Select Next. |  | Confirmation matches the second preview. |
+| Select the acknowledgement. |  | Return Order becomes available. |
 | Select Return Order once. | Second preview | The remaining ticket is returned. |
-| Select Done. | | Both tickets show returned. |
+| Select Done. |  | Both tickets show returned. |
 | Open Organizer Credits again. | Opening balance plus both previews | The total balance increase equals the sum of both previews. |
 | As the employee, find the original order in Dashboard → Transactions and open its related return/credit records. | Recorded order, two previews, receipt | Combined adjustments equal both previews and neither ticket was returned twice. |
 
 **Postconditions:**
 
+* Have the administrator restore Customer Self Refund Settings to its recorded original value if it was changed for this case.
 * Preserve the original purchase and all return/credit records. Several adjustment records may represent one customer return; reconcile their sum rather than assuming exactly two records.
 * Restore the original policy, shipping, and Venue settings. Keep the ticket type and its locked delivery pricing as purchase evidence; do not delete paid or returned orders.
 
-### TC-3: My Orders - Refunds - Return only selected customer-paid fees
+### TC-3: My Orders - Refunds - Return the fees allowed by Automated return refund type
 
-**Description:** A customer has two new, card-paid ticket orders with nonzero customer-paid Showpass and payment-processing fees. Return the first with no refundable fees, then return the second with FeeSelection. Only the fee classes currently selected may be added to Organizer Credit. Amounts and fee taxes come from each order's original charge, not its ticket's current price.
+**Description:** Return one new ticket using the saved refund type and method. Compare the preview and completed return to the original purchased amounts, including which fees remain with Showpass and which the customer receives. Run each ReturnMedium with each RefundType: six runs on separate orders.
 
 | Platform | View |
 | --- | --- |
 | WebPublic | Desktop |
 
-| FeeSelection | Select under Refundable customer-paid fees | Second return's Refundable fees | Excluded non-refundable fees |
-| --- | --- | --- | --- |
-| None | Neither choice. | 0.00 | All originally charged customer-paid fees. |
-| ShowpassOnly | Showpass fee only. | Original customer-paid Showpass fee, including its applicable tax. | Processing fee and other unselected customer-paid fees. |
-| ProcessingOnly | Payment processing fee only. | Original customer-paid processing fee, including its applicable tax. | Showpass fee and other unselected customer-paid fees. |
-| Both | Showpass fee and Payment processing fee. | Sum of those two original fee classes, including their applicable taxes. | Any other customer-paid fee class; selecting Both does not make arbitrary organizer fees refundable. |
+| ReturnMedium | Automated return medium |
+| --- | --- |
+| OriginalPayment | Revert Funds |
+| OrganizerCredit | Organizer Credit |
+
+| RefundType | Automated return refund type |
+| --- | --- |
+| Base | Base refund |
+| ExcludeShowpass | Full refund excluding Showpass fees |
+| Full | Full refund (Showpass fees invoiced) |
+
+
+| RefundType | Expected amount with shipping excluded and all fees customer-paid |
+| --- | --- |
+| Base | Purchased item subtotal plus its item tax; customer-paid fees and their taxes excluded. |
+| ExcludeShowpass | Base amount plus customer-paid organizer fees and their taxes; customer-paid Showpass/processing fees retained. |
+| Full | Full original customer-paid total; the organizer remains responsible for invoiced Showpass fees. |
 
 **Tags:** my-orders, refunds, fees-and-taxes
 
 **Parameters:**
-FeeSelection: None, ShowpassOnly, ProcessingOnly, Both
+ReturnMedium: OriginalPayment, OrganizerCredit
+RefundType: Base, ExcludeShowpass, Full
 
 **Preconditions:**
 
-* Preparing employee permissions: **Manage Organization Info**, **Manage Events**, and **Manage Transactions**.
-* Enable `enable_venue_policy_customer_self_refunds` for the organization. In **Admin → Venues → Venue customer refund policies**, find or add its record. In **Dashboard → Organization → Organization settings → Customer refunds**, save policy **on**, **Allow customer refunds for tickets = on**, **No cutoff**, all three restrictions **Allow customer refunds**, **Refund eligible items independently**, configurable amounts **on**, **Never refund shipping**, and refundable fees **empty**. Record original settings.
-* In **Admin → Venues → Venues**, save **Automated return medium = Organizer Credit** and **Enable itemized calculations = on**. Create a published future single-day event with public sales open and one General Admission ticket priced **10.00**, inventory **10**, **Allow customer-initiated refunds = on**, and **Electronic Ticket** delivery. No package, assigned seat, discount, plan, shipping, protection, gift card, or credit is included.
-* Use saved fee rules that charge the customer both a positive Showpass fee and a positive payment-processing fee. Record those two fee amounts and their fee taxes separately from the original finance breakdown or the authorized fee owner; do not use organizer-absorbed costs as customer-paid fees. Do not change a shared rate card to create this data.
-* As the buyer, purchase one ticket in each of **two separate new orders** with an approved refundable card payment. Record both order references, receipts, per-ticket item tax, the separate original fee amounts, and opening Organizer Credit balance. Confirm the preview supports the new separate Item taxes/Refundable fees breakdown before executing a return; an older amount path does not prove these rules.
+* Preparing employee permissions: **Manage Organization Info**, **Manage Events**, and **Manage Transactions**. The employee checking an original-payment refund can view that organization’s gateway refund record.
+* Enable the organization-scoped `enable_venue_policy_customer_self_refunds` flag.
+* In **Admin → Venues → Venues**, an administrator finds the organization and saves **Customer Self Refund Settings = on**. Record its original value.
+* In **Admin → Venues → Venue customer refund policies**, search for the organization; reuse its record, or **Add → Venue → select the organization → Save**. Record its original settings.
+* In **Dashboard → Organization → Organization settings → Customer refunds**, save **Enable customer refund policy = on**, both **Allow customer refunds for tickets = on** and **Allow customer refunds for products = on**, **No cutoff**, **Allow customer refunds after barcode delivery = on**, the fulfillment and check-in switches **off**, **Refund eligible items independently**, **Automated return medium = Organizer Credit**, **Automated return refund type = Base refund**, and **Shipping refund rule = Never refund shipping**.
+* Use saved ordinary fee rules with positive customer-paid organizer fees, Showpass fees, and processing fees. No fees are absorbed by the organizer, and there is no commission, shipping, discount, protection, credit, gift card, or payment plan. Record the separate original fee/tax amounts from the saved fee rules and financial records; do not change a shared rate card to prepare this run.
+* In Build → Events → All events, create a published future event with public sales open and one General Admission ticket at 20.00, inventory 10; save Basic info → Allow customer-initiated refunds on. Keep Electronic Ticket delivery.
+* On Customer refunds, save the selected ReturnMedium and RefundType, No cutoff, barcode refunds on, and Never refund shipping. Buy one ticket by an approved refundable card through the event’s public checkout. Use a fresh order for each run.
+* Record the original paid total, item subtotal, item tax, each customer-paid fee and its tax, card payment reference, and opening Organizer Credit. Calculate the expected amount from the table before opening Return order. Keep the ticket unscanned, unfulfilled, untransferred, and off resale.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| As the employee, open Dashboard → Organization → Organization settings → Customer refunds. | Selected organization | Refund amounts controls are shown. |
-| Clear Refundable customer-paid fees. | | Neither fee class is selected. |
-| Select Save. | | Customer refund policy saved appears. |
-| Reopen Customer refunds. | | Neither fee class is selected. |
-| As the buyer, open Account → My Orders → the first order → Return order. | First order | The paid ticket is selectable. |
-| Select its one ticket. | First receipt | Refundable fees is 0.00 and Excluded non-refundable fees contains the originally charged fees. |
-| Record the total. | 10.00 plus original item tax | No excluded fee is added to the return total. |
-| Select Next. | | Confirmation matches the preview and identifies Organizer Credit. |
-| Select the acknowledgement. | | Return Order becomes available. |
-| Select Return Order once. | First preview | The first ticket is returned. |
-| Select Done. | | The first order shows its ticket returned. |
-| Open Account → Credits → Organizer Credits. | Opening balance and first preview | Credit increased by exactly the first preview. |
-| As the employee, reopen Customer refunds and set Refundable customer-paid fees to FeeSelection. | Selected row | Exactly the required fee classes are selected. |
-| Select Save. | | Customer refund policy saved appears. |
-| Reopen Customer refunds. | Selected row | The saved selection is retained. |
-| As the buyer, open the second order's Return order and select its ticket. | Second receipt and FeeSelection | Refundable fees and Excluded non-refundable fees match the selected row. |
-| Record the second total. | 10.00 + original item tax + selected original fee classes | The total includes no unselected or uncharged fee. |
-| Select Next. | | Confirmation matches this preview and identifies Organizer Credit. |
-| Select the acknowledgement. | | Return Order becomes available. |
-| Select Return Order once. | Second preview | The second ticket is returned. |
-| Select Done. | | The second order shows its ticket returned. |
-| Open Organizer Credits again. | Opening balance plus both previews | The combined balance increase equals both preview totals. |
-| As the employee, open both original orders and their related adjustments in Dashboard → Transactions. | Original receipts and recorded previews | Each order's combined adjustment equals its preview, with the expected refunded Fees and Tax totals. |
+| As the buyer, open Account → My Orders and the purchased order. |  | The correct paid ticket is present. |
+| Open Return order and select the ticket. | Quantity 1 | The preview shows only this purchased ticket. |
+| Compare the fee and tax breakdown with the original values. | RefundType table | Refundable fees and excluded fees follow the selected refund type; organizer-absorbed costs are not charged to the customer. |
+| Compare the total and refund destination. | Independent expected amount; ReturnMedium | Both the amount and the original-payment or Organizer Credit message match the selected row. |
+| Select Next. |  | Confirmation shows the same amount and destination. |
+| Choose a listed return reason. |  | Return Order becomes available. |
+| Select Return Order once. |  | The return succeeds for the reviewed amount. |
+| Select Done and reopen the order. |  | The selected ticket is returned and cannot be selected again. |
+| Inspect the destination evidence listed for ReturnMedium. | OriginalPayment: original gateway refund record. OrganizerCredit: Account → Credits → Organizer Credits. | Exactly the expected value is returned to the selected destination; no additional payment refund or new credit is created. |
+| As the employee, open the original order and related return in Dashboard → Transactions. | Original receipt and expected fee treatment | The returned amount, fees, taxes, and linked payment/credit records agree with the selected refund type. |
 
 **Postconditions:**
 
-* Preserve both paid/returned orders and adjustment records. Restore policy and Venue values changed for the run.
-* Customer Organizer Credit is checked; this case does not prove a refund to the original payment method or a split credit/card refund.
+* Have the administrator restore Customer Self Refund Settings to its recorded original value if it was changed for this case.
+* Restore the original policy and Admin settings, save, and reopen to confirm. Preserve paid orders, returns, and credit/payment history.
+* Preserve the original purchase, completed refund/credit, and fee calculation. A pending provider refund is not a completed money-return result.
 
-### TC-4: My Orders - Refunds - Refresh the amount after shipping or fee choices change
+### TC-4: My Orders - Refunds - Review a new amount or refund method before confirming
 
-**Description:** A customer reviews a positive refund amount, then an employee changes a refundable shipping or fee choice while leaving the ticket eligible. Confirming the older amount must fail without returning the ticket or issuing credit. The customer must review the new lower amount before any new confirmation; Cancel leaves the order paid.
+**Description:** A customer reaches confirmation, then an employee changes the refund method or type. The old confirmation must be rejected even when changing only the destination leaves the total unchanged. Review the refreshed preview and Cancel.
 
 | Platform | View |
 | --- | --- |
 | WebPublic | Desktop |
 
-| AmountChange | Starting policy and purchase | Employee change after customer reaches confirmation | New amount |
+| Change | Starting values | Employee change | Expected refreshed preview |
 | --- | --- | --- | --- |
-| ExcludeShowpassFee | Showpass fee selected; electronic ticket with a positive customer-paid Showpass fee. | Clear Refundable customer-paid fees and save. | Original preview minus the originally included Showpass fee and its fee tax. |
-| ExcludeShipping | Refund shipping proportionally; one ticket purchased with Standard Shipping and an 8.00 Flat rate Shipping & Handling Fee. | Set Shipping refund rule to Never refund shipping and save. | Original preview minus 8.00 shipping and its shipping tax. |
+| ReturnMedium | Revert Funds; Base refund | Select Organizer Credit. | Same amount; destination is Organizer Credit. |
+| RefundType | Revert Funds; Full refund (Showpass fees invoiced) | Select Base refund. | Customer-paid fees excluded; total lower by those original fees and taxes. |
 
 **Tags:** my-orders, refunds, edge-case
 
 **Parameters:**
-AmountChange: ExcludeShowpassFee, ExcludeShipping
+Change: ReturnMedium, RefundType
 
 **Preconditions:**
 
-* Preparing employee permissions: **Manage Organization Info**, **Manage Events**, and **Manage Transactions**. Use separate customer and employee sessions so the customer's confirmation stays open.
-* Enable `enable_venue_policy_customer_self_refunds` for the organization; find or add its policy through **Admin → Venues → Venue customer refund policies**. In **Dashboard → Organization → Organization settings → Customer refunds**, save policy **on**, tickets **on**, **No cutoff**, all three restrictions **Allow customer refunds**, **Refund eligible items independently**, and configurable amounts **on**. Save the row's starting shipping and fee choices; ExcludeShipping uses fees empty and ExcludeShowpassFee uses Never refund shipping. Record original settings.
-* In **Admin → Venues → Venues**, save **Automated return medium = Organizer Credit** and **Enable itemized calculations = on**. Prepare a new published future single-day event with one public General Admission ticket, price **10.00**, inventory **10**, and **Allow customer-initiated refunds = on**. Use the delivery method in AmountChange. ExcludeShipping: enable **Fulfillment features enabled** in Organization settings → Shipping and fulfillment, disable the shipping quantity threshold, and set ticket **Delivery & transfers → Standard Shipping only → Shipping & Handling Fee 8.00 → Fee Method Flat rate** before any sale.
-* As the buyer, purchase quantity **1** with an approved refundable card payment. Record the receipt, applicable tax and fee values, opening Organizer Credit balance, and order reference. Keep the ticket unscanned, unfulfilled, and untransferred. ExcludeShowpassFee requires a positive customer-paid Showpass fee; organizer-absorbed fees do not qualify.
+* Preparing employee permissions: **Manage Organization Info**, **Manage Events**, and **Manage Transactions**. Use separate employee and customer sessions.
+* Enable the organization-scoped `enable_venue_policy_customer_self_refunds` flag.
+* In **Admin → Venues → Venues**, an administrator finds the organization and saves **Customer Self Refund Settings = on**. Record its original value.
+* In **Admin → Venues → Venue customer refund policies**, search for the organization; reuse its record, or **Add → Venue → select the organization → Save**. Record its original settings.
+* In **Dashboard → Organization → Organization settings → Customer refunds**, save **Enable customer refund policy = on**, both **Allow customer refunds for tickets = on** and **Allow customer refunds for products = on**, **No cutoff**, **Allow customer refunds after barcode delivery = on**, the fulfillment and check-in switches **off**, **Refund eligible items independently**, **Automated return medium = Organizer Credit**, **Automated return refund type = Base refund**, and **Shipping refund rule = Never refund shipping**.
+* Prepare a published future event with one 20.00 General Admission ticket, inventory 10, Electronic Ticket delivery, and Allow customer-initiated refunds on. Use saved rules charging a positive customer-paid fee; no discount, shipping, existing credit, gift card, plan, or package is included.
+* Save the Starting values from Change, then buy one ticket by refundable card. Record the original order, fee breakdown, payment record, and opening Organizer Credit. Keep it unscanned, unfulfilled, untransferred, and off resale.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| As the buyer, open Account → My Orders → the recorded order → Return order. | AmountChange | The ticket is selectable. |
-| Select the ticket and record the preview breakdown and total. | Original receipt | The row's shipping or Showpass fee is included and the total is positive. |
-| Select Next. | | The older amount is shown on confirmation. |
-| In the employee's session, open Customer refunds and make AmountChange's listed change. | Selected row | Only the shipping or fee choice changes; the ticket remains eligible. |
-| Select Save. | | Customer refund policy saved appears. |
-| Reopen Customer refunds in the employee session. | Selected row | The changed amount choice is retained. |
-| In the buyer's still-open confirmation, select the acknowledgement. | Older preview | The existing confirmation can be attempted. |
-| Select Return Order once. | Older preview | The older amount is rejected with a message to review the changed refund amount; no return succeeds. |
-| Review the refreshed amount selection screen. | New amount from AmountChange | The removed shipping or fee is no longer included and the total matches the current policy. |
-| Select Cancel. | | No new return is submitted. |
-| Reload the original order in My Orders. | Recorded ticket | The ticket is still paid and not returned. |
-| Open Account → Credits → Organizer Credits. | Opening balance | Credit is unchanged. |
-| As the employee, reopen the original order in Dashboard → Transactions. | Recorded order | No refund or credit adjustment was created by the rejected confirmation. |
+| As the buyer, open the order in My Orders and select Return order. |  | The paid ticket is selectable. |
+| Select the ticket and record the displayed total, fee breakdown, and destination. | Starting values in Change | The preview shows the starting refund method and type. |
+| Select Next and choose a return reason; leave confirmation open. |  | Return Order is available for the original preview. |
+| As the employee, open Customer refunds and make the change in the table. | Change | The new method or type is displayed. |
+| Select Save and reopen Customer refunds. |  | The changed choice is saved. |
+| As the buyer, select Return Order once on the original confirmation. |  | The old confirmation is rejected; no successful return is shown. |
+| Read the refreshed selection and preview. | Change | The current destination/type and recalculated amount replace the old preview; it is not resubmitted automatically. |
+| Select Cancel. |  | No new return is submitted. |
+| Reload the order and Organizer Credits; as the employee inspect its Transactions record. | Opening payment and credit values | The ticket remains paid; no payment refund, credit, or return adjustment was created. |
 
 **Postconditions:**
 
-* Restore the original policy, shipping, and Venue settings. Preserve the unchanged paid order; no return was completed.
+* Have the administrator restore Customer Self Refund Settings to its recorded original value if it was changed for this case.
+* Restore the original policy and Admin settings, save, and reopen to confirm. Preserve paid orders, returns, and credit/payment history.
+
+### TC-5: My Orders - Refunds - Reject an old preview after Shipping refund rule changes
+
+**Description:** The customer previews a return that includes shipping. The employee then saves Never refund shipping. The old confirmation must not return that shipping; the refreshed amount must exclude it.
+
+| Platform | View |
+| --- | --- |
+| WebPublic | Desktop |
+
+**Tags:** my-orders, refunds, edge-case
+
+**Preconditions:**
+
+* Preparing employee permissions: **Manage Organization Info**, **Manage Events**, and **Manage Transactions**. Use separate customer and employee sessions.
+* Enable the organization-scoped `enable_venue_policy_customer_self_refunds` flag.
+* In **Admin → Venues → Venues**, an administrator finds the organization and saves **Customer Self Refund Settings = on**. Record its original value.
+* In **Admin → Venues → Venue customer refund policies**, search for the organization; reuse its record, or **Add → Venue → select the organization → Save**. Record its original settings.
+* In **Dashboard → Organization → Organization settings → Customer refunds**, save **Enable customer refund policy = on**, both **Allow customer refunds for tickets = on** and **Allow customer refunds for products = on**, **No cutoff**, **Allow customer refunds after barcode delivery = on**, the fulfillment and check-in switches **off**, **Refund eligible items independently**, **Automated return medium = Organizer Credit**, **Automated return refund type = Base refund**, and **Shipping refund rule = Never refund shipping**.
+* Save Organizer Credit, Base refund, Refund shipping proportionally, and Allow customer refunds after fulfillment or shipping on. In Admin → Venue enable itemized calculations before creating the event.
+* In Organization → Shipping & Fulfillment, turn Fulfillment features enabled on and shipping quantity threshold off. Create a new published future event and one 10.00 ticket with its refund switch on. Under Delivery & transfers set Standard Shipping only, Shipping & Handling Fee 8.00, Fee Method Flat rate; leave basket delivery override off and save before any sale.
+* Buy quantity 1 by refundable card, with a controlled shipping address. Record the original 8.00 shipping charge, its separately established tax, the paid order, original Organizer Credit, and independently calculated starting return. Keep the ticket unfulfilled, unscanned, and untransferred.
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| As the buyer, open the order’s Return order and select its ticket. |  | The preview includes the original shipping charge and applicable shipping tax. |
+| Select Next and choose a reason; leave confirmation open. |  | Return Order is available for the original amount. |
+| As the employee, save Shipping refund rule = Never refund shipping and reopen Customer refunds. |  | Never refund shipping remains saved. |
+| As the buyer, select Return Order once. |  | The old amount is rejected without completing a return. |
+| Inspect the refreshed preview. | Original total minus 8.00 and its original shipping tax | The new preview excludes shipping and its tax. |
+| Select Cancel and reopen the order. |  | The ticket remains paid. |
+| Inspect Organizer Credit and, as the employee, the transaction. | Opening values | No new credit or refund was created. |
+
+**Postconditions:**
+
+* Have the administrator restore Customer Self Refund Settings to its recorded original value if it was changed for this case.
+* Restore the original policy and Admin settings, save, and reopen to confirm. Preserve paid orders, returns, and credit/payment history.
 
 ## Risk Areas
 
@@ -352,12 +413,13 @@ AmountChange: ExcludeShowpassFee, ExcludeShipping
 
 ## Minimum Execution Set
 
-1. TC-1: run each ShippingRule with each FeeSelection (16 runs); no purchase needed. This covers the shipping/fee settings combinations, not all purchase or customer-refund states.
-2. TC-2: first Never and AfterAll, then Proportional and UnshippedOnly on separate fresh orders. Record exact preview totals before each return.
-3. TC-3: first None and ShowpassOnly, then ProcessingOnly and Both. The original charged fee amounts must be independently established.
-4. TC-4: both AmountChange values; verify rejection, refreshed preview, and unchanged order/credit.
+1. TC-1: each ReturnMedium, RefundType and ShippingRule combination; 24 settings runs, still only form coverage.
+2. TC-2: all four rules on separate two-ticket orders; independently record original shipping and shipping tax.
+3. TC-3: all six refund method/type pairs; customer-paid organizer, Showpass and processing fees must be known and positive so the refund types are distinguishable.
+4. TC-4: both method and refund-type changes after confirmation opens; no completed return or credit.
+5. TC-5: shipping-rule change after preview, rejected old confirmation, then Cancel.
 
-Publication status: TC-1 / SPT-5308 is saved and verified with two independent four-value parameters for 16 settings combinations. Customer drafts require the documented purchase and original financial values; do not import them as runnable if that evidence is missing. A zero shipping-tax run proves shipping cost only; nonzero shipping-tax and stored component reporting remain separate proof targets.
+These are current local drafts, not newly published or executed Qase cases. TC-1 replaces the old SPT-5308 setup choices. Financial cases require independently established purchase components and permitted payment/credit evidence; missing setup remains Blocked. The older dated prediction worksheet is preserved as history, not current selectable options or execution proof.
 
 ## Suggested Automated Coverage
 
