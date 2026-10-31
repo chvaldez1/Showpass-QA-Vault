@@ -130,6 +130,8 @@ Apply [[05 Tooling/Qase Test Case Writing Rules#Readable Parameters And Combinat
 
 Use the writing rules as the field-format authority. Each copied case must stand alone: exact required permissions, concise find-or-create setup, parameter mappings, named starting screen, visible actions/results, and restoration or intentionally retained data. Define unfamiliar Showpass terms when first needed.
 
+For package cases, apply [[05 Tooling/Qase Test Case Writing Rules#Package Events And Guest Information]] before drafting. Explicitly identify the parent event, different child events, ticket types/quantities, any separate regular ticket, and event-level guest-collection settings. Use readable Single parameters with their value explanations in Description; leave Platform/View in its table. A correction to these relationships requires reviewing every field and the surrounding setup/coverage notes, not a wording change in chat alone.
+
 Keep implementation, Jira traceability, coverage commentary, and selector hints outside execution fields. Prefer visible navigation to hard-coded routes, except when the route itself is tested or no visible navigation exists. Use local `TC-*` labels outside the Title; use `SPT-*` only for real existing Qase IDs.
 
 Before adding cases, compare actions, expected results, starting state, and risk. Parameterize equivalent single/recurring Event, entry-point, role, or client variants when one short mapping and step set remain clear. Split when setup, outcome, permission boundary, or recovery changes materially. Use short PascalCase parameters, relevant Platform/View rows in Description, and 1–3 approved tags. Do not cap useful coverage at a fixed case count or inflate it with cosmetic variations.

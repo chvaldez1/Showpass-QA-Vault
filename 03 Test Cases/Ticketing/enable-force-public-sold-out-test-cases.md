@@ -9,11 +9,125 @@ tags:
 
 # Public Sold Out Switch — Manual Test Cases
 
+**Suite cleanup complete:** [[#Suite 625 organization and title cleanup — completed, 2026-10-30|Eight folders and 34 consistent titles]]. Verified **34 cases before → 34 cases after**; all other case content is unchanged.
+
 **Status: Published in Core - Inventory (625): TC-02 → [SPT-5230](https://app.qase.io/case/SPT-5230); TC-11 → [SPT-5236](https://app.qase.io/case/SPT-5236); TC-12 → [SPT-5237](https://app.qase.io/case/SPT-5237); TC-17 → [SPT-5238](https://app.qase.io/case/SPT-5238). Package cases TC-24 and TC-31–TC-36 and lifecycle cases TC-03, TC-20, TC-22, TC-23, TC-26, TC-28, TC-29 and TC-30 are also published in suite 625; their IDs appear beside each case below. The eight additions listed below are also published in suite 625; the remaining local drafts are explicitly listed below. No tests executed.**
 
 See [[#Qase Regression Gap Analysis — 2026-09-14]] for reusable existing cases and remaining regression gaps.
 
 **Latest critical coverage review:** [[#Critical Coverage Review — 2026-10-22]] lists the missing package, mixed-order, API, hold-boundary, seating and native-sales proofs. Recommendations only; no Qase writes.
+
+## Suite 625 organization and title cleanup — completed, 2026-10-30
+
+**Verified: 34 cases before → 34 cases after.** The original **Core - Inventory (625)** had 34 direct cases and no child folders. All 34 full case contents, parameter mappings and assertions were reviewed before grouping. The approved cleanup created eight child folders and changed only the title and folder assignment of each existing case. No test cases were created, copied, deleted, split, merged or executed. The live case definitions were the baseline, including user changes that differ from older local drafts.
+
+### Verified folders
+
+Core - Inventory (625) remains the parent. Every original case is present exactly once in these eight child folders; no cases remain directly in the parent:
+
+| Folder | Cases | Exact case IDs |
+| --- | --- | --- |
+| [Stock Counts and Overselling](https://app.qase.io/project/SPT?suite=1240) (1240) | 3 | SPT-394, SPT-398, SPT-3295 |
+| [Public Availability and Settings](https://app.qase.io/project/SPT?suite=1241) (1241) | 7 | SPT-402, SPT-5230, SPT-5300, SPT-5301, SPT-5302, SPT-5303, SPT-5307 |
+| [Assigned Seating](https://app.qase.io/project/SPT?suite=1242) (1242) | 4 | SPT-5236, SPT-5237, SPT-5238, SPT-5758 |
+| [Packages and Bundles](https://app.qase.io/project/SPT?suite=1243) (1243) | 6 | SPT-5263, SPT-5264, SPT-5265, SPT-5266, SPT-5267, SPT-5269 |
+| [Checkout and In-Person Sales](https://app.qase.io/project/SPT?suite=1244) (1244) | 4 | SPT-5283, SPT-5304, SPT-5305, SPT-5306 |
+| [Holds and Waitlists](https://app.qase.io/project/SPT?suite=1245) (1245) | 5 | SPT-5284, SPT-5285, SPT-5287, SPT-5756, SPT-5757 |
+| [Inventory Changes and Returns](https://app.qase.io/project/SPT?suite=1246) (1246) | 4 | SPT-5282, SPT-5286, SPT-5288, SPT-5289 |
+| [Retired - Do Not Run](https://app.qase.io/project/SPT?suite=1247) (1247) | 1 | SPT-5268 |
+
+**Count reconciliation:** 33 cases are in the seven working folders and SPT-5268 is in Retired - Do Not Run. Its [DELETE] marker and existing execution status are preserved. The marker is not permission to delete the case. No case is removed or reactivated. Its existing coverage references to SPT-4832, SPT-5265 and SPT-5266 remain recorded in the previous title and earlier retirement note.
+
+### Verified titles
+
+All 34 titles now use one suite-wide naming pattern: **Core - Inventory - [short action]**. The title names the behavior; existing descriptions and parameter mappings continue to identify the actual public, widget, Dashboard, Box Office, desktop or mobile path. This naming choice does not broaden a case's supported clients. Public sellout versus actual exhausted inventory, switch OFF versus ON, and Refund versus Void versus Exchange remain distinct.
+
+| Case | Folder | Saved title | Steps unchanged |
+| --- | --- | --- | --- |
+| [SPT-394](https://app.qase.io/case/SPT-394) | Stock Counts and Overselling | Core - Inventory - Show low-stock percentage indicators at configured thresholds | 5 |
+| [SPT-398](https://app.qase.io/case/SPT-398) | Stock Counts and Overselling | Core - Inventory - Show remaining ticket counts at the configured threshold | 5 |
+| [SPT-3295](https://app.qase.io/case/SPT-3295) | Stock Counts and Overselling | Core - Inventory - Prevent sales beyond the remaining ticket inventory | 6 |
+| [SPT-402](https://app.qase.io/case/SPT-402) | Public Availability and Settings | Core - Inventory - Respect actual stock when the public-sellout switch is off | 9 |
+| [SPT-5230](https://app.qase.io/case/SPT-5230) | Public Availability and Settings | Core - Inventory - Block tickets marked Show as sold out publicly | 8 |
+| [SPT-5300](https://app.qase.io/case/SPT-5300) | Public Availability and Settings | Core - Inventory - Apply public sellout to recurring dates and reopen one date | 15 |
+| [SPT-5301](https://app.qase.io/case/SPT-5301) | Public Availability and Settings | Core - Inventory - Clear public sellout without reopening exhausted tickets | 7 |
+| [SPT-5302](https://app.qase.io/case/SPT-5302) | Public Availability and Settings | Core - Inventory - Show an event as sold out when all ticket types are unavailable | 6 |
+| [SPT-5303](https://app.qase.io/case/SPT-5303) | Public Availability and Settings | Core - Inventory - Reopen an event when one stocked ticket type becomes available | 11 |
+| [SPT-5307](https://app.qase.io/case/SPT-5307) | Public Availability and Settings | Core - Inventory - Complete public purchases when the public-sellout switch is off | 8 |
+| [SPT-5236](https://app.qase.io/case/SPT-5236) | Assigned Seating | Core - Inventory - Buy an available ticket type for a seat shared with a sold-out type | 11 |
+| [SPT-5237](https://app.qase.io/case/SPT-5237) | Assigned Seating | Core - Inventory - Exclude publicly sold-out types from best-available seating | 9 |
+| [SPT-5238](https://app.qase.io/case/SPT-5238) | Assigned Seating | Core - Inventory - Complete an in-person seated sale despite public sellout | 7 |
+| [SPT-5758](https://app.qase.io/case/SPT-5758) | Assigned Seating | Core - Inventory - Block a seat when its only ticket type is sold out | 8 |
+| [SPT-5263](https://app.qase.io/case/SPT-5263) | Packages and Bundles | Core - Inventory - Buy a preset package with publicly sold-out included tickets | 13 |
+| [SPT-5264](https://app.qase.io/case/SPT-5264) | Packages and Bundles | Core - Inventory - Select custom package tickets that are publicly sold out | 14 |
+| [SPT-5265](https://app.qase.io/case/SPT-5265) | Packages and Bundles | Core - Inventory - Keep package seats correct and prevent a second sale of occupied seats | 14 |
+| [SPT-5266](https://app.qase.io/case/SPT-5266) | Packages and Bundles | Core - Inventory - Keep ticket and product bundles complete without overselling products | 17 |
+| [SPT-5267](https://app.qase.io/case/SPT-5267) | Packages and Bundles | Core - Inventory - Reject checkout when a package becomes publicly sold out | 9 |
+| [SPT-5269](https://app.qase.io/case/SPT-5269) | Packages and Bundles | Core - Inventory - Complete an in-person package sale despite public sellout | 9 |
+| [SPT-5283](https://app.qase.io/case/SPT-5283) | Checkout and In-Person Sales | Core - Inventory - Block publicly sold-out tickets from checkout and recovery links | 7 |
+| [SPT-5304](https://app.qase.io/case/SPT-5304) | Checkout and In-Person Sales | Core - Inventory - Reject an existing cart after its ticket becomes publicly sold out | 7 |
+| [SPT-5305](https://app.qase.io/case/SPT-5305) | Checkout and In-Person Sales | Core - Inventory - Complete a web or desktop ticket sale despite public sellout | 10 |
+| [SPT-5306](https://app.qase.io/case/SPT-5306) | Checkout and In-Person Sales | Core - Inventory - Complete a mobile or POS ticket sale despite public sellout | 9 |
+| [SPT-5284](https://app.qase.io/case/SPT-5284) | Holds and Waitlists | Core - Inventory - Complete an allocated Box Office hold sale despite public sellout | 7 |
+| [SPT-5285](https://app.qase.io/case/SPT-5285) | Holds and Waitlists | Core - Inventory - Complete an allocated hold-link purchase despite public sellout | 7 |
+| [SPT-5287](https://app.qase.io/case/SPT-5287) | Holds and Waitlists | Core - Inventory - Return released hold inventory without reopening public sales | 12 |
+| [SPT-5756](https://app.qase.io/case/SPT-5756) | Holds and Waitlists | Core - Inventory - Join a waitlist without issuing a publicly sold-out ticket | 5 |
+| [SPT-5757](https://app.qase.io/case/SPT-5757) | Holds and Waitlists | Core - Inventory - Allocate waitlist inventory and complete purchase while public sales stay closed | 19 |
+| [SPT-5282](https://app.qase.io/case/SPT-5282) | Inventory Changes and Returns | Core - Inventory - Return voided ticket inventory without reopening public sales | 12 |
+| [SPT-5286](https://app.qase.io/case/SPT-5286) | Inventory Changes and Returns | Core - Inventory - Preserve refund amounts and keep returned inventory publicly sold out | 18 |
+| [SPT-5288](https://app.qase.io/case/SPT-5288) | Inventory Changes and Returns | Core - Inventory - Increase ticket inventory without reopening public sales | 11 |
+| [SPT-5289](https://app.qase.io/case/SPT-5289) | Inventory Changes and Returns | Core - Inventory - Preserve Exchange credit and keep returned inventory publicly sold out | 17 |
+| [SPT-5268](https://app.qase.io/case/SPT-5268) | Retired - Do Not Run | Core - Inventory - [DELETE] Duplicate package shortage coverage | 5 |
+
+> [!info]- Full previous → proposed title comparison
+> These previous titles were read from Qase at 2026-10-30T19:17:48.729Z.
+>
+> | Case | Previous title | Saved title |
+> | --- | --- | --- |
+> | SPT-394 | Core - Inventory - Verify low inventory percentage indicators for event tickets | Core - Inventory - Show low-stock percentage indicators at configured thresholds |
+> | SPT-398 | Core - Inventory - Verify remaining absolute inventory count | Core - Inventory - Show remaining ticket counts at the configured threshold |
+> | SPT-3295 | Core - Inventory - Prevent event ticket overselling | Core - Inventory - Prevent sales beyond the remaining ticket inventory |
+> | SPT-402 | Core - Inventory - Verify sold-out event ticket states across sales platforms | Core - Inventory - Respect actual stock when the public-sellout switch is off |
+> | SPT-5230 | Core - Tickets - Verify that Force Public Sold Out is Respected | Core - Inventory - Block tickets marked Show as sold out publicly |
+> | SPT-5300 | Dashboard - Events - Apply public sellout to matching recurring ticket types and reopen one occurrence | Core - Inventory - Apply public sellout to recurring dates and reopen one date |
+> | SPT-5301 | Core - Tickets - Clearing public sellout respects the actual remaining tickets | Core - Inventory - Clear public sellout without reopening exhausted tickets |
+> | SPT-5302 | Core - Events - Show the event as sold out when every public ticket type is unavailable | Core - Inventory - Show an event as sold out when all ticket types are unavailable |
+> | SPT-5303 | Core - Events - Reopen an event by clearing public sellout on one ticket type with inventory | Core - Inventory - Reopen an event when one stocked ticket type becomes available |
+> | SPT-5307 | Core - Tickets - Global switch OFF preserves public purchases despite a saved public-sellout value | Core - Inventory - Complete public purchases when the public-sellout switch is off |
+> | SPT-5236 | Core - Assigned Seating - Buy the available ticket type when another type for the same seat is sold out | Core - Inventory - Buy an available ticket type for a seat shared with a sold-out type |
+> | SPT-5237 | Core - Assigned Seating - Exclude publicly sold-out ticket types from best-available seating | Core - Inventory - Exclude publicly sold-out types from best-available seating |
+> | SPT-5238 | Box Office - Assigned Seating - Complete an in-person cash sale of a publicly sold-out ticket | Core - Inventory - Complete an in-person seated sale despite public sellout |
+> | SPT-5758 | Core - Assigned Seating - Prevent selection of a seat whose only ticket type is sold out | Core - Inventory - Block a seat when its only ticket type is sold out |
+> | SPT-5263 | Core - Packages - Buy a preset package with publicly sold-out included tickets after reopening its parent | Core - Inventory - Buy a preset package with publicly sold-out included tickets |
+> | SPT-5264 | Public Checkout - Packages - Complete custom ticket choices without treating included public sellout as exhausted inventory | Core - Inventory - Select custom package tickets that are publicly sold out |
+> | SPT-5265 | Public Checkout - Packages - Preserve assigned seats when included tickets are publicly sold out | Core - Inventory - Keep package seats correct and prevent a second sale of occupied seats |
+> | SPT-5266 | Core - Packages - Keep ticket and product contents together when reopening a publicly sold-out bundle | Core - Inventory - Keep ticket and product bundles complete without overselling products |
+> | SPT-5267 | Public Checkout - Packages - Reject a package at checkout when its parent becomes publicly sold out | Core - Inventory - Reject checkout when a package becomes publicly sold out |
+> | SPT-5269 | Box Office - Packages - Complete an in-person package sale despite public sellout | Core - Inventory - Complete an in-person package sale despite public sellout |
+> | SPT-5283 | Core - Checkout - A checkout link cannot bypass an active public sellout | Core - Inventory - Block publicly sold-out tickets from checkout and recovery links |
+> | SPT-5304 | Core - Checkout - Reject an existing cart after its ticket type is marked publicly sold out | Core - Inventory - Reject an existing cart after its ticket becomes publicly sold out |
+> | SPT-5305 | Box Office - Tickets - Sell an available ticket despite its public-sellout setting | Core - Inventory - Complete a web or desktop ticket sale despite public sellout |
+> | SPT-5306 | Box Office - Tickets - Complete a mobile in-person sale of a publicly sold-out ticket | Core - Inventory - Complete a mobile or POS ticket sale despite public sellout |
+> | SPT-5284 | Box Office - Holds - Complete an allocated hold sale while public sellout is enabled | Core - Inventory - Complete an allocated Box Office hold sale despite public sellout |
+> | SPT-5285 | Public Checkout - Holds - Purchase allocated tickets while public sellout is enabled | Core - Inventory - Complete an allocated hold-link purchase despite public sellout |
+> | SPT-5287 | Box Office - Holds - Released inventory remains publicly sold out until the ticket setting is cleared | Core - Inventory - Return released hold inventory without reopening public sales |
+> | SPT-5756 | Public Checkout - Waitlists - Keep waitlist registration available for a publicly sold-out ticket type | Core - Inventory - Join a waitlist without issuing a publicly sold-out ticket |
+> | SPT-5757 | Core - Waitlists - Allocate and sell a waitlisted ticket while public sales remain closed | Core - Inventory - Allocate waitlist inventory and complete purchase while public sales stay closed |
+> | SPT-5282 | Dashboard - Tickets - Voiding an internal sale keeps public sales closed until the ticket setting is cleared | Core - Inventory - Return voided ticket inventory without reopening public sales |
+> | SPT-5286 | Dashboard - Tickets - Refund inventory stays publicly sold out until the ticket setting is cleared | Core - Inventory - Preserve refund amounts and keep returned inventory publicly sold out |
+> | SPT-5288 | Dashboard - Tickets - Extra inventory remains publicly sold out until the ticket setting is cleared | Core - Inventory - Increase ticket inventory without reopening public sales |
+> | SPT-5289 | Box Office - Exchanges - Exchanged inventory stays publicly sold out without changing the exchange credit | Core - Inventory - Preserve Exchange credit and keep returned inventory publicly sold out |
+> | SPT-5268 | [DELETE] Duplicate package shortage coverage — moved to SPT-4832, SPT-5265 and SPT-5266 | Core - Inventory - [DELETE] Duplicate package shortage coverage |
+
+### Approval, dry run and verification
+
+**Approved and applied:** the user explicitly approved the eight-folder and 34-case cleanup. The maintained suite script dry-ran and created the eight folders. The maintained case script then dry-ran the final batch against their assigned IDs and applied only **title and suite_id**. All 34 operations completed successfully.
+
+**Readback verified — 2026-10-30 19:26:47 UTC:** fetched every case again and confirmed its exact approved title and folder. Compared all other saved fields with the original definitions: descriptions, prerequisites, postconditions, every step/data/expected result, tags, both parameter representations, priority, severity, status, automation settings, custom fields, attachments and links remained unchanged. Existing step counts are 5–19. The grouped parameter rows in SPT-394, SPT-398, SPT-402 and SPT-3295 are preserved.
+
+Fetched all eight folders and checked their exact names, parent ID 625 and membership. Their counts total **34 unique original IDs**. The original parent name and its parent ID 592 are unchanged. SPT-5268 still exists with its [DELETE] marker; its historical coverage references remain below. This is verification of Qase organization and saved content, not a manual test run or a claim that the tested behavior passed.
+
+**Local note:** published case titles and current folder references below are aligned with Qase. Historical notes, local case labels, unpushed setup clarifications and test bodies are preserved. Temporary API snapshots, inspection copies, plans, receipts and helper files were removed after recording this result.
 
 ## Updated Requirements Checklist — 2026-10-01
 
@@ -243,6 +357,8 @@ Each active case is complete below. TC-01 is OFF; all other active cases have ON
 
 **Qase case:** [SPT-5307](https://app.qase.io/case/SPT-5307) — Core - Inventory (625). Created and read back on 2026-10-01; title, description, preconditions, postconditions, tags, parameters and all 8 steps match. No manual execution.
 
+**Current Qase folder:** [Public Availability and Settings](https://app.qase.io/project/SPT?suite=1241) (1241), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Purchase baselines:** [Single-day (SPT-3287)](https://app.qase.io/case/SPT-3287), [recurring (SPT-3288)](https://app.qase.io/case/SPT-3288), [free checkout (SPT-3290)](https://app.qase.io/case/SPT-3290), [attraction (SPT-3513)](https://app.qase.io/case/SPT-3513), [mobile app (SPT-4003)](https://app.qase.io/case/SPT-4003).
@@ -250,7 +366,7 @@ Each active case is complete below. TC-01 is OFF; all other active cases have ON
 > **Partial entry coverage:** [quantity-first (SPT-3512)](https://app.qase.io/case/SPT-3512), [calendar hosts (SPT-4979)](https://app.qase.io/case/SPT-4979), [website handoff (SPT-4981)](https://app.qase.io/case/SPT-4981), [SDK modal/embedded (SPT-4982)](https://app.qase.io/case/SPT-4982), [native Saved (SPT-2024)](https://app.qase.io/case/SPT-2024). These stop before completing the purchase from each named entry; legacy calendar remains a gap.
 > **Match scope:** SPT-402 now keeps the global switch OFF and covers actual-zero rejection plus adding/removing an available comparison ticket. Both types have Public sold out = Yes to detect an effect from the disabled feature. It does not complete a purchase or cover all 17 PurchaseEntry values; retain TC-01 for that proof.
 
-**Title:** Core - Tickets - Global switch OFF preserves public purchases despite a saved public-sellout value
+**Title:** Core - Inventory - Complete public purchases when the public-sellout switch is off
 
 **Description:** Buy an available ticket even though its saved public-sellout value is Yes. With the switch disabled, that value must not affect public purchases; actually exhausted tickets stay unavailable.
 
@@ -318,6 +434,8 @@ PurchaseEntry: EventDetailSingleDay, EventDetailRecurring, RecurringOccurrenceLi
 
 **Qase case:** [SPT-5230](https://app.qase.io/case/SPT-5230) — Core - Inventory (suite 625). Created from TC-02; all 8 steps, 17 PurchaseEntry values, description/setup tables and tags verified after creation. Title synced from Qase on 2026-09-15; all 8 steps, 17 PurchaseEntry values and tags still match. No Qase fields were changed during this merge.
 
+**Current Qase folder:** [Public Availability and Settings](https://app.qase.io/project/SPT?suite=1241) (1241), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Purchase baselines:** [Single-day (SPT-3287)](https://app.qase.io/case/SPT-3287), [recurring (SPT-3288)](https://app.qase.io/case/SPT-3288), [free checkout (SPT-3290)](https://app.qase.io/case/SPT-3290), [attraction (SPT-3513)](https://app.qase.io/case/SPT-3513), [mobile app (SPT-4003)](https://app.qase.io/case/SPT-4003).
@@ -325,7 +443,7 @@ PurchaseEntry: EventDetailSingleDay, EventDetailRecurring, RecurringOccurrenceLi
 > **Partial entry coverage:** [quantity-first (SPT-3512)](https://app.qase.io/case/SPT-3512), [calendar hosts (SPT-4979)](https://app.qase.io/case/SPT-4979), [website handoff (SPT-4981)](https://app.qase.io/case/SPT-4981), [SDK modal/embedded (SPT-4982)](https://app.qase.io/case/SPT-4982), [native Saved (SPT-2024)](https://app.qase.io/case/SPT-2024). These stop before completing the purchase from each named entry; legacy calendar remains a gap.
 > **Match scope:** existing purchase cases cover the available control and existing actual-zero rejection. **No direct forced-sellout equivalent found** for the TRUE target; keep the ON-specific assertions here.
 
-**Title:** Core - Tickets - Verify that Force Public Sold Out is Respected
+**Title:** Core - Inventory - Block tickets marked Show as sold out publicly
 
 **Description:** A ticket marked Show as sold out publicly cannot be selected, even with inventory remaining. Buy an available comparison ticket through the same entry point.
 
@@ -392,9 +510,11 @@ PurchaseEntry: EventDetailSingleDay, EventDetailRecurring, RecurringOccurrenceLi
 
 **Qase case:** [SPT-5282](https://app.qase.io/case/SPT-5282) — Core - Inventory (625). Created and verified on 2026-09-22; no manual execution.
 
+**Current Qase folder:** [Inventory Changes and Returns](https://app.qase.io/project/SPT?suite=1246) (1246), under Core - Inventory.
+
 > **Qase regression references (note only):** [Void event tickets and return inventory (SPT-938)](https://app.qase.io/case/SPT-938) is a related regression baseline identified in the prior Qase scan. The forced-sellout and reopening sequence is the addition here.
 
-**Title:** Dashboard - Tickets - Voiding an internal sale keeps public sales closed until the ticket setting is cleared
+**Title:** Core - Inventory - Return voided ticket inventory without reopening public sales
 
 **Description:** Void the internal sale that used the last ticket. Returned inventory stays publicly sold out until the organizer clears Show as sold out publicly.
 
@@ -475,11 +595,13 @@ Uncheck **Show as sold out publicly**, select Next and Save Event, and reopen th
 
 **Qase case:** [SPT-5301](https://app.qase.io/case/SPT-5301) — Core - Inventory (625). Created and read back on 2026-10-01; title, description, preconditions, postconditions, tags, parameters and all 7 steps match. No manual execution.
 
+**Current Qase folder:** [Public Availability and Settings](https://app.qase.io/project/SPT?suite=1241) (1241), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Partial match:** [Restore availability by increasing inventory (SPT-766)](https://app.qase.io/case/SPT-766) and [actual sold-out rejection (SPT-402)](https://app.qase.io/case/SPT-402). These do not clear the checkbox; increasing capacity is a different change. Keep the positive/zero-remaining checks here.
 
-**Title:** Core - Tickets - Clearing public sellout respects the actual remaining tickets
+**Title:** Core - Inventory - Clear public sellout without reopening exhausted tickets
 
 **Description:** Clear Show as sold out publicly. The ticket becomes purchasable only when actual inventory remains.
 
@@ -525,11 +647,13 @@ RemainingTickets: Available, Empty
 
 **Qase case:** [SPT-5303](https://app.qase.io/case/SPT-5303) — Core - Inventory (625). Created and read back on 2026-10-01; title, description, preconditions, postconditions, tags, parameters and all 11 steps match. No manual execution.
 
+**Current Qase folder:** [Public Availability and Settings](https://app.qase.io/project/SPT?suite=1241) (1241), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Partial matches:** [Inventory recovery (SPT-766)](https://app.qase.io/case/SPT-766) and [calendar availability (SPT-3505)](https://app.qase.io/case/SPT-3505). Neither clears one stocked type’s public-sellout setting or proves the event reopens after 25 minutes.
 
-**Title:** Core - Events - Reopen an event by clearing public sellout on one ticket type with inventory
+**Title:** Core - Inventory - Reopen an event when one stocked ticket type becomes available
 
 **Description:** Clear Show as sold out publicly on one available ticket type. It becomes selectable, and the event reopens after 25 minutes; other sold-out types stay unavailable.
 
@@ -570,11 +694,13 @@ RemainingTickets: Available, Empty
 
 **Qase case:** [SPT-5300](https://app.qase.io/case/SPT-5300) — Core - Inventory (625). Created and read back on 2026-10-01; title, description, preconditions, postconditions, tags, parameters and all 15 steps match. No manual execution.
 
+**Current Qase folder:** [Public Availability and Settings](https://app.qase.io/project/SPT?suite=1241) (1241), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **No direct inheritance-setting case found.** [Recurring public purchase (SPT-3288)](https://app.qase.io/case/SPT-3288) is a purchase baseline; it does not prove checkbox inheritance or reopening only one occurrence.
 
-**Title:** Dashboard - Events - Apply public sellout to matching recurring ticket types and reopen one occurrence
+**Title:** Core - Inventory - Apply public sellout to recurring dates and reopen one date
 
 **Description:** Enable Show as sold out publicly on a recurring event’s parent ticket type. Matching types on both dates inherit it; clearing it on one date reopens only that occurrence.
 
@@ -655,11 +781,13 @@ Leave the event editor without saving; the original saved setting remains unchan
 
 **Qase case:** [SPT-5302](https://app.qase.io/case/SPT-5302) — Core - Inventory (625). Created and read back on 2026-10-01; title, description, preconditions, postconditions, tags, parameters and all 6 steps match. No manual execution.
 
+**Current Qase folder:** [Public Availability and Settings](https://app.qase.io/project/SPT?suite=1241) (1241), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Partial matches:** [Event/timeslot sold-out state (SPT-402)](https://app.qase.io/case/SPT-402), [calendar availability (SPT-3505)](https://app.qase.io/case/SPT-3505) and [discovery indicators (SPT-214)](https://app.qase.io/case/SPT-214). None verifies forced/actual/mixed aggregation after 25 minutes.
 
-**Title:** Core - Events - Show the event as sold out when every public ticket type is unavailable
+**Title:** Core - Inventory - Show an event as sold out when all ticket types are unavailable
 
 **Description:** After 25 minutes, an event with every public ticket type unavailable shows sold out on its public page, event widget, organizer calendar and discovery result.
 
@@ -705,11 +833,13 @@ SelloutReason: AllForced, AllEmpty, Mixed
 
 **Qase case:** [SPT-5758](https://app.qase.io/case/SPT-5758) — Core - Inventory (625). Created and read back on 2026-10-22; title, description, preconditions, postconditions, tags, parameters and all 8 steps match. No manual execution.
 
+**Current Qase folder:** [Assigned Seating](https://app.qase.io/project/SPT?suite=1242) (1242), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Related regression:** [Public seat-map purchase (SPT-217)](https://app.qase.io/case/SPT-217), [exclude unavailable seats (SPT-2935)](https://app.qase.io/case/SPT-2935) and [attraction seating purchase (SPT-4049)](https://app.qase.io/case/SPT-4049). **Gap:** an unoccupied seat whose only ticket type is exhausted or forced sold out; unavailable-seat checks do not prove this type-level state.
 
-**Title:** Core - Assigned Seating - Prevent selection of a seat whose only ticket type is sold out
+**Title:** Core - Inventory - Block a seat when its only ticket type is sold out
 
 **Description:** An unoccupied seat cannot be selected when its only ticket type is publicly sold out or has no inventory. Buy a different available seat to check that seat selection still works.
 
@@ -769,11 +899,13 @@ SeatEntry: EventDetailMap, DirectSeatingPage, EventWidgetMap, AttractionSeatMap,
 
 **Qase case:** [SPT-5236](https://app.qase.io/case/SPT-5236) — Core - Inventory (suite 625). Updated and read back on 2026-09-21: clearer ON-only wording, both ON scenarios, all five purchase entries, all 11 steps, description, preconditions and postconditions match. Suite and tags are unchanged. No execution result recorded.
 
+**Current Qase folder:** [Assigned Seating](https://app.qase.io/project/SPT?suite=1242) (1242), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Related regression:** [Multiple ticket types on a seat (SPT-217)](https://app.qase.io/case/SPT-217), [best available with multiple types (SPT-2927)](https://app.qase.io/case/SPT-2927) and [attraction seating purchase (SPT-4049)](https://app.qase.io/case/SPT-4049). **Gap:** mixed available/sold-out types on the same seat and the sold-out option’s visible marking.
 
-**Title:** Core - Assigned Seating - Buy the available ticket type when another type for the same seat is sold out
+**Title:** Core - Inventory - Buy an available ticket type for a seat shared with a sold-out type
 
 **Description:** Buy available ticket type A on a seat shared with sold-out type B. The seat stays selectable, but B must show Sold Out and cannot be purchased.
 
@@ -836,11 +968,13 @@ SeatEntry: EventDetailMap, DirectSeatingPage, EventWidgetMap, AttractionSeatMap,
 
 **Qase case:** [SPT-5237](https://app.qase.io/case/SPT-5237) — Core - Inventory (suite 625). Updated and read back on 2026-09-21: switch ON is a prerequisite; all 9 steps, title, description, preconditions and postconditions match. The user’s SeatHost-only parameters, suite and tags are preserved. No execution result recorded.
 
+**Current Qase folder:** [Assigned Seating](https://app.qase.io/project/SPT?suite=1242) (1242), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Reusable best-available baselines:** [Single ticket type (SPT-2926)](https://app.qase.io/case/SPT-2926), [multiple ticket types (SPT-2927)](https://app.qase.io/case/SPT-2927), [exclude unavailable seats (SPT-2935)](https://app.qase.io/case/SPT-2935) and [excess quantity (SPT-2934)](https://app.qase.io/case/SPT-2934). **Gap:** forced ticket-type exclusion while actual seat inventory remains. Run only source-supported platform paths.
 
-**Title:** Core - Assigned Seating - Exclude publicly sold-out ticket types from best-available seating
+**Title:** Core - Inventory - Exclude publicly sold-out types from best-available seating
 
 **Description:** Best-available seating suggests seats after the customer chooses a ticket type and quantity. Buy available type A; publicly sold-out type B must not enter the cart.
 
@@ -891,12 +1025,14 @@ SeatHost: PublicPage, EventWidget, MobileApp
 
 **Qase case:** [SPT-5305](https://app.qase.io/case/SPT-5305) — Core - Inventory (625). Created and read back on 2026-10-01; title, description, preconditions, postconditions, tags, parameters and all 10 steps match. No manual execution.
 
+**Current Qase folder:** [Checkout and In-Person Sales](https://app.qase.io/project/SPT?suite=1244) (1244), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Reusable staff baselines:** [Single-day sale (SPT-4066)](https://app.qase.io/case/SPT-4066) and [recurring sale (SPT-4069)](https://app.qase.io/case/SPT-4069) include Web Box Office and Electron. Neither sets the public-sellout value explicitly.
 > **Separate attraction entry, partial:** [Staff attraction calendar (SPT-1077)](https://app.qase.io/case/SPT-1077) stops at basket addition; it does not replace a completed sale from that entry.
 
-**Title:** Box Office - Tickets - Sell an available ticket despite its public-sellout setting
+**Title:** Core - Inventory - Complete a web or desktop ticket sale despite public sellout
 
 **Description:** Complete an in-person cash sale of a publicly sold-out ticket with inventory remaining. Verify one transaction, one ticket and the inventory reduction.
 
@@ -991,12 +1127,14 @@ StaffEventEntry: SingleDay, RecurringDate, AttractionCalendar
 
 **Qase case:** [SPT-5306](https://app.qase.io/case/SPT-5306) — Core - Inventory (625). Created and read back on 2026-10-01; title, description, preconditions, postconditions, tags, parameters and all 9 steps match. No manual execution.
 
+**Current Qase folder:** [Checkout and In-Person Sales](https://app.qase.io/project/SPT?suite=1244) (1244), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Reusable POS baseline:** [Event ticket sale (SPT-2650)](https://app.qase.io/case/SPT-2650); [Square reader purchase (SPT-2688)](https://app.qase.io/case/SPT-2688) covers a paid-card variant, not this cash method.
 > **Mobile Box Office gap:** [Staff guest-information requirement (SPT-3251)](https://app.qase.io/case/SPT-3251) reaches validation/cancellation only. It does not provide a completed native Mobile Box Office ticket-sale baseline.
 
-**Title:** Box Office - Tickets - Complete a mobile in-person sale of a publicly sold-out ticket
+**Title:** Core - Inventory - Complete a mobile or POS ticket sale despite public sellout
 
 **Description:** Complete an in-person cash sale in Mobile Box Office or native POS. The ticket remains sellable internally despite being publicly sold out.
 
@@ -1085,11 +1223,13 @@ StaffEntry: MobileBoxOffice, NativePos
 
 **Qase case:** [SPT-5238](https://app.qase.io/case/SPT-5238) — Core - Inventory (suite 625). Updated and verified in Qase on 2026-09-21: global switch ON is a prerequisite, SwitchState is removed, and description, preconditions and postconditions match. All four InPersonSeatEntry values, seven steps, title, tags and suite are preserved. No execution result recorded.
 
+**Current Qase folder:** [Assigned Seating](https://app.qase.io/project/SPT?suite=1242) (1242), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Reusable in-person seating baselines:** [Web/Electron map purchase (SPT-4074)](https://app.qase.io/case/SPT-4074) and [Box Office best-available purchase (SPT-4075)](https://app.qase.io/case/SPT-4075); [shared-seat ownership and release (SPT-2357)](https://app.qase.io/case/SPT-2357) adds allocation regression. **Gap:** a distinct native Mobile Box Office journey and explicit saved public-sellout setup.
 
-**Title:** Box Office - Assigned Seating - Complete an in-person cash sale of a publicly sold-out ticket
+**Title:** Core - Inventory - Complete an in-person seated sale despite public sellout
 
 **Description:** Complete an in-person cash sale of a publicly sold-out ticket with an available seat. The issued seat must be unavailable for another sale.
 
@@ -1187,11 +1327,13 @@ KioskEvent: SingleDay, Recurring
 
 **Qase case:** [SPT-5304](https://app.qase.io/case/SPT-5304) — Core - Inventory (625). Created and read back on 2026-10-01; title, description, preconditions, postconditions, tags, parameters and all 7 steps match. No manual execution.
 
+**Current Qase folder:** [Checkout and In-Person Sales](https://app.qase.io/project/SPT?suite=1244) (1244), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Partial matches:** [Widget cart reopen/handoff (SPT-2439)](https://app.qase.io/case/SPT-2439), [cross-widget basket persistence (SPT-2435)](https://app.qase.io/case/SPT-2435) and [expired/empty cart recovery, including native app (SPT-4928)](https://app.qase.io/case/SPT-4928). None completes checkout after this ticket-setting change. TC-19 now includes the native cart-icon and legacy express-widget checkout attempts; their execution remains unverified.
 
-**Title:** Core - Checkout - Reject an existing cart after its ticket type is marked publicly sold out
+**Title:** Core - Inventory - Reject an existing cart after its ticket becomes publicly sold out
 
 **Description:** Add a ticket to the cart, then mark it publicly sold out. Resuming checkout must fail without issuing an order.
 
@@ -1241,11 +1383,13 @@ ResumeEntry: OpenWebCheckout, WidgetCart, MobileAppCart, ExpressWidget
 
 **Qase case:** [SPT-5283](https://app.qase.io/case/SPT-5283) — Core - Inventory (625). Created on 2026-09-22; browser mixed-link purchase and the paid abandoned-cart push scenario pushed and verified on 2026-09-23. No manual execution.
 
+**Current Qase folder:** [Checkout and In-Person Sales](https://app.qase.io/project/SPT?suite=1244) (1244), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Closest regression match:** [Checkout-link unavailable items (SPT-4802)](https://app.qase.io/case/SPT-4802) covers empty/existing carts and all/partially unavailable extras. [Create checkout link (SPT-4241)](https://app.qase.io/case/SPT-4241) supplies related setup. **Gaps:** explicit switch-ON setup and completed purchase. The app entry is an abandoned-cart push sent after a recovery email; the email link opened in a phone browser is a web entry.
 
-**Title:** Core - Checkout - A checkout link cannot bypass an active public sellout
+**Title:** Core - Inventory - Block publicly sold-out tickets from checkout and recovery links
 
 **Description:** Open a checkout link that requests a publicly sold-out ticket. In a browser, use an ordinary link; in the Showpass app, tap the abandoned-cart push sent after a recovery email. The sold-out ticket must stay out of checkout while an available ticket remains purchasable.
 
@@ -1350,12 +1494,14 @@ TicketOffer: AddOn, Upgrade
 
 **Qase case:** [SPT-5284](https://app.qase.io/case/SPT-5284) — Core - Inventory (625). Created and verified on 2026-09-22; no manual execution.
 
+**Current Qase folder:** [Holds and Waitlists](https://app.qase.io/project/SPT?suite=1245) (1245), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Closest existing-hold match:** [Held basket checkout integrity (SPT-1255)](https://app.qase.io/case/SPT-1255); [regular hold checkout (SPT-1249)](https://app.qase.io/case/SPT-1249) also completes staff checkout.
 > **Related group-sale baselines:** [General-admission group sale (SPT-1291)](https://app.qase.io/case/SPT-1291) and [assigned-seat group sale (SPT-1307)](https://app.qase.io/case/SPT-1307) create a new group sale. They do not prove checkout of an existing group allocation. Explicit switch/saved-value setup remains local.
 
-**Title:** Box Office - Holds - Complete an allocated hold sale while public sellout is enabled
+**Title:** Core - Inventory - Complete an allocated Box Office hold sale despite public sellout
 
 **Description:** Sell a previously reserved ticket from Box Office → Holds. Marking it publicly sold out must not block the existing allocation.
 
@@ -1402,11 +1548,13 @@ HeldSale: BasicHold, GroupSale
 
 **Qase case:** [SPT-5285](https://app.qase.io/case/SPT-5285) — Core - Inventory (625). Created and verified on 2026-09-22; no manual execution.
 
+**Current Qase folder:** [Holds and Waitlists](https://app.qase.io/project/SPT?suite=1245) (1245), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Related allocated-hold cases:** [Regular hold checkout (SPT-1249)](https://app.qase.io/case/SPT-1249), [branded hold link (SPT-1253)](https://app.qase.io/case/SPT-1253) and [complimentary basic hold purchase (SPT-5104)](https://app.qase.io/case/SPT-5104). Regular hold coverage emphasizes staff checkout; branded coverage stops at checkout; the complimentary case is a separate payment variant. None explicitly covers this public-sellout exception.
 
-**Title:** Public Checkout - Holds - Purchase allocated tickets while public sellout is enabled
+**Title:** Core - Inventory - Complete an allocated hold-link purchase despite public sellout
 
 **Description:** Buy a ticket through its existing hold link while ordinary public selection is blocked. A hold reserves tickets for a customer before purchase.
 
@@ -1453,9 +1601,11 @@ HoldLink: Basic, Branded
 
 **Qase case:** [SPT-5263](https://app.qase.io/case/SPT-5263) — Core - Inventory (suite 625). Synced the user-edited case and added the PackageShape explanation table on 2026-09-21. The `SingleEvent` and `MultipleEvents` descriptions below now use recorded included-ticket counts; this local clarification from the 2026-09-22 client review has not been pushed to Qase. No execution result recorded.
 
+**Current Qase folder:** [Packages and Bundles](https://app.qase.io/project/SPT?suite=1243) (1243), under Core - Inventory.
+
 > **Qase regression references (note only):** [Preset purchase (SPT-429)](https://app.qase.io/case/SPT-429), [calendar package purchase (SPT-3860)](https://app.qase.io/case/SPT-3860), and [child-capacity limits (SPT-4832)](https://app.qase.io/case/SPT-4832) remain related baselines. TC-24 is the ON-only acceptance case linked above.
 
-**Title:** Core - Packages - Buy a preset package with publicly sold-out included tickets after reopening its parent
+**Title:** Core - Inventory - Buy a preset package with publicly sold-out included tickets
 
 **Description:** A preset package supplies fixed included tickets. A customer cannot add the package while its own public-sellout checkbox is checked. Clearing only the package checkbox allows purchase even while the included tickets remain publicly sold out. Quantities and included event dates must match the configured package.
 
@@ -1520,11 +1670,13 @@ PackageShape: SingleEvent, MultipleEvents, NestedPreset, ReverseRatio
 
 **Qase case:** [SPT-5756](https://app.qase.io/case/SPT-5756) — Core - Inventory (625). Created and read back on 2026-10-22; title, description, preconditions, postconditions, tags, parameters and all 5 steps match. No manual execution.
 
+**Current Qase folder:** [Holds and Waitlists](https://app.qase.io/project/SPT?suite=1245) (1245), under Core - Inventory.
+
 > **Qase regression references (note only)**
 >
 > **Reusable waitlist baselines:** [Single-day signup (SPT-2880)](https://app.qase.io/case/SPT-2880), [public-calendar signup (SPT-3514)](https://app.qase.io/case/SPT-3514) and [widget-to-web signup (SPT-3520)](https://app.qase.io/case/SPT-3520). Keep the ON prerequisite and forced-sold-out setup here; later automatic fulfillment is not covered by these signup cases.
 
-**Title:** Public Checkout - Waitlists - Keep waitlist registration available for a publicly sold-out ticket type
+**Title:** Core - Inventory - Join a waitlist without issuing a publicly sold-out ticket
 
 **Description:** Join the waitlist for a publicly sold-out ticket that still has inventory. Joining records interest in a later release; it must not issue a ticket.
 
@@ -1557,9 +1709,11 @@ PackageShape: SingleEvent, MultipleEvents, NestedPreset, ReverseRatio
 
 **Qase case:** [SPT-5286](https://app.qase.io/case/SPT-5286) — Core - Inventory (625). Created and verified on 2026-09-22; no manual execution.
 
+**Current Qase folder:** [Inventory Changes and Returns](https://app.qase.io/project/SPT?suite=1246) (1246), under Core - Inventory.
+
 > **Qase regression references (note only):** [Full invoice refund (SPT-946)](https://app.qase.io/case/SPT-946) and [Selected-item refund (SPT-4763)](https://app.qase.io/case/SPT-4763) are related baselines; the amount comparison and explicit public reopening are required here.
 
-**Title:** Dashboard - Tickets - Refund inventory stays publicly sold out until the ticket setting is cleared
+**Title:** Core - Inventory - Preserve refund amounts and keep returned inventory publicly sold out
 
 **Description:** Refund an internal sale after marking its ticket publicly sold out. The refund amount stays unchanged; returned inventory reopens only when the ticket checkbox is cleared.
 
@@ -1617,9 +1771,11 @@ Use TC-01 / SPT-402 for OFF regression and TC-02 for ON public-sellout behavior.
 
 **Qase case:** [SPT-5287](https://app.qase.io/case/SPT-5287) — Core - Inventory (625). Created and verified on 2026-09-22; no manual execution.
 
+**Current Qase folder:** [Holds and Waitlists](https://app.qase.io/project/SPT?suite=1245) (1245), under Core - Inventory.
+
 > **Qase regression references (note only):** [Held basket checkout (SPT-1255)](https://app.qase.io/case/SPT-1255) is related allocated-access coverage; this release-to-public-availability sequence is a separate case.
 
-**Title:** Box Office - Holds - Released inventory remains publicly sold out until the ticket setting is cleared
+**Title:** Core - Inventory - Return released hold inventory without reopening public sales
 
 **Description:** Release the hold reserving the last ticket. Returned inventory stays publicly sold out until the ticket checkbox is cleared.
 
@@ -1661,9 +1817,11 @@ Use TC-01 / SPT-402 for OFF regression and TC-02 for ON public-sellout behavior.
 
 **Qase case:** [SPT-5288](https://app.qase.io/case/SPT-5288) — Core - Inventory (625). Created and verified on 2026-09-22; no manual execution.
 
+**Current Qase folder:** [Inventory Changes and Returns](https://app.qase.io/project/SPT?suite=1246) (1246), under Core - Inventory.
+
 > **Qase regression references (note only):** [Increase inventory and restore availability (SPT-766)](https://app.qase.io/case/SPT-766) is the OFF/unforced baseline. The ON + checked outcome here must stay closed until the checkbox is cleared.
 
-**Title:** Dashboard - Tickets - Extra inventory remains publicly sold out until the ticket setting is cleared
+**Title:** Core - Inventory - Increase ticket inventory without reopening public sales
 
 **Description:** Increase a sold-out ticket type’s inventory. Public sales stay closed until Show as sold out publicly is cleared.
 
@@ -1703,9 +1861,11 @@ Use TC-01 / SPT-402 for OFF regression and TC-02 for ON public-sellout behavior.
 
 **Qase case:** [SPT-5289](https://app.qase.io/case/SPT-5289) — Core - Inventory (625). Created and verified on 2026-09-22; no manual execution.
 
+**Current Qase folder:** [Inventory Changes and Returns](https://app.qase.io/project/SPT?suite=1246) (1246), under Core - Inventory.
+
 > **Qase regression references (note only):** [Exchange price/quantity scenarios (SPT-1275)](https://app.qase.io/case/SPT-1275) and [Same-value cash exchange (SPT-4823)](https://app.qase.io/case/SPT-4823) are related baselines. This case adds retained public sellout and a same-order credit comparison.
 
-**Title:** Box Office - Exchanges - Exchanged inventory stays publicly sold out without changing the exchange credit
+**Title:** Core - Inventory - Preserve Exchange credit and keep returned inventory publicly sold out
 
 **Description:** Exchange an internal sale without changing its exchange credit. Returned inventory stays publicly sold out until the original ticket’s checkbox is cleared.
 
@@ -1757,9 +1917,11 @@ These cases use the global switch ON throughout. The organizer can check or clea
 
 **Qase case:** [SPT-5264](https://app.qase.io/case/SPT-5264) — Core - Inventory (625). Wording cleanup applied and verified on 2026-09-21. Steps, parameters, title, platforms and tags preserved; no test execution recorded.
 
+**Current Qase folder:** [Packages and Bundles](https://app.qase.io/project/SPT?suite=1243) (1243), under Core - Inventory.
+
 > **Qase regression references (note only):** [Custom package purchase (SPT-3334)](https://app.qase.io/case/SPT-3334) is a related baseline from the earlier scan. This case adds the parent/child switch-ON rule, required choice and replacement proof.
 
-**Title:** Public Checkout - Packages - Complete custom ticket choices without treating included public sellout as exhausted inventory
+**Title:** Core - Inventory - Select custom package tickets that are publicly sold out
 
 **Description:** Reopen a custom package while its included tickets remain publicly sold out. A required choice must be selected, and changing A to B must issue only B.
 
@@ -1806,9 +1968,11 @@ Parent = package ticket. Children = included tickets.
 
 **Qase case:** [SPT-5265](https://app.qase.io/case/SPT-5265) — Core - Inventory (625). Updated and verified on 2026-09-22 with the last eligible seat check; both SeatingPackage values and 14 steps remain. No manual test executed.
 
+**Current Qase folder:** [Packages and Bundles](https://app.qase.io/project/SPT?suite=1243) (1243), under Core - Inventory.
+
 > **Qase regression references (note only):** [Assigned seating purchase (SPT-217)](https://app.qase.io/case/SPT-217) and [shared-seat ownership (SPT-2357)](https://app.qase.io/case/SPT-2357) are related coverage, not an exact package-override match.
 
-**Title:** Public Checkout - Packages - Preserve assigned seats when included tickets are publicly sold out
+**Title:** Core - Inventory - Keep package seats correct and prevent a second sale of occupied seats
 
 **Description:** Buy a seated package after clearing its parent checkbox. Included tickets remain publicly sold out. Buy the last eligible seat, then check that another package cannot take an occupied seat or complete without an available seat.
 
@@ -1864,9 +2028,11 @@ SeatingPackage: PresetSameSeat, CustomChosenSeats
 
 **Qase case:** [SPT-5266](https://app.qase.io/case/SPT-5266) — Core - Inventory (625). Updated and verified on 2026-09-22 with clearer bundle setup and a final product-shortage check; both BundleContents values and 17 steps remain. No manual test executed.
 
+**Current Qase folder:** [Packages and Bundles](https://app.qase.io/project/SPT?suite=1243) (1243), under Core - Inventory.
+
 > **Qase regression references (note only):** [Preset package purchase (SPT-429)](https://app.qase.io/case/SPT-429) supplies a related baseline. No exact ticket + product public-sellout case was established by the earlier Qase scan.
 
-**Title:** Core - Packages - Keep ticket and product contents together when reopening a publicly sold-out bundle
+**Title:** Core - Inventory - Keep ticket and product bundles complete without overselling products
 
 **Description:** Reopen a ticket + product bundle and buy 3. Check its included items and product stock. Then leave less product stock than another bundle requires and confirm another bundle cannot be purchased.
 
@@ -1929,9 +2095,11 @@ BundleContents: TicketAndProduct, TicketChildrenAndProduct
 
 **Qase case:** [SPT-5267](https://app.qase.io/case/SPT-5267) — Core - Inventory (625). Wording cleanup applied and verified on 2026-09-21. Steps, parameters, title, platforms and tags preserved; no test execution recorded.
 
+**Current Qase folder:** [Packages and Bundles](https://app.qase.io/project/SPT?suite=1243) (1243), under Core - Inventory.
+
 > **Qase regression references (note only):** [Existing-cart recovery (SPT-4928)](https://app.qase.io/case/SPT-4928) cover related cart recovery. This is a separate local package final-purchase check; no exact Qase match is claimed.
 
-**Title:** Public Checkout - Packages - Reject a package at checkout when its parent becomes publicly sold out
+**Title:** Core - Inventory - Reject checkout when a package becomes publicly sold out
 
 **Description:** Mark a package publicly sold out after the customer adds it to the cart. Final checkout must fail without issuing any part of the package.
 
@@ -1984,11 +2152,23 @@ PackageContents: PresetTickets, CustomTickets, TicketAndProduct
 
 **Qase case:** [SPT-5268](https://app.qase.io/case/SPT-5268) — Core - Inventory (625). Retired from execution; its Qase title was marked `[DELETE]` on 2026-09-22. The case still exists in Qase, with its original steps and parameters. No manual test was executed.
 
+**Current Qase folder:** [Retired - Do Not Run](https://app.qase.io/project/SPT?suite=1247) (1247), under Core - Inventory.
+
 > **Qase regression references (note only):** [Package child-capacity constraints (SPT-4832)](https://app.qase.io/case/SPT-4832) is the related inventory baseline. Product and seat shortages require their own component setup.
 
 > **Coverage moved:** SPT-5266 checks a product shortage after its successful ticket + product sale. SPT-5265 checks that no eligible seat remains after its successful seated package sale. SPT-4832 covers preset/custom ticket shortages. Do not run TC-35 separately.
 
-**Title:** [DELETE] Duplicate package shortage coverage — moved to SPT-4832, SPT-5265 and SPT-5266
+**Replacement coverage checked — 2026-10-30:** read the full live definitions of SPT-5268, SPT-4832, SPT-5265 and SPT-5266 through the documented read-only Qase API at 19:43:59 UTC. The principal shortage behaviors have existing cases, but SPT-5268 is not an exact duplicate of the three combined definitions:
+
+| SPT-5268 scenario | Existing case and explicit check | Limits of the replacement |
+| --- | --- | --- |
+| PresetTicket / CustomRequiredChoice | [SPT-4832](https://app.qase.io/case/SPT-4832), steps 2–3: exhaust included ticket/event inventory for Preset and Custom packages, then block another package without overselling. | Does not explicitly set global enable_force_public_sold_out ON with the package unchecked and included tickets checked. It does not map supported client/view combinations or explicitly check cart/order history for partial orders. |
+| BundledProduct | [SPT-5266](https://app.qase.io/case/SPT-5266), steps 15–17: neither variant can supply the required two units; another purchase is blocked, with no new ticket/product or second/product-only order. Same public web/app coverage, plus widgets. | One variant is exhausted and the other has one unit. This proves insufficient stock, while SPT-5268 specifies zero stock in every eligible variant. |
+| AssignedSeat | [SPT-5265](https://app.qase.io/case/SPT-5265), steps 8 and 14: reject an occupied seat and another package purchase after the last eligible seats are bought; no second order. Same public web/app coverage and public-sellout setup. | Tests exhaustion after a successful purchase, rather than starting the case with no eligible seats. |
+
+**Decision supported by this read:** reuse the three existing cases for the main shortage checks. Do not claim that every setup, client and assertion from SPT-5268 has an exact active replacement. Its retained definition preserves those details for a future coverage decision. This check changed no Qase records and executed no product tests. Temporary API output and its helper were deleted after recording the comparison.
+
+**Title:** Core - Inventory - [DELETE] Duplicate package shortage coverage
 
 **Description:** Attempt to buy a package with one required ticket, product or seat unavailable. Actual shortages must still block purchase, with no partial order or oversale.
 
@@ -2038,9 +2218,11 @@ UnavailableComponent: PresetTicket, CustomRequiredChoice, BundledProduct, Assign
 
 **Qase case:** [SPT-5269](https://app.qase.io/case/SPT-5269) — Core - Inventory (625). Wording cleanup applied and verified on 2026-09-21. Steps, parameters, title, platforms and tags preserved; no test execution recorded.
 
+**Current Qase folder:** [Packages and Bundles](https://app.qase.io/project/SPT?suite=1243) (1243), under Core - Inventory.
+
 > **Qase regression references (note only):** [Preset package purchase (SPT-429)](https://app.qase.io/case/SPT-429) and existing Box Office sale baselines are related coverage. This is a local package-specific in-person case.
 
-**Title:** Box Office - Packages - Complete an in-person package sale despite public sellout
+**Title:** Core - Inventory - Complete an in-person package sale despite public sellout
 
 **Description:** Complete an in-person cash sale while the package and included tickets remain publicly sold out. Check the issued contents, inventory and continued public restriction.
 
@@ -2094,9 +2276,11 @@ PackageContents: PresetTickets, CustomTickets, TicketAndProduct
 
 **Qase case:** [SPT-5757](https://app.qase.io/case/SPT-5757) — Core - Inventory (625). Created and read back on 2026-10-22; title, description, preconditions, postconditions, tags, parameters and all 19 steps match. No manual execution.
 
+**Current Qase folder:** [Holds and Waitlists](https://app.qase.io/project/SPT?suite=1245) (1245), under Core - Inventory.
+
 **Coverage note:** Published as [SPT-5757](https://app.qase.io/case/SPT-5757). Complements TC-25's signup-only check. Related existing baselines: [SPT-4231](https://app.qase.io/case/SPT-4231), [SPT-2882](https://app.qase.io/case/SPT-2882) and [SPT-4235](https://app.qase.io/case/SPT-4235). Those cases do not explicitly retain forced public sellout throughout this flow.
 
-**Title:** Core - Waitlists - Allocate and sell a waitlisted ticket while public sales remain closed
+**Title:** Core - Inventory - Allocate waitlist inventory and complete purchase while public sales stay closed
 
 **Description:** A customer joins a waitlist while one actual ticket remains and public sales are forced closed. The organizer adds one ticket through Allocate Inventory. The customer receives a reserved purchase offer and buys one ticket; the other actual ticket remains available internally while ordinary public purchase stays closed. A pending waitlist request records interest; an allocated offer reserves a real ticket for purchase.
 
@@ -2279,7 +2463,7 @@ Wording cleanup saved and verified on 2026-09-21; current title, tags and user-s
 
 Source: backend `apps/main/templates/tickets/dialogs/_edit-ticket-type.html` wraps the checkbox and explanatory text in the `enable_force_public_sold_out` switch. Public ticket serialization and basket enforcement remain covered by B4/B5. No live behavior was executed.
 
-**Title:** Core - Inventory - Verify sold-out event ticket states across sales platforms
+**Title:** Core - Inventory - Respect actual stock when the public-sellout switch is off
 
 **Description:** With the switch disabled, the ticket editor hides Show as sold out publicly. An administrator has prepared Public sold out = Yes on both the exhausted and available comparison types. The available ticket must enter the cart; actual zero inventory must still block selection. No payment is submitted.
 

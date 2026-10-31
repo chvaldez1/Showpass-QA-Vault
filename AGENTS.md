@@ -179,6 +179,8 @@ When user action or judgment is requested:
 
 Use [[05 Tooling/qasectl]] as the required operating guide for Qase reads, gap analysis, creates, and updates. Use [[06 Prompts/Showpass Qase Gap Analysis]] for gap-analysis procedure and output: focused, standalone Qase-ready cases first, compact analysis and evidence afterward. Split distinct behaviors instead of combining several tests into one large case.
 
+Apply [[05 Tooling/Qase Test Case Writing Rules#Package Events And Guest Information]] to package cases: the **parent event** sells the package ticket; **child events** are different events supplying included tickets. Make each case's event count, ticket relationships and guest-collection settings explicit. Use Inventory/Capacity wording. Keep readable Single-parameter value explanations in Description, preserve Platform/View as context, and verify the actual saved Single fields across every requested case. Review all fields and the canonical note after a setup correction; do not leave the clarification only in chat.
+
 To avoid repeated permission prompts and inconsistent Qase payloads:
 
 - Prefer one bulk Qase read plus local filtering for gap analysis. Use the read-only bulk search workflow in `05 Tooling/qasectl.md` and save temporary API output under `/private/tmp`.

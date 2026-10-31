@@ -89,3 +89,11 @@ Use [[00 Start Here/Showpass QA Handbook/14 Checkout and Post-Purchase Coverage|
 ## Maintained digital wallet branding coverage
 
 2026-10-16: [[03 Test Cases/Organizations/organization-settings-qase-test-cases#Branding → Deliverables → Digital Wallets|Digital Wallets cases and retained gaps]] records **SPT-5502–5513**, enhanced **SPT-65**, and unchanged-content **SPT-4742** in [Digital wallets (1179)](https://app.qase.io/project/SPT?suite=1179): 14 direct cases verified by full readback. Organization-only inherited pass refresh and a supported failure/retry recipe remain held; SPT-4899 is unchanged. Published definitions do not establish native pass appearance, admission or release readiness.
+
+## Maintained Orders wallet-saving coverage
+
+2026-10-30: [[03 Test Cases/Digital Wallets/orders-digital-wallet-qase-test-cases|Orders wallet cases and remaining gaps]] records **14 new cases SPT-5848–5861** and updates to **SPT-3794/4129** in [Wallet, Barcodes & Receipts (1015)](https://app.qase.io/project/SPT?suite=1015). All written fields were verified by readback. Ticket and product saving have separate selected-item and whole-order cases; one membership-saving case covers different benefits. Android app bulk saving and first-time NFC linking remain unresolved. No product tests were executed; publication does not prove installed-pass behavior or admission.
+
+The same parent suite now contains seven child folders, **1233–1239**, grouping all **30 cases** into Tickets, Products, Memberships, NFC Tickets, Orders and Receipts, Wallet Access and Recovery, and Pass Updates and Validity. The organization changed only case folder assignments; all 30 cases were read back and their content verified unchanged. The linked note records the exact destinations.
+
+All 30 titles now use **Core - User - My Orders -** followed by a short action matching the owning folder. This separately approved title-only cleanup was read back and verified; folder assignments and every other case field remained unchanged. The linked note retains the previous and published titles.

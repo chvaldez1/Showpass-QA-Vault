@@ -19,12 +19,26 @@ These rules define the Showpass Qase standard for user perspective, observable b
 
 Use this with [[06 Prompts/Showpass Qase Gap Analysis]], not ordinary new-case generation:
 
-1. Query Qase for existing coverage.
+1. Check the installed CLI and explain the read path as described below, then query Qase for existing coverage. For a linked suite, complete the suite-content review before choosing cases to split or add.
 2. Inspect backend source truth in `/Users/christianvaldez/Documents/Showpass/repos/web-app`.
 3. Inspect frontend behavior in `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`.
 4. Apply [[05 Tooling/Qase Test Case Writing Rules]] to any suggested new or updated cases.
 5. Deliver focused Qase-ready cases in the existing canonical note, with a brief coverage summary and supporting evidence afterward. Follow the dedicated gap-analysis workflow for layout and splitting.
 6. Do not push to Qase until the output is reviewed and signed off.
+
+### CLI And API Read Path
+
+This note describes the Qase workflow; it does not mean the installed `qasectl` binary supports every operation shown here. Before the first Qase read in a task, run `qasectl --help` and `qasectl testops --help`. Use an applicable CLI read command when one exists. Do not assume a case or suite command exists.
+
+If the installed CLI cannot read cases or suites, say so before using this note's read-only API workflow. Explain that it reads existing definitions and saves temporary local data without changing Qase. The documented API read is part of this workflow, not an additional write authorization. Prefer the documented command or an existing maintained reader; do not create a task-specific reader before checking those options. Honor an explicit CLI-only instruction, and do not bypass a rejected operation. Ask only when the user's constraint or an approval rejection requires a decision; do not request permission again after the user has authorized the read path.
+
+### Linked Suite Review
+
+When a gap-analysis link includes `suite=`, resolve its ID and name and read every direct case in that suite, including cases hidden by the link's search filter. A selected `case=` is the example or starting point, not the complete scope of a requested suite gap analysis. Identify child suites and read them when the requested feature includes them; state any exclusion. This does not broaden an exact-ID-only review.
+
+Read each case's full description, prerequisites, parameters and their mappings, actions, expected results, postconditions, tags and suite. A fetched snapshot, title list, or matching-case count is not a completed content review. Read manageable batches so truncated tool output does not silently omit fields.
+
+Before proposing splits or new cases, record the suite's reported count, cases retrieved, cases fully reviewed, and any unread IDs or fields. If content is unread, mark the comparison incomplete and any apparent absence Unknown. Then search the complete project snapshot locally for related coverage outside the suite, following the bulk workflow below. Keep existing cases, proposed changes and executed results distinct in progress updates.
 
 ## Exact-ID Review Workflow
 
@@ -164,6 +178,8 @@ The confirmation must state the exact scope that will be written and wait for an
 
 `Confirm scope: create only TC-1 from 03 Test Cases/Discounts/itemized-partial-apply-to-each-split-test-cases.md in suite 998. Do not create TC-2 through TC-14. Proceed?`
 
+A clear “push” or “apply” directly following an exact-ID, exact-field preview confirms that preview; do not ask for the same approval again. First finish the concrete local revision and dry run. A later change outside the confirmed scope needs a new preview and confirmation. Preserve the last verified publication record and clearly label pending revisions until readback succeeds.
+
 If the user confirms a bulk operation, dry-run every affected case and summarize the local draft label, real Qase case ID if updating, title, suite, tags, parameters, and step count before applying.
 
 ## Existing Case Change Classification
@@ -232,6 +248,8 @@ Prefer `05 Tooling/scripts/create-or-update-qase-case.mjs` over fragile inline s
 Local draft labels such as `TC-1` are not Qase case IDs. For new cases, do not pass `--update`; Qase assigns the new case ID during apply. Use `--update <case-id>` only when modifying an existing Qase case that already has a real Qase ID.
 
 Parameter caveat: the reusable script sends Markdown `Parameters` as Qase `params`, which Qase stores as separate single parameters. Keep execution context in the Description table by default, and use Markdown `Parameters` for setup values that change the behavior being verified. Use the smallest parameter set that remains clear. If grouped parameters are explicitly required, use an explicit `parameters` payload with `type: "group"` and verify the readback contains the intended group. Treat parameter-structure changes as high-risk writes: dry-run them, apply the smallest safe change, and confirm the stored structure and values from Qase before continuing.
+
+For a parameter review, enumerate every requested case ID. Compare the local Parameters block, every value's setup mapping inside Description, and Qase's saved `parameters` types/names/values (not only legacy `params`). State which cases have no parameters because they have one fixed setup. Do not answer a report that a named case has no Single parameters by checking only other parameterized cases. After an approved change, verify that each intended Single parameter is actually saved as `type: single`, every value survived, its Description mapping survived, and unrelated fields stayed unchanged. Do not introduce Platform/View parameters or new behavioral variations merely to populate an empty field.
 
 When simplifying a long scenario parameter into independent parameters, apply [[05 Tooling/Qase Test Case Writing Rules#Readable Parameters And Combination Accounting]]. Verify the stored parameters are separate collections with the intended values, confirm the Description still contains both setup mappings, and preserve the case's original assertions. Record the exact write scope and successful readback in the canonical note and linked handbook status; do not label unpublished customer drafts as published or definitions as executed tests.
 

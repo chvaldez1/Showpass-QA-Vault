@@ -133,6 +133,17 @@ Default to the minimum prerequisites needed to execute the case. When the user a
 - `TC-*` labels identify local drafts only. They may prefix Markdown headings and appear in coverage maps, but are not part of the Qase Title. Use `SPT-*` only for an existing Qase case.
 - Include any scenario mapping, expected field table, and setup needed by a parameter inside that case's Description or Preconditions. Do not leave assembly work for the person importing the cases.
 
+### Package Events And Guest Information
+
+- Define **parent event** as the event that sells the package ticket. Define **child events** as events other than the parent event that supply tickets included in the package. A package ticket, an included ticket, and an event are different records; name the one being configured or counted.
+- State the event layout inside each case: how many parent/child events are needed, which ticket types each supplies, how many tickets each package includes, and that the events belong to the same Organization when required. Do not leave “another event” or “included event” for the reader to interpret.
+- Included tickets may belong to the parent event when supported. Call this “included tickets from the parent event”; do not call the parent event a child event or silently exclude this existing coverage. Products and variants are included items, not child events.
+- For a regular-ticket-plus-package cart, say which event supplies the regular ticket and whether its ticket type is also included in the package. Do not confuse two ticket types with two events.
+- Map **Collect guest information per ticket** ON/OFF to each actual event. When its value must differ between parent and child, explicitly require different events; two ticket types on the same event cannot have independent values for an event-level setting.
+- Put each guest-information parameter's exact event settings, relevant hide-information/Delivery options, and original/new/final attendee-form counts in a short table in Description. Distinguish purchaser details from attendee forms. Do not combine every setting into independent parameters when that would permit invalid combinations.
+- Use **Inventory** for available ticket/product quantities and **Capacity** for event limits. Preserve exact visible control and existing folder names. Keep engineering phrases such as “logical package rows” and “removal targets” in source/automation notes; manual cases describe the package and included tickets that must remain or disappear.
+- When a child event supplies both included tickets and a separate regular ticket, account for both in that event's required Capacity. Keep their ticket-type Inventory and package membership distinct.
+
 ### Form Coverage And Case Purpose
 
 - Make the base form case explicit: list expected fields, dropdown choices, conditional visibility, and the Save control, then prove a meaningful edit survives reopening. `The page loads` is only an entry check.
@@ -182,6 +193,7 @@ For settings with multiple choices, also apply [[#Readable Parameters And Combin
 ## Plain-Language Wording
 
 - Use common Showpass product words that a venue employee, organizer, or customer would recognize.
+- Make each title identify the owning product area and the action/result that distinguishes the case. Preserve the agreed title prefix and align it with the owning suite/folder; do not hide the purpose behind a generic “verify package” title or put the full setup in the title.
 - Prefer direct phrases such as `selected items`, `full invoice amount`, `replacement invoice`, `delivery`, `payment type`, `payout`, and `settlement`.
 - Avoid dense QA or implementation wording in titles, descriptions, steps, and expected results, such as `scoping`, `artifacts`, `metadata`, `modifiers`, `handlers`, `ancestry`, `financial root`, or `external-payment` when a simpler phrase is accurate.
 - If a backend term is needed for accuracy, pair it with the user-visible concept and keep it short.
@@ -275,7 +287,8 @@ DeliveryMethod: Email, Print, WillCall
 
 ### Readable Parameters And Combination Accounting
 
-- Use short PascalCase values and map each to the exact product choice in a plain-language table inside Description or Preconditions. Short names are labels, not a substitute for setup instructions.
+- Use short PascalCase names and values. Keep the values as readable labels; put their explanations and exact setup in a plain-language table in **Description**, so they travel with the case into Qase. Preconditions may add essential preparation but must not be the only place a parameter is explained.
+- A Single parameter is a saved Qase field, not merely a table in Description. Review every named case, including a user's counterexample, rather than verifying only cases already known to contain parameters. A focused case with one fixed setup can have no parameters; do not add filler values or silently expand its scenarios to make the field nonempty.
 - When two controls vary independently and every selected pairing is supported, use separate parameters. Avoid concatenated names such as `NeverProcessingFee` when `ShippingRule = Never` and `FeeSelection = ProcessingOnly` say the same thing more clearly.
 - Use one scenario parameter when choices depend on each other or independent parameters would create unsupported combinations. Do not split dependent setup merely to shorten names.
 - Distinguish **each option covered** from **each combination covered**. Five selected shipping/fee pairs can include every option without covering all 16 pairs. List omitted combinations or classify them as deferred; never imply they were covered by another isolated case.
