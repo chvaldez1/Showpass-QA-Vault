@@ -15,7 +15,7 @@ tags:
 
 
 > [!important] Observe customer-visible release
-> Current source contains the Venue setting and My Orders behavior that the 2026-09-24 note marked absent. These cases are unexecuted and have not been sent to Qase. A generated barcode value is not proof of release; verify the customer can actually see/use the barcode. Follow [[00 Customer - How to Test]].
+> Current source contains the Venue setting and My Orders behavior that the 2026-09-24 note marked absent. These cases are unexecuted and have not been sent to Qase. A generated barcode value is not proof of release; verify the customer can actually see/use the barcode. Follow [[03 Test Cases/Refunds and Protection/Customer/00 Customer - How to Test]].
 
 **Qase publication review, 2026-10-05:** keep both cases local until the supported Admin/Organizer preparation for delayed delivery and a scheduled customer-visible release is documented. The backend releases tickets when their event enters the configured hours-before-start window, through `apps/tickets/managers/ticket_lifecycle.py` and `apps/tickets/services/fulfillment/activate_delayed_ticket_barcodes.py`; those background calls are not manual customer actions. An instruction to “schedule release” without its preparation steps is not enough for publication.
 

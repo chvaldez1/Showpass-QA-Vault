@@ -5,6 +5,7 @@ Use this prompt for a persistent checkout QA worker whose live job is to answer:
 > What should we automate next to reduce the most checkout money-movement risk?
 
 Related notes:
+- [[04 Automation/00 Index|Automation delivery and bounded planning]]
 - [[02 Feature QA/Checkout/Checkout Automation Mission Control]]
 - [[02 Feature QA/Checkout/Checkout Money Movement Risk Scoring]]
 - [[02 Feature QA/Checkout/Checkout Criticality From Jira Major Critical Export]]
@@ -15,6 +16,13 @@ Related notes:
 
 ```text
 Run the checkout recursive automation prioritization worker.
+
+Bounded planning rule (2026-10-31):
+- This remains planning-only. Do not implement tests or alter source repositories from this worker.
+- Every additional pass must name an unresolved question that could change the ranking, expected result, setup or first implementation choice.
+- When the current shortlist already answers the requested question and no such uncertainty remains, finish this planning request with its existing handoff and evidence limits. Do not generate another synchronization, no-gap or ranking pass merely to continue the loop.
+- This rule supersedes later instructions to keep planning after saturation without a new question. Preserve historical checkpoint IDs and reviewer decisions. Follow any active goal's status rules; do not infer permission to pause a goal or mark unfinished work complete.
+- A separate implementation request uses the current Playwright conversion workflow and continues through scoped code and verification. Do not import this planning-only boundary into that request.
 
 Primary question:
 What should we automate next among P0/highest-risk checkout money-movement paths?

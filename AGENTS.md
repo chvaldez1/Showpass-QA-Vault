@@ -34,7 +34,16 @@ Workflow notes may add task-specific instructions, but they must not redefine or
 
 Use [[00 Start Here/Showpass QA Handbook/00 Index|Showpass QA Master Handbook]] for hands-on Showpass system testing: actual Organizer/Customer/Attendee/Member/Venue Employee terminology, Venue/client/configuration setup, and connected create → purchase → fulfillment/admission → Refund/Void/Exchange → Inventory/financial walkthroughs. Add its senior-QA integration passes, automation-layer selection, physical-device coverage, and release-confidence guidance. It applies the canonical standard; it does not replace it. Bind recipes to the exact change, current source, supported clients, and actual configuration before drafting or executing tests.
 
+## Coverage Review And Implementation
+
+- For release readiness or “what coverage do we have?”, use [[06 Prompts/Release Coverage Review]]. Compare actual saved Qase cases, exact Playwright assertions and planned/executed browser checks for each changed behavior. Show Full/Partial/None/Unknown separately from current execution and list the exact remaining checks. Owner/sign-off fields are not required in the release template.
+- Reuse [[05 Tooling/scripts/collect-release-coverage.mjs]] for source/case/result evidence collection. Matches are candidates for review, not automatic full coverage. Follow the Qase read-first and write-confirmation rules below; an inaccessible or incomplete read cannot establish that a case is missing.
+- For implementation requests, carry selected improvements through code, focused verification and the actual CI status within authorized scope. Reuse existing test setup and cleanup; do not create another plan merely because an older worker was planning-only. Keep unrun, failed, skipped and retry-only results visible.
+- For requested prevention after a confirmed escaped bug, use [[06 Prompts/Escaped Bug To Regression]]. Connect the actual failure to the missing assertion/setup and verify the resulting protection; do not equate case publication or ticket closure with a passing regression.
+
 ## Source Of Truth
+
+- Ask and receive explicit permission before editing any other repository or project. Read-only source tracing is allowed. A broad request to improve this vault, its processes or automation does not by itself authorize cross-project edits. Once a specific cross-project scope is authorized, finish it without repeating the permission question.
 
 - Backend first: `/Users/christianvaldez/Documents/Showpass/repos/web-app`
 - Frontend follows backend behavior: `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`
@@ -180,6 +189,8 @@ When user action or judgment is requested:
 Use [[05 Tooling/qasectl]] as the required operating guide for Qase reads, gap analysis, creates, and updates. Use [[06 Prompts/Showpass Qase Gap Analysis]] for gap-analysis procedure and output: focused, standalone Qase-ready cases first, compact analysis and evidence afterward. Split distinct behaviors instead of combining several tests into one large case.
 
 Apply [[05 Tooling/Qase Test Case Writing Rules#Package Events And Guest Information]] to package cases: the **parent event** sells the package ticket; **child events** are different events supplying included tickets. Make each case's event count, ticket relationships and guest-collection settings explicit. Use Inventory/Capacity wording. Keep readable Single-parameter value explanations in Description, preserve Platform/View as context, and verify the actual saved Single fields across every requested case. Review all fields and the canonical note after a setup correction; do not leave the clarification only in chat.
+
+Apply [[05 Tooling/Qase Test Case Writing Rules#Explain Showpass Terms And Where To Find Them]] to every Qase-ready case. Explain required Showpass terms and give the exact Dashboard/UI or Admin location and required value. Distinguish saved settings, actual feature flags, employee permissions and custom questions. Say whose details are entered and which tickets need them; do not rely on unexplained attendee-form counts. Verify hidden-control preparation and supported UI/Admin setup. Treat readability feedback as a whole-case review that preserves coverage, not a synonym change or a chat-only explanation.
 
 To avoid repeated permission prompts and inconsistent Qase payloads:
 

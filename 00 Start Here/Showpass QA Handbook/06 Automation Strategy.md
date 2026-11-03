@@ -10,6 +10,8 @@ status: Source-informed guidance; execution evidence recorded per release
 
 [[00 Start Here/Showpass QA Handbook/00 Index|Handbook index]] · [[00 Start Here/World-Class Software Quality Standard|Canonical quality standard]]
 
+Use [[04 Automation/00 Index]] to carry this strategy through selection, implementation, local verification, actual CI execution and maintenance. Record process trials and measured effort in [[00 Start Here/QA Improvement Log]]. Planning-ready and implemented-but-unrun work remain distinct from passing protection.
+
 ## Turn the handbook into durable automation
 
 ### Select the correct layer

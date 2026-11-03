@@ -12,6 +12,8 @@ status: Source-informed guidance; execution evidence recorded per release
 
 ## Keep the system honest with useful measures
 
+Record a release-specific baseline and the improvement decision in [[00 Start Here/QA Improvement Log#Release measures]]. The initial baseline is Not collected; do not fill it from case counts or assume a CI result. Link each measurement to the candidate/configuration and actual evidence.
+
 Review these across releases; agree baselines and targets with the team rather than inventing percentages:
 
 - Escaped **Critical**, **Major**, and **Medium** incidents separately, grouped by failed business promise and client/configuration. Historical priority is not automatically validated impact.

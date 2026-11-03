@@ -19,7 +19,7 @@ status: Published 2026-10-30 — 10 cases created and 2 updated; product tests n
 
 **These are saved case definitions, not executed passes.** No Showpass purchase, payment, inventory mutation or product test was run. The source/routed-API, queue and concurrency evidence gaps below remain separate from publication.
 
-**Published updates:** [[#Proposed update to SPT-3294|SPT-3294 — regular ticket quantities, with package checks split out]] · [[#SPT-3879 improvement — separately requested after the Inventory batch|SPT-3879 — package prices, fees and the final charge]]. Earlier previews are retained as history and are not pending approval.
+**Published updates:** [[#Published update to SPT-3294|SPT-3294 — regular ticket quantities, with package checks split out]] · [[#SPT-3879 improvement — separately requested after the Inventory batch|SPT-3879 — package prices, fees and the final charge]]. Earlier published previews are retained as history. The 2026-11-02 readability revision below is the only pending preview.
 
 **Intent:** verify that customers can change package quantities without losing another attendee's answers, receiving incomplete packages, being charged for the wrong quantity or taking unavailable inventory. Source review covers the merged PR and the refreshed checkout, including the later safeguards in PR 7766. A single Venue's configuration is not used as the coverage boundary.
 
@@ -99,6 +99,14 @@ All rows below are **not run in this review**. “Definition verified” means s
 
 These focused cases use ordinary Preset packages. SPT-5862 explicitly includes package-only and included-ticket-only guest collection alongside the original both-level setup. Single-barcode behavior, custom/seated/product/nested packages and the other excluded shapes remain in the separate regression rows and coverage decisions.
 
+**Readability revision — 2026-11-02; not yet pushed to Qase:** this is the current preview for **SPT-3294, SPT-3879 and SPT-5862–SPT-5871**, replacing the unpushed ten-case wording preview from 2026-11-01. Say whose details are entered, remove unexplained form counts, identify the parent/child events, and give source-verified Dashboard/Admin locations for necessary Showpass controls. Identify saved event/package/ticket settings, custom questions, employee permissions and external calculation/payment evidence separately. SPT-5866 now names supported Admin preparation for its existing Per user 2 / Purchase limit 3 setup, which the Dashboard editor cannot save. SPT-5862 explains how to reveal/save the child hide toggle before changing the child event’s collection setting. Pre-payment collection is identified by its actual saved control. SPT-3879 explains its financial terms, where to read the configured and purchased values, and how to find the correct Invoice before opening its Invoice items.
+
+**Readability dry run:** all twelve operations passed through the maintained script. The live selected fields matched the reviewed before-state throughout the check. Each case parses with its own Description, Preconditions, Steps and Postconditions; setup-location/parameter mappings survive parsing. IDs, titles, folders, tags, parameters, selected Platform/View rows, quantities, financial assertions and step counts remain unchanged. The plan selects only the text fields that changed: Description and Preconditions for SPT-3294; Description/Preconditions/Steps for the ten new cases, plus Postconditions for SPT-5862, SPT-5866 and SPT-5871; Description/Preconditions/Postconditions/Steps for SPT-3879. No cases are created, moved, copied or deleted. Use the published case index above for the unchanged titles, suites, tags, parameter values and step counts. Product tests have not been run. Qase apply still needs confirmation of this exact twelve-case preview. Only the active plan is retained at `/private/tmp/package-readable-cases-plan-20261102.json` pending approval; remove after apply or cancellation.
+
+**Source check for setup locations — 2026-11-02:** backend checkout `03544e62cd3a93e92112e5759b9918e7bf1cdf07`; frontend checkout `cc59dd9de4ab94d28aaff199d288d615ca39f115`. Reviewed Event and TicketType models/Admin forms, Invoice/Invoice item Admin, Venue/internal-fee models, the Dashboard event navigation, Order form fields/custom-question/after-payment controls, ticket Inventory/event-wide settings, ticket purchase-limit validation and package Delivery options. These are source-verified locations and supported preparation, not a live UI inspection. The last successful Qase publication remains recorded above.
+
+**Shared workflow update — 2026-11-02:** [[05 Tooling/Qase Test Case Writing Rules#Explain Showpass Terms And Where To Find Them|the common readability rule]] now requires ordinary explanations, exact Dashboard/UI or Admin locations, control type, required value, hidden-control preparation and clear proof locations. Gap analysis, case generation, qasectl’s pre-dry-run checklist, AGENTS.md and the Package handbook reference or apply it. Readability corrections must update each affected case’s full fields without dropping useful checks. These workflow changes are saved locally; they do not apply the pending Qase batch.
+
 ### TC-1: Increase a preset package and keep each guest’s information
 
 **Qase case:** [SPT-5862](https://app.qase.io/case/SPT-5862) — Inventory → Packages and Bundles (1243). Created and full-field readback verified on 2026-10-30; not executed.
@@ -107,9 +115,9 @@ Keeps the answered-package regression separate from ordinary quantity controls a
 
 **Title:** Core - Inventory - Increase a preset package and keep each guest’s information
 
-**Description:** A customer has two packages with different guest information saved on every ticket that requires it. Increase to three packages, check the original guests and complete one purchase. Only the added package’s required attendee forms should start blank. GuestInfo selects where separate attendee forms appear; purchaser details are collected separately.
+**Description:** Start with two packages in the cart, with guest details already saved for the tickets that require them. Add one more package. The original tickets must keep the same names, email addresses and Guest notes. Only the new tickets should need their guest details entered. Then complete one purchase. GuestInfo selects which tickets need these details; it does not change the number of tickets in the package.
 
-Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package. These terms describe this package relationship, not recurring-event dates.
+Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package.
 
 | Platform | View |
 | --- | --- |
@@ -119,26 +127,49 @@ Event setup: use **two different events in the same Organization**. The **parent
 | Widget | Mobile |
 | React Native Public | Mobile |
 
-| GuestInfo | Collect guest information per ticket: parent event | Collect guest information per ticket: child event | Separate attendee forms |
-| --- | --- | --- | --- |
-| PackageAndIncluded | ON | ON | One package-ticket form and two included-ticket forms per package: 6 original forms, 3 new forms, 9 after the increase. |
-| IncludedOnly | OFF | ON | Two included-ticket forms per package, without a package-ticket form: 4 original forms, 2 new forms, 6 after the increase. |
-| PackageOnly | ON | OFF | One package-ticket form per package, without separate included-ticket forms: 2 original forms, 1 new form, 3 after the increase. |
+Guest details means **First name, Last name, Email and the answer to Guest notes** for the person using a ticket. Use different details for every ticket that requires them in this check. The customer paying for the order also enters their purchaser details; those are not the ticket details checked below.
 
-For every GuestInfo value, use these Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item ON; Only collect attendee info for individual tickets ON.** On the child event, set **Hide guest information when purchased as part of a package OFF**. Require First name, Last name, Email and a text question called Guest notes before payment only on events whose per-ticket collection is ON. On events where it is OFF, disable attendee custom questions; ordinary purchaser details remain separate.
+| GuestInfo | Enter guest details for |
+| --- | --- |
+| PackageAndIncluded | The package ticket and both included tickets in each package. |
+| IncludedOnly | Both included tickets in each package. Do not ask for guest details for the package ticket. |
+| PackageOnly | The package ticket only. Do not ask for guest details for either included ticket. |
 
-Run each GuestInfo value separately. The package contents, quantity increase, price and payment checks stay the same; the table gives the original, added and final attendee-form counts.
+| GuestInfo: Collect guest information per ticket | Parent event | Child event |
+| --- | --- | --- |
+| PackageAndIncluded | ON | ON |
+| IncludedOnly | OFF | ON |
+| PackageOnly | ON | OFF |
+
+For every GuestInfo value, use these saved Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item ON; Only collect attendee info for individual tickets ON.** On the child event’s Order form, first turn Collect guest information per ticket ON so the Hide guest information when purchased as part of a package toggle is visible. Set that hide toggle OFF, then set per-ticket collection to the ON/OFF value in the selected GuestInfo row. If it is turned OFF, the hide toggle disappears but keeps its saved value. Require First name, Last name, Email and a text question called Guest notes before payment only on events whose per-ticket collection is ON. On events where it is OFF, disable attendee custom questions; ordinary purchaser details remain separate.
+
+Run each GuestInfo value separately. Enter the required guest details for the two packages before increasing the quantity. After adding one package, those original details must stay saved; only its added tickets should ask for new guest details. The cart contents and payment checks stay the same.
+
+Customer starting point: open the parent event’s public page and select Buy, or use its existing Widget (the Showpass purchase window on the Organization’s website), according to the Platform/View row. For the Showpass app row, open Explore → the parent event → Buy.
+
+**Where to prepare this setup**
+
+| Item | Where to find it | What it means |
+| --- | --- | --- |
+| Preset package and its Delivery options | Dashboard → Events → open the parent event → Promote → Packages → Edit | Preset means each package includes the same fixed tickets. The Delivery options section contains the three saved package switches listed above. Save with Save package. |
+| Event guest-information settings | Dashboard → Events → open the parent or child event → Manage → Order form | Collect guest information per ticket is a saved event toggle, not a feature flag. It controls whether checkout asks for details for each ticket. |
+| Hide guest information when purchased as part of a package | The child event’s Order form, beside Collect guest information per ticket | This is another saved event toggle, not a custom question. Leave it OFF so the child tickets can ask for their own guest details. It is visible only while Collect guest information per ticket is ON. |
+| Names, email and Guest notes | On each event collecting guest details: Order form → Collection type → Enhanced Info; enable First name, Last name and Email. In Custom questions, add a required text question named Guest notes for the tested ticket types, collected during checkout. | Guest notes is a question created for this check, not a built-in Showpass setting or flag. Keep collection before payment: Collect information after payment on Order form must be OFF. If that control is hidden, an authorized administrator checks the event in Admin → Events and confirms Collect info post purchase is OFF. Save and reopen the page to check the values. |
+| Ticket Inventory and event Capacity | Each event → Manage → Tickets: the Inventory column sets each ticket type’s quantity; Event ticket settings → Total Event Inventory sets the event-wide limit. | Capacity in this case means the event’s Total Event Inventory setting. It is not another ticket type’s Inventory. |
+
+To compare remaining and reserved quantities, an employee opens Dashboard → Box Office → Sell, selects the recorded event and ticket type, and checks its Inventory information. Use Box Office and View Box Office Stats are employee permissions, not event settings. The employee preparing Dashboard settings also needs Manage Events. Record the original values before changing them; restore only the settings changed for this case.
 
 **Parameters:**
 GuestInfo: PackageAndIncluded, IncludedOnly, PackageOnly
 
 **Preconditions:**
 
+* The employee preparing the Dashboard settings has Manage Events permission.
 * Parent event: select a published, on-sale future event that sells the Preset package ticket.
-* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets from this child event.
+* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets (tickets without assigned seats) from this child event.
 * No seats, nested packages, bundled products, discount, hold, waitlist, group sale, payment plan, upgrade or pay-what-you-can pricing applies.
-* Prepare the selected GuestInfo setup from the Description. Use different names and answers for every required attendee form, with email addresses controlled for this case. Disable attendee custom questions on events whose per-ticket collection is OFF.
-* Use an unexpired cart containing two packages. Before opening the cart controls, save and record every required attendee and their Guest notes. Use the original form count from the selected GuestInfo row. Inventory and all purchase/customer limits allow at least three packages. Use one fixed package price, without multiple price tiers.
+* Prepare the selected GuestInfo setup from the Description. Use different names and Guest notes for every ticket that needs guest details, with email addresses controlled for this case. Disable attendee custom questions on events whose per-ticket collection is OFF.
+* From the parent event’s Buy flow, add two packages to a cart that has not timed out. Before opening the cart controls, save and record the name, email and Guest notes attached to each ticket listed in the selected GuestInfo row. Inventory and all purchase/customer limits allow at least three packages. Use one fixed package price, without multiple price tiers.
 * The package price is 10.00. Included tickets have no extra price; all fees, taxes and shipping are 0.00.
 * Use an approved test card with the payment provider in test mode because this case completes a paid purchase. Record available package-ticket and included-ticket counts before the cart is created. An employee with Use Box Office and View Box Office Stats can compare the recorded available counts. No employee permission is needed for the customer’s cart actions.
 
@@ -147,15 +178,15 @@ GuestInfo: PackageAndIncluded, IncludedOnly, PackageOnly
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Open the cart and increase the package quantity from two to three. | Quantity 3 | Three package tickets and six included tickets are selected; the total is 30.00. |
-| Reopen the guest-information step. | Original and new form counts from the selected GuestInfo row | Every original attendee keeps their own names and answers on the intended ticket. Only the added package’s required attendee forms start blank; no extra forms appear for tickets whose event collection is OFF. |
-| Complete the added package’s required attendee forms. | New people; count from the selected GuestInfo row | Every required form has its intended attendee information. No original guest’s answers are copied into the new forms. |
+| In checkout, check the guest details on the original tickets and the newly added tickets. | Tickets listed in the selected GuestInfo row | Every original ticket keeps its saved name, email and Guest notes. The new tickets that require guest details start blank; the other tickets do not ask for them. |
+| Enter the new guests’ names, email addresses and Guest notes for the added tickets. | New tickets listed in the selected GuestInfo row | Each new ticket has the details entered for it. No original guest’s answers have been copied to a new ticket. |
 | Continue to the order review. | Three packages | The review shows three packages, six included tickets and a total of 30.00. |
 | Complete the test-card payment once. | 30.00 | One payment and one successful order are created for 30.00. |
-| Open the completed order and its tickets. | New confirmation reference | The order contains three package tickets and six included tickets. Every ticket that required its own attendee form retains the recorded guest information; no separate attendee answers are required for the other tickets. |
+| Open the completed order and its tickets. | New confirmation reference | The order contains three package tickets and six included tickets. Every ticket that required guest details keeps its recorded name, email and Guest notes. The other tickets still do not ask for guest details. |
 
 **Postconditions:**
 
-* Keep the selected GuestInfo value, order, payment reference and guest-to-ticket comparison; do not delete financial records.
+* Keep the selected GuestInfo value, order, payment reference and record of which guest details belong to each ticket; do not delete financial records.
 * Compare final available counts with those recorded before selection: exactly three package-ticket and six included-ticket units were consumed.
 
 ### TC-2: Keep the requested quantity after two quick package increases
@@ -168,7 +199,7 @@ GuestInfo: PackageAndIncluded, IncludedOnly, PackageOnly
 
 **Description:** Request three packages, then four as soon as the cart accepts another edit. After the updates finish, the saved cart must have four packages, with no duplicated contents or lost original guest information.
 
-Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package. These terms describe this package relationship, not recurring-event dates.
+Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package.
 
 | Platform | View |
 | --- | --- |
@@ -183,15 +214,30 @@ Event setup: use **two different events in the same Organization**. The **parent
 | Collect guest information per ticket | ON | ON |
 | Hide guest information when purchased as part of a package | Not applicable to the package ticket | OFF |
 
-Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item ON; Only collect attendee info for individual tickets ON.** Each package has three separate attendee forms: its package ticket and two included tickets.
+Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item ON; Only collect attendee info for individual tickets ON.** For each package, the customer enters First name, Last name, Email and Guest notes for the person using the package ticket, then for the person using each of the two included tickets.
+
+Customer starting point: open the parent event’s public page and select Buy, or use its existing Widget (the Showpass purchase window on the Organization’s website), according to the Platform/View row. For the Showpass app row, open Explore → the parent event → Buy.
+
+**Where to prepare this setup**
+
+| Item | Where to find it | What it means |
+| --- | --- | --- |
+| Preset package and its Delivery options | Dashboard → Events → open the parent event → Promote → Packages → Edit | Preset means each package includes the same fixed tickets. The Delivery options section contains the three saved package switches listed above. Save with Save package. |
+| Event guest-information settings | Dashboard → Events → open the parent or child event → Manage → Order form | Collect guest information per ticket is a saved event toggle, not a feature flag. It controls whether checkout asks for details for each ticket. |
+| Hide guest information when purchased as part of a package | The child event’s Order form, beside Collect guest information per ticket | This is another saved event toggle, not a custom question. Leave it OFF so the child tickets can ask for their own guest details. It is visible only while Collect guest information per ticket is ON. |
+| Names, email and Guest notes | On each event collecting guest details: Order form → Collection type → Enhanced Info; enable First name, Last name and Email. In Custom questions, add a required text question named Guest notes for the tested ticket types, collected during checkout. | Guest notes is a question created for this check, not a built-in Showpass setting or flag. Keep collection before payment: Collect information after payment on Order form must be OFF. If that control is hidden, an authorized administrator checks the event in Admin → Events and confirms Collect info post purchase is OFF. Save and reopen the page to check the values. |
+| Ticket Inventory and event Capacity | Each event → Manage → Tickets: the Inventory column sets each ticket type’s quantity; Event ticket settings → Total Event Inventory sets the event-wide limit. | Capacity in this case means the event’s Total Event Inventory setting. It is not another ticket type’s Inventory. |
+
+To compare remaining and reserved quantities, an employee opens Dashboard → Box Office → Sell, selects the recorded event and ticket type, and checks its Inventory information. Use Box Office and View Box Office Stats are employee permissions, not event settings. The employee preparing Dashboard settings also needs Manage Events. Record the original values before changing them; restore only the settings changed for this case.
 
 **Preconditions:**
 
+* The employee preparing the Dashboard settings has Manage Events permission.
 * Parent event: select a published, on-sale future event that sells the Preset package ticket.
-* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets from this child event.
+* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets (tickets without assigned seats) from this child event.
 * No seats, nested packages, bundled products, discount, hold, waitlist, group sale, payment plan, upgrade or pay-what-you-can pricing applies.
 * On each event with per-ticket collection ON, require First name, Last name, Email and a text answer called Guest notes before payment. Use different details for each attendee and email addresses controlled for this case.
-* Start with two packages in an unexpired cart. Save and record different information for its six attendees. Inventory and purchase/customer limits allow at least four packages.
+* From the parent event’s Buy flow, add two packages to a cart that has not timed out. Save and record different information for its six attendees. Inventory and purchase/customer limits allow at least four packages.
 * The package price is 10.00. Included tickets have no extra price; all fees, taxes and shipping are 0.00.
 
 **Tags:** packages, cart, edge-case
@@ -201,8 +247,8 @@ Package Delivery options: **Send a single barcode OFF; Allow redemption on any i
 | Open the cart and request three packages. | Quantity 3 | The cart accepts the request and begins updating or shows three. |
 | As soon as the quantity controls accept another edit, request four packages. | Final requested quantity 4 | The next accepted request is for four packages. |
 | Wait for the cart update to finish, then reopen checkout. | Quantity 4 | Four package tickets and eight included tickets are selected; the total is 40.00. |
-| Compare the original attendee forms with the recorded values. | Six original attendees | All six original guests retain their own information; the six added attendee forms contain no copied guest answers. |
-| Reload checkout and check the cart again. | Same unexpired cart | The saved cart still contains four packages and the same guest information. |
+| In checkout, compare the names, email addresses and Guest notes on the original tickets with the recorded values. | Original 2 package tickets and 4 included tickets | All six original tickets keep their guest details. The 2 added package tickets and 4 added included tickets have blank guest details, with no original guest’s answers copied to them. |
+| Reload checkout and check the cart again. | Same cart, before it times out | The saved cart still contains four packages and the same guest information. |
 
 **Postconditions:**
 
@@ -218,7 +264,7 @@ Refines the earlier TC-3 into the requested regular-ticket + package scenario. P
 
 **Description:** Start with one regular ticket and one package. Increase only the regular-ticket quantity to two. The package must still contain its two included tickets with their original guest information.
 
-Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package. These terms describe this package relationship, not recurring-event dates. The child event also sells a separate regular General Admission ticket of a different ticket type. That regular ticket type is not included in the package; it is bought separately.
+Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package.  The child event also sells a separate regular General Admission ticket of a different ticket type. That regular ticket type is not included in the package; it is bought separately.
 
 | Platform | View |
 | --- | --- |
@@ -232,17 +278,32 @@ Event setup: use **two different events in the same Organization**. The **parent
 | Collect guest information per ticket | OFF | ON, for both the included tickets and the separate regular ticket |
 | Hide guest information when purchased as part of a package | Not applicable to the package ticket | OFF; this setting concerns included tickets, not the separate regular ticket |
 
-Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item OFF; Only collect attendee info for individual tickets ON.** One regular ticket plus one package has **three attendee forms**: the regular ticket and two included tickets. There is no separate package-ticket attendee form.
+Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item OFF; Only collect attendee info for individual tickets ON.** The customer enters First name, Last name, Email and Guest notes for the regular ticket and for each of the two included tickets. Checkout must not ask for another person’s details for the package ticket.
+
+Customer starting point: use the child event’s Buy flow for the separate regular ticket and the parent event’s Buy flow for the package. Widget means the Showpass purchase window on the Organization’s website. Use the Platform/View row selected for this check.
+
+**Where to prepare this setup**
+
+| Item | Where to find it | What it means |
+| --- | --- | --- |
+| Preset package and its Delivery options | Dashboard → Events → open the parent event → Promote → Packages → Edit | Preset means each package includes the same fixed tickets. The Delivery options section contains the three saved package switches listed above. Save with Save package. |
+| Event guest-information settings | Dashboard → Events → open the parent or child event → Manage → Order form | Collect guest information per ticket is a saved event toggle, not a feature flag. It controls whether checkout asks for details for each ticket. |
+| Hide guest information when purchased as part of a package | The child event’s Order form, beside Collect guest information per ticket | This is another saved event toggle, not a custom question. Leave it OFF so the child tickets can ask for their own guest details. It is visible only while Collect guest information per ticket is ON. |
+| Names, email and Guest notes | On each event collecting guest details: Order form → Collection type → Enhanced Info; enable First name, Last name and Email. In Custom questions, add a required text question named Guest notes for the tested ticket types, collected during checkout. | Guest notes is a question created for this check, not a built-in Showpass setting or flag. Keep collection before payment: Collect information after payment on Order form must be OFF. If that control is hidden, an authorized administrator checks the event in Admin → Events and confirms Collect info post purchase is OFF. Save and reopen the page to check the values. |
+| Ticket Inventory and event Capacity | Each event → Manage → Tickets: the Inventory column sets each ticket type’s quantity; Event ticket settings → Total Event Inventory sets the event-wide limit. | Capacity in this case means the event’s Total Event Inventory setting. It is not another ticket type’s Inventory. |
+
+To compare remaining and reserved quantities, an employee opens Dashboard → Box Office → Sell, selects the recorded event and ticket type, and checks its Inventory information. Use Box Office and View Box Office Stats are employee permissions, not event settings. The employee preparing Dashboard settings also needs Manage Events. Record the original values before changing them; restore only the settings changed for this case.
 
 **Preconditions:**
 
+* The employee preparing the Dashboard settings has Manage Events permission.
 * Parent event: select a published, on-sale future event that sells the Preset package ticket.
-* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets from this child event.
+* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets (tickets without assigned seats) from this child event.
 * On the child event, select a separate regular General Admission ticket type priced 5.00. It is different from the included ticket type and is not part of the package. The package price is 10.00; all fees, taxes and shipping are 0.00. Both selections can be purchased in one cart.
 * The child event’s Capacity permits at least 4 tickets in this cart, counting its included tickets and separate regular tickets together. Each ticket type’s Inventory permits the quantities used below.
 * No seats, nested packages, bundled products, discount, hold, waitlist, group sale, payment plan, upgrade or pay-what-you-can pricing applies.
 * On each event with per-ticket collection ON, require First name, Last name, Email and a text answer called Guest notes before payment. Use different details for each attendee and email addresses controlled for this case.
-* Start with an unexpired cart containing one regular ticket and one package. Save and record the three attendees and their answers. The starting total is 15.00.
+* From the child event’s Buy flow, add one regular ticket; then add one package from the parent event’s Buy flow to the same cart, before it times out. Save and record the three attendees and their answers. The starting total is 15.00.
 * Regular-ticket inventory and limits allow at least two. Record regular-ticket and included-ticket availability before selecting the items. An employee with Use Box Office and View Box Office Stats can compare the recorded available counts. No employee permission is needed for the customer’s cart actions.
 
 **Tags:** packages, basket, checkout
@@ -250,7 +311,7 @@ Package Delivery options: **Send a single barcode OFF; Allow redemption on any i
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Open the cart and increase only the regular-ticket quantity from one to two. | Regular tickets 2; package 1 | The total becomes 20.00; the package quantity stays at one. |
-| Reopen the guest-information step. | Two regular tickets and two included tickets | The package’s two attendees keep their original information, and only the added regular-ticket attendee form is new. |
+| In checkout, check the names, email addresses and Guest notes on the tickets. | Two regular tickets and two included tickets | Both included tickets and the original regular ticket keep their guest details. Only the added regular ticket asks for a new guest’s details. |
 | Compare the cart contents with the original selection. | Package 1; included tickets 2 | No extra package or included ticket has been added. |
 | Reload checkout and inspect the guest information again. | Same cart | The saved quantities and original guest information remain unchanged. |
 
@@ -267,7 +328,7 @@ Package Delivery options: **Send a single barcode OFF; Allow redemption on any i
 
 **Description:** Two packages are already reserved with saved guest information. Attempt to add a third when the selected inventory or event capacity cannot supply it. The rejected increase must leave the original cart intact.
 
-Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package. These terms describe this package relationship, not recurring-event dates.
+Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package.
 
 | Platform | View |
 | --- | --- |
@@ -282,28 +343,42 @@ Event setup: use **two different events in the same Organization**. The **parent
 | Collect guest information per ticket | ON | ON |
 | Hide guest information when purchased as part of a package | Not applicable to the package ticket | OFF |
 
-Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item ON; Only collect attendee info for individual tickets ON.** Each package has three separate attendee forms: its package ticket and two included tickets.
-| InventoryLimit | Only limiting inventory or capacity before the two packages are selected |
-| --- | --- |
-| PackageTicketInventory | The package ticket’s inventory is 2. |
-| IncludedTicketInventory | Included-ticket inventory is 4; each package needs 2. |
-| ParentEventCapacity | The parent event’s total capacity is 2, with no other sales or reservations. |
-| ChildEventCapacity | The child event’s total capacity is 4, with no other sales or reservations. |
+Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item ON; Only collect attendee info for individual tickets ON.** For each package, the customer enters First name, Last name, Email and Guest notes for the person using the package ticket, then for the person using each of the two included tickets.
+| InventoryLimit | Exact setting before the two packages are selected | Where to set it |
+| --- | --- | --- |
+| PackageTicketInventory | The package ticket’s Inventory is 2. | Parent event → Manage → Tickets → package ticket’s Inventory. |
+| IncludedTicketInventory | The included ticket type’s Inventory is 4; each package needs 2. | Child event → Manage → Tickets → included ticket type’s Inventory. |
+| ParentEventCapacity | The parent event’s Total Event Inventory is 2, with no other sales or reservations. | Parent event → Manage → Tickets → Event ticket settings → Total Event Inventory. |
+| ChildEventCapacity | The child event’s Total Event Inventory is 4, with no other sales or reservations. | Child event → Manage → Tickets → Event ticket settings → Total Event Inventory. |
 
-Run one boundary at a time. Other inventory and capacity limits must permit three packages. Keep the limiting value positive; zero can mean unlimited.
+Run one InventoryLimit value at a time. Capacity here means the event-wide Total Event Inventory setting. Other inventory and capacity limits must permit three packages. Keep the limiting value positive; zero can mean unlimited.
+
+Customer starting point: open the parent event’s public page and select Buy, or use its existing Widget (the Showpass purchase window on the Organization’s website), according to the Platform/View row. For the Showpass app row, open Explore → the parent event → Buy.
+
+**Where to prepare this setup**
+
+| Item | Where to find it | What it means |
+| --- | --- | --- |
+| Preset package and its Delivery options | Dashboard → Events → open the parent event → Promote → Packages → Edit | Preset means each package includes the same fixed tickets. The Delivery options section contains the three saved package switches listed above. Save with Save package. |
+| Event guest-information settings | Dashboard → Events → open the parent or child event → Manage → Order form | Collect guest information per ticket is a saved event toggle, not a feature flag. It controls whether checkout asks for details for each ticket. |
+| Hide guest information when purchased as part of a package | The child event’s Order form, beside Collect guest information per ticket | This is another saved event toggle, not a custom question. Leave it OFF so the child tickets can ask for their own guest details. It is visible only while Collect guest information per ticket is ON. |
+| Names, email and Guest notes | On each event collecting guest details: Order form → Collection type → Enhanced Info; enable First name, Last name and Email. In Custom questions, add a required text question named Guest notes for the tested ticket types, collected during checkout. | Guest notes is a question created for this check, not a built-in Showpass setting or flag. Keep collection before payment: Collect information after payment on Order form must be OFF. If that control is hidden, an authorized administrator checks the event in Admin → Events and confirms Collect info post purchase is OFF. Save and reopen the page to check the values. |
+
+To compare remaining and reserved quantities, an employee opens Dashboard → Box Office → Sell, selects the recorded event and ticket type, and checks its Inventory information. Use Box Office and View Box Office Stats are employee permissions, not event settings. The employee preparing Dashboard settings also needs Manage Events. Record the original values before changing them; restore only the settings changed for this case.
 
 **Parameters:**
 InventoryLimit: PackageTicketInventory, IncludedTicketInventory, ParentEventCapacity, ChildEventCapacity
 
 **Preconditions:**
 
+* The employee preparing the Dashboard settings has Manage Events permission.
 * Parent event: select a published, on-sale future event that sells the Preset package ticket.
-* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets from this child event.
+* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets (tickets without assigned seats) from this child event.
 * No seats, nested packages, bundled products, discount, hold, waitlist, group sale, payment plan, upgrade or pay-what-you-can pricing applies.
 * On each event with per-ticket collection ON, require First name, Last name, Email and a text answer called Guest notes before payment. Use different details for each attendee and email addresses controlled for this case.
 * Record the original limits and prepare the selected InventoryLimit. Purchase and customer limits allow three; dates and public availability permit sale. Record available counts before selection.
 * The package price is 10.00. Included tickets have no extra price; all fees, taxes and shipping are 0.00.
-* Reserve two packages in an unexpired cart and save different information for all six attendees. Record the names and answers. No other customer changes this inventory during the attempt. An employee with Use Box Office and View Box Office Stats can compare the recorded available counts. No employee permission is needed for the customer’s cart actions.
+* From the parent event’s Buy flow, add two packages to a cart that has not timed out and save different information for all six attendees. Record the names and answers. No other customer changes this inventory during the attempt. An employee with Use Box Office and View Box Office Stats can compare the recorded available counts. No employee permission is needed for the customer’s cart actions.
 
 **Tags:** packages, cart, edge-case
 
@@ -311,7 +386,7 @@ InventoryLimit: PackageTicketInventory, IncludedTicketInventory, ParentEventCapa
 | --- | --- | --- |
 | Open the cart and attempt to increase the package quantity from two to three. | Selected InventoryLimit | The increase is rejected with inventory or capacity feedback. |
 | Inspect the cart after the error. | Original quantity 2 | Two package tickets and four included tickets remain, with a total of 20.00. |
-| Reopen the guest-information step. | Six recorded attendees | All six original guests keep their information on their intended tickets. |
+| In checkout, compare each ticket’s name, email and Guest notes with the recorded values. | Original 2 package tickets and 4 included tickets | All six tickets keep the same guest details; the rejected increase has not cleared, copied or moved them to another ticket. |
 | Reload checkout while the cart remains unexpired. | Same cart | Quantity two, the total and the saved guest information are unchanged. |
 | As the employee, compare the limiting availability in Box Office with the recorded counts. | Original two-package reservation | The failed increase has not taken extra inventory or released the original reservation. |
 
@@ -328,7 +403,7 @@ InventoryLimit: PackageTicketInventory, IncludedTicketInventory, ParentEventCapa
 
 **Description:** A customer already bought one package and has one more in the cart. Their limit is two packages across orders. Increasing the cart to two would make three, so the increase must be rejected without changing the earlier order or current reservation.
 
-Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package. These terms describe this package relationship, not recurring-event dates.
+Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package.
 
 | Platform | View |
 | --- | --- |
@@ -342,31 +417,48 @@ Event setup: use **two different events in the same Organization**. The **parent
 | Collect guest information per ticket | ON | ON |
 | Hide guest information when purchased as part of a package | Not applicable to the package ticket | OFF |
 
-Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item ON; Only collect attendee info for individual tickets ON.** Each package has three separate attendee forms: its package ticket and two included tickets.
+Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item ON; Only collect attendee info for individual tickets ON.** For each package, the customer enters First name, Last name, Email and Guest notes for the person using the package ticket, then for the person using each of the two included tickets.
+
+Customer starting point: open the parent event’s public page and select Buy, or use its existing Widget (the Showpass purchase window on the Organization’s website), according to the Platform/View row.
+
+**Where to prepare this setup**
+
+| Item | Where to find it | What it means |
+| --- | --- | --- |
+| Preset package and its Delivery options | Dashboard → Events → open the parent event → Promote → Packages → Edit | Preset means each package includes the same fixed tickets. The Delivery options section contains the three saved package switches listed above. Save with Save package. |
+| Event guest-information settings | Dashboard → Events → open the parent or child event → Manage → Order form | Collect guest information per ticket is a saved event toggle, not a feature flag. It controls whether checkout asks for details for each ticket. |
+| Hide guest information when purchased as part of a package | The child event’s Order form, beside Collect guest information per ticket | This is another saved event toggle, not a custom question. Leave it OFF so the child tickets can ask for their own guest details. It is visible only while Collect guest information per ticket is ON. |
+| Names, email and Guest notes | On each event collecting guest details: Order form → Collection type → Enhanced Info; enable First name, Last name and Email. In Custom questions, add a required text question named Guest notes for the tested ticket types, collected during checkout. | Guest notes is a question created for this check, not a built-in Showpass setting or flag. Keep collection before payment: Collect information after payment on Order form must be OFF. If that control is hidden, an authorized administrator checks the event in Admin → Events and confirms Collect info post purchase is OFF. Save and reopen the page to check the values. |
+| Ticket Inventory and event Capacity | Each event → Manage → Tickets: the Inventory column sets each ticket type’s quantity; Event ticket settings → Total Event Inventory sets the event-wide limit. | Capacity in this case means the event’s Total Event Inventory setting. It is not another ticket type’s Inventory. |
+
+To compare remaining and reserved quantities, an employee opens Dashboard → Box Office → Sell, selects the recorded event and ticket type, and checks its Inventory information. Use Box Office and View Box Office Stats are employee permissions, not event settings. The employee preparing Dashboard settings also needs Manage Events. Record the original values before changing them; restore only the settings changed for this case.
+
+For this case, **Per user** in Admin is the ticket’s customer limit across orders; the Dashboard label is **Per-user limit** under Tickets → edit the package ticket → Basic info → Purchase limits. **Purchase limit** in Admin is **Maximum purchase limit** there and applies to one purchase. Prepare the exact 2-versus-3 values in Admin: the Dashboard editor requires the Per-user limit to be at least the Maximum purchase limit and will not save this combination. These are saved ticket settings, not flags.
 
 **Preconditions:**
 
+* The employee preparing the Dashboard settings has Manage Events permission.
 * Parent event: select a published, on-sale future event that sells the Preset package ticket.
-* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets from this child event.
+* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets (tickets without assigned seats) from this child event.
 * No seats, nested packages, bundled products, discount, hold, waitlist, group sale, payment plan, upgrade or pay-what-you-can pricing applies.
 * On each event with per-ticket collection ON, require First name, Last name, Email and a text answer called Guest notes before payment. Use different details for each attendee and email addresses controlled for this case.
-* Record the package ticket’s original per-customer limit. An authorized administrator sets it to 2. The per-purchase limit is at least 3, and all inventory/event capacities permit at least three packages.
+* An administrator with permission to change Ticket types opens Admin → Ticket types, searches for the package ticket by name, and confirms its Event is the parent event. Record Per user and Purchase limit. Set Per user to 2 and Purchase limit to 3, Save, and reopen to verify. All Inventory and event-wide limits permit at least three packages.
 * Use a signed-in customer with exactly one earlier paid order for this package. Record its order reference and tickets.
-* In the same customer account, reserve one additional package in an unexpired cart. Save and record its three attendees and answers. Record the current cart total.
+* In the same customer account, reserve one additional package in a cart that has not timed out. Save and record its three attendees and answers. Record the current cart total.
 
 **Tags:** packages, cart, edge-case
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Open the current cart and increase its package quantity from one to two. | Earlier paid order 1 + requested cart 2 = 3; limit 2 | The increase is rejected with customer-limit feedback. |
-| Reopen checkout and inspect the attendee forms. | Original cart quantity 1 | One package and two included tickets remain at the original total, with their three original attendees. |
+| Reopen checkout and check the names, email addresses and Guest notes on the tickets. | Original cart quantity 1 | One package ticket and two included tickets remain at the original total, each keeping its original guest details. |
 | Reload checkout. | Same account and cart | The rejected quantity has not been saved; the original reservation remains. |
 | Open My Orders and the earlier paid order. | Recorded confirmation reference | The earlier order and tickets are unchanged, and the rejected edit has created no new order. |
 
 **Postconditions:**
 
 * Remove only this case’s unpurchased cart items. Check in Box Office that their reserved quantities return to availability; leave other customers’ carts and orders unchanged.
-* Keep the earlier paid order and restore the recorded per-customer limit after clearing the new cart.
+* Keep the earlier paid order and restore both recorded Admin values, Per user and Purchase limit, after clearing the new cart.
 
 ### TC-6: Let only one buyer reserve the last available package
 
@@ -378,7 +470,7 @@ Package Delivery options: **Send a single barcode OFF; Allow redemption on any i
 
 **Description:** Two customers each have one package reserved. Only one additional package remains. Both attempt to increase to two; only one increase may succeed, and both customers must keep their original guest information.
 
-Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the one included General Admission ticket in each package. These terms describe this package relationship, not recurring-event dates.
+Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the one included General Admission ticket in each package.
 
 | Platform | View |
 | --- | --- |
@@ -390,16 +482,33 @@ Event setup: use **two different events in the same Organization**. The **parent
 | Collect guest information per ticket | ON | ON |
 | Hide guest information when purchased as part of a package | Not applicable to the package ticket | OFF |
 
-Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item ON; Only collect attendee info for individual tickets ON.** Each package has two separate attendee forms: its package ticket and one included ticket.
+Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item ON; Only collect attendee info for individual tickets ON.** For each package, the customer enters First name, Last name, Email and Guest notes for the package ticket and for its one included ticket.
+
+Customer starting point: open the parent event’s public page and select Buy, or use its existing Widget (the Showpass purchase window on the Organization’s website), according to the Platform/View row.
+
+**Where to prepare this setup**
+
+| Item | Where to find it | What it means |
+| --- | --- | --- |
+| Preset package and its Delivery options | Dashboard → Events → open the parent event → Promote → Packages → Edit | Preset means each package includes the same fixed tickets. The Delivery options section contains the three saved package switches listed above. Save with Save package. |
+| Event guest-information settings | Dashboard → Events → open the parent or child event → Manage → Order form | Collect guest information per ticket is a saved event toggle, not a feature flag. It controls whether checkout asks for details for each ticket. |
+| Hide guest information when purchased as part of a package | The child event’s Order form, beside Collect guest information per ticket | This is another saved event toggle, not a custom question. Leave it OFF so the child tickets can ask for their own guest details. It is visible only while Collect guest information per ticket is ON. |
+| Names, email and Guest notes | On each event collecting guest details: Order form → Collection type → Enhanced Info; enable First name, Last name and Email. In Custom questions, add a required text question named Guest notes for the tested ticket types, collected during checkout. | Guest notes is a question created for this check, not a built-in Showpass setting or flag. Keep collection before payment: Collect information after payment on Order form must be OFF. If that control is hidden, an authorized administrator checks the event in Admin → Events and confirms Collect info post purchase is OFF. Save and reopen the page to check the values. |
+| Ticket Inventory and event Capacity | Each event → Manage → Tickets: the Inventory column sets each ticket type’s quantity; Event ticket settings → Total Event Inventory sets the event-wide limit. | Capacity in this case means the event’s Total Event Inventory setting. It is not another ticket type’s Inventory. |
+
+To compare remaining and reserved quantities, an employee opens Dashboard → Box Office → Sell, selects the recorded event and ticket type, and checks its Inventory information. Use Box Office and View Box Office Stats are employee permissions, not event settings. The employee preparing Dashboard settings also needs Manage Events. Record the original values before changing them; restore only the settings changed for this case.
+
+If one increase finishes before the other starts, record that the customers tried in sequence. That result does not prove the simultaneous-reservation check; proving that timing needs a controlled developer test.
 
 **Preconditions:**
 
+* The employee preparing the Dashboard settings has Manage Events permission.
 * Parent event: select a published, on-sale future event that sells the Preset package ticket.
-* Child event: select a different published, on-sale future event in the same Organization. Each package includes one General Admission ticket from this child event.
+* Child event: select a different published, on-sale future event in the same Organization. Each package includes one General Admission ticket (a ticket without an assigned seat) from this child event.
 * No seats, nested packages, bundled products, discount, hold, waitlist, group sale, payment plan, upgrade or pay-what-you-can pricing applies.
 * On each event with per-ticket collection ON, require First name, Last name, Email and a text answer called Guest notes before payment. Use different details for each attendee and email addresses controlled for this case.
-* Use two independent customer accounts and sessions. Package-ticket and included-ticket inventory are both 3, with no prior sales or other reservations. All event capacities and purchase/customer limits allow at least four.
-* Each customer reserves one package in an unexpired cart and saves different information for its two attendees. Record both guest mappings, totals and available counts. One additional package remains. An employee with Use Box Office and View Box Office Stats can compare the recorded available counts. No employee permission is needed for the customer’s cart actions.
+* Use two different customer accounts, each signed in through its own browser profile so their carts are not shared. Package-ticket and included-ticket inventory are both 3, with no prior sales or other reservations. All event capacities and purchase/customer limits allow at least four.
+* Each customer reserves one package in a cart that has not timed out and saves different information for its two attendees. Record both guest mappings, totals and available counts. One additional package remains. An employee with Use Box Office and View Box Office Stats can compare the recorded available counts. No employee permission is needed for the customer’s cart actions.
 
 **Tags:** packages, cart, edge-case
 
@@ -407,8 +516,8 @@ Package Delivery options: **Send a single barcode OFF; Allow redemption on any i
 | --- | --- | --- |
 | Have both customers request an increase from one package to two at the agreed start signal. | Two independent sessions | One cart accepts two packages; the other shows inventory feedback and stays at one. |
 | Reopen checkout in each session. | Successful cart 2; other cart 1 | The two carts together contain three packages and three included tickets, never four. |
-| Compare each customer’s original attendee forms with the recorded values. | Two original attendees per customer | Each customer retains their own original guests and answers, with no crossed information. |
-| Inspect the added attendee forms in the successful cart. | One new package ticket and one included ticket | Only those two new forms start blank. |
+| In each cart, compare the original tickets’ names, email addresses and Guest notes with the recorded values. | One original package ticket and one original included ticket per customer | Each original ticket keeps its saved guest details. Neither customer sees the other customer’s details. |
+| In the cart whose increase succeeded, inspect the guest details requested for the added tickets. | One new package ticket and one new included ticket | Both new tickets ask for guest details with blank values. The original tickets still have their saved details. |
 | As the employee, compare package-ticket and included-ticket availability in Box Office. | Total inventory 3 of each | Three units of each ticket type are reserved; neither is oversold. |
 
 **Postconditions:**
@@ -421,9 +530,9 @@ Package Delivery options: **Send a single barcode OFF; Allow redemption on any i
 
 **Title:** Core - Inventory - Increase a preset package with per-ticket guest collection off
 
-**Description:** Increase a preset package from two to three when neither event collects information for each ticket. Included quantities and the total must increase, without creating separate attendee forms.
+**Description:** Increase a preset package from two to three when neither event collects information for each ticket. Included quantities and the total must increase. Checkout must not start asking for the name, email or guest-question answers of the person using each ticket.
 
-Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package. These terms describe this package relationship, not recurring-event dates.
+Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package.
 
 | Platform | View |
 | --- | --- |
@@ -436,12 +545,24 @@ Event setup: use **two different events in the same Organization**. The **parent
 | --- | --- | --- |
 | Collect guest information per ticket | OFF | OFF |
 
-Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item OFF; Only collect attendee info for individual tickets ON.** Neither event has custom guest questions. Checkout still asks for the purchaser's details; it must not add a separate attendee form for each ticket.
+Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item OFF; Only collect attendee info for individual tickets ON.** Neither event has custom guest questions. Checkout still asks for the details of the customer paying for the order. It must not ask for a guest’s details for each package ticket or included ticket.
+
+**Where to prepare this setup**
+
+| Item | Where to find it | What it means |
+| --- | --- | --- |
+| Preset package and its Delivery options | Dashboard → Events → open the parent event → Promote → Packages → Edit | Preset means each package includes the same fixed tickets. The Delivery options section contains the three saved package switches listed above. Save with Save package. |
+| Event guest-information settings | Dashboard → Events → open the parent or child event → Manage → Order form | Collect guest information per ticket is a saved event toggle, not a feature flag. It controls whether checkout asks for details for each ticket. |
+| No ticket-by-ticket guest questions | Parent and child events → Manage → Order form | Set Collect guest information per ticket OFF on both events and use events without custom guest questions. This does not remove the purchaser details needed to place the order. Save and reopen each Order form. |
+| Ticket Inventory and event Capacity | Each event → Manage → Tickets: the Inventory column sets each ticket type’s quantity; Event ticket settings → Total Event Inventory sets the event-wide limit. | Capacity in this case means the event’s Total Event Inventory setting. It is not another ticket type’s Inventory. |
+
+To compare remaining and reserved quantities, an employee opens Dashboard → Box Office → Sell, selects the recorded event and ticket type, and checks its Inventory information. Use Box Office and View Box Office Stats are employee permissions, not event settings. The employee preparing Dashboard settings also needs Manage Events. Record the original values before changing them; restore only the settings changed for this case.
 
 **Preconditions:**
 
+* The employee preparing the Dashboard settings has Manage Events permission.
 * Parent event: select a published, on-sale future event that sells the Preset package ticket.
-* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets from this child event.
+* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets (tickets without assigned seats) from this child event.
 * No seats, nested packages, bundled products, discount, hold, waitlist, group sale, payment plan, upgrade or pay-what-you-can pricing applies.
 * The package price is 10.00. Included tickets have no extra price; all fees, taxes and shipping are 0.00.
 * Use an empty cart. Inventory and purchase/customer limits permit three packages. Record package-ticket and included-ticket available counts before selection. An employee with Use Box Office and View Box Office Stats can compare the recorded available counts. No employee permission is needed for the customer’s cart actions.
@@ -450,10 +571,10 @@ Package Delivery options: **Send a single barcode OFF; Allow redemption on any i
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Open the public event’s Buy flow or its Widget and select two packages. | Quantity 2 | Two package tickets and four included tickets are selected; the total is 20.00. |
+| Open the parent event’s Buy flow or its Widget and select two packages. | Quantity 2 | Two package tickets and four included tickets are selected; the total is 20.00. |
 | Increase the package quantity to three in the cart. | Quantity 3 | Three package tickets and six included tickets are selected; the total is 30.00. |
-| Open checkout. | Per-ticket collection OFF on the parent and child events | Purchaser details can be entered without separate attendee forms for the package or included tickets. |
-| Reload checkout and inspect the cart. | Same unexpired cart | Three packages, six included tickets and the total of 30.00 remain saved. |
+| Open checkout. | Per-ticket collection OFF on the parent and child events | The customer can enter their purchaser details. Checkout does not ask for a guest’s name, email or guest-question answers for any package ticket or included ticket. |
+| Reload checkout and inspect the cart. | Same cart, before it times out | Three packages, six included tickets and the total of 30.00 remain saved. |
 
 **Postconditions:**
 
@@ -466,9 +587,9 @@ Package Delivery options: **Send a single barcode OFF; Allow redemption on any i
 
 **Title:** Core - Inventory - Decrease a preset package and release the removed tickets
 
-**Description:** Reduce two answered packages to one. One complete package must remain with its own guest information, and only the removed package’s reservation must be released.
+**Description:** Start with two packages whose guest details have already been entered, then reduce the quantity to one. One complete package must remain with its own guest information, and only the removed package’s reservation must be released.
 
-Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package. These terms describe this package relationship, not recurring-event dates.
+Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package.
 
 | Platform | View |
 | --- | --- |
@@ -483,24 +604,39 @@ Event setup: use **two different events in the same Organization**. The **parent
 | Collect guest information per ticket | ON | ON |
 | Hide guest information when purchased as part of a package | Not applicable to the package ticket | OFF |
 
-Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item ON; Only collect attendee info for individual tickets ON.** Each package has three separate attendee forms: its package ticket and two included tickets.
+Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item ON; Only collect attendee info for individual tickets ON.** For each package, the customer enters First name, Last name, Email and Guest notes for the person using the package ticket, then for the person using each of the two included tickets.
+
+Customer starting point: open the parent event’s public page and select Buy, or use its existing Widget (the Showpass purchase window on the Organization’s website), according to the Platform/View row. For the Showpass app row, open Explore → the parent event → Buy.
+
+**Where to prepare this setup**
+
+| Item | Where to find it | What it means |
+| --- | --- | --- |
+| Preset package and its Delivery options | Dashboard → Events → open the parent event → Promote → Packages → Edit | Preset means each package includes the same fixed tickets. The Delivery options section contains the three saved package switches listed above. Save with Save package. |
+| Event guest-information settings | Dashboard → Events → open the parent or child event → Manage → Order form | Collect guest information per ticket is a saved event toggle, not a feature flag. It controls whether checkout asks for details for each ticket. |
+| Hide guest information when purchased as part of a package | The child event’s Order form, beside Collect guest information per ticket | This is another saved event toggle, not a custom question. Leave it OFF so the child tickets can ask for their own guest details. It is visible only while Collect guest information per ticket is ON. |
+| Names, email and Guest notes | On each event collecting guest details: Order form → Collection type → Enhanced Info; enable First name, Last name and Email. In Custom questions, add a required text question named Guest notes for the tested ticket types, collected during checkout. | Guest notes is a question created for this check, not a built-in Showpass setting or flag. Keep collection before payment: Collect information after payment on Order form must be OFF. If that control is hidden, an authorized administrator checks the event in Admin → Events and confirms Collect info post purchase is OFF. Save and reopen the page to check the values. |
+| Ticket Inventory and event Capacity | Each event → Manage → Tickets: the Inventory column sets each ticket type’s quantity; Event ticket settings → Total Event Inventory sets the event-wide limit. | Capacity in this case means the event’s Total Event Inventory setting. It is not another ticket type’s Inventory. |
+
+To compare remaining and reserved quantities, an employee opens Dashboard → Box Office → Sell, selects the recorded event and ticket type, and checks its Inventory information. Use Box Office and View Box Office Stats are employee permissions, not event settings. The employee preparing Dashboard settings also needs Manage Events. Record the original values before changing them; restore only the settings changed for this case.
 
 **Preconditions:**
 
+* The employee preparing the Dashboard settings has Manage Events permission.
 * Parent event: select a published, on-sale future event that sells the Preset package ticket.
-* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets from this child event.
+* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets (tickets without assigned seats) from this child event.
 * No seats, nested packages, bundled products, discount, hold, waitlist, group sale, payment plan, upgrade or pay-what-you-can pricing applies.
 * On each event with per-ticket collection ON, require First name, Last name, Email and a text answer called Guest notes before payment. Use different details for each attendee and email addresses controlled for this case.
 * The package price is 10.00. Included tickets have no extra price; all fees, taxes and shipping are 0.00.
-* Start with two packages in an unexpired cart. Save distinct information for all six attendees and record which three guests belong to each package. Record available inventory before selection. An employee with Use Box Office and View Box Office Stats can compare the recorded available counts. No employee permission is needed for the customer’s cart actions.
+* From the parent event’s Buy flow, add two packages to a cart that has not timed out. Save distinct information for all six attendees and record which three guests belong to each package. Record available inventory before selection. An employee with Use Box Office and View Box Office Stats can compare the recorded available counts. No employee permission is needed for the customer’s cart actions.
 
 **Tags:** packages, basket, checkout
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Open the cart and reduce the package quantity from two to one. | Quantity 1 | One package ticket and two included tickets remain; the total becomes 10.00. |
-| Reopen the guest-information step. | One original package remains | Its three guests keep their original information; answers from different packages are not combined. |
-| Reload checkout. | Same cart | One complete package and its three guest forms remain, with a total of 10.00. |
+| In checkout, check the name, email and Guest notes on each remaining ticket. | One package ticket and two included tickets | All three tickets keep the guest details belonging to the remaining package. Details from different packages have not been combined. |
+| Reload checkout. | Same cart | One package ticket and two included tickets remain, each with its saved guest details; the total is 10.00. |
 | As the employee, compare available counts in Box Office with the recorded values. | Removed quantity: one package | One package-ticket and two included-ticket units have been released; the remaining package is still reserved. |
 
 **Postconditions:**
@@ -513,9 +649,9 @@ Package Delivery options: **Send a single barcode OFF; Allow redemption on any i
 
 **Title:** Core - Inventory - Remove a package and keep the regular ticket in the cart
 
-**Description:** A cart contains one regular ticket and one package with two included tickets. Remove only the package. Its tickets and guest forms must disappear while the regular ticket and its guest information remain.
+**Description:** A cart contains one regular ticket and one package with two included tickets. Remove only the package. Its tickets must disappear, and checkout must stop asking for their guest details. The regular ticket must remain with its saved name, email and Guest notes.
 
-Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package. These terms describe this package relationship, not recurring-event dates. The child event also sells a separate regular General Admission ticket of a different ticket type. That regular ticket type is not included in the package; it is bought separately.
+Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package.  The child event also sells a separate regular General Admission ticket of a different ticket type. That regular ticket type is not included in the package; it is bought separately.
 
 | Platform | View |
 | --- | --- |
@@ -529,26 +665,41 @@ Event setup: use **two different events in the same Organization**. The **parent
 | Collect guest information per ticket | OFF | ON, for both the included tickets and the separate regular ticket |
 | Hide guest information when purchased as part of a package | Not applicable to the package ticket | OFF; this setting concerns included tickets, not the separate regular ticket |
 
-Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item OFF; Only collect attendee info for individual tickets ON.** One regular ticket plus one package has **three attendee forms**: the regular ticket and two included tickets. There is no separate package-ticket attendee form.
+Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item OFF; Only collect attendee info for individual tickets ON.** The customer enters First name, Last name, Email and Guest notes for the regular ticket and for each of the two included tickets. Checkout must not ask for another person’s details for the package ticket.
+
+Customer starting point: use the child event’s Buy flow for the separate regular ticket and the parent event’s Buy flow for the package. Widget means the Showpass purchase window on the Organization’s website. Use the Platform/View row selected for this check.
+
+**Where to prepare this setup**
+
+| Item | Where to find it | What it means |
+| --- | --- | --- |
+| Preset package and its Delivery options | Dashboard → Events → open the parent event → Promote → Packages → Edit | Preset means each package includes the same fixed tickets. The Delivery options section contains the three saved package switches listed above. Save with Save package. |
+| Event guest-information settings | Dashboard → Events → open the parent or child event → Manage → Order form | Collect guest information per ticket is a saved event toggle, not a feature flag. It controls whether checkout asks for details for each ticket. |
+| Hide guest information when purchased as part of a package | The child event’s Order form, beside Collect guest information per ticket | This is another saved event toggle, not a custom question. Leave it OFF so the child tickets can ask for their own guest details. It is visible only while Collect guest information per ticket is ON. |
+| Names, email and Guest notes | On each event collecting guest details: Order form → Collection type → Enhanced Info; enable First name, Last name and Email. In Custom questions, add a required text question named Guest notes for the tested ticket types, collected during checkout. | Guest notes is a question created for this check, not a built-in Showpass setting or flag. Keep collection before payment: Collect information after payment on Order form must be OFF. If that control is hidden, an authorized administrator checks the event in Admin → Events and confirms Collect info post purchase is OFF. Save and reopen the page to check the values. |
+| Ticket Inventory and event Capacity | Each event → Manage → Tickets: the Inventory column sets each ticket type’s quantity; Event ticket settings → Total Event Inventory sets the event-wide limit. | Capacity in this case means the event’s Total Event Inventory setting. It is not another ticket type’s Inventory. |
+
+To compare remaining and reserved quantities, an employee opens Dashboard → Box Office → Sell, selects the recorded event and ticket type, and checks its Inventory information. Use Box Office and View Box Office Stats are employee permissions, not event settings. The employee preparing Dashboard settings also needs Manage Events. Record the original values before changing them; restore only the settings changed for this case.
 
 **Preconditions:**
 
+* The employee preparing the Dashboard settings has Manage Events permission.
 * Parent event: select a published, on-sale future event that sells the Preset package ticket.
-* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets from this child event.
+* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets (tickets without assigned seats) from this child event.
 * On the child event, select a separate regular General Admission ticket type priced 5.00. It is different from the included ticket type and is not part of the package. The package price is 10.00; all fees, taxes and shipping are 0.00. Both selections can be purchased in one cart.
 * The child event’s Capacity permits at least 3 tickets in this cart, counting its included tickets and separate regular tickets together. Each ticket type’s Inventory permits the quantities used below.
 * No seats, nested packages, bundled products, discount, hold, waitlist, group sale, payment plan, upgrade or pay-what-you-can pricing applies.
 * On each event with per-ticket collection ON, require First name, Last name, Email and a text answer called Guest notes before payment. Use different details for each attendee and email addresses controlled for this case.
-* Start with one regular ticket and one package in an unexpired cart, total 15.00. Save and record their three attendees. Record each ticket type’s available inventory before selection. An employee with Use Box Office and View Box Office Stats can compare the recorded available counts. No employee permission is needed for the customer’s cart actions.
+* Add one regular ticket from the child event’s Buy flow, then one package from the parent event’s Buy flow to the same cart before it times out. The total is 15.00. Save and record their three attendees. Record each ticket type’s available inventory before selection. An employee with Use Box Office and View Box Office Stats can compare the recorded available counts. No employee permission is needed for the customer’s cart actions.
 
 **Tags:** packages, basket, checkout
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Open the cart and select Remove on the package. | Leave the regular ticket selected | The package and its two included tickets disappear; the regular ticket remains at 5.00. |
-| Open the guest-information step. | One remaining regular ticket | Only its attendee form remains, with the original guest information. |
+| In checkout, check which tickets still ask for guest details. | One remaining regular ticket | Only the regular ticket remains, with its original name, email and Guest notes. The removed package’s tickets no longer ask for details. |
 | Reload checkout and inspect the cart. | Same cart | The package has not returned; the one regular ticket and its information remain saved. |
-| As the employee, compare available inventory in Box Office. | One regular ticket still reserved | The package’s package-ticket unit and two included-ticket units have been released; the regular-ticket reservation is unchanged. |
+| As the employee, compare available inventory in Box Office. | One regular ticket still reserved | One package-ticket unit and two included-ticket units have been released; the regular-ticket reservation is unchanged. |
 
 **Postconditions:**
 
@@ -561,9 +712,9 @@ Package Delivery options: **Send a single barcode OFF; Allow redemption on any i
 
 **Title:** Core - Inventory - Buy one regular ticket and one preset package with separate guest information
 
-**Description:** Buy one regular ticket and one preset package in the same order. The package includes two tickets. Checkout must collect information for three attendees and issue exactly the selected items, with no lost or duplicate tickets.
+**Description:** Buy one regular ticket and one preset package in the same order. The package includes two tickets. Checkout must collect a name, email and Guest notes for the regular ticket and for each of the two included tickets, then issue exactly the selected items without lost or duplicate tickets.
 
-Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package. These terms describe this package relationship, not recurring-event dates. The child event also sells a separate regular General Admission ticket of a different ticket type. That regular ticket type is not included in the package; it is bought separately.
+Event setup: use **two different events in the same Organization**. The **parent event** sells the package ticket. One **child event**, different from the parent, supplies the two included General Admission tickets in each package.  The child event also sells a separate regular General Admission ticket of a different ticket type. That regular ticket type is not included in the package; it is bought separately.
 
 | Platform | View |
 | --- | --- |
@@ -577,12 +728,27 @@ Event setup: use **two different events in the same Organization**. The **parent
 | Collect guest information per ticket | OFF | ON, for both the included tickets and the separate regular ticket |
 | Hide guest information when purchased as part of a package | Not applicable to the package ticket | OFF; this setting concerns included tickets, not the separate regular ticket |
 
-Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item OFF; Only collect attendee info for individual tickets ON.** One regular ticket plus one package has **three attendee forms**: the regular ticket and two included tickets. There is no separate package-ticket attendee form.
+Package Delivery options: **Send a single barcode OFF; Allow redemption on any included item OFF; Only collect attendee info for individual tickets ON.** The customer enters First name, Last name, Email and Guest notes for the regular ticket and for each of the two included tickets. Checkout must not ask for another person’s details for the package ticket.
+
+Customer starting point: use the child event’s Buy flow for the separate regular ticket and the parent event’s Buy flow for the package. Widget means the Showpass purchase window on the Organization’s website. Use the Platform/View row selected for this check.
+
+**Where to prepare this setup**
+
+| Item | Where to find it | What it means |
+| --- | --- | --- |
+| Preset package and its Delivery options | Dashboard → Events → open the parent event → Promote → Packages → Edit | Preset means each package includes the same fixed tickets. The Delivery options section contains the three saved package switches listed above. Save with Save package. |
+| Event guest-information settings | Dashboard → Events → open the parent or child event → Manage → Order form | Collect guest information per ticket is a saved event toggle, not a feature flag. It controls whether checkout asks for details for each ticket. |
+| Hide guest information when purchased as part of a package | The child event’s Order form, beside Collect guest information per ticket | This is another saved event toggle, not a custom question. Leave it OFF so the child tickets can ask for their own guest details. It is visible only while Collect guest information per ticket is ON. |
+| Names, email and Guest notes | On each event collecting guest details: Order form → Collection type → Enhanced Info; enable First name, Last name and Email. In Custom questions, add a required text question named Guest notes for the tested ticket types, collected during checkout. | Guest notes is a question created for this check, not a built-in Showpass setting or flag. Keep collection before payment: Collect information after payment on Order form must be OFF. If that control is hidden, an authorized administrator checks the event in Admin → Events and confirms Collect info post purchase is OFF. Save and reopen the page to check the values. |
+| Ticket Inventory and event Capacity | Each event → Manage → Tickets: the Inventory column sets each ticket type’s quantity; Event ticket settings → Total Event Inventory sets the event-wide limit. | Capacity in this case means the event’s Total Event Inventory setting. It is not another ticket type’s Inventory. |
+
+To compare remaining and reserved quantities, an employee opens Dashboard → Box Office → Sell, selects the recorded event and ticket type, and checks its Inventory information. Use Box Office and View Box Office Stats are employee permissions, not event settings. The employee preparing Dashboard settings also needs Manage Events. Record the original values before changing them; restore only the settings changed for this case.
 
 **Preconditions:**
 
+* The employee preparing the Dashboard settings has Manage Events permission.
 * Parent event: select a published, on-sale future event that sells the Preset package ticket.
-* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets from this child event.
+* Child event: select a different published, on-sale future event in the same Organization. Each package includes two General Admission tickets (tickets without assigned seats) from this child event.
 * On the child event, select a separate regular General Admission ticket type priced 5.00. It is different from the included ticket type and is not part of the package. The package price is 10.00; all fees, taxes and shipping are 0.00. Both selections can be purchased in one cart.
 * The child event’s Capacity permits at least 3 tickets in this cart, counting its included tickets and separate regular tickets together. Each ticket type’s Inventory permits the quantities used below.
 * No seats, nested packages, bundled products, discount, hold, waitlist, group sale, payment plan, upgrade or pay-what-you-can pricing applies.
@@ -594,16 +760,16 @@ Package Delivery options: **Send a single barcode OFF; Allow redemption on any i
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Open the regular event’s Buy flow and add one regular ticket. | Regular ticket quantity 1 | One regular ticket is in the cart at 5.00. |
+| Open the child event’s Buy flow and add one regular ticket. | Regular ticket quantity 1 | One regular ticket is in the cart at 5.00. |
 | Open the parent event’s Buy flow and add one package to the same cart. | Package quantity 1; two included tickets | The cart contains both selections at a total of 15.00. |
-| Open checkout and enter the three attendees’ information. | One regular-ticket guest; two included-ticket guests | Exactly three separate attendee forms are shown; no package-ticket attendee form is added. |
+| Open checkout and enter a different name, email and Guest notes for the regular ticket and for each included ticket. | One regular ticket and two included tickets | Each of these three tickets accepts its own guest details. Checkout does not ask for another guest’s details for the package ticket. |
 | Continue to the order review. | Recorded guests and selections | The review retains one regular ticket and one package containing two included tickets; the total is 15.00. |
 | Complete the approved test-card payment once. | 15.00 | One payment and one successful order are created for 15.00. |
 | Open the completed order and its tickets. | New confirmation reference | The order contains the regular ticket and the complete package; each of the three attendee tickets has its intended guest information. |
 
 **Postconditions:**
 
-* Keep the completed order, payment reference and guest-to-ticket comparison; do not delete financial records.
+* Keep the completed order, payment reference and record of which guest details belong to each ticket; do not delete financial records.
 * Compare final availability with the recorded counts: one regular-ticket unit, one package-ticket unit and two included-ticket units were consumed.
 
 ## Published updates to existing cases — 2026-10-30
@@ -658,13 +824,24 @@ This case uses regular tickets only. There is no package, so parent event and ch
 
 Run one EventType and supported client/view row per execution.
 
+**Where to prepare this setup**
+
+| Term or setting | Where to find it | Meaning |
+| --- | --- | --- |
+| General Admission | Dashboard → Events → open the event → Manage → Tickets | A ticket without an assigned seat. Select the ticket type used for this check. |
+| Collect guest information per ticket | That event → Manage → Order form | A saved event toggle, not a feature flag or custom question. Leave it OFF for this quantity-control case. Save and reopen the page. |
+| Inventory and Capacity | That event → Manage → Tickets: Inventory for the ticket type; Event ticket settings → Total Event Inventory for the event-wide limit | Both must allow at least three tickets. Capacity means Total Event Inventory here. |
+| Purchase limits | Tickets → edit the selected ticket type → Basic info → Purchase limits | Leave Minimum purchase limit blank for the default of 1. Maximum purchase limit and Per-user limit must allow at least three. Box Office purchase limit must also allow three for the employee-sale rows. |
+
+The setup employee needs Manage Events. The employee checking reservations opens Dashboard → Box Office → Sell, selects the same event/date and ticket type, and checks Inventory. Use Box Office and View Box Office Stats are employee permissions. For RecurringEvent, use the same occurrence every time; it is one date/time offered by the recurring event.
+
 **Parameters:**
 EventType: SingleEvent, RecurringEvent
 
 **Preconditions:**
 
-* Use an empty, unexpired cart and published, on-sale tickets matching EventType. No package, assigned seating, discount, hold, waitlist or payment plan applies.
-* Collect guest information per ticket is OFF for the selected event. This case checks quantity controls; it does not collect separate attendee answers.
+* Use an empty cart that has not timed out and published, on-sale tickets matching EventType. No package, assigned seating, discount, hold, waitlist or payment plan applies.
+* Collect guest information per ticket is OFF for the selected event. This case checks quantity controls; checkout should not ask for a different guest’s details for each ticket.
 * Each ticket costs 10.00, with all fees, taxes and shipping at 0.00. Expected totals are 20.00 for two tickets, 30.00 for three, and 10.00 for one.
 * Inventory and event capacity permit at least three tickets. The minimum purchase quantity is 1 and the per-purchase and customer limits permit at least three.
 * Record the ticket type, selected date/time and available inventory before selection. No other customer changes that inventory during this check.
@@ -735,6 +912,20 @@ Prepare the following expected amounts independently for package quantities **3,
 | Final amount to pay | The item subtotal and customer-paid charges/taxes under those rules. |
 | Internal/absorbed fees and allocations | The fee owner, eligible items and saved parent/included-item allocation. These are checked separately from the customer's total. |
 
+**Where to find the settings and financial records**
+
+| Term | Plain meaning | Location |
+| --- | --- | --- |
+| Preset or Custom package | Preset has fixed included tickets; Custom lets the customer choose the included tickets from configured groups. | Dashboard → Events → parent event → Promote → Packages → Edit. Record the saved selections; do not change the package during the check. |
+| Revenue realization / allocation | How money from the package sale is assigned to the package ticket and included items for reporting. It is not another amount charged to the customer. | Admin → Venues → the Organization’s Venue → Package revenue realization type. Package-specific settings are on Admin → Ticket packages; included-ticket allocation records are under Sub ticket type infos. Reuse an already configured package rather than changing an Organization’s mode for this check. |
+| Internal fees | Charges that reduce the Organization’s earnings and may not appear as extra charges on the customer’s receipt. | An authorized financial reviewer reads Admin → Venue internal fees and Venue internal fee values for this Venue to prepare the calculation. |
+| Expected-amount worksheet | A calculation prepared from the saved prices, fee rules and taxes before checkout. | A calculation sheet kept with the run evidence; it is not a Showpass screen. Do not copy checkout’s total into it as the expected result. |
+| Invoice and invoice item | An Invoice is the financial record for the order; an Invoice item is one line of that Invoice. | Dashboard → Transactions for the customer-facing order review. For the detailed saved financial check, Admin → Invoices → find the new paid Invoice using its transaction reference or the customer email in text search; confirm its date, amount and items, then open its Invoice items using their change links. |
+| Saved internal fees and allocations | The amounts and package-revenue shares actually saved on those order lines. | On each Admin Invoice item, read Venue internal fees and Percent allocation applied from package where applicable. Compare with the prepared calculation; do not edit or save financial records. |
+| Payment-provider transaction | The corresponding test payment recorded by the Organization’s configured payment provider. | That provider’s authorized test dashboard, using the payment reference from the order. This is outside Showpass. |
+
+The person preparing the worksheet must be allowed to read these Admin records. If the required financial values or provider transaction cannot be accessed, mark the run Blocked and state what is missing; the receipt total alone does not prove the internal-fee check. Use already prepared configurations and keep their values unchanged.
+
 **Parameters:**
 PackageSetup: Preset, ProductBundle, Custom
 
@@ -744,7 +935,7 @@ PackageSetup: Preset, ProductBundle, Custom
 * Before adding items, record the event/item relationships listed in Description. Preserve the selected package configuration, event dates and Custom choices throughout the quantity changes.
 * Have a completed expected-amount worksheet for quantities 3, 4 and 2, prepared from the actual saved prices, fees, taxes, currency, delivery and allocation rules for this PackageSetup and sales channel. Keep the settings and calculations with the run evidence; do not use checkout's calculated total as its own expected result.
 * Include at least one applicable customer-paid fee. Record every applicable internal/absorbed fee and whether an included product participates in each fee. Keep these settings unchanged during the test.
-* Start with an empty cart. Use controlled customer details and an approved test card with the provider in test mode because this case completes a paid purchase.
+* Start with an empty cart. Use customer details controlled for this check and an approved test card with the provider in test mode because this case completes a paid purchase.
 * An employee with Administer Transactions can open the saved order. Arrange authorized read-only access to the corresponding payment-provider transaction and the saved financial evidence needed to compare applicable internal fees and revenue allocations.
 * For Web Box Office or the desktop employee app, the selling employee also needs Use Box Office and the permission for the selected card-payment method.
 
@@ -758,11 +949,11 @@ PackageSetup: Preset, ProductBundle, Custom
 | Complete the required customer details and open the final order review. | Prepared final expected amounts | The named prices, fees, taxes, delivery charges and final amount match the independent quantity-two calculation. |
 | Complete the approved test-card payment once. | Final expected amount | One payment and one successful order are created for that exact amount. |
 | As the permitted employee, open the new order in Transactions and compare its receipt/invoice and corresponding provider transaction with the worksheet. | New confirmation and payment references | Both saved order and provider amount match the final expectation, and the order contains the two complete packages plus one regular ticket. |
-| Compare applicable saved internal fees and parent/included-item allocations with their independent expected amounts. | Authorized saved financial evidence; recorded product fee policy where relevant | The expected internal fees and allocations are present once on the intended items, even when they do not change the customer-facing total. |
+| As the authorized financial reviewer, open the new Invoice’s Invoice items in Admin and compare their saved internal fees and package-revenue shares with the worksheet. | Authorized saved financial evidence; recorded product fee policy where relevant | The expected internal fees and allocations are present once on the intended items, even when they do not change the customer-facing total. |
 
 **Postconditions:**
 
-* Keep the order, payment reference, configuration snapshot and independent calculation as evidence. Do not delete financial records.
+* Keep the order, payment reference, a record of the saved settings and the independent calculation as evidence. Do not delete financial records.
 * Restore only settings changed for preparation; keep the completed order's historical prices and financial records intact.
 
 **Execution prerequisite, not an invented result:** this improved case can be saved without assigning arbitrary Venue-specific fee amounts. Before running it, the independent calculation and authorized financial evidence must be available. If either is missing, mark that execution Blocked; matching the customer total alone does not prove internal fee correctness. Separate full pricing-mode, refund and financial-failure matrices remain outside this case.

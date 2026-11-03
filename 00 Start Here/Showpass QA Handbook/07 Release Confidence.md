@@ -46,6 +46,8 @@ These are proof targets for the affected launch, not automatically mandatory che
 
 Keep this in the release/feature's one canonical run note, not separate competing summaries:
 
+Use [[03 Test Cases/Release Decision Template]] to answer whether each behavior has a Qase case, full or partial coverage, Playwright automation, a planned/executed browser test and applicable passing results. Follow [[00 Start Here/QA Operating Workflow]] to collect the evidence during the change. The reusable release note focuses on coverage and missing checks; owner/sign-off fields are not required.
+
 | Field | Required content |
 | --- | --- |
 | Change and candidate | Plain-language behavior; branch/diff/source revisions; deployed build/environment |
@@ -53,11 +55,11 @@ Keep this in the release/feature's one canonical run note, not separate competin
 | Scope | Entry points, outcomes, roles, existing records, flags, payment modes, hardware |
 | Proof results | Each named outcome with Passed/Failed/Deferred/Manual-only/Not applicable/Blocked and evidence |
 | Findings | Reported priority and assessed severity separately; confidence; release classification |
-| Coverage gaps | Missing exact evidence/setup; why it matters; owner; next action/date or explicit risk acceptance |
+| Coverage gaps | Missing exact cases, assertions, execution or setup; why it matters; next check or explicit risk acceptance |
 | Safety | Changed records, preserved references, original values, verified cleanup/isolation |
 | Rollout | Applicable configuration, observation and recovery owner; rollback limitations for irreversible payments |
 | Recommendation | Go; Go with known non-blocking issues; No-Go; or Decision blocked by named missing evidence |
-| Decision owner | Who accepts each residual business risk; not merely who executed tests |
+| Test coverage | Saved Qase cases, exact Playwright assertions and browser walkthroughs/results; Full/Partial/None/Unknown separated from execution |
 
 Never average away a failed high-impact proof target using a high overall pass percentage. Confidence should be stated per business outcome, not only per release.
 

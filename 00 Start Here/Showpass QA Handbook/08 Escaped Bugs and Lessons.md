@@ -12,6 +12,8 @@ status: Source-informed guidance; execution evidence recorded per release
 
 ## Convert escaped bugs into prevention
 
+Track the selected prevention/process trial and its follow-up result in [[00 Start Here/QA Improvement Log]]. Link this investigation or the incident's existing note instead of copying it. A rule or test added after an escape is a proposed prevention until relevant execution and follow-up show what it protects.
+
 1. Preserve the reported configuration, client/build, record references, business harm, and uncertainty. Do not reduce the incident to its title.
 2. Reproduce through the affected layer with owned data. Determine the first wrong business result, not just the final error.
 3. Trace why prior tests missed it: absent configuration, wrong actor/client, shallow assertion, only new data, missing async result, unavailable hardware, or flaky/quarantined coverage.

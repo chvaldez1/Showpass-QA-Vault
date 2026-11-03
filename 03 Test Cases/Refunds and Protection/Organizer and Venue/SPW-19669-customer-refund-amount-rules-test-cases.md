@@ -20,7 +20,7 @@ tags:
 | TC-5 | [SPT-5807](https://app.qase.io/case/SPT-5807) | 1108 |
 
 > [!important] Buy new orders after saving the amount settings
-> The amount controls and calculation are now present in local source. Older purchases can use the previous calculation. The cases are unexecuted; the publication section below lists which are saved in Qase. Start with [[00 Organizer and Venue - How to Test]] and [[00 Customer - How to Test]].
+> The amount controls and calculation are now present in local source. Older purchases can use the previous calculation. The cases are unexecuted; the publication section below lists which are saved in Qase. Start with [[03 Test Cases/Refunds and Protection/Organizer and Venue/00 Organizer and Venue - How to Test]] and [[03 Test Cases/Refunds and Protection/Customer/00 Customer - How to Test]].
 
 ## Qase publication
 

@@ -10,6 +10,7 @@ Source reviews, coverage gaps, risk analysis, and automation planning. These not
 
 | Folder | What belongs here | Start here |
 | --- | --- | --- |
+| QA Process | Vault review and changes that support release confidence, automation and improvement | [[02 Feature QA/QA Process/Vault Review - 2026-10-31\|October 31 vault review]] |
 | Checkout | Checkout risks, missing checks, and automation priorities | [[02 Feature QA/Checkout/Checkout Automation Mission Control\|Checkout Automation Mission Control]] |
 | Purchase Coverage | The full purchase journey and its supporting data | [[02 Feature QA/Purchase Coverage/End-to-End Purchase Coverage Matrix\|End-to-End Purchase Coverage Matrix]] |
 | Playwright Coverage | Existing automated coverage and gaps found from Major/Critical incidents | [[02 Feature QA/Playwright Coverage/Major Critical Playwright Gap Analysis\|Major Critical Playwright Gap Analysis]] |

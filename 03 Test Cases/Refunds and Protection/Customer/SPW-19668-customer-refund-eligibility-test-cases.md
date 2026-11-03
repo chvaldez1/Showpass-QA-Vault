@@ -11,6 +11,23 @@ tags:
 
 # Customer Refund Eligibility Test Cases
 
+> [!important] SPT-5326 readability update — 2026-11-02
+> **Published and read back successfully:** TC-12 / [SPT-5326](https://app.qase.io/case/SPT-5326) is now **My Orders - Refunds - Block or allow a refund for a product already marked Fulfilled**. Its Description identifies one admission plus one separately purchased product and explains why the admission's refund switch stays off. The 18 steps now include the previously prerequisite-only fulfillment update, confirmation and reopening, followed by policy off → on, preview/Cancel and unchanged order/fulfillment checks. The case checks return eligibility with Shipping Cost 0.00; it does not prove shipping-charge allocation. Title, Description, Preconditions, Postconditions and Steps were saved and verified. Existing WebPublic/Desktop, no parameters, tags, suite 1108 and other metadata are preserved. No Showpass order was changed or test executed.
+>
+> Source review: backend `customer_return_eligibility.py` checks the saved Fulfilled status against the policy; `apps/tickets/api/venue_based/viewsets/ticket_items.py` provides the fulfillment update with Scan Tickets authority. Frontend `ProductDeliverySection.web.tsx`, `ShippingFulfillmentPage.web.tsx` and the Transactions fulfillment dialog confirm the preparation controls. Handbook Playbook 15 supplies the supported transaction/fulfillment walkthrough. The source revisions are recorded in the package update below. Only SPT-5326 was changed by this update; broader requested writes await exact case scope.
+
+> [!important] SPT-5325 readability update — 2026-11-02
+> **Latest title, published and verified:** My Orders - Refunds - Block or allow a refund when the customer can already see the ticket barcode. This title-only update preserves all execution fields; the earlier title below is publication history.
+>
+> **Published and read back successfully:** TC-6 / [SPT-5325](https://app.qase.io/case/SPT-5325) is now **My Orders - Refunds - Block or allow a ticket return after barcode delivery**. The case states that the standard barcode is already visible and the ticket's own refund switch stays on. One table explains the Organization setting: off hides Return order; on allows a preview. The 13 steps include an explicit barcode check, save/reopen, preview/Cancel and an unchanged paid ticket. Existing WebPublic/Desktop, no parameters, tags, suite 1108 and other metadata are preserved. No test was executed.
+>
+> Refactor evidence: current backend `customer_return_eligibility.py` checks delivered barcode status against the policy's barcode behavior; frontend `customer-refund-policy-form-fields.ts` confirms the control label and My Orders `order-action-availability.ts` controls Return order visibility. Revisions are the same backend/frontend revisions recorded in the package update below. The unrelated Organization Product switch remains in the existing preparation; no product purchase or product assertion was added.
+
+> [!important] SPT-5309 package update — 2026-11-02
+> **Published and read back successfully:** TC-1 / [SPT-5309](https://app.qase.io/case/SPT-5309) now includes **ItemType = TicketProductPackage**. One admission ticket includes one product variant; the product's refund switch off blocks the package, and turning it on allows the package ticket to be selected once. Preview and Cancel only. The original five configurations, WebPublic/Desktop, title, tags, suite 1108, metadata and 13-step count are preserved. Description, Preconditions, Postconditions, Single ItemType values and Steps were verified after saving. This is an enhancement to one existing case; no new Qase case or purchase was created, and the manual test has not been run. The Organization Products-off scenario in the Fan Expo checklist remains separate.
+>
+> Source review: backend `03544e62cd3a93e92112e5759b9918e7bf1cdf07` — `apps/financials/services/invoice/customer_return_eligibility.py` (included-item blockers and package selection), `customer_return_amounts.py` (included items do not add a second refund), `apps/tickets/models/packages_management/sub_ticket_option.py` and `apps/tickets/admin/packages.py` (supported Sub-product relation setup and sales lock). Frontend `cc59dd9de4ab94d28aaff199d288d615ca39f115` — `packages/core/src/app-contexts/user/features/account/features/my-orders/utils/order-actions/return-order.ts` retains the purchased package ticket for return selection. No branch comparison or code changes were made.
+
 > [!important] Current-page review — 2026-10-27
 > **Published and verified:** the cases listed below now match Qase after the approved 21 updates and 14 creates. Required gates, current controls, item setup, and expected results were reviewed in plain language. No purchases, refunds, or scans were executed. The table is the current publication map; older dated records below are history.
 
@@ -112,7 +129,7 @@ We are testing whether My Orders offers only the customer-return selections allo
 | Axis | States | Cases |
 | --- | --- | --- |
 | Policy and item | General admission, product add-on, standalone product, individual seat, single-barcode ticket package; automatic/blocked outcome | TC-1, TC-2 |
-| Ticket + product package | Ticket linked to an included product through Admin; separate barcode mode | TC-9; current-source blocked selection, not successful return coverage |
+| Ticket + product package | Ticket includes one product through Admin; separate barcode mode; included product switch off → on | TC-1 TicketProductPackage / SPT-5309; blocked → selectable package preview and Cancel. Published 2026-11-02; not executed. TC-9 is historical and withheld. |
 | Cutoff | Absolute, event-relative, item-relative, manually closed | TC-3 |
 | Mixed order | Whole-order selection for two ticket types, ticket + separate product, and two individual seats; one blocked item; package selection boundary | TC-4, TC-10, TC-11; completed whole-order return in completion TC-5. Block-if-any uses TC-5. |
 | Restriction | After barcode delivery; After fulfillment or shipping; After check-in or scan | TC-6, TC-12, TC-13; one searchable title per setting |
@@ -134,7 +151,7 @@ In these cases, an item is **returnable** when the customer is allowed to select
 
 ### TC-1: My Orders - Refunds - Let a customer select a purchased ticket or product after refunds are enabled for it
 
-**Description:** A customer buys the items listed for ItemType while the selected item's **Allow customer-initiated refunds** switch is off. An employee turns that switch on, and the customer reopens the same order to check that the correct purchase becomes selectable. This case reads the return preview and cancels; it does not complete a refund. A ticket package is one purchase containing included tickets; the package listing is selected for return, not an included ticket on its own.
+**Description:** A customer buys the items listed for ItemType while the named item's **Allow customer-initiated refunds** switch is off. An employee turns that switch on, and the customer reopens the same order to check that the correct purchase becomes selectable. This case reads the return preview and cancels; it does not complete a refund. A package is one purchase containing included tickets or products. Select the purchased package ticket for return; its included items cannot be returned separately. For TicketProductPackage, the included product starts with refunds off: this blocks the package until the product's switch is turned on. Buying a separate checkout add-on is a different setup.
 
 | Platform | View |
 | --- | --- |
@@ -147,37 +164,39 @@ In these cases, an item is **returnable** when the customer is allowed to select
 | StandaloneProduct | One product variant, price 15.00, inventory 10; refund switch off; Visible on Your Venue Page on. | On the organization's public page, buy quantity 1 of that product without a ticket. | Purchased product → Fulfillment. | Exactly the product variant; there is no admission ticket in the order. |
 | AssignedSeat | A public, paid ticket for one individually selectable seat in a future event with an existing seating map. Refund switch off; no package, full-table requirement, membership, shared hold, or resale. | Buy one available seat and record event, ticket type, section, row, seat, and paid price. | Purchased ticket type → Basic info. | The one ticket for the recorded seat; it remains owned by the customer because the return is cancelled. |
 | TicketPackage | A Preset package priced 20.00 containing quantity 1 of each of two different General Admission ticket types. Included ticket switches on; package listing ticket switch off. Send a single barcode on; Allow redemption on any included item off. | Buy quantity 1 of the package and record its listing plus both included ticket types. | Package listing ticket type → Basic info. | The package listing is selectable as one purchase; included tickets cannot be returned independently. |
+| TicketProductPackage | One General Admission ticket priced 25.00 includes quantity 1 of one product variant through a saved Sub-product relation. Ticket refund switch on; included product refund switch off. One event sells the package ticket; the product has no event. No child events, included tickets, separate checkout add-on or separate TicketPackage record. | Buy quantity 1 of the package ticket and record its admission and included product variant. Do not buy the product again as an add-on. | Included product → Fulfillment. | Before the product switch is enabled, Return order is hidden. After saving, select the package ticket once; the included product cannot be selected separately. The preview uses the paid package amount without adding the included product's standalone price again. |
 
 **Tags:** my-orders, refunds
 
 **Parameters:**
-ItemType: TicketType, Product, StandaloneProduct, AssignedSeat, TicketPackage
+ItemType: TicketType, Product, StandaloneProduct, AssignedSeat, TicketPackage, TicketProductPackage
 
 **Preconditions:**
 
-* The preparing employee has **Manage Organization Info** and **Manage Events**; Product and StandaloneProduct also require **Manage Marketplace** and an organization not on Basic pricing.
+* The preparing employee has **Manage Organization Info** and **Manage Events**; Product, StandaloneProduct and TicketProductPackage also require **Manage Marketplace** and an organization not on Basic pricing. TicketProductPackage requires an administrator able to add **Sub-product relations** before the ticket has sales.
 * In **Admin → Venues → Venues**, an administrator finds the organization and saves **Customer Self Refund Settings = on**. Record its original value.
 * In **Dashboard → Organization → Organization settings → Customer refunds**, save both **Allow customer refunds for tickets** and **Allow customer refunds for products** on, and **Automated return refund type = Base refund**; record their original values.
 * Enable the organization-scoped `enable_venue_policy_customer_self_refunds` rollout flag. Use an organization with **Admin → Venues → Venues → Barcode delivery = Default**, so this case does not depend on delayed release or customer activation.
 * In **Admin → Venues → Venue customer refund policies**, search for the organization; reuse its policy or **Add → Venue → select the organization → Save**. In **Dashboard → Organization → Organization settings → Customer refunds**, save **Enable customer refund policy = on**, **Cutoff type = No cutoff**, **Allow customer refunds after barcode delivery = on**, **Allow customer refunds after fulfillment or shipping = off**, **Allow customer refunds after check-in or scan = off**, **Orders with mixed eligibility = Refund eligible items independently** before purchase. Record the original settings.
 * For tickets, open **Dashboard → Build → Events → All events → Edit → Tickets** on a published, single-day event at least seven days in the future with public sales open. Add or select the ticket types in ItemType; edit **Basic info → Allow customer-initiated refunds** and save the starting values. Record event and item names; use items without unrelated sales because their refund switches will change.
-* For products, open **Dashboard → Build → Products → All products**; create or select a product and use **Inventory** to save the variant's name, price, and inventory from ItemType. In **Fulfillment**, save **Allow customer-initiated refunds = off**. Product: in **Availability → Checkout add-ons**, turn on **Add to event checkout process**, choose **Event checkout visibility = Include for certain items**, select this event and accompanying ticket under **Select tickets to include**, and save. StandaloneProduct: in **Availability → Sales channels**, turn on **Visible on Your Venue Page** and save.
+* For products, open **Dashboard → Build → Products → All products**; create or select a product and use **Inventory** to save the variant's name, price, and inventory from ItemType. In **Fulfillment**, save **Allow customer-initiated refunds = off**. Product: in **Availability → Checkout add-ons**, turn on **Add to event checkout process**, choose **Event checkout visibility = Include for certain items**, select this event and accompanying ticket under **Select tickets to include**, and save. StandaloneProduct: in **Availability → Sales channels**, turn on **Visible on Your Venue Page** and save. TicketProductPackage: use the included-product preparation below instead of enabling checkout add-ons.
 * For AssignedSeat, reuse an event whose public seating map offers an individual seat for the selected ticket type; choose and record the seat before payment. Do not change a shared seating layout to prepare this case.
 * For TicketPackage, use an organization already set to **Admin → Venues → Venues → Package revenue realization type = Parent**. Create three public ticket types with inventory 10: the 20.00 package listing and two included types priced 10.00 and 12.00. In **Dashboard → Promote → Packages → Create package**, choose **Package type = Preset**, this **Event**, and the listing **Ticket type**; under **Included tickets**, use **Add ticket** for each included type with **Qty = 1**. Save the barcode choices in ItemType, then reopen the event's Tickets page to save the listing switch off and both included switches on. All tickets use the same future event; no nested package or product is included.
+* For TicketProductPackage, prepare one unsold General Admission ticket priced 25.00 with Inventory 10 and **Basic info → Allow customer-initiated refunds = on** on the selected event. Create one product with a single variant priced 15.00 and Inventory 10; save **Fulfillment → Allow customer-initiated refunds = off** and **Availability → Checkout add-ons → Add to event checkout process = off**. In **Admin → Tickets → Sub-product relations → Add**, select that **Ticket type** and **Product**, then save **Quantity = 1**, **Use parent barcode = off**, and **Include in fees = on**. Reopen the relation to check it. Create this relationship before purchase; it cannot be added or changed after the ticket has sales. Do not add a separate ticket package or another event. Both Organization ticket and product refund switches stay on throughout this case.
 * As the customer who will use My Orders, complete the purchase listed for ItemType with an approved refundable card payment. Record the receipt, transaction, item quantities, prices, taxes, fees, variant or seat labels, and original switches. Keep every purchased item unscanned, unfulfilled, untransferred, and not offered for resale.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | As the purchasing customer, open Account → My Orders. | Recorded transaction | The order contains the names and quantities listed for ItemType. |
-| Read the order details. | ItemType; product variant, seat, or package listing recorded at purchase | The order contains the correct purchase, not another ticket, variant, or seat. |
+| Read the order details. | ItemType; product variant, seat, or package listing recorded at purchase | The order contains the correct purchase, not another ticket, variant, or seat. For TicketProductPackage, the package contains one admission and one included product variant, without a second separately purchased product. |
 | As the buyer, open the prepared order in Account → My Orders and inspect its order options. | The item whose switch is off | Return order is not offered; no customer return or positive refund preview can be started. |
-| As the employee, open the purchased ticket type's Basic info or product's Fulfillment page listed for ItemType. | Recorded item name | Allow customer-initiated refunds is off for the intended item. |
+| As the employee, open the ticket type's Basic info or product's Fulfillment page named in the ItemType table. | Recorded item name; TicketProductPackage uses the included product's Fulfillment page. | Allow customer-initiated refunds is off for the intended item. For TicketProductPackage, the package ticket's own switch remains on. |
 | Turn on Allow customer-initiated refunds. |  | The item switch is on. |
 | Select Save. |  | The item change is saved. |
 | Reopen the same item settings. |  | Allow customer-initiated refunds remains on. |
 | As the customer, reload the same order. | Recorded transaction | The original paid purchase is still shown with its recorded quantity. |
-| Open Return order again. | Expected return selection in ItemType | The intended purchase is selectable and any accompanying blocked ticket remains unselectable. |
-| Select the newly returnable purchase. | Quantity 1 of the ticket, variant, seat ticket, or package listing | The preview shows a positive amount for the selected purchase without including a blocked companion item. |
+| Open Return order again. | Expected return selection in ItemType | The intended purchase is selectable and any accompanying blocked ticket remains unselectable. For either package setup, select the purchased package ticket; included tickets or products cannot be selected separately. |
+| Select the newly returnable purchase. | Quantity 1 of the ticket, variant, seat ticket, or package listing | The preview shows a positive amount for the selected purchase without including a blocked companion item. A package is counted once; the included tickets' or product's standalone prices are not added again to its paid package amount. |
 | Read the selected purchase's description and quantity. | Original receipt and ItemType | The selection matches the recorded ticket, product variant, seat ticket, or single package purchase. |
 | Select Cancel. |  | The dialog closes without submitting a return. |
 | Reopen the order in My Orders. | Recorded transaction | All purchased items remain paid and none is marked returned. |
@@ -188,6 +207,7 @@ ItemType: TicketType, Product, StandaloneProduct, AssignedSeat, TicketPackage
 * Restore the changed item switches and organization policy values, save, and reopen them. Keep the order paid and unrefunded.
 * AssignedSeat: the customer still owns the recorded seat; cancelling the return must not release it.
 * TicketPackage: the package and both included tickets remain paid; neither included ticket was returned separately.
+* TicketProductPackage: the admission and included product remain paid, unfulfilled and unreturned. Restore the included product's original refund switch. Keep the sold package relationship unchanged; do not delete it as cleanup.
 
 ### TC-2: My Orders - Refunds - Block a customer return when the organization policy is off
 
@@ -340,47 +360,54 @@ PurchaseConfiguration: TwoTicketTypes, TicketAndProduct, TwoAssignedSeats
 * Have the administrator restore Customer Self Refund Settings to its recorded original value if it was changed for this case.
 * Restore policy and ticket switches; leave the order unrefunded.
 
-### TC-6: My Orders - Refunds - Allow customer refunds after barcode delivery - Block or allow customer refunds
+### TC-6: My Orders - Refunds - Block or allow a refund when the customer can already see the ticket barcode
 
-**Description:** A customer has one paid ticket whose standard barcode is already available in My Orders. Allow customer refunds after barcode delivery must hide **Return order** when off and allow a positive preview after it is saved on. Cancel without returning the ticket.
+**Description:** The customer already has one paid ticket and can see its barcode in My Orders. Check whether **Allow customer refunds after barcode delivery** controls the customer's ability to return that same ticket. The ticket type's **Allow customer-initiated refunds** stays **on** throughout. Use **Barcode delivery = Default**, so the barcode is available without waiting for a delayed release or asking the customer to activate it. Preview the refund, then Cancel.
 
 | Platform | View |
 | --- | --- |
 | WebPublic | Desktop |
 
+| Organization setting being tested | What the customer should see on the same order |
+| --- | --- |
+| Allow customer refunds after barcode delivery = off | The barcode is visible, but Return order is hidden. |
+| Allow customer refunds after barcode delivery = on | The barcode is still visible. Return order is available, and the ticket can be selected for a refund preview. |
+
 **Tags:** my-orders, refunds, edge-case
 
 **Preconditions:**
 
-* The preparing employee has **Manage Organization Info** and **Manage Events**.
-* In **Admin → Venues → Venues**, an administrator finds the organization and saves **Customer Self Refund Settings = on**. Record its original value.
-* In **Dashboard → Organization → Organization settings → Customer refunds**, save both **Allow customer refunds for tickets** and **Allow customer refunds for products** on, and **Automated return refund type = Base refund**; record their original values.
-* Enable `enable_venue_policy_customer_self_refunds` for the selected organization. Use **Admin → Venues → Venues → Barcode delivery = Default**; do not use customer activation or delayed barcode delivery.
-* In **Admin → Venues → Venue customer refund policies**, find the organization or **Add → Venue → select the organization → Save**. In **Dashboard → Organization → Organization settings → Customer refunds**, save policy on, **No cutoff**, **Refund eligible items independently** before purchase. Record the original policy and item switches.
-* Set **Allow customer refunds after barcode delivery = off**. Set **Allow customer refunds after fulfillment or shipping** and **Allow customer refunds after check-in or scan** to **on**.
-* In **Dashboard → Build → Events → All events → Edit → Tickets**, use a published, single-day event at least seven days in the future with public sales open. Create or select one public General Admission ticket priced 10.00, inventory 10, without a package or assigned seat; save **Basic info → Allow customer-initiated refunds = on**. Use electronic delivery, with no shipping, discount, credit, gift card, or payment plan.
-* As the buyer, buy quantity 1 with an approved refundable card payment. Open **Account → My Orders → the order's tickets** and confirm its barcode is available; record the transaction, ticket name, and displayed barcode. Keep it unscanned, unfulfilled, untransferred, and not on resale.
+* The preparing employee has **Manage Organization Info** and **Manage Events**. Record the original settings before changing them.
+* An administrator opens **Admin → Venues → Venues → the selected Organization's Venue record** and saves **Customer Self Refund Settings = on** and **Barcode delivery = Default**.
+* The Venue-scoped feature flag **enable_venue_policy_customer_self_refunds = on** for the selected Venue.
+* In **Admin → Venues → Venue customer refund policies**, search for the selected Venue. Reuse its policy, or select **Add → Venue → select the Venue → Save**.
+* In **Dashboard → Organization → Organization settings → Customer refunds**, save **Enable customer refund policy = on**, **Allow customer refunds for tickets = on**, **Allow customer refunds for products = on**, **Automated return refund type = Base refund**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**.
+* On that same settings page, save **Allow customer refunds after barcode delivery = off**. Save **Allow customer refunds after fulfillment or shipping = on** and **Allow customer refunds after check-in or scan = on**.
+* In **Dashboard → Build → Events → All events → Edit → Tickets**, prepare one public General Admission ticket priced **10.00**, with **Inventory = 10**, on a published single-day event at least seven days in the future with sales open. Save **Basic info → Allow customer-initiated refunds = on**. Leave this ticket switch on for the whole test.
+* As the customer who will open My Orders, buy **one** of that ticket with an approved refundable card payment and electronic delivery. The order contains only that ticket: no package, assigned seat, product, shipping, discount, credit, gift card or payment plan. Record the transaction and ticket name.
+* Keep the ticket unscanned, unfulfilled, untransferred and off resale. The customer must already be able to see its barcode before checking the refund setting.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| As the buyer, open Account → My Orders. | Recorded transaction and ticket | The original paid purchase is present. |
-| As the buyer, open the prepared order in Account → My Orders and inspect its order options. | Allow customer refunds after barcode delivery = off | Return order is not offered; no customer return or positive refund preview can be started. |
-| Leave the order without submitting any return. |  | No refund or credit is created. |
-| As the employee, open Dashboard → Organization → Organization settings → Customer refunds. | Selected organization | Allow customer refunds after barcode delivery is off. |
-| Change Allow customer refunds after barcode delivery to on. |  | The new choice is shown. |
-| Select Save. |  | Customer refund policy saved appears. |
-| Reopen Customer refunds. |  | Allow customer refunds after barcode delivery still is on. |
-| As the buyer, reload the same order in My Orders. | Recorded transaction | The original purchase is still shown. |
-| Open Return order. | ticket | The ticket is selectable. |
-| Select the ticket. | Quantity 1 | A positive preview applies only to the selected purchase. |
-| Select Cancel. |  | No return is submitted. |
-| Reopen the order. | Recorded transaction | Nothing is marked returned; the purchase retains its delivered-barcode, unscanned state. |
+| As the purchasing customer, open Account → My Orders and open the recorded order. | Recorded transaction and ticket name | The order contains one paid ticket with the recorded name. |
+| Open the ticket to view its barcode. | The purchased General Admission ticket | The barcode is visible before any refund setting is changed. |
+| Open the order's available actions. | Allow customer refunds after barcode delivery = off | Return order is hidden even though the ticket's barcode is visible and its own refund switch is on. |
+| Leave the order without returning the ticket. | | No return is submitted and no refund or credit is created. |
+| As the employee, open Dashboard → Organization → Organization settings → Customer refunds. | The Organization that sold the ticket | Allow customer refunds after barcode delivery is off. |
+| Turn on Allow customer refunds after barcode delivery. | Leave the ticket type's own refund switch on. | The Organization setting now shows on. |
+| Select Save. | | Customer refund policy saved appears. |
+| Leave Customer refunds and reopen it. | Same Organization | Allow customer refunds after barcode delivery is still on. |
+| As the customer, reload the same order in My Orders. | Recorded transaction | The same ticket is still paid. |
+| Select Return order. | The purchased ticket | The return dialog opens and the ticket can be selected. |
+| Select the ticket. | Quantity 1 | The preview shows a refund amount greater than zero for that ticket only. |
+| Select Cancel. | | The return dialog closes without submitting a refund. |
+| Reopen the order and view the ticket. | Recorded transaction | The ticket remains paid and unscanned, is not marked returned, and its barcode is still available. |
 
 **Postconditions:**
 
-* Have the administrator restore Customer Self Refund Settings to its recorded original value if it was changed for this case.
-* Restore the original policy and item switches, save, and reopen them. Keep the order unrefunded.
-* Preserve the original delivered-barcode, unscanned evidence; do not erase operational history to reset the case.
+* Restore every Organization, Venue and ticket setting changed for this case, including the barcode-delivery setting and rollout flag if changed. Save and reopen to check the original values.
+* Keep the purchased ticket paid and unrefunded. Do not scan, fulfill or delete it to clean up this preview test.
+* Keep evidence that the barcode was visible in both settings and that Cancel left the ticket unchanged; do not include the usable barcode value in shared notes.
 
 ### TC-7: My Orders - Refunds - Keep existing customer returns working outside the new rollout
 
@@ -575,49 +602,65 @@ PackageConfiguration: TicketPackage, TicketProductPackage
 
 * Restore changed policy and refund-switch values. Keep the paid order and package relationship; do not edit or remove package composition after sales.
 
-### TC-12: My Orders - Refunds - Allow customer refunds after fulfillment or shipping - Block or allow customer refunds for a fulfilled product
+### TC-12: My Orders - Refunds - Block or allow a refund for a product already marked Fulfilled
 
-**Description:** A customer bought an admission ticket and a product using Standard Shipping. The employee has marked the product Fulfilled; the admission refund switch remains off. Allow customer refunds after fulfillment or shipping must decide whether the product can be selected. Cancel without returning either purchase.
+**Description:** A customer buys one admission ticket and one separately priced product in the same checkout. An employee marks the product **Fulfilled**, recording that its shipping has been completed. Check whether **Allow customer refunds after fulfillment or shipping** blocks or allows a refund preview for that product. No physical shipment is needed to prepare the saved status for this test. The product's own refund switch stays on. The admission ticket's switch stays off, so the ticket cannot make Return order appear while the product is blocked. Preview the product refund, then Cancel.
 
 | Platform | View |
 | --- | --- |
 | WebPublic | Desktop |
 
+| What to buy | Refund switch | Delivery and order state |
+| --- | --- | --- |
+| One General Admission ticket priced 10.00 | Allow customer-initiated refunds = off throughout | Electronic delivery; unscanned and unfulfilled. This is the accompanying admission, not the item being returned. |
+| One product variant priced 15.00, added separately at checkout | Allow customer-initiated refunds = on throughout | Standard Shipping. An employee must save Fulfillment status = Fulfilled before the refund checks. This is not a ticket + product package. |
+
+| Organization setting being tested | Expected result for that same order |
+| --- | --- |
+| Allow customer refunds after fulfillment or shipping = off | Return order is hidden: the product is blocked because it is Fulfilled, and the ticket's own refund switch is off. |
+| Allow customer refunds after fulfillment or shipping = on | Return order is available. The fulfilled product can be selected; the admission ticket stays blocked. |
+
 **Tags:** my-orders, refunds, edge-case
 
 **Preconditions:**
 
-* The preparing employee has **Manage Organization Info**, **Manage Events**, **Manage Marketplace**, **Manage Transactions**, and **Scan Tickets**. The organization is not on Basic pricing; Scan Tickets is also required by the fulfillment update action.
-* In **Admin → Venues → Venues**, an administrator finds the organization and saves **Customer Self Refund Settings = on**. Record its original value.
-* In **Dashboard → Organization → Organization settings → Customer refunds**, save both **Allow customer refunds for tickets** and **Allow customer refunds for products** on, and **Automated return refund type = Base refund**; record their original values.
-* Enable `enable_venue_policy_customer_self_refunds` for the selected organization. Use **Admin → Venues → Venues → Barcode delivery = Default**; do not use customer activation or delayed barcode delivery.
-* In **Admin → Venues → Venue customer refund policies**, find the organization or **Add → Venue → select the organization → Save**. In **Dashboard → Organization → Organization settings → Customer refunds**, save policy on, **No cutoff**, **Refund eligible items independently** before purchase. Record the original policy and item switches.
-* Set **Allow customer refunds after fulfillment or shipping = off**. Set **Allow customer refunds after barcode delivery** and **Allow customer refunds after check-in or scan** to **on**.
-* In **Dashboard → Build → Events → All events → Edit → Tickets**, use a published, single-day event at least seven days in the future with public sales open. Create or select a public General Admission ticket priced 10.00, inventory 10, and save **Basic info → Allow customer-initiated refunds = off**. This accompanying ticket must stay blocked throughout the case.
-* In **Dashboard → Build → Products → All products**, create or select a product with one variant priced 15.00 and inventory 10 under **Inventory**. Under **Fulfillment**, save **Allow customer-initiated refunds = on** and **Product Delivery Method(s) = Standard Shipping** only, **Shipping Cost = 0.00**, **Fee Method = Per item**. Under **Availability → Checkout add-ons**, enable **Add to event checkout process**, choose **Event checkout visibility = Include for certain items**, select the event and admission under **Select tickets to include**, and save.
-* As the buyer, buy quantity 1 of the admission and quantity 1 of the product variant in the same checkout with an approved refundable card payment. Select Standard Shipping for the product and enter a supported shipping address you control. Record the receipt, transaction, product variant, and quantities; do not use discounts, credit, gift cards, payment plans, protection, or a package.
-* As the employee, open **Dashboard → Transactions → the original transaction → Fulfillment**. For the product, choose **Fulfillment status = Fulfilled**, select **Update**, then **Confirm**. Reopen Fulfillment and verify the product remains Fulfilled; do not fulfill the admission. This is a saved shipping-status setup; no physical shipment is required. Keep both purchases unscanned, untransferred, and not on resale.
+* The preparing employee has **Manage Organization Info**, **Manage Events**, **Manage Marketplace**, **Manage Transactions**, and **Scan Tickets**. Scan Tickets is required to update fulfillment. The Organization is not on Basic pricing. Record original settings before changing them.
+* In **Admin → Venues → Venues → the selected Organization's Venue record**, an administrator saves **Customer Self Refund Settings = on** and **Barcode delivery = Default**.
+* The Venue-scoped feature flag **enable_venue_policy_customer_self_refunds = on** for the selected Venue.
+* In **Admin → Venues → Venue customer refund policies**, search for the Venue. Reuse its policy, or select **Add → Venue → select the Venue → Save**.
+* In **Dashboard → Organization → Organization settings → Customer refunds**, save **Enable customer refund policy = on**, both **Allow customer refunds for tickets / products = on**, **Automated return refund type = Base refund**, **Cutoff type = No cutoff**, and **Orders with mixed eligibility = Refund eligible items independently**.
+* On that same page, save **Allow customer refunds after fulfillment or shipping = off**. Leave **Allow customer refunds after barcode delivery = on** and **Allow customer refunds after check-in or scan = on**.
+* In **Dashboard → Organization → Organization settings → Shipping and fulfillment**, save **Fulfillment features enabled = on**.
+* In **Dashboard → Build → Events → All events → Edit → Tickets**, prepare the admission from What to buy with **Inventory = 10** and **Basic info → Allow customer-initiated refunds = off**. Use a published single-day event at least seven days in the future with sales open.
+* In **Dashboard → Build → Products → All products**, prepare one product with a single variant priced **15.00** and **Inventory = 10**. Under **Fulfillment**, save **Allow customer-initiated refunds = on**, **Product Delivery Method(s) = Standard Shipping** only, **Shipping Cost = 0.00**, and **Fee Method = Per item**. Zero shipping cost keeps this case focused on whether the product can be returned.
+* For that product, open **Availability → Checkout add-ons**. Turn on **Add to event checkout process**, choose **Event checkout visibility = Include for certain items**, select the prepared event and admission under **Select tickets to include**, and Save.
+* As the customer who will use My Orders, buy one admission and one product variant together with an approved refundable card payment. Choose **Standard Shipping** for the product and use a supported shipping address you control. Record the transaction, receipt and product variant. Do not include a package, discount, credit, gift card, payment plan or protection. Keep both purchases unscanned, untransferred and off resale.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| As the buyer, open Account → My Orders. | Recorded transaction and product | The original paid purchase is present. |
-| As the buyer, open the prepared order in Account → My Orders and inspect its order options. | Allow customer refunds after fulfillment or shipping = off | Return order is not offered; no customer return or positive refund preview can be started. |
-| Leave the order without submitting any return. |  | No refund or credit is created. |
-| As the employee, open Dashboard → Organization → Organization settings → Customer refunds. | Selected organization | Allow customer refunds after fulfillment or shipping is off. |
-| Change Allow customer refunds after fulfillment or shipping to on. |  | The new choice is shown. |
-| Select Save. |  | Customer refund policy saved appears. |
-| Reopen Customer refunds. |  | Allow customer refunds after fulfillment or shipping still is on. |
-| As the buyer, reload the same order in My Orders. | Recorded transaction | The original purchase is still shown. |
-| Open Return order. | product | The product is selectable while the accompanying ticket remains blocked. |
-| Select the product. | Quantity 1 | A positive preview applies only to the selected purchase. |
-| Select Cancel. |  | No return is submitted. |
-| Reopen the order. | Recorded transaction | Nothing is marked returned; the purchase retains its fulfilled shipping state. |
+| As the employee, open Dashboard → Transactions and open the recorded purchase. | Recorded transaction | The order contains one admission and the recorded product variant. |
+| Select Fulfillment. | The recorded product | The product is listed with a Fulfillment status control. |
+| Set the product's Fulfillment status to Fulfilled. | Change only the product; leave the admission unchanged. | Fulfilled is selected for the product. |
+| Select Update. | | A confirmation is shown. |
+| Select Confirm. | | The product's fulfillment change is saved. |
+| Reopen Fulfillment for the same transaction. | Recorded product variant | The product still shows Fulfilled; the admission was not fulfilled. |
+| As the customer, open Account → My Orders and inspect the recorded order's available actions. | Allow customer refunds after fulfillment or shipping = off | Return order is hidden. Neither purchase can be returned with these settings. |
+| Leave the order without returning either purchase. | | No return is submitted and no refund or credit is created. |
+| As the employee, open Dashboard → Organization → Organization settings → Customer refunds. | The Organization that sold the items | Allow customer refunds after fulfillment or shipping is off. |
+| Turn on Allow customer refunds after fulfillment or shipping. | Keep the product's own refund switch on and the ticket's off. | The Organization setting shows on. |
+| Select Save. | | Customer refund policy saved appears. |
+| Leave Customer refunds and reopen it. | Same Organization | Allow customer refunds after fulfillment or shipping is still on. |
+| As the customer, reload the same order in My Orders. | Recorded transaction | The admission and product are still paid. |
+| Select Return order. | Recorded product variant | The fulfilled product can be selected. The admission ticket cannot be selected. |
+| Select the product. | Quantity 1 | The preview shows a refund amount greater than zero for the product only, with no admission or shipping charge included. |
+| Select Cancel. | | The dialog closes without submitting a refund. |
+| Reopen the order in My Orders. | Recorded transaction | Both purchases remain paid; neither is marked returned. |
+| As the employee, reopen the transaction's Fulfillment. | Recorded product variant | The product still shows Fulfilled. Cancelling the refund did not reset its shipping status. |
 
 **Postconditions:**
 
-* Have the administrator restore Customer Self Refund Settings to its recorded original value if it was changed for this case.
-* Restore the original policy and item switches, save, and reopen them. Keep the order unrefunded.
-* Preserve the original fulfilled shipping evidence; do not erase operational history to reset the case.
+* Restore the original Organization, Venue and item settings changed for this case, including the rollout flag, barcode-delivery setting and fulfillment feature setting if changed. Save and reopen to check the original values.
+* Keep both purchased items paid and unrefunded. Preserve the product's saved Fulfilled status and its history; do not delete the order or reset that status as cleanup.
 
 ### TC-13: My Orders - Refunds - Allow customer refunds after check-in or scan - Block or allow customer refunds for a checked-in ticket
 
@@ -751,14 +794,14 @@ AllowedItems: Both, TicketsOnly, ProductsOnly
 | Already-returned item in whole-order mode | Deferred | Requires a separate prepared partial-return order; do not infer coverage from the all-paid cases. |
 | Legacy compatibility and order ownership | Manual-only | TC-7–TC-8. |
 | Direct API bypass, foreign or duplicate item IDs, invalid payment and invoice states | API/backend verification | Current validator and API tests cover examples; run and extend them before release. |
-| Package selection | Manual-only for the specified configurations | TC-1 prepares a single-barcode Preset ticket package; TC-9 prepares a ticket + product package. Separate-barcode ticket packages, nested/custom packages, and blocked descendants need distinct checks. |
+| Package selection | Manual-only; cases published, not executed | TC-1 prepares a single-barcode Preset ticket package and a separate-barcode ticket + product package. The included product's switch off → on is covered by TicketProductPackage. Other blocked descendant states, separate-barcode ticket-only packages and nested/custom packages need distinct checks. |
 | Specific customer-facing blocked-reason wording | Product-expectation question | Distinct backend codes currently map to generic item copy in My Orders. |
 | Request/approval mode | Not applicable to current model | Only automatic and blocked outcomes exist. |
 | Venue shipping/fee amount rules; separate delayed-barcode opt-in | Separate executable scope | Current source now contains both. Follow [[SPW-19669-customer-refund-amount-rules-test-cases]] and [[SPW-19670-delayed-barcode-self-refund-test-cases]]. |
 
 ## Minimum Execution Set
 
-Run TC-1 once for each of its five ItemType values, TC-9 for the ticket + product package, TC-2, all TC-3 cutoff rows, each TC-4 PurchaseConfiguration, TC-5, both TC-10 PurchaseConfiguration values, both TC-11 PackageConfiguration values, TC-6, TC-12, and TC-13, TC-7, and TC-8. Record unavailable state preparation as blocked, not passed.
+Run TC-1 once for each of its six ItemType values, including TicketProductPackage. TC-9 and TC-11 are historical withheld cases; do not execute their obsolete blanket package-failure expectations. Also run TC-2, all TC-3 cutoff rows, each TC-4 PurchaseConfiguration, TC-5, both TC-10 PurchaseConfiguration values, TC-6, TC-12, TC-13, TC-7 and TC-8. Record unavailable state preparation as blocked, not passed.
 
 ## Suggested Automated Coverage
 
@@ -773,5 +816,5 @@ Cover exact cutoff boundaries and timezones; all item and mixed-order variants; 
 ## Open Questions
 
 1. Should the customer see precise reasons for item flag, barcode, shipping, and scan blocks, or is the current generic item message accepted?
-2. Should a ticket + product package be returnable as one purchase? Current backend admits the package ticket when all included items qualify, but the customer page filters it out for the separate-barcode configuration in TC-9. This is a source-based integration concern, not an executed defect.
+2. Ticket + product package selection now has a current-source recipe in TC-1 / SPT-5309. The earlier frontend-filter concern in historical TC-9 is superseded by the 2026-11-02 source review; the new case still needs execution on the deployed build. Completed refund amounts, included-item validity and inventory effects remain outside this preview case.
 3. Which deployed build and preparation accounts will be used for fulfillment and check-in states?

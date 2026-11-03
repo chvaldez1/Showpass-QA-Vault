@@ -13,7 +13,7 @@ tags:
 > Start with [[SPW-19666-customer-self-refunds-test-cases#Current coverage review — 2026-10-27|the current page review]]. Qase and the local cases now match the reviewed repos. The approved 21 updates and 14 new cases were saved and verified; the Start Here note lists their IDs. Both Excel calculators use the current refund choices. No refunds were executed.
 
 
-Use this page **before** [[00 Customer - How to Test|the customer checks]]. An **organization** in Dashboard is the **venue** in Showpass Admin. The organization policy is one saved record for that business. Each ticket type and product has a separate **Allow customer-initiated refunds** switch. An employee refund in Transactions is a different workflow.
+Use this page **before** [[03 Test Cases/Refunds and Protection/Customer/00 Customer - How to Test|the customer checks]]. An **organization** in Dashboard is the **venue** in Showpass Admin. The organization policy is one saved record for that business. Each ticket type and product has a separate **Allow customer-initiated refunds** switch. An employee refund in Transactions is a different workflow.
 
 ## 1. Check the exact gates
 
@@ -76,6 +76,6 @@ Use an event and products whose settings you are authorized to change and whose 
 
 ## Finish and evidence
 
-For each scenario, record the selected organization, deployed build, flag state, policy values, employee role, event/ticket/product, purchase reference, and the exact visible result. Configuration success requires saved values after reload; customer success requires [[00 Customer - How to Test|the full order and money checks]]. Restore original policy, item, rollout, and Venue settings through their owners. Leave paid/refunded orders intact.
+For each scenario, record the selected organization, deployed build, flag state, policy values, employee role, event/ticket/product, purchase reference, and the exact visible result. Configuration success requires saved values after reload; customer success requires [[03 Test Cases/Refunds and Protection/Customer/00 Customer - How to Test|the full order and money checks]]. Restore original policy, item, rollout, and Venue settings through their owners. Leave paid/refunded orders intact.
 
 **Sources reviewed:** [SPW-19667](https://showpass.atlassian.net/browse/SPW-19667), [SPW-19669](https://showpass.atlassian.net/browse/SPW-19669), [SPW-19670](https://showpass.atlassian.net/browse/SPW-19670); backend `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/venues/utils.py`, `apps/venues/api/venue_based/viewsets/refunds.py`, `apps/venues/models/venue_management/customer_refund_policy.py`, `apps/venues/models/venue_management/venue.py`; frontend `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/organization/settings/customer-refunds/` and ticket/product editors. Source reviewed 2026-10-02; no live setup was changed.

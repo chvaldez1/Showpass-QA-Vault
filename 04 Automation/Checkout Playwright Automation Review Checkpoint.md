@@ -1,5 +1,8 @@
 # Checkout Playwright Automation Review Checkpoint
 
+> [!important] Implementation correction — 2026-10-31
+> Backend tracing during [[02 Feature QA/QA Process/Vault Review - 2026-10-31#Implementation follow-through|the follow-on implementation]] established that `amount_paid` is venue settlement liability, which can differ from the customer total. The old AUTO-CHK-003 suggestion below must not compare Settlement amount with the checkout total. The implemented shared check reads the exact invoice's `final_amount` and compares it with the independently supplied customer total. Settlement needs its own expected amount. Static validation passed; live beta execution and CI remain unrun. Preserve the historical ranking below, and recheck current code before further implementation.
+
 Related notes:
 - [[02 Feature QA/Checkout/Checkout Automation Mission Control]]
 - [[02 Feature QA/Checkout/Checkout Automation Worker State.json]]

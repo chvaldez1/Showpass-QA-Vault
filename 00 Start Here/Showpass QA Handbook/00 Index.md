@@ -18,6 +18,8 @@ Do not stop because the screen your developer changed works. An Event that saves
 > [!important] Scope and safety
 > [[00 Start Here/World-Class Software Quality Standard]] remains the authority for evidence, scope, coverage, data safety, classification, and release decisions. These are reusable source-informed walkthroughs, not executed results or ready-to-copy Qase cases. Bind each selected path to the actual build, supported clients, permissions, flags, and configuration. Use owned isolated records and approved test payments.
 
+For the daily path from a change to execution, automation, release decision and learning, use [[00 Start Here/QA Operating Workflow]]. Track actual process trials and measurements in [[00 Start Here/QA Improvement Log]].
+
 ## Start with a real workflow
 
 1. [[00 Start Here/Showpass QA Handbook/12 Venue Client and Scenario Setup|Choose the Venue and verify configuration]]. For an existing Organizer, compare Organization Info, hidden Admin settings and Event/catalog relationships; document safe sandbox substitutions instead of assuming a generic TEA Event is equivalent.

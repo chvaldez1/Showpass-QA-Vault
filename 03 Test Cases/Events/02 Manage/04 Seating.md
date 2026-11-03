@@ -5771,6 +5771,9 @@ The existing small/medium/large rows and large-map performance cases overlap; pr
 
 ### Browser observations — definitions are not executed proof
 
+> [!warning] Local evidence availability checked 2026-10-31
+> The 15 linked screenshots and Qase JSON receipts under `evidence/seating-review-2026-10-16/` in this review/follow-up are absent from this local vault, including the three embedded screenshots. A vault-wide filename search did not find them elsewhere. Historical observations, publication claims, original dates and links below are preserved; their raw evidence could not be independently rechecked in this vault review. No browser or Qase checks were rerun. Recover original captures/receipts if available; do not recreate proof or treat these missing files as current release evidence.
+
 Existing demo tab, authenticated Christian Valdez, Berry Bonanza Hockey recurring parent, Strawberry Rink. The editor displayed **4205 seats and 378 areas**. Exact organization identity, employee permissions and feature-flag values were not independently verified. Opened Edit Space and returned with Cancel; did not edit geometry, click permission/settings toggles, run generators or select Save. No stress loop, new session, purchase or live mutation occurred. Displaying the map is not a save, ownership or financial pass.
 
 ![[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/map-editor-visible.png|500]]

@@ -41,6 +41,8 @@ Give each check a report-local ID (`TC-01`, `TC-02`, and so on). Use the same ID
 - **Finishing point:** [The observable result that completes the requested check, plus required cleanup. List relevant known issues/deprecated controls without turning them into new bug drafts.]
 - **Allowed changes:** [Permitted test-data changes, restoration and preserved review data.]
 
+When this run supports a release decision, add the coverage table, remaining checks and recommendation from [[03 Test Cases/Release Decision Template]] to this same note before the final Results table. Show Qase, Playwright and browser coverage separately from actual execution. Link exact checks/steps below; do not create a competing release summary. A focused smoke check still supports only its declared scope.
+
 ## TC-01 [Descriptive scenario name]
 
 **What this tests:** [One specific outcome. Say whether this checks a visible link, opening a screen, saving a change or its later effect. Do not leave the reader to infer the goal from the title.]

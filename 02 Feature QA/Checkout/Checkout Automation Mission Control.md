@@ -2,6 +2,9 @@
 
 Persistent state for the checkout recursive automation prioritization worker.
 
+> [!note] Vault review — 2026-10-31
+> This is a historical planning checkpoint, not current executed CI protection. The October 31 vault review did not rerank candidates or verify the current test implementation. Use [[04 Automation/00 Index]] for delivery and [[06 Prompts/Convert Test Cases to Playwright]] for a separately requested implementation. The planning worker now stops when its requested answer is ready and no decision-changing uncertainty remains; preserve the existing IDs and reviewer gate below.
+
 Related notes:
 - [[06 Prompts/Checkout Recursive Automation Prioritization Worker]]
 - [[02 Feature QA/Checkout/Checkout Automation Worker State.json]]

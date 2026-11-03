@@ -16,8 +16,8 @@ This page translates every acceptance criterion in [SPW-19326](https://showpass.
 
 ## How to use this page
 
-1. Follow [[00 Organizer and Venue - How to Test|Organizer and Venue setup]] to select an organization, prepare its policy and ticket settings, and record original values.
-2. Follow [[00 Customer - How to Test|Customer setup]] to create **new** paid orders and check My Orders. Use separate orders for each completed refund.
+1. Follow [[03 Test Cases/Refunds and Protection/Organizer and Venue/00 Organizer and Venue - How to Test|Organizer and Venue setup]] to select an organization, prepare its policy and ticket settings, and record original values.
+2. Follow [[03 Test Cases/Refunds and Protection/Customer/00 Customer - How to Test|Customer setup]] to create **new** paid orders and check My Orders. Use separate orders for each completed refund.
 3. Follow [[00 Staff Refund Permissions - How to Test|Staff refund setup]] for the separate employee-permission work.
 4. Mark each criterion **Pass**, **Fail**, **Blocked**, **Deferred**, or **Not applicable** in an execution record. A form save proves configuration only; a completed return needs fresh order, ticket, money, and reporting evidence.
 

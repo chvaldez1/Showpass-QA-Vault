@@ -161,8 +161,8 @@ This is the working order for [SPW-19495](https://showpass.atlassian.net/browse/
 
 | Order | Who does it | Guide | Jira card and detailed cases |
 | --- | --- | --- | --- |
-| 1. Prepare the organization | Organizer/Venue Employee plus an Admin for rollout and missing policy record | [[00 Organizer and Venue - How to Test]] | [[SPW-19667-customer-refund-policy-test-cases|SPW-19667]]: form, cutoffs, ticket/product switches, employee access, French and older settings page. |
-| 2. Buy orders and inspect return choices | Customer | [[00 Customer - How to Test]] | [[SPW-19668-customer-refund-eligibility-test-cases|SPW-19668]]: allowed, blocked, mixed-order, cutoff and ownership behavior. |
+| 1. Prepare the organization | Organizer/Venue Employee plus an Admin for rollout and missing policy record | [[03 Test Cases/Refunds and Protection/Organizer and Venue/00 Organizer and Venue - How to Test]] | [[SPW-19667-customer-refund-policy-test-cases|SPW-19667]]: form, cutoffs, ticket/product switches, employee access, French and older settings page. |
+| 2. Buy orders and inspect return choices | Customer | [[03 Test Cases/Refunds and Protection/Customer/00 Customer - How to Test]] | [[SPW-19668-customer-refund-eligibility-test-cases|SPW-19668]]: allowed, blocked, mixed-order, cutoff and ownership behavior. |
 | 3. Check amounts on new compatible orders | Organizer configures; Customer returns; permitted Employee checks Transactions | Same Organizer and Customer guides | [[SPW-19669-customer-refund-amount-rules-test-cases|SPW-19669]]: shipping, fees, preview/final amount. |
 | 4. Check delayed barcode delivery | Admin configures Venue; Customer checks My Orders | Customer guide | [[SPW-19670-delayed-barcode-self-refund-test-cases|SPW-19670]]: before/after release, opt-in and blockers. |
 | 5. Complete customer acceptance | Customer plus permitted Employee for financial/admission evidence | Customer guide | [[SPW-19671-customer-self-refund-acceptance-test-cases|SPW-19671]]: successful and failed returns, final state and no duplicate. |
@@ -188,7 +188,7 @@ The user explicitly approved **“approve those nine changes”**. Exactly **two
 | Created [SPT-5326](https://app.qase.io/case/SPT-5326) | 19668 TC-12 | My Orders - Refunds - After fulfillment or shipping - Block or allow customer refunds for a fulfilled product | my-orders, refunds, edge-case | None | 12 |
 | Created [SPT-5327](https://app.qase.io/case/SPT-5327) | 19668 TC-13 | My Orders - Refunds - After check-in or scan - Block or allow customer refunds for a checked-in ticket | my-orders, refunds, edge-case | None | 12 |
 
-SPT-5312 and SPT-5315 already have the exact **Block when any remaining item is ineligible** and **Refund eligible items independently** choices in their verified titles. The [[00 Customer - How to Test#Find a case by the setting name|Customer guide]] links each policy choice to its saved cases.
+SPT-5312 and SPT-5315 already have the exact **Block when any remaining item is ineligible** and **Refund eligible items independently** choices in their verified titles. The [[03 Test Cases/Refunds and Protection/Customer/00 Customer - How to Test#Find a case by the setting name|Customer guide]] links each policy choice to its saved cases.
 
 **Execution and remaining scope:** these are verified Qase definitions, not executed tests. No customer orders, payments, credits, inventory, fulfillment, or scans were changed. SPT-5323 checks the current package-selection limitation; it does not prove successful package returns or a live defect. Customer-side refund-amount drafts remain unpublished; SPT-5308 covers saving amount settings only. Already-returned-item whole-order coverage and the other documented deferred checks remain outstanding.
 
@@ -273,7 +273,7 @@ The user approved this exact scope with “push it” on 2026-10-05: **three chi
 
 **Corrected expectations:** when every purchase is blocked, the return modal uses its blocked-message screen; do not require a disabled list that the current frontend does not show. In the basic amount path, returning one ticket plus one product creates one credit record for each selected purchase row; compare their sum to the single displayed preview total. Neither correction removes the original blocking, credit, or no-duplicate proof. No completed-return case here proves a refund to the customer's card.
 
-The complete item/configuration coverage and remaining boundaries are in [[00 Customer - How to Test#Purchase configurations and coverage boundaries|the Customer guide]]. The user confirmed “ticket products” means a ticket + product package. TicketAndProduct is a different configuration: admission plus a separately priced add-on. Eligibility TC-9 documents the actual ticket + product package setup and the current-source blocked selection. TC-9 remains local and is not part of the two existing-case updates.
+The complete item/configuration coverage and remaining boundaries are in [[03 Test Cases/Refunds and Protection/Customer/00 Customer - How to Test#Purchase configurations and coverage boundaries|the Customer guide]]. The user confirmed “ticket products” means a ticket + product package. TicketAndProduct is a different configuration: admission plus a separately priced add-on. Eligibility TC-9 documents the actual ticket + product package setup and the current-source blocked selection. TC-9 remains local and is not part of the two existing-case updates.
 
 **Readback baseline:** `/private/tmp/qase-refund-item-scope-before.json`. **Proposed update batch:** `/private/tmp/qase-refund-item-scope-batch.json`; apply is not authorized yet. The saved 2026-10-05 publication table above remains historical and does not describe these pending fields.
 

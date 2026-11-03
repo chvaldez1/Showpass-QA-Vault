@@ -219,6 +219,8 @@ Before running an update dry-run, confirm:
 - [ ] The smallest clear parameter set is used; independent parameters are added only when they change the flow or expected result.
 - [ ] Parameter names are short, every value maps to exact setup inside the case, and required combinations remain reachable after simplification.
 - [ ] The claimed run count matches the selected combinations; form persistence, customer preview, completed returns, and financial proof are accounted for separately.
+- [ ] Applied [[05 Tooling/Qase Test Case Writing Rules#Explain Showpass Terms And Where To Find Them]]: each necessary Showpass term has an ordinary explanation, exact Dashboard/UI or Admin location, correct control/record type and required value; result locations and necessary access are explicit.
+- [ ] Readability feedback has been applied across all affected fields and the requested case set. The instructions do not rely on the chat, unexplained form counts, hidden controls without preparation, or a setup combination the named UI cannot save. Description mappings and location tables survive the maintained parser.
 
 1. Confirm scope before writing: suite ID, whether cases are creates or updates, existing Qase case IDs only for updates, and exact field types to update.
 2. Read and apply [[05 Tooling/Qase Test Case Writing Rules]] for any test case content changes.
