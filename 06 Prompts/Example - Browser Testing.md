@@ -104,3 +104,5 @@ Do not modify Qase.
 ```
 
 For drafting cases, use [[06 Prompts/Example - Generate Test Cases]]. To compare existing Qase coverage, use [[06 Prompts/Example - Qase Gap Analysis]].
+
+For repeated Event setup, use [[06 Prompts/Generate Showpass Test Events]] to create a fresh Event manually in the already-signed-in beta/demo sidebar. Use saved data and batch form entry; require complete package contents/settings first. Scripts, direct API requests, separate logins and cloning are different work and need an explicit request.

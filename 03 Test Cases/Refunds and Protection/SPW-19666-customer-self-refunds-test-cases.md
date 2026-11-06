@@ -10,6 +10,10 @@ tags:
 
 # Customer refunds — start here
 
+> [!important] Delayed-barcode cases published — 2026-11-05
+> The three approved SPW-19670 creates are saved and full-field readback verified in Customer (1108): **SPT-5894** released/barred, **SPT-5895** released/completed Organizer Credit return, **SPT-5896** unreleased preview with Single DelayedReturns Off/On. The canonical [[SPW-19670-delayed-barcode-self-refund-test-cases|delayed-barcode note]] contains exact setup and remaining coverage. No existing Qase cases changed. These definitions are unexecuted; earlier dated publication holds below are history.
+
+
 > [!warning] Open exchange issue — 2026-10-28
 > [[02 Feature QA/Refunds and Exchanges/SPW-21227-customer-refunds-block-exchanges|SPW-21227]] now has an updated and readback-verified Jira description with exact Venue feature flags, saved settings, event cutoff and ticket requirements. The customer Exchange button is blocked by the Venue's **Customer Self Refund Settings** value. A Web Box Office exchange server error is also reported, but its response and cause remain unverified. The user approved the Jira update on 2026-10-28; no business data was changed.
 
@@ -127,7 +131,7 @@ Each linked Jira note contains the full standalone cases and setup. Labels below
 | Older/incomplete shipping purchase data | Backend refuses an unsafe amount and asks for organizer help. Need a known untouched historical order and read-only purchase evidence; do not edit financial records to manufacture it. This is Blocked manual setup, not silent legacy fallback. |
 | Duplicate or concurrent requests; provider failure after an earlier completed refund | Backend/integration proof required. Existing UI repeated-return case is not two-request race coverage. Controlled provider failure setup is not available in this review. |
 | Square Terminal original-payment return | Current backend blocks a positive asynchronous payment refund through this customer path; Organizer Credit is a different flow. Need a legitimate supported original purchase before a manual negative can be called runnable. |
-| Delayed barcode release | [[SPW-19670-delayed-barcode-self-refund-test-cases|19670]] TC-1/TC-2 remain local; exact supported release setup is still a publication blocker. General barcode permission does not replace Admin opt-in or the saved automated-return window. |
+| Delayed barcode refunds | [[SPW-19670-delayed-barcode-self-refund-test-cases|19670]] TC-1–TC-3 are published and verified 2026-11-05 as [SPT-5894](https://app.qase.io/case/SPT-5894), [SPT-5895](https://app.qase.io/case/SPT-5895), [SPT-5896](https://app.qase.io/case/SPT-5896). Setup uses delay 24/72 hours on an Event about 48 hours away; no release wait needed. Cases are unexecuted. Scheduled transition of an existing ticket, main-gate-off and delayed-specific deadline/safeguard regressions remain separate checks. |
 | Missing policy, loading error/Try again, Save/network failure | UI/source branches reviewed. Missing policy returns an empty list, which must not be confused with a genuine disabled Admin setting. A controlled failure/missing-record setup is needed; do not delete a shared policy or invent an exact error response. |
 | Free tickets, staff refunds, legacy/non-rollout venues | Separate regression controls, not covered by a paid-policy pass. Adjacent free-return SPT-3374, staff duplicate-refund SPT-4842, and gift-card staff refund SPT-3845 were read; do not duplicate their flows or assume the current policy changes those separate refund contracts. |
 | Full Admin Refund, Universal Credit, retired amount/fee fields | Not offered by this form. Backend-only authorization/read-only-field checks remain relevant; do not add them as selectable manual parameters. |

@@ -16,6 +16,7 @@ Automate repeated work where it gives reliable proof or saves recurring effort. 
 | Need | Canonical starting point | Evidence boundary |
 | --- | --- | --- |
 | Checkout implementation candidates | [[04 Automation/Checkout Playwright Automation Review Checkpoint]] | Existing top-six recommendation is planning-only; recheck current source/assertions before implementation |
+| Manually create beta/demo Events from scratch | [[06 Prompts/Generate Showpass Test Events]] | Uses the signed-in sidebar and saved data; fresh Thursday trial passed in 7:43 including final review. [[04 Automation/Production Event Copy to Beta Investigation|Trial evidence]]. Scripts and cloning are separate work. |
 | Broader incident-driven candidates | [[04 Automation/Major Critical Playwright Automation Candidates]] | Historical/source review; compare with checkout candidates before starting overlapping work |
 | Checkout risk context and existing IDs | [[02 Feature QA/Checkout/Checkout Automation Mission Control]] | Preserve IDs, ranking caveats and the planning worker's original scope |
 | Native mobile/device work | [[09 Appium/Test Project]] and [[09 Appium/CI]] | Local, simulator, physical-device and CI results are different evidence; some targets remain blocked/unrun |

@@ -1,0 +1,82 @@
+{
+  "source_venue_id": 18350,
+  "parent_input": "venue-18044-local-copy-input.json",
+  "venue": {
+    "name": "MEGACON Orlando - Local copy",
+    "currency": "USD",
+    "timezone": "US/Eastern",
+    "unit_number": "",
+    "street_name": "301 N Cattlemen Rd",
+    "city": "Sarasota",
+    "province": "Florida",
+    "postal_code": "34232",
+    "country": "US",
+    "pricing_tier": "vpt_standard",
+    "fee_structure": "configured_fee_structure",
+    "shipping_quantity_limit_message": "The quantity of items selected cannot be shipped. Please select a different delivery method.",
+    "barcode_delivery": "default",
+    "package_revenue_realization_type": "parent",
+    "is_test": true,
+    "is_disabled": false,
+    "is_parent": false,
+    "exchange_tickets_fees_type": "no_fees",
+    "exchange_tickets_fees_type_box_office": "no_fees",
+    "tax_on_fees": false,
+    "allow_shipping": true,
+    "shipping_quantity_limit_enabled": true,
+    "allow_delivery_ticket_transfers": false,
+    "allow_guest_checkout": true,
+    "ticket_transfers_enabled": true,
+    "all_in_pricing_is_enabled": false,
+    "allow_recurring_events": false,
+    "enable_multi_layer_packages": false,
+    "disable_event_refunds": false,
+    "enable_automated_returns": false,
+    "category": 4,
+    "shipping_quantity_limit": 12,
+    "barcode_delivery_delay": 24,
+    "modules_enabled": [
+      "1",
+      "7"
+    ],
+    "allowed_shipping_countries": [
+      "United States"
+    ],
+    "blocked_shipping_regions": [
+      "US-VI",
+      "US-GU",
+      "US-MP",
+      "US-AS",
+      "US-HI",
+      "US-AK",
+      "US-PR"
+    ]
+  },
+  "unresolved": [],
+  "deferred": [
+    "Applicable organizer fee/tax rules, internal rate cards and fee-calculation records have not been supplied; parent Venue 18044 may affect inheritance",
+    "Enabled module IDs are confirmed; related module usages/sub-options/prices are not included in the Venue row",
+    "The separate customer-refund policy record and relevant feature-flag rules are not included in the Venue row",
+    "Related-record copying and comparison are separate from this basic two-Venue setup; checkout, fee totals and production-equivalent behavior are not verified"
+  ],
+  "notes": [
+    "Source Venue 18350 and its own settings are now confirmed from the supplied 264-field row; module IDs 1 and 7 mean Events and Exchanges",
+    "The Venue business address is Sarasota; the Event Location remains Orange County Convention Center in Orlando",
+    "Source parent 18044 is metadata only; never assign that production ID to a local relationship",
+    "Only the selected test settings are retained; source email/contact accounts, gateway/provider references, credentials, integrations and notification recipients are excluded",
+    "Free-text policy/contact wording and source artwork are omitted for this setup",
+    "Local payment setup uses the destination configuration; no source payment gateway is copied",
+    "is_test is the source Venue privacy setting, not proof of the database environment; DEV/localhost guards still apply",
+    "Both selected Venue inputs are supplied; create the local parent first, then link the new local child inside the same transaction",
+    "Basic Venue creation no longer waits for related fees; financial verification remains deferred",
+    "No production access or local database write has occurred"
+  ],
+  "source_parent_venue_id": 18044,
+  "source": {
+    "attachment": "/Users/christianvaldez/.codex/attachments/dd9f2840-24e1-49af-a63f-066310f285fc/Pasted text.txt",
+    "row_count": 1,
+    "field_count": 264,
+    "organization_name": "MEGACON Orlando",
+    "received_on": "2026-11-04"
+  }
+}

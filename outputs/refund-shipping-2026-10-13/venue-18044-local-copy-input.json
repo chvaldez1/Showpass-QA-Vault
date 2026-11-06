@@ -1,0 +1,56 @@
+{
+  "source_venue_id": 18044,
+  "source_parent_venue_id": null,
+  "source": {
+    "kind": "user-pasted focused Venue query result",
+    "organization_name": "FAN EXPO HQ USA",
+    "row_count": 1,
+    "field_count": 26,
+    "received_on": "2026-11-04"
+  },
+  "venue": {
+    "name": "FAN EXPO HQ USA - Local copy",
+    "is_parent": true,
+    "is_test": true,
+    "is_disabled": false,
+    "category": 4,
+    "currency": "USD",
+    "timezone": "America/Toronto",
+    "street_name": "20 Eglinton Ave W",
+    "city": "Toronto",
+    "province": "New York",
+    "postal_code": "M4R 1K8",
+    "country": "US",
+    "modules_enabled": ["8", "7", "1"],
+    "pricing_tier": "vpt_standard",
+    "fee_structure": "configured_fee_structure",
+    "tax_on_fees": false,
+    "allow_shipping": true,
+    "allowed_shipping_countries": [],
+    "blocked_shipping_regions": [],
+    "shipping_quantity_limit_enabled": false,
+    "shipping_quantity_limit": null,
+    "allow_delivery_ticket_transfers": false,
+    "barcode_delivery": "default",
+    "barcode_delivery_delay": 24,
+    "ticket_transfers_enabled": true,
+    "all_in_pricing_is_enabled": true,
+    "allow_recurring_events": true,
+    "package_revenue_realization_type": "parent"
+  },
+  "unresolved": [],
+  "deferred": [
+    "Related fees, module prices, flag rules and customer-refund policy are not verified by the basic Venue copy"
+  ],
+  "warnings": [
+    "Source parent address combines Toronto and M4R 1K8 with province New York and country US; preserved as supplied, not independently validated"
+  ],
+  "notes": [
+    "is_parent=true follows the supplied MEGACON parent relationship; the focused result did not export that field",
+    "Private, enabled and category 4 are deliberate local setup choices, not asserted source values",
+    "The model requires a parent registration recipient; use the existing local owner's email only",
+    "Exchanges use the backend's no-fee local default; the parent's exchange fee policies were not exported",
+    "Source credentials, email accounts, payment gateways and integration identities are not copied",
+    "Only selected Venue fields and the new local parent/child relationship are in this creation stage"
+  ]
+}

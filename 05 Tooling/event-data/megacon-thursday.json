@@ -1,0 +1,203 @@
+{
+  "format": "showpass-event-generation-v2",
+  "run_key": "megacon-thursday-preview",
+  "source": {
+    "kind": "user-supplied production exports",
+    "event_id": 1533087,
+    "tt_id": 4422561,
+    "requires_live_production_access": false
+  },
+  "destination": {
+    "environment": "beta",
+    "venue_id": null,
+    "organization_name": "MEGACON Orlando",
+    "currency": "USD"
+  },
+  "finish": "keep_draft",
+  "events": [
+    {
+      "key": "megacon",
+      "location": {
+        "existing_id": 16106,
+        "environment": "beta"
+      },
+      "settings": {
+        "name": "MEGACON Orlando 2027 - QA API template",
+        "timezone": "America/New_York",
+        "starts_on": "2027-05-20T16:00:00-04:00",
+        "ends_on": "2027-05-23T17:00:00-04:00",
+        "description": "",
+        "categories": [
+          "community_and_culture",
+          "film_media_and_entertainment",
+          "hobbies_and_special_interests"
+        ],
+        "image": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iODAwIiB2aWV3Qm94PSIwIDAgODAwIDgwMCI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9IiMyMTRkNTIiLz48cmVjdCB4PSI3MCIgeT0iOTAiIHdpZHRoPSI2NjAiIGhlaWdodD0iNjIwIiByeD0iMzIiIGZpbGw9IiNmN2Y0ZWEiLz48dGV4dCB4PSI0MDAiIHk9IjM1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNjIiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMjE0ZDUyIj5RQSBFVkVOVDwvdGV4dD48dGV4dCB4PSI0MDAiIHk9IjQ0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZpbGw9IiMyMTRkNTIiPlRFU1QgVEVNUExBVEU8L3RleHQ+PC9zdmc+",
+        "info_collect_per_ticket": true,
+        "info_collection_type": "gict_enhanced_info",
+        "collect_info_post_purchase": true,
+        "enforce_box_office_info_collection": false,
+        "collect_info_email": true,
+        "collect_info_first_name": true,
+        "collect_info_last_name": true,
+        "collect_info_phone_number": false,
+        "collect_info_home_address": false,
+        "collect_info_company": false,
+        "collect_info_job_title": false,
+        "collect_info_student_number": false,
+        "collect_info_birthday": false,
+        "collect_info_license_plate": false
+      },
+      "tickets": [
+        {
+          "key": "thursday",
+          "expected_bundle": false,
+          "settings": {
+            "name": "THURSDAY ADULT - Single Day Pass",
+            "price": "23.00",
+            "inventory": 20000,
+            "purchase_limit": 100,
+            "box_office_purchase_limit": 100,
+            "regular_price": "34.00",
+            "presale_verbiage": "Early Bird Pricing",
+            "sale_starts_on_custom": null,
+            "sale_ends_on_custom": "2027-01-14T23:59:00-05:00",
+            "custom_ticket_event_starts_on": null,
+            "custom_ticket_event_ends_on": "2027-05-20T21:00:00-04:00",
+            "public_sold_out": false,
+            "customer_refund_enabled": false,
+            "ticket_transfer_enabled": true,
+            "shipping_type": ["st_delivery", "st_will_call"],
+            "shipping_cost": "15.00",
+            "shipping_fee_method": "sp_flat_rate",
+            "combine_shipping": false,
+            "shipping_cost_overrides_basket": false,
+            "will_call_handling_cost": "0.00",
+            "will_call_fee_method": "sp_per_ticket_item_group",
+            "combine_will_call_cost": false,
+            "send_digital_tickets_with_will_call": true
+          }
+        }
+      ],
+      "questions": [
+        {
+          "settings": {
+            "collect_after_checkout": true,
+            "help_text": "",
+            "options": [
+              {
+                "text": "Under 18"
+              },
+              {
+                "text": "18-24"
+              },
+              {
+                "text": "25-34"
+              },
+              {
+                "text": "35-44"
+              },
+              {
+                "text": "45-54"
+              },
+              {
+                "text": "55-64"
+              },
+              {
+                "text": "65-74"
+              },
+              {
+                "text": "75 & Over"
+              }
+            ],
+            "required": true,
+            "title": "Please select your age",
+            "type": "select"
+          },
+          "ticket_keys": ["thursday"]
+        },
+        {
+          "settings": {
+            "collect_after_checkout": true,
+            "help_text": "",
+            "options": [
+              {
+                "text": "Comics"
+              },
+              {
+                "text": "Anime"
+              },
+              {
+                "text": "Cosplay"
+              },
+              {
+                "text": "Gaming (Roleplaying & Tabletop)"
+              },
+              {
+                "text": "Gaming (Video Games)"
+              },
+              {
+                "text": "Horror"
+              },
+              {
+                "text": "SciFi/Fantasy"
+              },
+              {
+                "text": "YouTube/TikTok Creators"
+              }
+            ],
+            "placeholder": "",
+            "required": true,
+            "title": "What are your main interests at the show?",
+            "type": "checkbox_group"
+          },
+          "ticket_keys": ["thursday"]
+        }
+      ]
+    }
+  ],
+  "packages": [],
+  "fees": [
+    {
+      "ticket": "thursday",
+      "mode": "ensure",
+      "definition": {
+        "name": "Processing Fee",
+        "type": "fee"
+      },
+      "value": {
+        "fee_added": "3.70",
+        "fee_percent": "0",
+        "is_absorbed": false,
+        "item_types": ["ticket"],
+        "payment_types": ["cash", "card"],
+        "purchase_platforms": ["online", "in_person"],
+        "fee_tax": "0.00"
+      }
+    },
+    {
+      "ticket": "thursday",
+      "mode": "inherit",
+      "definition": {
+        "name": "Sales Tax",
+        "type": "tax"
+      },
+      "value": {
+        "fee_added": "0",
+        "fee_percent": "0.065",
+        "is_absorbed": false,
+        "item_types": ["ticket", "product"],
+        "payment_types": ["cash", "card"],
+        "purchase_platforms": ["online", "in_person"],
+        "fee_tax": "0.00"
+      }
+    }
+  ],
+  "omissions": [
+    "Production internal rate cards, locked prices, sales, provider IDs, subscribers, other TTs and unrelated configuration.",
+    "Post-create checkout, fulfillment, scanning and actual inventory exhaustion.",
+    "Artwork is a generic inline QA preset; SVG acceptance is source-backed and not yet live-tested.",
+    "Destination default sale-start time replaces the computed production sale-start timestamp."
+  ],
+  "unresolved": []
+}

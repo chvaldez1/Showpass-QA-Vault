@@ -1,8 +1,8 @@
 ---
 title: Delayed Barcode Customer Self-Refund Test Cases
 jira: SPW-19670
-status: source-reviewed-not-executed
-date: 2026-10-27
+status: published-source-reviewed-not-executed
+date: 2026-11-05
 tags:
   - qa/test-cases
   - refunds
@@ -10,132 +10,229 @@ tags:
 
 # Delayed Barcode Customer Self-Refund Test Cases
 
-> [!important] Current-page review — 2026-10-27
-> Current manual case changes are local proposals; Qase has not been updated in this review and no purchases/refunds were executed. Start with [[SPW-19666-customer-self-refunds-test-cases#Current coverage review — 2026-10-27|the current coverage review]]. Older source notes, dated worksheets, and publication records below describe their original revisions and do not override this review.
+**Published and verified in Qase on 2026-11-05; not executed.** The old release-setup blocker is resolved in these instructions. Use one ordinary ticket per order. Separate cases distinguish a hidden barcode, a released barcode blocked by the Venue setting, and a completed return after release.
 
-
-> [!important] Observe customer-visible release
-> Current source contains the Venue setting and My Orders behavior that the 2026-09-24 note marked absent. These cases are unexecuted and have not been sent to Qase. A generated barcode value is not proof of release; verify the customer can actually see/use the barcode. Follow [[03 Test Cases/Refunds and Protection/Customer/00 Customer - How to Test]].
-
-**Qase publication review, 2026-10-05:** keep both cases local until the supported Admin/Organizer preparation for delayed delivery and a scheduled customer-visible release is documented. The backend releases tickets when their event enters the configured hours-before-start window, through `apps/tickets/managers/ticket_lifecycle.py` and `apps/tickets/services/fulfillment/activate_delayed_ticket_barcodes.py`; those background calls are not manual customer actions. An instruction to “schedule release” without its preparation steps is not enough for publication.
-
-## Testing Intent
-
-Prove that a delayed-delivery ticket can be returned before barcode release, remains blocked after release with the Venue opt-in off, and can be previewed and returned after release when the opt-in and other return rules allow it.
-
-## Jira Intake Summary
-
-[SPW-19670](https://showpass.atlassian.net/browse/SPW-19670) adds one ordinary Venue field, `allow_delayed_barcode_automated_returns`, default off. The Jira card says no **separate** delayed-barcode waffle flag. Current source nevertheless requires the shared `enable_venue_policy_customer_self_refunds` rollout flag for a released delayed barcode; record this difference. Existing **Enable automated returns**, window, medium, and refund type remain relevant. Staff refunds are outside this card.
-
-## Sources Reviewed
-
-**Backend:** `/Users/christianvaldez/Documents/Showpass/repos/web-app` — `apps/venues/models/venue_management/venue.py`, `apps/venues/utils.py`, `apps/financials/services/invoice/customer_return_eligibility.py`, `user_invoice_return.py`, `apps/financials/api/user_based/serializers/invoices/detail.py` and `lists.py`.
-
-**Frontend:** `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend` — `packages/core/src/app-contexts/user/features/account/features/my-orders/utils/order-actions/return-order.ts` and `ui/modals/return-order/MyOrdersReturnOrder.web.tsx`.
-
-## Source-backed Behavior
-
-* The Venue field starts off. For a released delayed barcode, current backend requires the organization rollout flag, Venue **Allow delayed barcode automated returns = on**, and Venue **Enable automated returns = on**. The old automated-return window still applies.
-* If the new organization policy is on, its item switch, outcome, cutoff, and barcode restrictions also apply. A released delayed barcode cannot bypass another blocker.
-* A customer-activation ticket after activation remains blocked. Scanned/checked-in, refunded, voided, non-paid, transfer/resale-in-progress, and wrong-customer items remain blocked.
-* Preview and submission recheck eligibility. Refund amount uses the saved purchase and Venue's existing automated-return medium/type; this card does not introduce new refund math.
-
-## State-space / Setup Matrix
-
-| Venue automated returns | Delayed-barcode opt-in | Customer-visible barcode | Expected selection |
-| --- | --- | --- | --- |
-| On | Off | Not released | Eligible if all other rules pass. |
-| On | Off | Released | Blocked. |
-| On | On | Not released | Eligible if all other rules pass. |
-| On | On | Released | Eligible if rollout and all other rules pass. |
-| Off | On | Released | Blocked. |
-
-Also check activated customer-activation, checked-in/scanned, refunded/voided/non-paid, and inside the automated-return window. Prepare separate tickets for irreversible states.
-
-## Recommended Test Data
-
-Use an event/ticket type configured for **delayed barcode delivery**, with its release scheduled during the run. An authorized Admin can set the selected Venue's **Enable automated returns**, **Allow delayed barcode automated returns**, **Automated return window**, **Automated return medium**, and **Automated return refund type**; record their original values. Include the organization in `enable_venue_policy_customer_self_refunds`. If the new organization policy is enabled, save automatic outcome, no cutoff, **After barcode delivery = Allow customer refunds**, and ticket switch on. Buy separate new paid tickets as the customer who will open My Orders. Keep them unscanned/untransferred. Record receipt and the actual customer-visible before/after barcode states. If release cannot be safely scheduled or observed, mark the post-release cases Blocked with that exact setup gap.
+| Local case | What it proves | Qase status |
+| --- | --- | --- |
+| TC-1 | Released delayed barcode + Allow delayed barcode automated returns off → Return order hidden | [SPT-5894](https://app.qase.io/case/SPT-5894), Customer 1108; 6 steps |
+| TC-2 | Released delayed barcode + delayed returns on → one Organizer Credit return, even with the general barcode-refund switch off | [SPT-5895](https://app.qase.io/case/SPT-5895), Customer 1108; 12 steps |
+| TC-3 | Barcode still hidden → refund preview available with the delayed-return setting either off or on | [SPT-5896](https://app.qase.io/case/SPT-5896), Customer 1108; 8 steps; Single DelayedReturns: Off, On |
 
 ## Qase-ready Manual Test Cases
 
-### TC-1: My Orders - Refunds - Block a released delayed barcode when the Venue opt-in is off
+### TC-1: My Orders - Refunds - Hide Return order after delayed barcode release when delayed barcode returns are off
 
-**Description:** The buyer can inspect the return before a delayed barcode is released. After release, the same ticket cannot be returned while **Allow delayed barcode automated returns** is off.
-
-| Platform | View |
-| --- | --- |
-| WebPublic | Desktop |
-
-**Tags:** my-orders, refunds, post-purchase
-
-**Preconditions:**
-
-* In **Dashboard → Organization → Organization settings → Customer refunds**, an employee with **Manage Organization Info** saves Organizer Credit, Base refund, and Allow customer refunds for tickets on.
-* The organization is included in `enable_venue_policy_customer_self_refunds`. In Admin → Venue, an authorized administrator saves **Customer Self Refund Settings = on** and **Allow delayed barcode automated returns = off**, with an event outside the saved automated-return window. Record original Venue values.
-* In Showpass Admin → Venue customer refund policies, reuse the organization's policy or **Add** → select the organization in **Venue** → **Save**. An employee with **Manage Organization Info** saves policy on, ticket refunds on, no cutoff, and **Allow customer refunds after barcode delivery = on**. An employee with **Manage Events** turns on the ticket type's **Allow customer-initiated refunds**. Record original values.
-* The buyer has a newly paid, unscanned delayed-delivery ticket whose barcode has not yet been released. Its scheduled release occurs during this run; record the receipt and how the buyer will see the barcode.
-
-| Step Action | Data | Expected Result |
-| --- | --- | --- |
-| As buyer, open Account → My Orders → the order → Return order before release. | Paid delayed ticket | The ticket is selectable and a refund preview is available; do not submit. |
-| Close the return dialog and wait for scheduled barcode release. | Customer ticket view | The buyer can now see the released barcode. |
-| Reload My Orders and inspect the same order; open Return order if that action remains available. | Venue opt-in off | The action is unavailable or the ticket cannot be selected; no refund is submitted. |
-| Reopen the order and customer credit/payment history. | Original order | Ticket remains paid and no refund/credit was created. |
-
-**Postconditions:**
-
-* Have the administrator restore Customer Self Refund Settings to its recorded original value if it was changed for this case.
-* Keep the paid order for evidence. Restore policy, ticket, and Venue values changed for this case.
-
-### TC-2: My Orders - Refunds - Return an eligible ticket after delayed barcode release
-
-**Description:** With the Venue opt-in on, the buyer can preview and complete one return after the delayed barcode is visible, receiving only the amount supported by the original purchase.
+**Description:** The customer can already see the barcode for one ticket bought with delayed barcode delivery. **Allow delayed barcode automated returns = off** blocks that ticket from being returned. The Organization policy and ticket refund switches are on. **Allow customer refunds after barcode delivery = on** remains on, so this case specifically proves that it cannot override the separate delayed-barcode setting.
 
 | Platform | View |
 | --- | --- |
 | WebPublic | Desktop |
 
+The Event starts approximately 48 hours from purchase. **Barcode delivery delay = 72** means release is allowed 72 hours before the Event. Because the purchase happens inside that period, the barcode is available immediately. No scheduled job or wait for the Event is needed.
+
 **Tags:** my-orders, refunds, post-purchase
 
 **Preconditions:**
 
-* In **Dashboard → Organization → Organization settings → Customer refunds**, an employee with **Manage Organization Info** saves Organizer Credit, Base refund, and Allow customer refunds for tickets on.
-* The organization is included in `enable_venue_policy_customer_self_refunds`. In Admin → Venue, an authorized administrator saves **Customer Self Refund Settings = on**, **Allow delayed barcode automated returns = on**, a return window that still permits this future event, . Record original values.
-* The organization's separate customer refund policy exists. An employee with **Manage Organization Info** saves policy on, ticket refunds on, no cutoff, and **Allow customer refunds after barcode delivery = on**. An employee with **Manage Events** turns on the ticket type's **Allow customer-initiated refunds**. Record original values.
-* The buyer has a **new** paid, unscanned delayed-delivery ticket and its original receipt. Schedule release during the run and record the buyer's starting Organizer Credit balance.
+* Preparing employee permissions: **Manage Organization Info**, **Manage Events** and **Manage Transactions**. An administrator can edit Venue and Ticket type records and feature flags. Record the original settings before changes.
+* In **Admin → Venues → Venues → the selected Organization's Venue**, save **Customer Self Refund Settings = on**, **Allow delayed barcode automated returns = off**, and **Automated return window = 24** hours. These are saved Venue settings. The Event must still be more than 24 hours away throughout the run.
+* Enable the **Venue-scoped feature flag enable_venue_policy_customer_self_refunds** for that Venue.
+* In **Admin → Venues → Venue customer refund policies**, search for the Venue; reuse its policy or select **Add → Venue → select the Venue → Save**.
+* In **Dashboard → Organization → Organization settings → Customer refunds**, save **Enable customer refund policy = on**, **Allow customer refunds for tickets = on**, **Cutoff type = No cutoff**, **Orders with mixed eligibility = Refund eligible items independently**, and **Allow customer refunds after barcode delivery = on**. Save both **Allow customer refunds after fulfillment or shipping** and **Allow customer refunds after check-in or scan** off.
+* On that same page, save **Automated return medium = Organizer Credit** and **Automated return refund type = Base refund**.
+* In **Dashboard → Build → Events → All events**, create or select an event without other customers' sales. Set its start to approximately **48 hours from now**, record the date/time and timezone, publish it and open sales. In **Edit → Tickets**, create one public General Admission ticket priced **10.00**, **Inventory = 10**, with **Basic info → Allow customer-initiated refunds = on**.
+* Before purchasing, open **Admin → Tickets → Ticket types**, find that ticket by its Event and name, and save **Barcode delivery = Delayed Activation** and **Barcode delivery delay = 72** hours. Setting these on the ticket type makes the Event/Venue fallback irrelevant for this purchase. Reopen and verify them.
+* As the customer who will use My Orders, purchase **one** of that ticket with an approved refundable card payment and electronic delivery. The order contains no package, product, shipping, discount, existing credit, gift card, protection or payment plan. Record the receipt and transaction. Keep the ticket paid, unscanned, unfulfilled, untransferred and off resale.
+* Record the customer's **Account → Credits → Organizer Credits** balance for this Organization before checking the order.
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| As buyer, open Account → My Orders → Return order before release. | Paid delayed ticket | The ticket is selectable and preview shows an amount from the purchase; do not submit yet. |
-| Close the dialog and wait until the buyer can see the released barcode. | Customer ticket view | Barcode is visibly available to the buyer. |
-| Reload My Orders → Return order and select the same ticket. | Released barcode | The ticket remains selectable and a current preview appears. |
-| Record the preview and complete Return order once. | Current preview amount | Return Successful shows one refund/credit equal to the preview. |
-| Reopen the order, Organizer Credits, and the organizer transaction. | Original receipt and order reference | Ticket is returned, cannot be returned again, credit increased once, and one matching return record exists. |
+| As the purchasing customer, open Account → My Orders and open the recorded order. | Recorded transaction and ticket name | The order contains the one paid admission ticket. |
+| Open the ticket. | The purchased delayed-delivery ticket | Its barcode is visible. A hidden barcode means the required starting state was not prepared. |
+| Inspect the order's available actions. | Allow delayed barcode automated returns = off | Return order is hidden. |
+| Reload the order. | Same transaction | The ticket remains paid and Return order remains hidden. |
+| Open Account → Credits → Organizer Credits. | Recorded starting balance for this Organization | The balance is unchanged. |
+| As the employee, open Dashboard → Transactions and find the recorded purchase. | Recorded transaction | No customer return is linked to the sale and the ticket is not marked returned. |
 
 **Postconditions:**
 
-* Have the administrator restore Customer Self Refund Settings to its recorded original value if it was changed for this case.
-* Preserve the paid and returned records. Restore policy, ticket, and Venue settings changed for this case.
+* Restore the Venue, feature flag, Organization policy and ticket settings changed for this case, then save and reopen them. Keep the purchased records and receipt; do not delete financial history.
+* Do not use a displayed barcode number as evidence in shared notes. Record whether it was visible.
+* Keep the ticket paid and unreturned; no refund is submitted in this case.
 
-## Risk Areas
+### TC-2: My Orders - Refunds - Return a ticket for Organizer Credit after its delayed barcode is released
 
-* My Orders may offer Return order while preview or submission rejects a released barcode, or the reverse.
-* A generated barcode may be mistaken for customer-visible release.
-* The opt-in may bypass cutoff, checked-in, payment, ownership, or amount safeguards.
+**Description:** The customer can see the delayed-delivery ticket's barcode. **Allow delayed barcode automated returns = on** allows one completed return when the other refund rules pass. Keep the general **Allow customer refunds after barcode delivery = off** to prove that the separate delayed-barcode setting controls this ticket. This case uses **Organizer Credit**: credit is added for purchases from the same Organization. With **Full refund (Showpass fees invoiced)** and one card-paid ticket without extras, the expected customer credit equals the original receipt's total paid amount, including its charged fees and taxes.
 
-## Minimum Execution Set
+| Platform | View |
+| --- | --- |
+| WebPublic | Desktop |
 
-Run TC-1 and TC-2 on separate new paid tickets. Also check one activated customer-activation ticket, one checked-in ticket, one ticket inside the automated-return window, one order with automated returns off, and one duplicate attempt. Record the exact blocked message and verify no refund record was created. Use backend/API tests for wrong-customer and state combinations that cannot be prepared safely through product UI.
+The Event starts approximately 48 hours from purchase, with **Barcode delivery delay = 72**. The release period is already open, so the purchased barcode is immediately available. This proves the released-barcode return path; scheduled release of an earlier purchase is separate coverage.
+
+**Tags:** my-orders, refunds, post-purchase
+
+**Preconditions:**
+
+* Preparing employee permissions: **Manage Organization Info**, **Manage Events** and **Manage Transactions**. An administrator can edit Venue and Ticket type records and feature flags. Record the original settings before changes.
+* In **Admin → Venues → Venues → the selected Organization's Venue**, save **Customer Self Refund Settings = on**, **Allow delayed barcode automated returns = on**, and **Automated return window = 24** hours. These are saved Venue settings. The Event must still be more than 24 hours away throughout the run.
+* Enable the **Venue-scoped feature flag enable_venue_policy_customer_self_refunds** for that Venue.
+* In **Admin → Venues → Venue customer refund policies**, search for the Venue; reuse its policy or select **Add → Venue → select the Venue → Save**.
+* In **Dashboard → Organization → Organization settings → Customer refunds**, save **Enable customer refund policy = on**, **Allow customer refunds for tickets = on**, **Cutoff type = No cutoff**, **Orders with mixed eligibility = Refund eligible items independently**, and **Allow customer refunds after barcode delivery = off**. Save both **Allow customer refunds after fulfillment or shipping** and **Allow customer refunds after check-in or scan** off.
+* On that same page, save **Automated return medium = Organizer Credit** and **Automated return refund type = Full refund (Showpass fees invoiced)**.
+* In **Dashboard → Build → Events → All events**, create or select an event without other customers' sales. Set its start to approximately **48 hours from now**, record the date/time and timezone, publish it and open sales. In **Edit → Tickets**, create one public General Admission ticket priced **10.00**, **Inventory = 10**, with **Basic info → Allow customer-initiated refunds = on**.
+* Before purchasing, open **Admin → Tickets → Ticket types**, find that ticket by its Event and name, and save **Barcode delivery = Delayed Activation** and **Barcode delivery delay = 72** hours. Setting these on the ticket type makes the Event/Venue fallback irrelevant for this purchase. Reopen and verify them.
+* As the customer who will use My Orders, purchase **one** of that ticket with an approved refundable card payment and electronic delivery. The order contains no package, product, shipping, discount, existing credit, gift card, protection or payment plan. Record the receipt and transaction. Keep the ticket paid, unscanned, unfulfilled, untransferred and off resale.
+* Before opening Return order, record the customer's **Account → Credits → Organizer Credits** balance for this Organization and the original receipt's **total paid amount and currency**. That original total is the expected credit; do not derive it from the refund preview.
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| As the purchasing customer, open Account → My Orders and open the recorded order. | Recorded transaction | The order contains one paid admission ticket. |
+| Open the ticket. | Delayed-delivery ticket purchased inside its release period | Its barcode is visible before the return starts. |
+| Select Return order. | The same order | The ticket is selectable despite the general barcode-refund switch being off. |
+| Select the ticket. | Quantity 1 | The preview shows Organizer Credit equal to the original receipt's total paid amount, with no shipping or shipping tax. |
+| Select Next. | Recorded original paid total | Confirm Return shows the same amount and Organizer Credit destination. |
+| Choose Bought by mistake under Why are you returning this order? | Bought by mistake | Return Order is available. |
+| Select Return Order once. | Recorded credit amount and currency | Return Successful shows that amount. |
+| Select Done. | | The success dialog closes. |
+| Reopen the order in My Orders. | Original transaction | The ticket is marked returned/refunded and cannot be selected for a second customer return. |
+| Open Account → Credits → Organizer Credits. | Starting balance plus original paid total | This Organization's credit balance increased exactly once by the expected amount. |
+| As the employee, open Dashboard → Transactions and find the original transaction. | Original sale and linked customer return | Exactly one customer return is linked to the sale, for the recorded ticket and credit amount. |
+| Open the transaction's item details. | Recorded ticket | The selected ticket is returned; no extra ticket, item or credit adjustment was created. |
+
+**Postconditions:**
+
+* Restore the Venue, feature flag, Organization policy and ticket settings changed for this case, then save and reopen them. Keep the purchased records and receipt; do not delete financial history.
+* Do not use a displayed barcode number as evidence in shared notes. Record whether it was visible.
+* Preserve the returned ticket, original receipt, return record and starting/final credit balances. Do not reverse the return or delete its history as cleanup.
+
+### TC-3: My Orders - Refunds - Allow a refund preview before a delayed ticket barcode is released
+
+**Description:** The customer has one paid delayed-delivery ticket whose barcode is still hidden. **Allow delayed barcode automated returns** may be off or on: this setting only adds permission after release. Before release, the ticket should still be selectable when the main Venue, Organization and ticket refund settings allow it. Preview and Cancel leave the ticket paid.
+
+| Platform | View |
+| --- | --- |
+| WebPublic | Desktop |
+
+Run each DelayedReturns value separately. The Event starts approximately 48 hours from purchase. **Barcode delivery delay = 24** leaves the barcode hidden until 24 hours before the Event starts. Finish the preview while the barcode is still hidden; no release wait is part of this case.
+
+| DelayedReturns | Admin → Venues → Venues → selected Venue → Allow delayed barcode automated returns | Expected result before release |
+| --- | --- | --- |
+| Off | Off | Return order is available and the ticket can be previewed. |
+| On | On | Return order is available and the ticket can be previewed. |
+
+**Tags:** my-orders, refunds, post-purchase
+
+**Parameters:**
+DelayedReturns: Off, On
+
+**Preconditions:**
+
+* Preparing employee permissions: **Manage Organization Info**, **Manage Events** and **Manage Transactions**. An administrator can edit Venue and Ticket type records and feature flags. Record the original settings before changes.
+* In **Admin → Venues → Venues → the selected Organization's Venue**, save **Customer Self Refund Settings = on**, **Allow delayed barcode automated returns = the selected DelayedReturns value**, and **Automated return window = 24** hours. These are saved Venue settings. The Event must still be more than 24 hours away throughout the run.
+* Enable the **Venue-scoped feature flag enable_venue_policy_customer_self_refunds** for that Venue.
+* In **Admin → Venues → Venue customer refund policies**, search for the Venue; reuse its policy or select **Add → Venue → select the Venue → Save**.
+* In **Dashboard → Organization → Organization settings → Customer refunds**, save **Enable customer refund policy = on**, **Allow customer refunds for tickets = on**, **Cutoff type = No cutoff**, **Orders with mixed eligibility = Refund eligible items independently**, and **Allow customer refunds after barcode delivery = off**. Save both **Allow customer refunds after fulfillment or shipping** and **Allow customer refunds after check-in or scan** off.
+* On that same page, save **Automated return medium = Organizer Credit** and **Automated return refund type = Base refund**.
+* In **Dashboard → Build → Events → All events**, create or select an event without other customers' sales. Set its start to approximately **48 hours from now**, record the date/time and timezone, publish it and open sales. In **Edit → Tickets**, create one public General Admission ticket priced **10.00**, **Inventory = 10**, with **Basic info → Allow customer-initiated refunds = on**.
+* Before purchasing, open **Admin → Tickets → Ticket types**, find that ticket by its Event and name, and save **Barcode delivery = Delayed Activation** and **Barcode delivery delay = 24** hours. Setting these on the ticket type makes the Event/Venue fallback irrelevant for this purchase. Reopen and verify them.
+* As the customer who will use My Orders, purchase **one** of that ticket with an approved refundable card payment and electronic delivery. The order contains no package, product, shipping, discount, existing credit, gift card, protection or payment plan. Record the receipt and transaction. Keep the ticket paid, unscanned, unfulfilled, untransferred and off resale.
+* Record the customer's **Account → Credits → Organizer Credits** balance for this Organization. Both parameter runs may reuse the same paid order while its barcode remains hidden, because each run cancels without refunding it.
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| As the purchasing customer, open Account → My Orders and open the recorded order. | Recorded transaction | The order contains one paid ticket. |
+| Open the ticket. | DelayedReturns; Barcode delivery delay = 24 | The barcode is hidden with delayed-availability information. A visible barcode is the wrong starting state. |
+| Select Return order. | Same order | The ticket is selectable for either DelayedReturns value. |
+| Select the ticket. | Quantity 1 | A refund amount greater than zero is previewed for that ticket, with Organizer Credit as its destination. |
+| Select Cancel. | | No return is submitted. |
+| Reopen the order. | Original transaction | The ticket is still paid, not marked returned, and its barcode remains hidden. |
+| Open Account → Credits → Organizer Credits. | Recorded starting balance | The Organization's credit balance is unchanged. |
+| As the employee, open Dashboard → Transactions and find the purchase. | Recorded transaction | No customer return is linked to the sale. |
+
+**Postconditions:**
+
+* Restore the Venue, feature flag, Organization policy and ticket settings changed for this case, then save and reopen them. Keep the purchased records and receipt; do not delete financial history.
+* Do not use a displayed barcode number as evidence in shared notes. Record whether it was visible.
+* Keep the ticket paid and unreturned. Finish both parameter runs before its release period opens.
+
+## Source-backed Behavior
+
+* **Customer Self Refund Settings** is the main saved Venue gate. The shared Venue-targeted feature flag **enable_venue_policy_customer_self_refunds** is required by the current policy path; it is not a separate delayed-barcode flag.
+* A released delayed ticket additionally needs **Allow delayed barcode automated returns = on** and must pass **Automated return window** in Admin. It also passes the Organization policy cutoff. **No cutoff** does not disable the Admin window.
+* Released delayed barcodes are deliberately excluded from the general **Allow customer refunds after barcode delivery** restriction. That general switch does not overrule the delayed-barcode setting. The earlier note claiming both barcode permissions apply was incorrect.
+* Before release, the delayed-barcode setting does not block an otherwise eligible ticket. The main Venue/Organization gates, ticket switch, ownership, payment and other rules still apply.
+* Barcode mode and delay can be set on a ticket type; otherwise they fall back through Event to Venue. Set the values on the new ticket type before purchase for these cases. Do not attempt to change an already issued ticket by editing its Event.
+* Purchase inside the release period marks the new delayed ticket active immediately. Checking My Orders proves customer-visible availability; a generated barcode string alone is insufficient.
+* Full refund was chosen for TC-2 so its independent customer-credit expectation is the original receipt total. The old unpublished Base-refund draft was replaced for this clean completion case; Base refund remains used for the preview baseline and other published refund cases. This is not new refund math.
+
+## Sources Reviewed
+
+[SPW-19670](https://showpass.atlassian.net/browse/SPW-19670), description and comment read through Atlassian Rovo on 2026-11-05; status BETA QA. Jira requests default-off Venue opt-in, before/after-release behavior, preserved safeguards and existing refund calculations.
+
+**Backend** `/Users/christianvaldez/Documents/Showpass/repos/web-app`, revision `3550179e4d3ec0788410fd1ef92422f5291cef53`:
+
+* `apps/tickets/mixins.py`, `apps/tickets/models/event_management/event_ticket_types.py`, `event.py`, `apps/tickets/admin/ticket_types.py`, `events.py` — supported Admin fields and ticket → Event → Venue fallback.
+* `apps/tickets/models/ticket_lifecycle/ticket.py` → `set_barcode_delivery_delay`, `apps/tickets/services/fulfillment/ticket_generator_service.py` — immediate availability for purchases inside the configured release period.
+* `apps/financials/services/invoice/customer_return_eligibility.py` → `_get_item_blocker`, `_get_legacy_cutoff_blocker` — opt-in, main gate, cutoff and general-barcode exception.
+* `apps/financials/services/invoice/customer_return_amounts.py`, `user_invoice_return.py`, `apps/financials/payments/refunders/base.py` — original paid values, completed credit and Full-refund amount.
+* `apps/venues/models/venue_management/venue.py` — default-off delayed setting and Admin return window in hours.
+
+**Frontend** `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`, revision `1e6663a3cc6d6a68ada9bd9dbb0d58fea3339fcd`:
+
+* `packages/core/src/app-contexts/user/features/account/features/my-orders/utils/order-actions/return-order.ts`, `order-action-availability.ts` — delayed opt-in filtering and action availability.
+* `ui/modals/return-order/MyOrdersReturnOrder.web.tsx` — selection, Next, Confirm Return, reason, Return Order and Return Successful. These paths are relative to the same My Orders feature directory.
+
+Applied the QA Handbook delivery and Refund/Credit walkthroughs, canonical quality standard and Qase writing rules. No repo edits, branch comparison, browser test, purchase, refund or barcode release was performed.
+
+## Qase Review And Publication
+
+Read-only complete SPT snapshot: **2349 cases**, retrieved **2026-11-05T20:51:48.619Z**; 17 broad delayed/19670 candidates. Full-text search across saved definitions found **zero** naming **Allow delayed barcode automated returns** or its exact key. This is a targeted duplicate review, not a full release-coverage audit.
+
+Related cases reviewed: **SPT-3877** configures release timing; **SPT-4108** checks hidden/visible barcodes; **SPT-5325** checks the Default-barcode refund restriction. None asserts the delayed-refund opt-in. **SPT-5309**, **SPT-5314** and **SPT-5327** explicitly prepare Default barcodes; their general ticket, credit and check-in checks do not establish delayed-barcode behavior. Existing cases are preserved.
+
+**Approved and applied:** the user approved these three creates. The maintained batch writer created **SPT-5894 / TC-1**, **SPT-5895 / TC-2** and **SPT-5896 / TC-3** in **Customer (1108)**. All have **my-orders, refunds, post-purchase** tags. Step counts are **6 / 12 / 8**. TC-3's **DelayedReturns = Off, On** was read back as a saved **Single** parameter; the other two have no parameters. Full readback compared Title, Description, Preconditions, Postconditions, suite, tags, parameters and every step with the approved local drafts: all matched. No existing case was changed, moved or deleted. No product test or transaction was executed.
+
+**Evidence and cleanup:** publication IDs, scope, counts and successful full-field comparison are recorded here. The complete temporary Qase snapshot, apply receipt, plans and readback files were removed after verification; no temporary API-output paths remain required by this note.
+
+**Publication history:** on 2026-10-05, the two original drafts were held because “schedule release” lacked executable preparation. The 2026-10-27 batch explicitly excluded them. The current recipes resolve that drafting gap without waiting for scheduled release; no prior executed result is being claimed. The original TC-1 pre-release baseline is now the focused TC-3; TC-1 retains the released-blocked responsibility and TC-2 retains completed return after release.
+
+## State-space / Setup Matrix
+
+| Customer Self Refund Settings | Delayed returns | Barcode | Expected | Coverage |
+| --- | --- | --- | --- | --- |
+| On | Off | Hidden | Preview allowed | TC-3 Off; not run |
+| On | On | Hidden | Preview allowed | TC-3 On; not run |
+| On | Off | Visible, delayed mode | Return order hidden | TC-1; not run |
+| On | On | Visible, delayed mode | Completed return allowed; general barcode-refund switch off | TC-2; not run |
+| Off | On | Visible, delayed mode | Blocked | Additional focused main-gate regression deferred |
+
+## Recommended Test Data And Minimum Execution Set
+
+Use the named one-ticket recipes in each standalone case. Run TC-1, TC-2 and both TC-3 values: **three cases, four runs**. Existing matching owned orders can be reused after verifying their issued barcode mode, release state and all saved gates. TC-3's two values can use the same unreturned order. TC-2 needs an order whose completed refund is authorized; a saved case definition does not authorize executing it against a client purchase.
+
+## Risk Areas And Remaining Coverage
+
+| Proof target | Status / next check |
+| --- | --- |
+| Unreleased and released allowed/blocked base behavior | Published as SPT-5894–5896; not executed |
+| General barcode restriction off with delayed opt-in on | Explicit in TC-2; not executed |
+| Main Venue gate off despite delayed opt-in on | Separate focused negative still needed |
+| Admin automated-return window and policy cutoff block independently | Separate delayed-ticket cutoff checks still needed; general SPT-5311 is related only |
+| Same already-purchased ticket changes from hidden to visible through the scheduled job | Not proved by immediate-at-purchase setup; reuse SPT-3877/4108 for release, then add refund checks around that actual transition |
+| Checked-in, refunded, voided, transferred/resale, wrong owner and customer-activation controls | Delayed-specific backend/API checks and separate supported manual preparations still required; standard-barcode cases do not replace them |
+| Stale preview, duplicate submit, source financial values, fees/earnings, admission validity and inventory after return | Existing general regressions are related; delayed-specific execution and financial/admission/stock proof remain outstanding |
+| Original-card return after release | This completion case uses Organizer Credit only; original-payment delayed completion remains separate |
 
 ## Suggested Automated Coverage
 
-Assert field default off and invoice serialization; rollout/opt-in/automated-return combinations; frontend selection; preview and submission parity; activation, scan, cutoff, ownership, paid status; no uncharged value; and rollback to off.
+Backend: all main-gate/opt-in/release combinations; both independent cutoff sources; general barcode exception; paid/used/voided/ownership states; preview and submit parity; original amount and duplicate protection. Frontend: correct Return order visibility and selection for delayed tickets before/after release with Admin opt-in off/on. Keep real scheduled release and customer-visible timing as separate integration assertions.
 
 ## Assumptions and Unknowns
 
-Local source contains the field and return path; deployment, migration, saved Venue values, and customer-visible barcode release were not checked live. The shared rollout flag requirement for released barcodes is source-backed and differs from Jira's wording if read as “no flag at all.”
+These are source-reviewed definitions. Deployment, migrations, actual Venue settings and release visibility were not verified live. A missing barcode despite the inside-release-period recipe is a blocked starting state to investigate, not a refund pass. Jira says the Venue field is the only rollout control; current source also checks the shared customer-policy rollout flag for released barcodes. That discrepancy remains recorded for product/engineering.
 
 ## Open Questions
 
-1. Which event/ticket setup provides a scheduled, observable delayed barcode release during the manual run?
-2. Should released delayed-barcode returns require the shared customer-policy rollout flag even when the new organization policy is disabled?
+1. Should the current shared-rollout requirement and general-barcode exception be made explicit in the Jira acceptance text?
+2. Which owned order and approved completion scope should be used when the successful return case is executed? No execution is requested by this publication preparation.

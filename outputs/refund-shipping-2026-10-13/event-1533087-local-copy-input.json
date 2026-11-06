@@ -1,0 +1,226 @@
+{
+  "source_event_id": 1533087,
+  "source_venue_id": 18350,
+  "source_location_id": 54229,
+  "venue_input": "venue-18350-local-copy-input.json",
+  "location": {
+    "name": "Orange County Convention Center",
+    "street_name": "9800 International Dr",
+    "city": "Orlando",
+    "province": "Florida",
+    "postal_code": "32819",
+    "country": "US",
+    "position": "28.424717,-81.46993839999999",
+    "unit_number": null,
+    "is_venue_location": false,
+    "google_place_id": null,
+    "place_id": null
+  },
+  "event": {
+    "name": "MEGACON Orlando 2027 - Local copy",
+    "subtitle": "",
+    "description": "",
+    "terms": "",
+    "refund_policy": "",
+    "message": null,
+    "require_terms_acceptance": null,
+    "terms_url_link": null,
+    "initiate_purchase_button": "ipbd_buy_tickets",
+    "post_purchase_message": "",
+    "timezone": "US/Eastern",
+    "inventory": null,
+    "no_ticket_types_message": "",
+    "show_on_calendar": true,
+    "hide_event_end_time": false,
+    "show_inventory_amount": null,
+    "collect_info_email": true,
+    "collect_info_first_name": true,
+    "collect_info_last_name": true,
+    "collect_info_phone_number": false,
+    "collect_info_home_address": false,
+    "collect_info_company": false,
+    "collect_info_job_title": false,
+    "collect_info_student_number": false,
+    "collect_info_birthday": false,
+    "collect_info_license_plate": false,
+    "info_collect_per_ticket": true,
+    "enforce_box_office_info_collection": false,
+    "info_collection_type": "gict_enhanced_info",
+    "collect_info_post_purchase": true,
+    "is_guest_info_merged_to_vu": false,
+    "hide_info_collection_when_purchased_as_package_child": false,
+    "categories": [
+      "community_and_culture",
+      "film_media_and_entertainment",
+      "hobbies_and_special_interests"
+    ],
+    "restrictions": [],
+    "no_isolated_seats": true,
+    "low_inventory_warning_enabled": null,
+    "is_web_purchase_only": false,
+    "single_event_purchase_only": null,
+    "transfer_limit": null,
+    "exchange_tickets_event_start_limit": null,
+    "barcode_delivery": null,
+    "barcode_delivery_delay": null,
+    "date_time_to_be_determined": false,
+    "time_to_be_determined": false,
+    "max_ticket_quantity_per_user": null,
+    "sale_ends_on_default_option": "end_of_event",
+    "custom_purchase_button": null,
+    "donation_verbiage": "",
+    "donation_default_amount": "five",
+    "no_ticket_types": false,
+    "slug_custom": "local-copy-event-1533087",
+    "starts_on": "2027-05-20 20:00:00+00",
+    "ends_on": "2027-05-23 21:00:00+00",
+    "status": "sp_event_draft",
+    "is_featured": false,
+    "is_recurring": false,
+    "async_save": false,
+    "collect_info_custom_questions": [],
+    "has_distributed_inventory": false
+  },
+  "deferred": [
+    "TT 4422561, its shipping settings, and applicable fee/tax rules",
+    "Two custom questions: bind them to the new local TT after it exists",
+    "Images/banner files and linked Products or Waitlists",
+    "Distributed Inventory: verify local flag/setup at the TT stage",
+    "Background jobs and customer-facing behavior: no jobs are dispatched by this helper"
+  ],
+  "deferred_custom_questions": [
+    {
+      "collect_after_checkout": true,
+      "help_text": "",
+      "id": "279c8039-1662-408a-9c65-452750b9656d",
+      "options": [
+        {
+          "text": "Under 18"
+        },
+        {
+          "text": "18-24"
+        },
+        {
+          "text": "25-34"
+        },
+        {
+          "text": "35-44"
+        },
+        {
+          "text": "45-54"
+        },
+        {
+          "text": "55-64"
+        },
+        {
+          "text": "65-74"
+        },
+        {
+          "text": "75 & Over"
+        }
+      ],
+      "required": true,
+      "ticket_types": [
+        4422558,
+        4422559,
+        4422560,
+        4422561,
+        4422562,
+        4422563,
+        4422564,
+        4422565,
+        4422566,
+        4422567,
+        4422568,
+        4422569,
+        4422570,
+        4422571,
+        4422572,
+        4422573,
+        4422574,
+        4422575,
+        4422576,
+        4422577,
+        4422578,
+        4600533,
+        4600538,
+        4600539,
+        4600540,
+        4600602,
+        4600603,
+        4600604,
+        4600708,
+        4645663
+      ],
+      "title": "Please select your age",
+      "type": "select"
+    },
+    {
+      "collect_after_checkout": true,
+      "help_text": "",
+      "id": "38288961-9615-417b-be85-473e4aba1cdd",
+      "options": [
+        {
+          "text": "Comics"
+        },
+        {
+          "text": "Anime"
+        },
+        {
+          "text": "Cosplay"
+        },
+        {
+          "text": "Gaming (Roleplaying & Tabletop)"
+        },
+        {
+          "text": "Gaming (Video Games)"
+        },
+        {
+          "text": "Horror"
+        },
+        {
+          "text": "SciFi/Fantasy"
+        },
+        {
+          "text": "YouTube/TikTok Creators"
+        }
+      ],
+      "placeholder": "",
+      "required": true,
+      "ticket_types": [
+        4422558,
+        4422559,
+        4422560,
+        4422561,
+        4422562,
+        4422563,
+        4422564,
+        4422565,
+        4422566,
+        4422567,
+        4422568,
+        4422569,
+        4422570,
+        4422571,
+        4422572,
+        4422573,
+        4422574,
+        4422575,
+        4422576,
+        4422577,
+        4422578,
+        4600533,
+        4600538,
+        4600539,
+        4600540,
+        4600602,
+        4600603,
+        4600604,
+        4600708,
+        4645663
+      ],
+      "title": "What are your main interests at the show?",
+      "type": "checkbox_group"
+    }
+  ]
+}

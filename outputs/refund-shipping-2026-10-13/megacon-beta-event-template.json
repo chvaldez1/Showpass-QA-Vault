@@ -1,0 +1,209 @@
+{
+  "format": "showpass-event-template-v1",
+  "purpose": "Input for the repeatable workflow; not a raw API POST body.",
+  "environment_policy": {
+    "allowed_by_default": [
+      "beta",
+      "demo"
+    ],
+    "production": "Never access production, including reads or login, without explicit authorization for that action."
+  },
+  "source": {
+    "kind": "user-supplied production exports",
+    "event_id": 1533087,
+    "tt_id": 4422561,
+    "requires_live_production_access": false
+  },
+  "destination": {
+    "environment": "beta",
+    "organization_name": "MEGACON Orlando",
+    "status": "sp_event_draft"
+  },
+  "event": {
+    "name": "MEGACON Orlando 2027",
+    "timezone": "America/New_York",
+    "starts_on": "2027-05-20T16:00:00-04:00",
+    "ends_on": "2027-05-23T17:00:00-04:00",
+    "description": "",
+    "is_recurring": false,
+    "categories": [
+      "community_and_culture",
+      "film_media_and_entertainment",
+      "hobbies_and_special_interests"
+    ]
+  },
+  "location": {
+    "name": "Orange County Convention Center",
+    "street_name": "9800 International Dr",
+    "city": "Orlando",
+    "province": "Florida",
+    "postal_code": "32819",
+    "country": "US",
+    "position": "28.424717,-81.46993839999999"
+  },
+  "tt": {
+    "name": "THURSDAY ADULT - Single Day Pass",
+    "price": "23.00",
+    "currency": "USD",
+    "inventory": 20000,
+    "purchase_limit": 100,
+    "box_office_purchase_limit": 100,
+    "regular_price": "34.00",
+    "presale_verbiage": "Early Bird Pricing",
+    "sale_starts_on_custom": null,
+    "sale_ends_on_custom": "2027-01-14T23:59:00-05:00",
+    "custom_ticket_event_starts_on": null,
+    "custom_ticket_event_ends_on": "2027-05-20T21:00:00-04:00",
+    "public_sold_out": false,
+    "customer_refund_enabled": false,
+    "ticket_transfer_enabled": true,
+    "shipping_type": [
+      "st_delivery",
+      "st_will_call"
+    ],
+    "shipping_cost": "15.00",
+    "shipping_fee_method": "sp_flat_rate",
+    "combine_shipping": false,
+    "shipping_cost_overrides_basket": false,
+    "will_call_handling_cost": "0.00",
+    "will_call_fee_method": "sp_per_ticket_item_group",
+    "combine_will_call_cost": false,
+    "send_digital_tickets_with_will_call": true
+  },
+  "organizer_fees": [
+    {
+      "name": "Processing Fee",
+      "type": "fee",
+      "fee_added": "3.70",
+      "fee_percent": "0",
+      "scope": "new_tt",
+      "payer": "customer",
+      "payment_types": [
+        "cash",
+        "card"
+      ],
+      "purchase_platforms": [
+        "online",
+        "in_person"
+      ]
+    },
+    {
+      "name": "Sales Tax",
+      "type": "tax",
+      "fee_added": "0",
+      "fee_percent": "0.065",
+      "scope": "reuse_matching_inherited_rule_or_create_for_new_tt",
+      "payer": "customer",
+      "payment_types": [
+        "cash",
+        "card"
+      ],
+      "purchase_platforms": [
+        "online",
+        "in_person"
+      ]
+    }
+  ],
+  "guest_information": {
+    "info_collection_type": "gict_enhanced_info",
+    "collect_info_post_purchase": true,
+    "info_collect_per_ticket": true,
+    "fields": [
+      "first_name",
+      "last_name",
+      "email"
+    ],
+    "enforce_box_office_info_collection": false,
+    "custom_questions": [
+      {
+        "collect_after_checkout": true,
+        "help_text": "",
+        "options": [
+          {
+            "text": "Under 18"
+          },
+          {
+            "text": "18-24"
+          },
+          {
+            "text": "25-34"
+          },
+          {
+            "text": "35-44"
+          },
+          {
+            "text": "45-54"
+          },
+          {
+            "text": "55-64"
+          },
+          {
+            "text": "65-74"
+          },
+          {
+            "text": "75 & Over"
+          }
+        ],
+        "required": true,
+        "title": "Please select your age",
+        "type": "select"
+      },
+      {
+        "collect_after_checkout": true,
+        "help_text": "",
+        "options": [
+          {
+            "text": "Comics"
+          },
+          {
+            "text": "Anime"
+          },
+          {
+            "text": "Cosplay"
+          },
+          {
+            "text": "Gaming (Roleplaying & Tabletop)"
+          },
+          {
+            "text": "Gaming (Video Games)"
+          },
+          {
+            "text": "Horror"
+          },
+          {
+            "text": "SciFi/Fantasy"
+          },
+          {
+            "text": "YouTube/TikTok Creators"
+          }
+        ],
+        "placeholder": "",
+        "required": true,
+        "title": "What are your main interests at the show?",
+        "type": "checkbox_group"
+      }
+    ],
+    "question_ticket_binding": "Resolve to the newly created beta/demo TT ID; never reuse source TT IDs."
+  },
+  "artwork": {
+    "policy": "Choose an existing beta/demo media-library image; finish cropping, save, then reopen to verify.",
+    "exact_source_match_required": false
+  },
+  "limits": [
+    "This Event spans May 20\u201323; only the selected TT is Thursday-only.",
+    "Production internal rate cards, locked prices, provider IDs, sales, orders, subscribers and other TTs are excluded.",
+    "Inherited beta/demo fee rules and the checkout total require separate checks.",
+    "The destination default sale-start time is used; the source computed sale-start timestamp is not reproduced.",
+    "This file does not execute creation; the Dashboard workflow was exercised, while an API runner remains unimplemented."
+  ],
+  "verified_beta_run": {
+    "date": "2026-11-04",
+    "event_name": "MEGACON Orlando 2027 - QA template",
+    "event_edit_url": "https://beta.showpass.com/manage/events/megacon-orlando-2027-qa-template/basic-info/",
+    "tt_id": 1628263,
+    "location_id": 16106,
+    "status": "Draft",
+    "creation_transport": "Dashboard in the Codex in-app browser",
+    "checkout_executed": false
+  }
+}
