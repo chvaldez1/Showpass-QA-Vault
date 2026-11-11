@@ -64,6 +64,16 @@ Backend code is the first source of truth for behavior, schemas, APIs, permissio
 - Do not replace code tracing with browser inspection or automatically fall back to a browser when source evidence is incomplete. State the specific evidence gap instead.
 - Distinguish source-backed behavior from live record state; a URL alone does not establish the record's saved values or deployed behavior.
 
+## Admin Access And Readiness Checks
+
+- **Ask and receive explicit permission before accessing Admin.** This includes opening, navigating, reading, inspecting or changing Django Admin, Dashboard Admin tools, or Admin-only records/endpoints. Read-only access still requires permission. Do not work around this boundary through an API, another tab or another client.
+- Permission to investigate, create an Event, prepare a test scenario, test a basket or check readiness does **not** authorize Admin access. An existing login, visible Admin link, pasted Admin URL or prerequisite mentioning Admin is not permission either.
+- Before creating or updating scenario data, confirm the intended environment and Organization/Venue through the authorized Dashboard and ask the user whether the scenario's required flags, modules, permissions and relevant payment/fee setup are ready. Ask for exact required values, such as `enable_voucher_refund_limit_fix = ON`, rather than claiming that "all flags" are enabled.
+- **Readiness is a question for the user by default, not an instruction to inspect Admin.** Derive the checklist from the selected test case and current source. Bundle missing readiness questions, accept ON/OFF/unknown or an equivalent clear answer, and label user-confirmed settings separately from agent-verified settings. Reuse confirmations already supplied for the same scope instead of asking again.
+- An unknown or unsuitable prerequisite blocks the work that depends on it. Explain what is missing and what can safely continue; do not create a supposedly ready scenario, silently relax the case or enable shared settings to make it fit. Do not treat a setting's name or source default as its saved value.
+- If Admin access is actually needed, explain the specific page/record and purpose, ask explicitly, and wait for the answer before access. Permission to inspect Admin does not authorize saving, toggling flags, changing a gateway or modifying records; those changes need their own authorized scope.
+- Stop Admin activity immediately if permission is absent, withdrawn or the user says to stop. The canonical QA standard and handbook may identify Admin-managed prerequisites, but they do not override this access rule.
+
 ## Sentry Record Details
 
 Make Sentry findings easy to locate in Showpass. Near the top of each investigation, include a compact table with the Venue ID and Venue/Organization name; Customer name, email and ID when available and needed for the lookup; what is being purchased or exchanged, including Event/date, item names, quantities and IDs when captured; original invoice ID/order reference and original items; and replacement basket/invoice/credit IDs when relevant. Include the useful confirmed details in the chat response as well.
@@ -191,6 +201,8 @@ Use [[05 Tooling/qasectl]] as the required operating guide for Qase reads, gap a
 Apply [[05 Tooling/Qase Test Case Writing Rules#Package Events And Guest Information]] to package cases: the **parent event** sells the package ticket; **child events** are different events supplying included tickets. Make each case's event count, ticket relationships and guest-collection settings explicit. Use Inventory/Capacity wording. Keep readable Single-parameter value explanations in Description, preserve Platform/View as context, and verify the actual saved Single fields across every requested case. Review all fields and the canonical note after a setup correction; do not leave the clarification only in chat.
 
 Apply [[05 Tooling/Qase Test Case Writing Rules#Explain Showpass Terms And Where To Find Them]] to every Qase-ready case. Explain required Showpass terms and give the exact Dashboard/UI or Admin location and required value. Distinguish saved settings, actual feature flags, employee permissions and custom questions. Say whose details are entered and which tickets need them; do not rely on unexplained attendee-form counts. Verify hidden-control preparation and supported UI/Admin setup. Treat readability feedback as a whole-case review that preserves coverage, not a synonym change or a chat-only explanation.
+
+Apply [[05 Tooling/Qase Test Case Writing Rules#Scannable Preconditions And Explicit Event Setup]] by default. Use short prerequisite sections, one requirement per bullet, and compact Event/ticket or settings tables when useful. State how many separate Events and orders exist, what each Event supplies, ticket quantities, required values and the starting order/balance state. Keep simple cases short; do not replace dense paragraphs with dense bullets or add irrelevant setup. Carry clarified labels and relationships through the whole case while preserving coverage.
 
 To avoid repeated permission prompts and inconsistent Qase payloads:
 

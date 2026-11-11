@@ -36,6 +36,7 @@ Constraints:
 - Do not update Qase.
 - Do not run git diff or branch comparison unless explicitly asked for diff-based coverage.
 - Use [[05 Tooling/Qase Test Case Writing Rules]].
+- Default to its Scannable Preconditions And Explicit Event Setup format: short sections and concise bullets, with Event/ticket and settings tables where useful. State the Event count, quantities and which tickets belong to each order.
 - Use `TC-*` labels for local test-case drafts.
 - Keep cases executable by a Showpass customer, organizer, venue employee, Box Office employee, dashboard user, attendee, or authenticated user.
 - Do not write `the tester`.

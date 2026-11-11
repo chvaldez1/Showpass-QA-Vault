@@ -44,6 +44,7 @@ Source reviews, coverage gaps, risk analysis, and automation planning. These not
 
 ## Refunds and Exchanges
 
+- [[02 Feature QA/Refunds and Exchanges/SPW-18708-ticket-credit-uses-after-void|Ticket-credit uses after Void — existing issue and source findings]]
 - [[02 Feature QA/Refunds and Exchanges/SPW-20827-shipping-sale-and-refund-report-totals|Shipping sale and refund rows do not balance — October 29 CSV evidence and QA draft]]
 
 ## Adding a feature review

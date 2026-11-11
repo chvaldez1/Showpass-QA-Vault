@@ -51,7 +51,7 @@ Do not require an executive report, separate inventories and matrices repeating 
 - Put Platform/View in Description. Mention relevant page versions, account states, timezones and selected runs there; do not turn every context choice into a Qase parameter or repeat every axis in every case.
 - Use zero parameters when context notes suffice; use one small parameter for repeated data-driven checks when it improves execution. Keep dependent choices together and state the selected run rule.
 - Use readable Single parameters only for meaningful setup variations, explain every value in Description, and verify their actual saved Qase structure after an approved push. Review the full changed set, not only the cases that already had parameters. Never report a pending draft or stored definition as an executed pass.
-- Include only essential permissions, gates, starting records and safe data in Preconditions. Repeat essential setup inside each standalone case, not generic workflow commentary.
+- Include only essential permissions, gates, starting records and safe data in Preconditions. Apply [[05 Tooling/Qase Test Case Writing Rules#Scannable Preconditions And Explicit Event Setup]] to new and enhanced cases: short sections and explicit Event/ticket, settings and starting-order tables where useful. Keep essential setup inside each standalone case and preserve its coverage.
 - Put one observable action and result in each step. Name visible controls; keep implementation terms and source links in supporting notes.
 - Distinguish Qase-ready **case content** from live execution and setup availability. Known missing setup is explicitly Blocked; a pasted link or a saved case definition is not a pass.
 

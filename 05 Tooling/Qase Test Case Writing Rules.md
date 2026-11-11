@@ -90,7 +90,7 @@ Prefer:
 
 ### Preconditions And Postconditions Formatting
 
-- Use an asterisk (`*`) Markdown bulleted list whenever Preconditions or Postconditions contain more than one requirement or result.
+- Use asterisk (`*`) Markdown bullets for individual requirements and results. Preconditions may combine short bold subsection labels, bullets and setup/value tables as described below; Postconditions with multiple results use bullets.
 - Put one setup requirement, permission, test-data condition, cleanup action, or final-state assertion in each bullet.
 - Keep a single sentence on the field label line only when the field contains one short condition.
 - Do not combine several conditions into one paragraph; Qase fields must remain easy to scan during execution.
@@ -106,6 +106,49 @@ Prefer:
 
 * One renewal order exists for the customer.
 * The member retains the selected seat.
+```
+
+### Scannable Preconditions And Explicit Event Setup
+
+Use this format by default when setup has several parts. A list of long paragraphs is still a block of text, even when each paragraph has a bullet.
+
+- Split Preconditions into short, clearly named sections such as **Employee and switch**, **Events and tickets**, **Customer and voucher**, **Order at the start of the test**, and **Evidence to prepare**. Include only the sections the case needs. A simple case can remain two or three short bullets.
+- Put one requirement or preparation action in each bullet. Separate permissions, feature flags, saved settings, record selection and expected starting balances instead of packing them into one sentence.
+- For cases involving Events and tickets, state the number of **separate Events**, which Organization owns them, and what each Event supplies. Use a compact setup table when several Events, ticket types, quantities or roles must be distinguished.
+- In that table, identify each Event's role, ticket type, quantity and intended action or untouched control. Give price, Inventory/Capacity, sale/date state and other settings when they affect the result; omit unrelated settings rather than inventing values to fill a table.
+- Distinguish **one Event with several ticket types**, **several Events in one order**, and **several separate orders**. State how many orders must exist and which tickets each contains. Do not make the reader reconstruct this from totals.
+- Explain whether an Event issues credits, supplies tickets redeemed with an already-issued credit, or sells/includes package tickets. Apply the package relationship rules below when relevant; do not invent an issuing Event or parent/child relationship for ordinary voucher redemption.
+- Use a small **Setting | Required value** table for related voucher, membership or other configuration values when it is easier to scan than prose. Distinguish values required before purchase from the saved state at test start; never reset used balances or historical amounts just to match a setup table.
+- Event A/B/C and Order A/B/C may be local labels. Tell the person executing the case to record actual names/references, then use those labels consistently in Description, parameter mappings, Steps, Data, Expected Results and Postconditions. Labels are not invented records that must already exist.
+- Keep the exact supported preparation location and essential starting state inside each standalone case. Moving setup into tables does not permit `Setup A`, dependence on another case, omitted permissions or unsupported Admin instructions.
+- Preserve every assertion, meaningful parameter and cleanup requirement when improving readability. Technical investigation and general workflow commentary stay in supporting notes.
+
+Format illustration for a case with several Events; this is not a complete executable case:
+
+```markdown
+**Preconditions:**
+
+**Employee and switch**
+
+* Employee permission: Manage Transactions.
+* Global switch: enable_voucher_refund_limit_fix = ON.
+
+**Events and tickets — 3 separate Events**
+
+* All three Events belong to the same Organization.
+* Each sells one regular admission ticket type eligible for the same already-issued voucher.
+* Record the actual Event names against the labels below.
+
+| Event | Tickets in the order | Action during the test |
+| --- | --- | --- |
+| Event A | 1 ticket | Refund first. |
+| Event B | 1 ticket | Refund in a second action. |
+| Event C | 1 ticket | Keep unrefunded. |
+
+**Order at the start of the test**
+
+* One completed paid order contains all 3 tickets on 3 separate Event lines.
+* All tickets are unscanned and unrefunded.
 ```
 
 ### Short, Actionable Prerequisites
@@ -186,6 +229,8 @@ Keep this review focused on the requested scope. Reuse existing proof where suit
 ### Copy-to-Qase Review Gate
 
 Before delivering, apply [[#Case Strength Review]], then read each case without the surrounding note. Can a product-team member tell **what must exist, how to prepare it, what to do, and what should happen**? Remove shared-setup references, unnecessary environment/identity constraints, draft-to-draft commentary, and duplicate cleanup. Check that every stated field, flag, permission, route, and outcome has evidence or an explicit unresolved status outside the case. A Qase-ready label must mean the case fields are already complete.
+
+Apply [[#Scannable Preconditions And Explicit Event Setup]] before accepting the case: can the reader identify the Events, tickets, quantities, order grouping, settings and starting state by scanning Preconditions? For cases without Events, apply the same check to the actual records involved. Break up dense bullets and resolve ambiguous relationships across the whole case without removing coverage.
 
 When the user corrects the workflow or simplifies setup, review the entire case: Description, parameter mapping, Preconditions, Steps, Data, Expected Results, and Postconditions, plus surrounding test-data and execution notes. Remove stale assumptions everywhere, update numbered stopping points, and preserve the requested behavioral coverage. Updating only the entry step or mentioning the correction in a final reply is not enough.
 
