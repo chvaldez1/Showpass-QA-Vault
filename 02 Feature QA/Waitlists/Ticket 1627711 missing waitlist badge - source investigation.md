@@ -39,11 +39,11 @@ Source: `showpass-frontend/packages/core/src/app-contexts/dashboard/features/eve
 - The user initially reported that ticket type **1627711** has Waitlist and forced public sold out enabled, but its Waitlist badge is absent; another Venue works. The later query identifies the affected Venue and Event above; the working comparison is still unknown.
 - The first screenshot shows the ticket's Waitlist panel as **Enabled**, with card verification unchecked and purchase limit 8. It does not show the public ticket card or a refreshed saved record.
 
-![Ticket type 1627711 Waitlist settings](<../../99 Archive/QA Evidence/Waitlist/2026-10-28-regression-investigation/ticket-1627711-waitlist-settings.png>)
+![Ticket type 1627711 Waitlist settings](<ticket-1627711-waitlist-settings.png>)
 
 - The second screenshot shows **Show as sold out publicly** with a grey, left-positioned switch that appears off at capture time. The later user-provided query also returns a false saved override. Neither establishes whether an earlier save was attempted or failed.
 
-![Show as sold out publicly control](<../../99 Archive/QA Evidence/Waitlist/2026-10-28-regression-investigation/public-sold-out-control.png>)
+![Show as sold out publicly control](<public-sold-out-control.png>)
 
 ## Source-backed behavior
 

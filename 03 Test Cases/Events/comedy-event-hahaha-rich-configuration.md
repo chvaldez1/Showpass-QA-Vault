@@ -319,7 +319,7 @@ Unless a different date is stated, times above are November 12, 2032 in Toronto.
 
    <img src="../../99%20Archive/QA%20Evidence/events/comedy-event-hahaha-timing-2026-11-09/confirmation-saved.jpg" alt="Reloaded confirmation message distinguishing all arrival and experience times" width="600" style="max-width:100%;height:auto;">
 
-   PDF saved fields were also read in the final Tickets page; [full saved page](../../99%20Archive/QA%20Evidence/events/comedy-event-hahaha-timing-2026-11-09/tickets-final.jpg).
+   PDF saved fields were also read in the final Tickets page; [full saved page](9999%20Archive/QA%20Evidence/events/comedy-event-hahaha-timing-2026-11-09/tickets-final.jpg).
 
 2. In Legal & important info, retain **Arrive with your complete party** and replace the general door notice with **Main show: standard doors 6:00 PM; show 7:00 PM Toronto time**. Add **VIP priority entry opens at 5:30 PM** and **Separate workshop: doors 5:45 PM; workshop 6:00-6:30 PM; main-show admission not included**. Save, reload and inspect the public **Important Info**.
 

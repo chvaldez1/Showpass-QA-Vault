@@ -118,11 +118,11 @@ Audit evidence: [[03 Test Cases/Reports/evidence/reports-beta-smoke-2026-10-21/r
 
 New-page evidence, with the settled product name and banner:
 
-![[99 Archive/QA Evidence/Reports/reports-beta-smoke-2026-10-21/16-product-pdf-missing-attributes.png]]
+![[16-product-pdf-missing-attributes.png]]
 
 Earlier same-product PDF baseline:
 
-![[99 Archive/QA Evidence/Reports/reports-beta-smoke-2026-10-21/12-legacy-product-attributes.png]]
+![[12-legacy-product-attributes.png]]
 
 **Source support:** Backend Report.product_attributes is a persisted field exposed by the report serializer; the previous template renders Product Attributes for Product Summary. The new ReportProductScopeFields component renders its checklist only when helpers.hasField(PRODUCT_ATTRIBUTES) permits it. These support the missing-control investigation; the exact deployed metadata/root cause was not established. Source references below.
 
@@ -144,7 +144,7 @@ Earlier same-product PDF baseline:
 
 **Impact:** Cannot request the supported ticket-type-specific PDF from the new builder. Actual erroneous financial amounts or an existing saved filter being erased were not executed. Saving a previously filtered definition is therefore an unsubmitted risk, not a confirmed destructive outcome.
 
-![[99 Archive/QA Evidence/Reports/reports-beta-smoke-2026-10-21/17-event-pdf-missing-ticket-types.png]]
+![[17-event-pdf-missing-ticket-types.png]]
 
 **Reset:** Abandon the unsaved form. **Release classification:** Major migration scope gap remains open; no Critical financial failure proved.
 
@@ -166,7 +166,7 @@ Earlier same-product PDF baseline:
 
 Backend source: catalog.py:167 lists is_select_all_invoices / is_select_from_sub_orgs for Transactions; Report.validate_transaction_selection at saved_reports.py:175 validates CSV, dates of at most one year and parent-only inclusion. The earlier template explicitly offers Select All Invoices for Transactions. Frontend report-constants-utils.ts:147 omits Transactions from supportsSelectAllInvoices and :155 limits supportsSelectFromSubOrgs to Itemized Sales. The new ReportScopeSection uses those helpers to render the controls.
 
-![[99 Archive/QA Evidence/Reports/reports-beta-smoke-2026-10-21/18-transactions-missing-all-invoices.png]]
+![[18-transactions-missing-all-invoices.png]]
 
 **Reset:** Abandon the unsaved form. **Release classification:** Major migration access/scope gap remains open. No missing money or Critical financial-output failure was established.
 
@@ -188,15 +188,15 @@ Both download listeners initially timed out. That was **not** an application fai
 
 Generated Product Summary PDF visibly opened:
 
-![[99 Archive/QA Evidence/Reports/reports-beta-smoke-2026-10-21/13-product-pdf-opened.png]]
+![[13-product-pdf-opened.png]]
 
 Final new-page list showing the two preserved reports:
 
-![[99 Archive/QA Evidence/Reports/reports-beta-smoke-2026-10-21/14-new-reports-final-list.png]]
+![[14-new-reports-final-list.png]]
 
 Required event validation:
 
-![[99 Archive/QA Evidence/Reports/reports-beta-smoke-2026-10-21/15-required-event-validation.png]]
+![[15-required-event-validation.png]]
 
 ### Sources reviewed
 
@@ -246,7 +246,7 @@ Required event validation:
 
 **Actual:** At step 2 the popup is 332px wide at x=8, while the frame's usable width is 305px. Content width grows to 340px. The Saturday column and next-month control extend beyond the right edge. A 390px view fits and allowed selecting October 21. **Impact:** narrow-window date selection requires horizontal panning; this is not proof that a phone's native picker fails.
 
-![[99 Archive/QA Evidence/Reports/reports-beta-smoke-2026-10-21/ux-12-mobile-date-picker-320.png]]
+![[ux-12-mobile-date-picker-320.png]]
 
 **Source:** shared/components/ui-kit/form/InputDatePicker/InputDatePicker.web.tsx, desktop Popover.Content and the separate device-detected native/mobile paths. **Reset:** calendar closed/selection kept only in the owned unsaved form, subsequently abandoned. **Release:** responsive polish defect, no financial failure demonstrated.
 
@@ -264,7 +264,7 @@ Required event validation:
 
 **Actual:** At steps 2/3 both Enter and Space leave the query unchanged. Normal pointer activation clears it (also confirmed in the mobile drawer). The search × itself also has no accessible name. **Impact:** a keyboard user cannot use this clear control. Header Clear or selecting/deleting the text provides a workaround.
 
-![[99 Archive/QA Evidence/Reports/reports-beta-smoke-2026-10-21/ux-18-keyboard-clear-no-effect.png]]
+![[ux-18-keyboard-clear-no-effect.png]]
 
 **Source:** shared/components/application/form/SearchBar/SearchBar.web.tsx attaches clearing to onMouseDown, with no matching onClick; no accessible label on the icon button. **Reset:** header Clear used; query verified empty. **Release:** keyboard/usability defect, no saved data affected.
 
@@ -296,7 +296,7 @@ Evidence: ux-verification-summary.json records label/text null or empty, 40 × 4
 
 **Actual:** The report name scrolls off-screen when actions become visible. The confirmation says only Are you sure you want to delete this saved report? It does not show the name. Cancel works. **Impact:** users must remember which row they were on; long lists increase the chance of targeting the wrong report. No wrong-report deletion was attempted or established.
 
-![[99 Archive/QA Evidence/Reports/reports-beta-smoke-2026-10-21/ux-07-mobile-delete-confirmation.png]]
+![[ux-07-mobile-delete-confirmation.png]]
 
 **Suggested improvement:** show the report name in the confirmation; consider keeping name/actions together through responsive cards or sticky columns. Source: DeleteReportModal.web.tsx renders a generic message despite having the report object. **Reset:** Cancel selected and report retained. **Release:** usability improvement; not a Critical finding.
 

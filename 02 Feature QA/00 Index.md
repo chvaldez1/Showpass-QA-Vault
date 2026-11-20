@@ -16,6 +16,12 @@ Source reviews, coverage gaps, risk analysis, and automation planning. These not
 | Playwright Coverage | Existing automated coverage and gaps found from Major/Critical incidents | [[02 Feature QA/Playwright Coverage/Major Critical Playwright Gap Analysis\|Major Critical Playwright Gap Analysis]] |
 | Support Incidents | Lessons and system gaps from customer and employee support issues | [[02 Feature QA/Support Incidents/SPD Dev Support System Gap Analysis - April to September 2026\|SPD Dev Support System Gap Analysis — April to September 2026]] |
 | Refunds and Exchanges | Customer refund settings and exchange-access investigations | [[02 Feature QA/Refunds and Exchanges/SPW-21227-customer-refunds-block-exchanges\|SPW-21227 — customer refund setup hides exchanges]] |
+| Branch Digests | Release-labelled branch changes, source links, Qase coverage and focused regression | [[02 Feature QA/Branch Digests/2026-11-13-release-36.39.0\|Release 36.39.0 — November 13]] |
+
+## Branch Digests
+
+- [[02 Feature QA/Branch Digests/2026-11-13-release-36.39.0|Release 36.39.0 — upcoming changes and regression, November 13]]
+- [[02 Feature QA/Branch Digests/2026-11-06-develop|November 6 develop comparison]]
 
 ## Checkout
 

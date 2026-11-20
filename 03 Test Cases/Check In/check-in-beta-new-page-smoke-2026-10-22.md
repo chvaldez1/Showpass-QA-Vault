@@ -49,78 +49,78 @@ Evidence below records the route, action, expectation, observed result and captu
 
 > [!example]- Single-day event — screenshots
 > **14:08:59 MDT — /dashboard/events/check-in/ → new embedded Check In:** Selected single-day event before mutation; starting count 2/12663 and unused test groups.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/01-single-event-baseline.png]]
+> ![[01-single-event-baseline.png]]
 >
 > **14:09:34 MDT — /dashboard/events/check-in/ → new embedded Check In:** Ticket Details before submission; expected unused ticket, observed Issued and No history found.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/02-single-ticket-before.png]]
+> ![[02-single-ticket-before.png]]
 >
 > **14:09:51 MDT — /dashboard/events/check-in/ → new embedded Check In:** One barcode submission; expected one admission, observed Ticket scanned!, Scanned and count 3/12663.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/03-single-ticket-scan-result.png]]
+> ![[03-single-ticket-scan-result.png]]
 >
 > **14:10:17 MDT — /dashboard/events/check-in/ → new embedded Check In:** Repeated barcode; expected rejection, observed Ticket has already been scanned with unchanged count.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/04-single-ticket-duplicate.png]]
+> ![[04-single-ticket-duplicate.png]]
 >
 > **14:10:39 MDT — /dashboard/events/check-in/ → new embedded Check In:** After Refresh and reopening Item History; expected one saved admission, observed Scanned at 14:09:45.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/05-single-ticket-persisted-history.png]]
+> ![[05-single-ticket-persisted-history.png]]
 >
 
 > [!example]- Recurring event and event isolation — screenshots
 > **14:11:55 MDT — /dashboard/events/check-in/ → new embedded Check In:** Scan setup; expected only first occurrence ticket type active, observed Nov 15 checked and Nov 16/17 unchecked.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/06-recurring-occurrence-selection.png]]
+> ![[06-recurring-occurrence-selection.png]]
 >
 > **14:12:36 MDT — /dashboard/events/check-in/ → new embedded Check In:** Single-day control barcode under recurring selection; expected no admission, observed Ticket matching code not found and 0/3250.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/07-wrong-event-rejected.png]]
+> ![[07-wrong-event-rejected.png]]
 >
 > **14:12:51 MDT — /dashboard/events/check-in/ → new embedded Check In:** Ticket Details; expected Nov 15 occurrence and unused ticket, observed matching date, Issued and empty History.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/08-recurring-ticket-before.png]]
+> ![[08-recurring-ticket-before.png]]
 >
 > **14:13:04 MDT — /dashboard/events/check-in/ → new embedded Check In:** Row Scan; expected one admission, observed Ticket scanned! and 1/3250.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/09-recurring-scan-result.png]]
+> ![[09-recurring-scan-result.png]]
 >
 > **14:13:22 MDT — /dashboard/events/check-in/ → new embedded Check In:** Repeated recurring barcode; expected rejection, observed already-scanned error without another admission.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/10-recurring-duplicate.png]]
+> ![[10-recurring-duplicate.png]]
 >
 > **14:13:29 MDT — /dashboard/events/check-in/ → new embedded Check In:** After Refresh; expected one saved recurring admission, observed only Scanned at 14:12:58.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/11-recurring-persisted-history.png]]
+> ![[11-recurring-persisted-history.png]]
 >
 
 > [!example]- Product pickup, Return and re-scan — screenshots
 > **14:13:58 MDT — /dashboard/events/check-in/ → new embedded Check In:** Scan setup; expected product-only selection, observed Events 0, Ticket types 0 and T-shirt all sizes checked.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/12-product-only-selection.png]]
+> ![[12-product-only-selection.png]]
 >
 > **14:14:43 MDT — /dashboard/events/check-in/ → new embedded Check In:** Product Details before pickup; expected correct variant and no pickup, observed Fancy t-shirt / T-shirt all sizes and empty History.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/13-product-before.png]]
+> ![[13-product-before.png]]
 >
 > **14:15:00 MDT — /dashboard/events/check-in/ → new embedded Check In:** Typed product barcode; expected successful pickup without events, observed Product scanned! and 1/22190.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/14-product-barcode-result.png]]
+> ![[14-product-barcode-result.png]]
 >
 > **14:15:21 MDT — /dashboard/events/check-in/ → new embedded Check In:** Repeated product barcode; expected rejection, observed Product has already been scanned and unchanged count.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/15-product-duplicate.png]]
+> ![[15-product-duplicate.png]]
 >
 > **14:15:41 MDT — /dashboard/events/check-in/ → new embedded Check In:** After Refresh; expected one saved pickup, observed Scanned at 14:14:52.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/16-product-persisted-history.png]]
+> ![[16-product-persisted-history.png]]
 >
 > **14:16:14 MDT — /dashboard/events/check-in/ → new embedded Check In:** Return on this run’s item; expected pickup reversed, observed Product returned! and 0/22190.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/17-product-return-result.png]]
+> ![[17-product-return-result.png]]
 >
 > **14:16:37 MDT — /dashboard/events/check-in/ → new embedded Check In:** After Refresh; expected retained audit trail, observed Returned at 14:16:05 plus original Scanned.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/18-product-return-persisted.png]]
+> ![[18-product-return-persisted.png]]
 >
 > **14:16:50 MDT — /dashboard/events/check-in/ → new embedded Check In:** Scan button after Return; expected one new authorized pickup, observed Product scanned! and net 1/22190.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/19-product-row-rescan.png]]
+> ![[19-product-row-rescan.png]]
 >
 > **14:17:11 MDT — /dashboard/events/check-in/ → new embedded Check In:** After final Refresh; expected exact scan/return/re-scan sequence, observed three entries at 14:14:52 / 14:16:05 / 14:16:43.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/20-product-final-history.png]]
+> ![[20-product-final-history.png]]
 >
 
 > [!example]- Fresh reload and unchanged control — screenshots
 > **14:19:33 MDT — /dashboard/events/check-in/ → new embedded Check In:** After full browser reload and reselecting the single-day event; expected no admission from wrong-event rejection or search, observed Issued and No history found for the control.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/21-control-ticket-unchanged.png]]
+> ![[21-control-ticket-unchanged.png]]
 >
 
 > [!example]- Final browser state — 14:21:57 MDT
 > /dashboard/events/check-in/ → new embedded page. Temporary search and viewport override cleared; single-day count remains 3/12663 and the unused control is still Issued.
-> ![[99 Archive/QA Evidence/Check In/check-in-beta-new-page-smoke-2026-10-22/22-final-review-state.png]]
+> ![[22-final-review-state.png]]
 
 ## Preserved Review Data
 

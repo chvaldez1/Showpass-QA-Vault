@@ -124,7 +124,7 @@ function getBlockAfterLabel(section, label) {
   const lines = [];
   for (const line of after) {
     if (!line.trim()) {
-      if (lines.length > 0) break;
+      if (lines.length > 0) lines.push("");
       continue;
     }
     if (/^\*\*[^*]+:\*\*/.test(line) || /^### /.test(line)) break;

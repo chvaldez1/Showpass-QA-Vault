@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Purchase Flow Explorer</title>
+  <link rel="stylesheet" href="canvas.css">
   <style>
     :root {
       color-scheme: light;
@@ -311,14 +312,17 @@
     <p class="header-meta" id="generated-label"></p>
   </header>
 
-  <nav class="tabs" aria-label="Explorer views">
-    <button class="tab" type="button" role="tab" aria-selected="true" data-view="overview">Overview</button>
-    <button class="tab" type="button" role="tab" aria-selected="false" data-view="browse">Browse records</button>
-    <button class="tab" type="button" role="tab" aria-selected="false" data-view="sequences">Trace sequences</button>
+  <nav class="tabs" aria-label="Explorer views" role="tablist">
+    <button class="tab" type="button" role="tab" aria-selected="true" data-view="canvas" aria-controls="view-canvas">Flow canvas</button>
+    <button class="tab" type="button" role="tab" aria-selected="false" data-view="overview">Reference overview</button>
+    <button class="tab" type="button" role="tab" aria-selected="false" data-view="browse">Reference records</button>
+    <button class="tab" type="button" role="tab" aria-selected="false" data-view="sequences">Reference traces</button>
   </nav>
 
   <main class="workspace" id="app">
-    <section class="view active" id="view-overview" aria-label="Coverage overview">
+    <section class="view active" id="view-canvas" aria-label="Collapsible purchase flow"></section>
+    <section class="view" id="view-overview" aria-label="Coverage overview">
+      <p style="padding:12px 18px;border-bottom:1px solid var(--line);color:var(--muted)">Older reference dataset. Record counts describe the source map, not executed tests. The full catalog has not been rechecked against the canvas revisions.</p>
       <div class="overview">
         <div class="metrics" id="metrics"></div>
         <section class="section-band">
@@ -387,6 +391,8 @@
     </section>
   </main>
 
+  <noscript><p>This explorer needs JavaScript enabled to expand the purchase flow.</p></noscript>
+  <script src="canvas-data.js"></script>
   <script src="../../02%20Feature%20QA/Purchase%20Coverage/End-to-End%20Purchase%20Coverage%20Matrix.browser-data.js"></script>
   <script>
     let typeLabels = {};
@@ -427,6 +433,7 @@
     function switchView(name) {
       document.querySelectorAll(".tab").forEach((tab) => {
         tab.setAttribute("aria-selected", String(tab.dataset.view === name));
+        tab.tabIndex = tab.dataset.view === name ? 0 : -1;
       });
       document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === `view-${name}`));
     }
@@ -576,7 +583,20 @@
     }
 
     function bindEvents() {
-      document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => switchView(tab.dataset.view)));
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.setAttribute("aria-controls", `view-${tab.dataset.view}`);
+        tab.tabIndex = tab.getAttribute("aria-selected") === "true" ? 0 : -1;
+        tab.addEventListener("click", () => switchView(tab.dataset.view));
+        tab.addEventListener("keydown", (event) => {
+          const tabs = [...document.querySelectorAll(".tab")];
+          const current = tabs.indexOf(tab);
+          const next = event.key === "ArrowRight" ? (current + 1) % tabs.length : event.key === "ArrowLeft" ? (current + tabs.length - 1) % tabs.length : event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : null;
+          if (next === null) return;
+          event.preventDefault();
+          switchView(tabs[next].dataset.view);
+          tabs[next].focus();
+        });
+      });
       document.getElementById("record-search").addEventListener("input", applyFilters);
       document.getElementById("section-filter").addEventListener("change", applyFilters);
       document.getElementById("type-list").addEventListener("click", (event) => {
@@ -618,8 +638,8 @@
           searchText: JSON.stringify(record).toLowerCase(),
         }));
         filteredRecords = records;
-        document.getElementById("source-label").textContent = `${data.document.sourceMarkdown} · ${data.summary.sourceLines.toLocaleString()} source lines`;
-        document.getElementById("generated-label").textContent = `Generated ${new Date(data.document.generatedAt).toLocaleString()}`;
+        document.getElementById("source-label").textContent = "Source-backed workflow map · local HTML / CSS / JS";
+        document.getElementById("generated-label").textContent = `Reference dataset: ${data.document.generatedAt.slice(0, 10)} · not fully re-audited`;
         renderOverview();
         renderFilters();
         renderResults();
@@ -633,5 +653,6 @@
 
     initialize();
   </script>
+  <script src="canvas.js"></script>
 </body>
 </html>

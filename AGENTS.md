@@ -26,6 +26,14 @@ Examples:
 | Execution gaps remain | We have test cases for these checks, but we haven't run them yet |
 | Validate benefit isolation | Using one membership benefit must leave the member's other benefits unchanged |
 
+## Stay True To The Request
+
+- Let the user's current request define the work, deliverable and finishing point. This being a QA workspace does not make every request a testing request. Skills and standing workflows guide the requested work; they must not add unrelated work or deliverables.
+- Carry out the requested action directly. Do not expand writing, editing or configuration into source investigations, browser testing, basket checks, public-page reviews, coverage analysis, reports or handoffs unless the user requested them or a concrete blocker makes a specific check necessary.
+- Verify only what is needed to establish that the requested action completed, such as confirming the intended text was saved. A completion check is not a reason to begin a wider QA run. Change only the requested fields and preserve unrelated settings.
+- Apply scope corrections immediately. If the user says they want a rich description, write, format and save that description. If they say they are not asking for testing, stop the extra testing instead of finishing the expanded plan first.
+- Keep setup questions, source reads, screenshots and documentation proportional to the actual request. Ask only for missing information or authorization that materially blocks that request, and reuse answers already supplied. Admin access and other explicit permission boundaries still apply.
+
 ## Canonical QA Standard
 
 Read and apply [[00 Start Here/World-Class Software Quality Standard]] for QA scope, testing intent, proof targets, state-space modeling, coverage accounting, evidence, data safety, finding classification, human verification, readiness gates, and release decisions.
@@ -57,7 +65,7 @@ Backend code is the first source of truth for behavior, schemas, APIs, permissio
 - Authorized browser work is limited to the Codex in-app browser and the standing scope below. If the required integration or API is unavailable, report that specific blocker; do not switch to a desktop app or another browser.
 - Investigate Sentry through its connected integration or read-only API. Do not open Sentry in a browser as an authentication or investigation fallback.
 - A pasted link is context, not an instruction to open the page, inspect a live session, or start browser testing.
-- Continue tracing local backend and frontend code by default. Use the URL's route, model, or record identifier to understand the user's question and locate the relevant code.
+- For investigations and test-design requests, continue tracing local backend and frontend code by default. Use the URL's route, model, or record identifier to understand the user's question and locate the relevant code. For a requested content edit, use the supplied page and its controls; read source only when a specific uncertainty or blocker requires it.
 - For test generation and gap analysis, the user's standing preference authorizes using an already-open, relevant Codex browser for read-only navigation and non-saving UI inspection. Verify the environment, role, Organization and page; use it to enrich visible wording, navigation grouping and state coverage alongside source review. Do not inspect unrelated tabs or start a new browser/session solely because a URL was pasted.
 - Outside that standing scope, open or inspect a linked page only when the user explicitly asks for browser inspection, navigation, or live testing. A question such as “should I change it here?” with a URL does not independently authorize browser use.
 - Browser enrichment does not by itself authorize saving, creating, deleting, sending, purchasing, refunding, or triggering jobs. Execute mutations only within the user's authorized test-data and cleanup scope. If no suitable session exists, continue source-backed drafting and name material unverified UI facts.
@@ -157,7 +165,7 @@ Agents should keep work aligned with this folder contract:
 - Do not move, copy, or mirror repositories into this vault.
 - Reference repo paths instead of copying large code snippets.
 - Prefer checklists, short workflows, and focused QA notes.
-- Capture behavior, risks, test cases, and automation candidates.
+- For requested QA work, capture behavior, risks, test cases, and automation candidates. Do not create QA artifacts for an ordinary writing or configuration request unless asked.
 - Keep browser smoke work tied to the requested outcome and finishing point. Use the supplied records and ready controls first, apply scope corrections immediately, and follow [[06 Prompts/Interactive Browser Release Testing#Keep the scope and finish clear]]. Do not expand into nearby features just because they are available.
 - Plan supported cleanup before a browser mutation and verify it in the same host/session. Reuse useful evidence instead of repeating captures. These efficiency rules do not weaken the canonical financial, inventory or access gates.
 - Clean up temporary files you create yourself. Keep scratch scripts, intermediate exports, downloaded inspection copies and other disposable working files under `/private/tmp` where practical, and track their exact paths. When they are no longer needed, use `rm` to delete those specific files, remove obsolete references, and verify cleanup before finishing. Do not leave cleanup for the user or use broad deletion patterns in shared temporary folders. Preserve user-owned files, maintained tools, final deliverables, necessary evidence and files still needed for active work; explain any temporary files deliberately retained and why.
