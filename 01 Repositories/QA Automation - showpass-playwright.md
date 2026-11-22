@@ -25,10 +25,9 @@ Use [[00 Start Here/World-Class Software Quality Standard]] as the canonical qua
 
 ## Upstream Workflow References
 
-- `docs/agent-workflows/standards/manual-qa-principles.md`
-- `docs/agent-workflows/workflows/showpass-qa-test-case-generator.md`
-- `docs/agent-workflows/standards/playwright-principles.md`
-- `docs/agent-workflows/standards/test-architecture.md#ui-aligned-test-folders` — visible navigation and owning-screen placement
+- [Agent workflow index](../../showpass-playwright/docs/agent-workflows/README.md#choose-the-procedure) for the current test writing, update, and review procedures.
+- [Manual QA principles](../../showpass-playwright/docs/playwright-handbook/planning/manual-qa.md) and the [QA test case generator](../../showpass-playwright/docs/agent-workflows/workflows/showpass-qa-test-case-generator.md) for manual case guidance.
+- [Dashboard tests follow the menu](../../showpass-playwright/docs/playwright-handbook/foundations/project-structure.md#dashboard-tests-follow-the-menu) for visible navigation and owning-screen placement.
 
 The generator's [[06 Prompts/Showpass QA Test Case Generator#Source Context|tuning reference]] records the PR #458 revision reviewed. Prefer its relevant efficiency and browser-evidence practices without importing browser-guide exceptions that conflict with the vault's canonical standard or standalone Qase fields.
 

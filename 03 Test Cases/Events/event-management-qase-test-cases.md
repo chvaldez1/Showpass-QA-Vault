@@ -750,7 +750,7 @@ Complex controls accounted for: image selection/crop/rejection → SPT-5339; ric
 | P1 browser | SPT-5339/5342/5356/5349/5350, representative order form, allowed/denied navigation | Assert fresh reads and unchanged comparison records. |
 | Manual/device | Cropping appearance, narrow-screen keyboard/focus, PDF readability, real email and thermal print | Real inbox/printer/provider output must be observed separately; no synthetic “delivered” pass. |
 
-Automation sources: [single-event journeys](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/events/single-events.test.ts>), [recurring-event journeys](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/core/checkout/events/recurring-events.test.ts>), [cross-section save tests](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/ticket-types/editor-modal/event-sections-save.integration.test.tsx>). Located/inspected only; nothing was run.
+Automation sources: [historical single-event journeys](https://github.com/showpass/showpass-playwright/blob/64baf393252863b3a30f2085b6c4c3b999f99137/tests/core/checkout/events/single-events.test.ts), [historical recurring-event journeys](https://github.com/showpass/showpass-playwright/blob/64baf393252863b3a30f2085b6c4c3b999f99137/tests/core/checkout/events/recurring-events.test.ts), [cross-section save tests](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/ticket-types/editor-modal/event-sections-save.integration.test.tsx>). Located/inspected only; nothing was run.
 
 ## Sources and read record
 

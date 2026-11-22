@@ -92,7 +92,7 @@ For Dashboard `/manage/` coverage, organize by what employees see: **navigation 
 - Suggest Qase suite placement using the same visible hierarchy, but preserve actual suite names/IDs in the coverage baseline. Mark proposed placement when the tree has not been read; never invent suite IDs. Creating/moving suites or cases requires separate authorized scope.
 - UI organization does not change platform scope. Browser layout does not prove native app/hardware behavior, and shared implementation alone does not make a case cross-platform. Parameterize equivalent scenarios instead of duplicating them by page or client.
 
-This adapts the Playwright repository's `docs/agent-workflows/standards/test-architecture.md#ui-aligned-test-folders` to vault notes. Automation uses its own repository folder conventions. Verify current navigation and record conflicts rather than guessing from a legacy route or folder name.
+This adapts the Playwright repository's [Dashboard folder guidance](../../showpass-playwright/docs/playwright-handbook/foundations/project-structure.md#dashboard-tests-follow-the-menu) to vault notes. Automation uses its own repository folder conventions. Verify current navigation and record conflicts rather than guessing from a legacy route or folder name.
 
 ## Filing Rules
 

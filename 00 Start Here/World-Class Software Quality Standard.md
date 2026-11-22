@@ -79,7 +79,7 @@ Local workflow bindings:
 - Qase reads and writes: [[05 Tooling/qasectl]]
 - Jira intake: Atlassian Rovo plugin, following the Jira Access rules in `AGENTS.md`.
 
-The Playwright repository's `manual-qa-principles.md` and `showpass-qa-test-case-generator.md` informed this standard. They remain useful engineering references, but this vault note is the canonical quality policy.
+The Playwright repository's [Manual QA Principles](../../showpass-playwright/docs/playwright-handbook/planning/manual-qa.md) and [QA test case generator](../../showpass-playwright/docs/agent-workflows/workflows/showpass-qa-test-case-generator.md) informed this standard. This vault note is the canonical quality policy.
 
 ### Consolidation Decisions
 

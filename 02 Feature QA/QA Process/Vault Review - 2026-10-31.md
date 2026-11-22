@@ -126,7 +126,7 @@ The separate repository's unrelated existing edits were preserved. This task cha
 - `playwright.config.ts`
 - `playwright.desktop.config.ts`
 - `eslint.config.js`
-- `docs/agent-workflows/standards/verification-and-reporting.md`
+- [Verification and reporting at its previous path](https://github.com/showpass/showpass-playwright/blob/888ae6784957e5306d3421233e3546f7b9bdc18d/docs/agent-workflows/standards/verification-and-reporting.md). See the [current handbook page](../../../showpass-playwright/docs/playwright-handbook/running/verification.md) for today's guidance.
 
 Root: `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`. The source revision and local changes are captured by the collector and per-run metadata; no deployed application revision was inferred from them.
 

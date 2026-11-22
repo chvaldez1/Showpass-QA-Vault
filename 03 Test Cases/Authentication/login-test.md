@@ -11,7 +11,7 @@ This note covers all known entry points where a Showpass user can reach login, p
 - [[Showpass QA Test Case Generator]]
 - [[05 Tooling/Qase Test Case Writing Rules]]
 - Merged local login notes: `protected-login-qase-updates.md`, `public-provider-login-qase-updates.md`, `login-qase-gap-analysis.md`
-- `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/showpass-qa-test-case-generator.md`
+- `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/workflows/showpass-qa-test-case-generator.md`
 - `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/api/urls.py`
 - `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/main/api/auth/urls.py`
 - `/Users/christianvaldez/Documents/Showpass/repos/web-app/apps/main/api/auth/views.py`

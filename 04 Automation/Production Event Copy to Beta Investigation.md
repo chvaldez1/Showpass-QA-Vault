@@ -431,10 +431,10 @@ API registrations: [Event and dependency routes](</Users/christianvaldez/Documen
 
 The repo now has more support than in the September discussion:
 
-- [API login helper](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/utils/api-helpers.ts:351>) signs in to a separate API session and obtains the CSRF token needed for writes.
+- [API login helper](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/utils/api-helpers.ts:353>) signs in to a separate API session and obtains the CSRF token needed for writes.
 - [Cloudflare helper](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/fixtures/helpers/cloudflare-access.ts>) supports host-scoped beta/demo access. Generic API contexts must explicitly use the applicable Access setup; it is not automatically inherited from the browser configuration.
-- [Event-authoring setup](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/web/dashboard/build/events/event-authoring.fixture.ts:241>) reads employment, permissions, reference Event, and Locations before creating data.
-- [Event-authoring persistence and cleanup](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/web/dashboard/build/events/event-authoring.persistence.ts>) tracks creation, background jobs, fresh reads, and exact owned Event archival.
+- [Create Event fixture](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/web/dashboard/build/events/all-events/create-event/create-event.fixture.ts>) uses the Organizer fixture for access and scopes setup and cleanup to owned Events.
+- [Event-authoring persistence and cleanup](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/web/dashboard/build/events/all-events/create-event/create-event.persistence.ts>) tracks creation, background jobs, fresh reads, and exact owned Event archival.
 
 These are reusable patterns, not an existing production-to-beta copier. Keep the exporter/settings format separate from the transport so a production shell export and API export can feed the same beta creator. A manual command should preserve its output; a test fixture can request cleanup.
 

@@ -1,224 +1,123 @@
 # Showpass QA Vault Agent Guide
 
-Use this vault as a QA-first workspace for test creation, QA analysis, and automation planning.
-
-## Clear, Everyday Language
-
-The user should be able to understand each response on the first read. Apply this to chat replies, progress updates, findings, reports and test cases.
-
-- Use natural, everyday wording. Assume the user knows Showpass but may not know software engineering or QA jargon.
-- Give as much detail as the answer needs. Do not force short answers or remove useful explanation just to reduce length.
-- Start with the answer, then explain it in a sensible order. Connect each point to the situation being discussed.
-- Describe what someone does, what happens and why it matters. Name the actual ticket, product, membership, employee or customer instead of using abstract labels.
-- Replace technical terms with a concrete example whenever possible. If a technical term is necessary, explain it when first used.
-- Keep sentences easy to follow, with one main idea each. Avoid packing several conditions or qualifications into one sentence.
-- Make test results clear: say "we tested this and it passed," "we have a test case but haven't run it," "we need to add a test," or "we confirmed a bug," as appropriate.
-- Explain the actual business impact before calling a gap important. State when it matters only for certain venues or setups.
-- Keep code details, commands and commit hashes in supporting notes unless they help answer the user's question. Preserve necessary evidence, uncertainty and required QA checks.
-- Before sending, reread the response for wording that makes the user translate it into ordinary language. Rewrite those parts.
-
-Examples:
-
-| Avoid | Prefer |
-| --- | --- |
-| Concurrent redemption can violate entitlement limits | Two employees scanning the same ticket at the same time could let it be used twice |
-| Persisted state must be verified | Refresh the page and check that the change was saved |
-| Execution gaps remain | We have test cases for these checks, but we haven't run them yet |
-| Validate benefit isolation | Using one membership benefit must leave the member's other benefits unchanged |
+Use this vault for Showpass QA work and follow the requested deliverable for every task.
 
 ## Stay True To The Request
 
-- Let the user's current request define the work, deliverable and finishing point. This being a QA workspace does not make every request a testing request. Skills and standing workflows guide the requested work; they must not add unrelated work or deliverables.
-- Carry out the requested action directly. Do not expand writing, editing or configuration into source investigations, browser testing, basket checks, public-page reviews, coverage analysis, reports or handoffs unless the user requested them or a concrete blocker makes a specific check necessary.
-- Verify only what is needed to establish that the requested action completed, such as confirming the intended text was saved. A completion check is not a reason to begin a wider QA run. Change only the requested fields and preserve unrelated settings.
-- Apply scope corrections immediately. If the user says they want a rich description, write, format and save that description. If they say they are not asking for testing, stop the extra testing instead of finishing the expanded plan first.
-- Keep setup questions, source reads, screenshots and documentation proportional to the actual request. Ask only for missing information or authorization that materially blocks that request, and reuse answers already supplied. Admin access and other explicit permission boundaries still apply.
+Decide what the user wants before choosing a skill, workflow, or tool.
+
+| Request | What to deliver |
+| --- | --- |
+| “Give me the run lines,” “what should I use?” | Give commands or advice in chat. Project scaffolding, installs, project file edits, and server startup require an explicit request to do that work. |
+| “Review our workflow,” “check this plan” | Inspect the relevant sources and report findings. Apply changes only when asked. |
+| “Fix AGENTS.md and give me setup commands” | Edit the named file and give the setup commands in chat. |
+| “Build it in this folder,” “run this browser check” | Carry out the requested work on the named target within the permissions below. Verify the requested outcome and stop there. |
+
+For a mixed request, deliver the part that is clear. If “prototype” could mean an example in chat or a project build, clarify before creating project files. Skills and linked workflows guide authorized work. Apply scope corrections immediately, use known answers, and keep setup, source review, screenshots, and verification proportional to the task.
+
+Use the package manager the user specifies. For an existing project, otherwise follow its declared `packageManager` or lockfile. Default to `pnpm` for new Showpass JavaScript and TypeScript projects, including the commands you give the user.
+
+## Permissions
+
+### Projects and changes
+
+- Get explicit permission before editing another repository or project. Read-only source tracing is allowed. A broad request to improve this vault or its workflows does not authorize cross-project edits. Reuse permission granted for the same scope. Keep unrelated fields, records, and files out of the change.
+- A request to draft, review, or read does not authorize a live save, purchase, send, import, refund, deletion, background job, or publication. Execute data changes and cleanup only within the authorized scope. A draft Jira issue or Qase case stays a draft until the user authorizes publication.
+- Follow task-specific access restrictions, including any requirements for production or test-data access. A workflow or a tool approval does not extend the user's authorization.
+
+### Pasted Links And Browser Use
+
+- A pasted URL is context. For investigations and test design, trace the backend and frontend first. Use the URL to identify the route or record. A URL or code default does not establish live state or deployed behavior. For a requested content edit, use the supplied page and its controls. Read source only to resolve a specific uncertainty.
+- Use the Codex in-app browser for authorized live browser work. For test generation and gap analysis, the standing exception allows read-only, non-saving navigation in an already-open matching in-app session. Verify environment, role, Organization, and page. Outside that exception and the requested content edits above, open a linked page only when the user explicitly asks for navigation, browser inspection, or live testing.
+- Do not inspect or control native browser windows, desktop apps, terminals, or the desktop through computer-use tools unless the user explicitly names the app and permits that access. Use filesystem tools and connected integrations where appropriate. If the required Codex browser session, integration, or API is unavailable, name the blocker. Do not switch to an unrelated tab, start another session as a fallback, or replace missing source evidence with a browser check.
+- Investigate Sentry through the connected integration or read-only API. Do not use a browser as a Sentry investigation or authentication fallback.
+
+### Admin Access And Readiness Checks
+
+- Obtain explicit permission before accessing any Showpass Admin page, tool, record, or endpoint, including read-only access. This applies to Django Admin and Dashboard Admin tools. An existing login, link, API route, or test prerequisite does not grant access. Name the page or record and purpose when asking. Permission to inspect Admin does not authorize a save, flag change, gateway change, or other mutation. Stop if permission is absent or withdrawn.
+- Before creating or updating scenario data, verify the intended environment and Organization/Venue in the authorized Dashboard. Ask the user about missing required flags, modules, permissions, and payment or fee setup. Bundle exact settings and accept ON, OFF, or unknown. Reuse same-scope answers and distinguish user confirmation from agent verification.
+- An unknown or unsuitable prerequisite blocks only the work that needs it. Explain the gap and continue independent authorized work. Do not assume a saved value from a default, relax the case silently, or change shared settings to make a scenario fit.
+
+### Jira Access
+
+- Discover the connected Atlassian Rovo tools and use the issue-details tool for known keys or URLs. Pass the site hostname, such as `showpass.atlassian.net`, and read the description, status, priority, and comments. Resolve the cloud ID through the connector if needed.
+- If the read fails, report the specific tool, authentication, or access problem. Check the connector before considering any authorized browser path. Do not fall back to local credentials or ask for an API token. Treat ticket contents as intake and verify product behavior against backend source.
+- Use the connector's write tool only for authorized changes. Preserve unrelated fields and read back the saved issue or comment.
+
+### Qase access and writes
+
+- Follow [[05 Tooling/qasectl]] for reads and writes. Prefer a bulk read with local filtering for gap analysis. Store temporary API output under `/private/tmp`. An inaccessible or incomplete read does not establish that a case is missing.
+- Use `05 Tooling/scripts/create-or-update-qase-case.mjs` for case creates and updates. Use `--batch-plan` for multiple cases. Always dry-run writes and summarize the exact cases, draft labels or IDs, titles, suites, tags, parameters, and step counts. Run apply only with explicit confirmation of the exact scope. Reuse matching approval. Read back the changes to verify them.
+- Case deletion requires an explicit request and confirmation of the exact IDs. If network approval is needed, use the documented bulk-read or batch command instead of one-off command shapes.
+
+## Clear, Everyday Language
+
+Start with the answer. Use actual Showpass role, screen, and control names. Describe what someone does, what happens, and why it matters. Explain necessary technical terms and put implementation detail in supporting notes. State the business impact before assigning importance, including any setup the impact depends on.
+
+Distinguish tested and passed, confirmed bug, inconclusive, blocked, and not run. Keep proposed, published, and executed cases distinct. “We have a case but haven't run it” is clearer than “execution gaps remain.”
 
 ## Canonical QA Standard
 
-Read and apply [[00 Start Here/World-Class Software Quality Standard]] for QA scope, testing intent, proof targets, state-space modeling, coverage accounting, evidence, data safety, finding classification, human verification, readiness gates, and release decisions.
+For QA work, read [[00 Start Here/World-Class Software Quality Standard]]. It owns scope, proof targets, coverage, evidence, safety, finding classification, readiness, and release decisions. Apply the portions relevant to the request. Use [[00 Start Here/QA Operating Workflow]] to choose a QA workflow and the [[00 Start Here/Showpass QA Handbook/00 Index|Showpass QA Master Handbook]] for hands-on testing, terminology, setup, and connected Organizer, Customer, Attendee/Member, and Venue Employee flows.
 
-Workflow notes may add task-specific instructions, but they must not redefine or weaken the canonical standard.
+### Source Of Truth
 
-Use [[00 Start Here/Showpass QA Handbook/00 Index|Showpass QA Master Handbook]] for hands-on Showpass system testing: actual Organizer/Customer/Attendee/Member/Venue Employee terminology, Venue/client/configuration setup, and connected create → purchase → fulfillment/admission → Refund/Void/Exchange → Inventory/financial walkthroughs. Add its senior-QA integration passes, automation-layer selection, physical-device coverage, and release-confidence guidance. It applies the canonical standard; it does not replace it. Bind recipes to the exact change, current source, supported clients, and actual configuration before drafting or executing tests.
+- Backend behavior, schemas, permissions, and validation: `/Users/christianvaldez/Documents/Showpass/repos/web-app`
+- Visible entry points, controls, and client behavior: `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`
+- Durable automation patterns: `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`
 
-## Coverage Review And Implementation
+Trace the backend first for behavior. Use frontend evidence for how people reach it. Separate source findings, live observations, saved results, and test outcomes.
 
-- For release readiness or “what coverage do we have?”, use [[06 Prompts/Release Coverage Review]]. Compare actual saved Qase cases, exact Playwright assertions and planned/executed browser checks for each changed behavior. Show Full/Partial/None/Unknown separately from current execution and list the exact remaining checks. Owner/sign-off fields are not required in the release template.
-- Reuse [[05 Tooling/scripts/collect-release-coverage.mjs]] for source/case/result evidence collection. Matches are candidates for review, not automatic full coverage. Follow the Qase read-first and write-confirmation rules below; an inaccessible or incomplete read cannot establish that a case is missing.
-- For implementation requests, carry selected improvements through code, focused verification and the actual CI status within authorized scope. Reuse existing test setup and cleanup; do not create another plan merely because an older worker was planning-only. Keep unrun, failed, skipped and retry-only results visible.
-- For requested prevention after a confirmed escaped bug, use [[06 Prompts/Escaped Bug To Regression]]. Connect the actual failure to the missing assertion/setup and verify the resulting protection; do not equate case publication or ticket closure with a passing regression.
+### Coverage Review And Implementation
 
-## Source Of Truth
+- For release readiness or “what coverage do we have?”, use [[06 Prompts/Release Coverage Review]] and `05 Tooling/scripts/collect-release-coverage.mjs`. Compare saved Qase cases, exact Playwright assertions, and browser checks against each changed behavior. Search matches are candidates. Report Full, Partial, None, or Unknown separately from current execution, and name exact remaining checks. Owner and sign-off fields are optional.
+- For authorized implementation, reuse existing setup and cleanup, make the scoped change, verify the focused behavior, and check actual CI status within scope. Carry through an authorized improvement even if an earlier worker only planned it. Keep failed, unrun, skipped, and retry-only results visible.
+- For requested prevention after a confirmed escaped bug, use [[06 Prompts/Escaped Bug To Regression]]. Tie the regression to the actual failure and verify it catches the missing behavior.
 
-- Ask and receive explicit permission before editing any other repository or project. Read-only source tracing is allowed. A broad request to improve this vault, its processes or automation does not by itself authorize cross-project edits. Once a specific cross-project scope is authorized, finish it without repeating the permission question.
+### Branch And PR QA Rules
 
-- Backend first: `/Users/christianvaldez/Documents/Showpass/repos/web-app`
-- Frontend follows backend behavior: `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`
-- Playwright automation patterns: `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`
+- For branch or PR QA, confirm the active branch and intended base. Start from the exact diff and explain the changed behavior in everyday language before writing cases. For Jira-card generation, read a diff only when the user asks for branch- or diff-based coverage.
+- Trace changed APIs, services, models, webhooks, jobs, and shared components to every affected client, including clients with unchanged files. Account for provider callbacks, polling, and delayed updates when they can affect orders, money, inventory, fulfillment, or reporting.
+- List where people start (for example, Web Box Office or Electron) separately from what can happen (success, cancel, failure, retry, timeout, or delayed result). Prove a clean success as its own check. Test each control or recovery path where it exists; mark unsupported combinations as not applicable.
 
-Backend code is the first source of truth for behavior, schemas, APIs, permissions, and validation. Frontend code follows that behavior and shows how users reach it. The Playwright repo shows durable automation patterns.
+### Manual Test Case Readability And Route Stability
 
-## Pasted Links And Browser Use
-
-- Do not inspect or control desktop apps, native browser windows, or the desktop through computer-use tools. This includes Chrome, Dia, Slack, Obsidian, terminals, and desktop screenshots. Use filesystem tools for local source and connected integrations/APIs for service data. An instruction to investigate, test a link, or reproduce an issue does not authorize desktop-app access. Only a later explicit user instruction naming the desktop app and permitting its use can override this restriction.
-- Authorized browser work is limited to the Codex in-app browser and the standing scope below. If the required integration or API is unavailable, report that specific blocker; do not switch to a desktop app or another browser.
-- Investigate Sentry through its connected integration or read-only API. Do not open Sentry in a browser as an authentication or investigation fallback.
-- A pasted link is context, not an instruction to open the page, inspect a live session, or start browser testing.
-- For investigations and test-design requests, continue tracing local backend and frontend code by default. Use the URL's route, model, or record identifier to understand the user's question and locate the relevant code. For a requested content edit, use the supplied page and its controls; read source only when a specific uncertainty or blocker requires it.
-- For test generation and gap analysis, the user's standing preference authorizes using an already-open, relevant Codex browser for read-only navigation and non-saving UI inspection. Verify the environment, role, Organization and page; use it to enrich visible wording, navigation grouping and state coverage alongside source review. Do not inspect unrelated tabs or start a new browser/session solely because a URL was pasted.
-- Outside that standing scope, open or inspect a linked page only when the user explicitly asks for browser inspection, navigation, or live testing. A question such as “should I change it here?” with a URL does not independently authorize browser use.
-- Browser enrichment does not by itself authorize saving, creating, deleting, sending, purchasing, refunding, or triggering jobs. Execute mutations only within the user's authorized test-data and cleanup scope. If no suitable session exists, continue source-backed drafting and name material unverified UI facts.
-- Do not replace code tracing with browser inspection or automatically fall back to a browser when source evidence is incomplete. State the specific evidence gap instead.
-- Distinguish source-backed behavior from live record state; a URL alone does not establish the record's saved values or deployed behavior.
-
-## Admin Access And Readiness Checks
-
-- **Ask and receive explicit permission before accessing Admin.** This includes opening, navigating, reading, inspecting or changing Django Admin, Dashboard Admin tools, or Admin-only records/endpoints. Read-only access still requires permission. Do not work around this boundary through an API, another tab or another client.
-- Permission to investigate, create an Event, prepare a test scenario, test a basket or check readiness does **not** authorize Admin access. An existing login, visible Admin link, pasted Admin URL or prerequisite mentioning Admin is not permission either.
-- Before creating or updating scenario data, confirm the intended environment and Organization/Venue through the authorized Dashboard and ask the user whether the scenario's required flags, modules, permissions and relevant payment/fee setup are ready. Ask for exact required values, such as `enable_voucher_refund_limit_fix = ON`, rather than claiming that "all flags" are enabled.
-- **Readiness is a question for the user by default, not an instruction to inspect Admin.** Derive the checklist from the selected test case and current source. Bundle missing readiness questions, accept ON/OFF/unknown or an equivalent clear answer, and label user-confirmed settings separately from agent-verified settings. Reuse confirmations already supplied for the same scope instead of asking again.
-- An unknown or unsuitable prerequisite blocks the work that depends on it. Explain what is missing and what can safely continue; do not create a supposedly ready scenario, silently relax the case or enable shared settings to make it fit. Do not treat a setting's name or source default as its saved value.
-- If Admin access is actually needed, explain the specific page/record and purpose, ask explicitly, and wait for the answer before access. Permission to inspect Admin does not authorize saving, toggling flags, changing a gateway or modifying records; those changes need their own authorized scope.
-- Stop Admin activity immediately if permission is absent, withdrawn or the user says to stop. The canonical QA standard and handbook may identify Admin-managed prerequisites, but they do not override this access rule.
+- Use visible product navigation and precise actions, such as Dashboard → Events → Manage Events → Edit. Put route and source details in the description or sources. Hard-code a route in an execution step only when the route is being tested or no visible navigation exists. Group Dashboard cases by [[03 Test Cases/Test Cases by Feature#Dashboard UI Organization|the visible menu and owning screen]].
+- For migrations, confirm old business functions are reachable from the real landing page. Apply [[00 Start Here/World-Class Software Quality Standard#Preserve Access During Page Migrations]]. Direct URLs alone do not prove discoverability.
+- For manual reproduction and human checks, use [[00 Start Here/World-Class Software Quality Standard#Executable Reproduction Handoff]]. State how to reach the required starting state and provide numbered Expected/Actual steps. Use the separate Qase format for standalone cases.
+- Combine cases with the same actions and result using a readable parameter. Split cases when permission or entry-point differences make the steps confusing. Use `TC-*` for local drafts and `SPT-*` only for existing Qase IDs. Keep local IDs out of Qase titles and execution fields. Keep Jira traceability outside the case description.
+- Follow [[05 Tooling/Qase Test Case Writing Rules]] for standalone prerequisites, form coverage, source verification, and Copy-to-Qase review. Apply its [[05 Tooling/Qase Test Case Writing Rules#Explain Showpass Terms And Where To Find Them|setup wording]] and [[05 Tooling/Qase Test Case Writing Rules#Scannable Preconditions And Explicit Event Setup|prerequisite format]]. Name exact permissions, flags, setup locations, and values. Use [[05 Tooling/Qase Test Case Writing Rules#Package Events And Guest Information]] for parent versus child Events and whose information each ticket collects. Preserve Platform/View, verify saved Single parameters across the scoped cases, and carry setup corrections through every affected field and the canonical note.
+- Use [[06 Prompts/Showpass Qase Gap Analysis]] for focused standalone drafts first and compact findings afterward. Split distinct behaviors so each case can be followed on its own.
 
 ## Sentry Record Details
 
-Make Sentry findings easy to locate in Showpass. Near the top of each investigation, include a compact table with the Venue ID and Venue/Organization name; Customer name, email and ID when available and needed for the lookup; what is being purchased or exchanged, including Event/date, item names, quantities and IDs when captured; original invoice ID/order reference and original items; and replacement basket/invoice/credit IDs when relevant. Include the useful confirmed details in the chat response as well.
+Include a compact lookup table near the top of each investigation and the useful details in the reply. Name the Venue and Venue ID, the Customer name/email/ID if needed for lookup, Event/date, purchased or exchanged items with quantities and IDs, original order reference and items, and replacement basket/invoice/credit IDs where relevant. Read relevant captured values even when tags are empty. Label information as not captured, redacted, not applicable, or blocked by named access. Use narrow, permitted read-only correlation and omit credentials and barcodes.
 
-Inspect relevant captured application values even when Sentry's user or business tags are empty. Keep original and replacement records separate, and label an invoice item ID as an order line rather than an invoice ID. Do not substitute the Event name for the Venue name or infer a missing amount from a model description. Mark each unavailable field as not captured, redacted, not applicable, or blocked by a named access problem. Use permitted read-only integrations for a narrow correlation when useful; do not bypass redaction, expose credentials or ticket barcodes, or change records to obtain identifying details.
-
-### Verify IDs before giving lookup instructions
-
-- Confirm the record type from the captured field, model or verified relationship. Always label lookup numbers explicitly: **Invoice ID**, **Invoice item ID**, **Basket ID**, **Customer ID**, or **Venue ID**. Avoid ambiguous labels such as “original ID” or “order ID” for a numeric value whose type is not established.
-- Keep **Invoice ID** and **Invoice item ID** in separate fields. An invoice item is one line of an invoice. Only give its parent Invoice ID when that relationship was actually captured or read; otherwise say **Invoice ID: unknown**. Never reuse the item ID as the parent invoice ID.
-- Before giving an Admin link or search, check that its destination matches the record type: **Invoices** for an Invoice ID, **Invoice items** for an Invoice item ID. To find a parent invoice from an item, open the item first and read its **Invoice** field. An ID searched under the wrong record type does not establish that the intended record was deleted.
-
-## Jira Access
-
-Use the connected Atlassian Rovo plugin for Jira reads and authorized writes. When the user asks to read, summarize, or analyze Jira issues:
-
-- Discover the Jira tools available in the current task, including deferred tools, before choosing a fallback. Prefer the connected Atlassian Rovo plugin for reads; do not assume it is unavailable because an older note says so.
-- For a known issue key or link, use the plugin's issue-details tool with the site hostname, such as `showpass.atlassian.net`, and request the description, status, priority, and comments. Resolve the cloud ID through the plugin if the hostname is rejected.
-- If the connector is unavailable or a read fails, report the specific tool, authentication, or permission problem. Do not infer connector access from local `.env` configuration or recreate a local credential-based reader as a fallback.
-- Do not ask the user to provide an API token or sign into a browser before checking the connected plugin and attempting the requested read. Use browser access only within the user's authorized browser scope and after the connector path has been checked.
-- Reading a Jira issue does not authorize comments, edits, transitions, or other Jira writes. Ticket content is intake evidence; verify system behavior against backend source truth.
-- For user-requested Jira creates or updates, use the plugin's matching write tool within the authorized scope, preserve unrelated fields, and read back the changed issue or comment to verify the result.
-
-## Branch And PR QA Rules
-
-When the user supplies a branch or PR, treat the exact branch diff as the starting scope. Do not generate coverage from the broad feature name alone.
-
-- Confirm the active branch and compare it with the intended base branch before broad feature analysis.
-- Summarize the changed user behavior in plain language before writing cases.
-- Trace every changed backend API, service, model, webhook, background task, or shared frontend component to all clients that use it. A client can be affected even when its files are not changed in the branch.
-- Build separate lists for entry points and outcomes. Entry points are where the actor starts, such as Web Box Office, POS mode, Electron, or mobile. Outcomes are what happens, such as success, cancel, failure, retry, timeout, or a delayed final update.
-- Include a clean successful flow as its own proof target. Do not treat success only as the final step of a cancel, failure, or retry case.
-- Cover a control or recovery path only on clients that actually provide it. Mark unsupported combinations as not applicable instead of forcing platform symmetry.
-- Include provider callbacks, webhooks, polling, and other background final-state paths when they can change payment, order, inventory, fulfillment, credit, refund, payout, or reporting state.
-- Do not limit platform scope to files directly edited in the branch. Include unchanged clients when source shows they call the changed shared behavior, and state that evidence clearly.
-- For Jira-card generation, keep the existing no-diff rule unless the user explicitly asks for branch- or diff-based coverage.
-
-Test notes must be executable by someone with little or no Showpass knowledge:
-
-- Define necessary Showpass terms in plain language when the workflow uses product-specific concepts.
-- Say where the actor starts, what they select, and what they should see.
-- Prefer customer- and employee-visible proof such as one charge, one transaction, one order, and one set of tickets over internal field names.
-- Keep implementation details in source-backed behavior or risk sections, not in manual steps.
-
-## Manual Test Case Readability And Route Stability
-
-Write every manual test case for a regular person who may have little Showpass knowledge.
-
-- For browser/Sentry reproduction walkthroughs and human checks, apply [[00 Start Here/World-Class Software Quality Standard#Executable Reproduction Handoff]]. Explain how to reach the required starting state using actual controls, rather than assuming an unfiltered page, enabled panel or matching employee. Use numbered Expected/Actual steps in these reports; standalone Qase-ready cases retain their required format.
-- Use the words visible in the product. Prefer `open Manage Events`, `select Edit`, and `the saved value is still shown` over terms such as `source-backed navigation`, `state-aware surface`, `route parity`, `mapped destination`, `fixture`, `persistence boundary`, or `handoff`.
-- Titles, Descriptions, Preconditions, Steps, Data, and Expected Results must use plain language. Technical terms may remain in source notes, risk analysis, or automation notes when they are needed for accuracy.
-- Define a Showpass-specific term the first time it is needed and cannot be replaced with common wording.
-- Put the current route in the Description or Sources Reviewed when it helps trace source behavior. Do not put a hard-coded route, Angular hash URL, slug pattern, or framework-specific path in a manual Step or Data cell unless the route itself is the behavior under test or no visible product navigation exists.
-- Prefer visible navigation such as `Dashboard → Events → Manage Events → Edit`. Treat legacy Angular routes as temporary because they may change during the Next.js migration.
-- Organize Dashboard `/manage/` cases and gap rows by the visible navigation hierarchy and owning screen, following [[03 Test Cases/Test Cases by Feature#Dashboard UI Organization]]. Keep route evidence outside manual steps; grouping does not authorize moving existing notes or Qase suites.
-- A route migration must not require rewriting user-focused steps when the visible workflow and expected behavior remain the same.
-- For replacement pages, legacy embeds and navigation changes, apply [[00 Start Here/World-Class Software Quality Standard#Preserve Access During Page Migrations]]. Compare previous business functions with reachable replacements from the actual user landing page; do not treat a direct URL, a different navigation shell, or a deferred owning-screen review as proof of preserved access.
-- Before drafting separate cases, check whether the cases use the same actions and prove the same result. If they do, create one case with a clear parameter. Single-event and recurring-event versions should normally be parameter values when only the displayed table or setup changes.
-- Combine entry-point and permission variations only when one short scenario table and one step set remain easy to follow. Split the case when conditional steps would make execution confusing.
-- Label an uncreated local case as `TC-*`. Use `SPT-*` only for a case that already has that Qase ID.
-- Apply [[05 Tooling/Qase Test Case Writing Rules]] for every Qase-ready draft, including its prerequisite, standalone-field, form-coverage, source-verification, and Copy-to-Qase review rules. Each case must be executable on its own by a product-team member.
-- Explain setup concisely with exact required employee permissions, actual flags, and supported admin record preparation. Do not add generic QA-environment requirements, invented QA venue names, or specific record IDs unless the behavior or a concrete safety requirement depends on them.
-- Keep local `TC-*` labels out of Qase titles and execution fields. Keep Jira traceability and cross-case commentary outside case descriptions; never make a case depend on `Setup A` or another case.
+Keep original and replacement records distinct. Verify and label the lookup type for each ID and destination. An **Invoice item ID** identifies one order line. If its parent is unverified, write **Invoice ID unknown**. For a permitted Admin lookup, send an Invoice ID to Invoices and an Invoice item ID to Invoice items. Find a parent invoice through the item's **Invoice** field. Searching under the wrong record type does not prove a record was deleted.
 
 ## Vault Handshake
 
-Agents should keep work aligned with this folder contract:
+| Folder | Use |
+| --- | --- |
+| `00 Start Here/` | Orientation, standards, and QA workflow |
+| `01 Repositories/` | Repository reference notes |
+| `02 Feature QA/` | Feature notes and risk analysis. Start at the index and keep supporting data by its report. |
+| `03 Test Cases/` | Manual case templates, drafts, and browser reports |
+| `04 Automation/` | Automation candidates and planning |
+| `05 Tooling/` | Tool workflows and maintained scripts |
+| `06 Prompts/` | Reusable prompts and agent workflows |
+| `08 Sentry Investigations/` | Sentry investigations and reproductions |
+| `99 Archive/` | Inactive notes and local QA evidence |
 
-- `00 Start Here/` - orientation and basic QA workflow.
-- `01 Repositories/` - short reference notes for source repositories.
-- `02 Feature QA/` - feature-level QA notes and risk analysis, grouped by topic. Start with `02 Feature QA/00 Index.md`; keep each report's supporting data beside it.
-- `03 Test Cases/` - manual test case templates and drafted cases.
-- `04 Automation/` - automation candidate planning.
-- `05 Tooling/` - CLI and workflow tool references.
-- `06 Prompts/` - reusable prompts and agent workflows.
-- `08 Sentry Investigations/` - Sentry error investigations and manual reproduction notes. Save these here, not under `02 Feature QA/`.
-- `99 Archive/` - old or inactive notes.
+Keep one active output note per QA request, ticket, feature, or Qase work item. Reuse the existing canonical note and preserve the user's edits, links, IDs, headings, and surrounding content. Treat `*Template.md` files as reusable scaffolds and write generated outputs to a feature-specific note unless the user requests a template edit. Reference source paths instead of copying repositories or large snippets into the vault.
 
-## Agent Rules
+## Browser Reports And Evidence
 
-- Do not move, copy, or mirror repositories into this vault.
-- Reference repo paths instead of copying large code snippets.
-- Prefer checklists, short workflows, and focused QA notes.
-- For requested QA work, capture behavior, risks, test cases, and automation candidates. Do not create QA artifacts for an ordinary writing or configuration request unless asked.
-- Keep browser smoke work tied to the requested outcome and finishing point. Use the supplied records and ready controls first, apply scope corrections immediately, and follow [[06 Prompts/Interactive Browser Release Testing#Keep the scope and finish clear]]. Do not expand into nearby features just because they are available.
-- Plan supported cleanup before a browser mutation and verify it in the same host/session. Reuse useful evidence instead of repeating captures. These efficiency rules do not weaken the canonical financial, inventory or access gates.
-- Clean up temporary files you create yourself. Keep scratch scripts, intermediate exports, downloaded inspection copies and other disposable working files under `/private/tmp` where practical, and track their exact paths. When they are no longer needed, use `rm` to delete those specific files, remove obsolete references, and verify cleanup before finishing. Do not leave cleanup for the user or use broad deletion patterns in shared temporary folders. Preserve user-owned files, maintained tools, final deliverables, necessary evidence and files still needed for active work; explain any temporary files deliberately retained and why.
-- Keep large files and generated binary files out of Git by default, including images, videos, archives and bulky exports. Commit or push one only when the requested work genuinely requires that file in the repository, and explain why it is needed. Use a narrow file-specific exception when necessary; do not weaken ignore rules for an entire evidence folder or add disposable working files.
-- Keep screenshots and other image evidence local under `99 Archive/QA Evidence/<feature>/<run-slug>/`. Link or embed their vault-relative archive paths in the active test note. They stay out of Git unless a specific file is necessary under the rule above. When relocating images, preserve the files and update current references; do not rewrite Git history.
-- Make browser reports readable walkthroughs using [[03 Test Cases/Browser Test Report Template]]: setup, numbered actions, Expected and Actual results, with each real screenshot visibly rendered beneath its step. Use standard Markdown images or HTML image markup with valid local paths and a display width of up to 600px so previews can render them; do not hide screenshots in collapsed callouts or provide only image links. Keeping images out of Git does not mean hiding them from the report. Finish with one table showing Passed, Failed, Blocked and any Not run checks.
-- Give browser checks stable report-local IDs (`TC-01`, `TC-02`, and so on), with a clickable test index near the top. Reuse each ID in the plan, heading and final results table. Every result must link to its exact test heading and name the relevant step. Split independently assessed checks, such as Build, Operations and Account menus, so a failed row points directly to the failed check and its evidence.
-- Before each browser test's numbered Steps, state **What this tests** and **Start here**. Name the actual screen, employee/customer, Organizer and required record state. Every step must give the exact action and target; Expected must name the message, links, fields, values or saved outcome to inspect. The reader must not need the chat to work out what is being tested. Keep screenshots small enough to read alongside the steps, with full-size originals available. Rewriting an old report must preserve its run date and distinguish clearer instructions from newly executed checks.
-- For each distinct confirmed browser bug, include a copy-ready Jira draft beside the affected test in the same note: **Title: `fix (area) | observed problem`**, followed by short **GIVEN**, **WHEN**, **THEN** prose blocks. THEN states the observed failure and, in a separate sentence, what should happen. Keep actual and intended results distinct within THEN; do not require a separate Expected section or replace the narrative with a table. Include useful impact, environment/date, evidence and material limits; retain the full evidence and data safety/cleanup record locally. The reproduction walkthrough still uses numbered Expected/Actual steps. Use a local `BUG-*` ID and link affected result rows to that draft; do not create duplicate cards for symptoms of the same issue. Keep uncertain findings labelled. A draft does not authorize any Jira write.
-- Routine browser text dumps are temporary working files: save them under `/private/tmp` and delete them with `rm` once the useful findings are recorded and the dumps are no longer needed. Remove obsolete links. Retain a raw capture only when it provides necessary proof unavailable in the report, screenshots or actual outputs, and explain why. This cleanup does not include user-provided files, screenshots, CSV/PDF outputs or other necessary evidence.
-- Account for every declared in-scope control, state, validation, mutation, side effect, and cleanup path as covered, manual-only, deferred, not applicable, or blocked with evidence.
-- Update notes only when they make QA work easier to repeat.
-- Write Jira bug descriptions from QA's observed setup, actions and results. Keep only relevant flags/settings with exact scope and state; do not invent missing preparation or outcomes. Keep source checks, code paths, commit hashes and causal analysis in the local investigation unless technical detail is requested. Preserve the full canonical evidence/classification record locally; the Jira summary need not repeat it.
-- Write a user's Jira report in their voice: use first person for their reported actions, not "QA encountered", "the employee reports", or "the user has not supplied". Preserve evidence provenance internally and do not imply agent execution. Roles remain useful in GIVEN/WHEN.
-- Make Jira drafts readable to a product-team member without code or chat context. Use everyday wording and the verified Showpass names for actors, screens, controls, items and fields from the QA Handbook. Use Organization for the Dashboard business and Venue for its Admin record; distinguish Customer from Attendee when relevant and keep Refund, Void and Exchange distinct. Explain unfamiliar Showpass terms briefly, keep exact necessary flag keys/error text, and leave other engineering terms in internal notes. Before delivery, check that the reader can identify where to start, what to select and what is wrong.
-- When appending or revising notes, preserve existing user edits, links, IDs, headings, and surrounding content unless the user explicitly asks to remove or rewrite them.
-- Keep notes short enough for both humans and AI agents to scan quickly.
-- Maintain one active output note per user request, Jira ticket, feature, or Qase work item. Before creating another file for the same scope, update the existing canonical note. If the approach changes, consolidate useful evidence and final content into one chosen note instead of leaving parallel drafts.
-- Treat files named `*Template.md` as reusable scaffolds, not generated-output targets. If a prompt points at a template path for generated QA output, create a feature-specific note in the same folder unless the user explicitly says to overwrite or edit the template itself.
+- Use [[06 Prompts/Interactive Browser Release Testing#Keep the scope and finish clear]] for live runs. Keep scope tied to the requested outcome, select the proof needed, and account for every in-scope action, state, side effect, and cleanup path. Plan authorized cleanup before a mutation and verify it in the same environment and session.
+- Use [[03 Test Cases/Browser Test Report Template]] for the run note. It owns the stable test IDs and links, starting-state and Expected/Actual steps, rendered screenshots, and single final results table. Use one copy-ready Jira draft per confirmed browser bug beside the affected test. Follow the Showpass bug-drafter for the draft. Use first person for the user's own observations and keep evidence provenance clear. Rewriting a report preserves the run date and distinguishes instruction improvements from new execution.
+- Keep screenshots and images under `99 Archive/QA Evidence/<feature>/<run-slug>/`. Link or render them in the active note as directed by the template. Keep large files and generated binaries out of Git. A necessary repository asset requires a narrow file-specific exception and an explanation. Preserve originals and update active links if relocating evidence.
+- Keep agent-created scratch files, intermediate exports, and routine browser text dumps under `/private/tmp` when practical. Track exact paths, remove disposable copies with `rm` after extracting useful proof, and verify cleanup. Preserve necessary evidence, outputs, and user files. Explain any raw capture retained for proof.
 
 ## No-Guessing Communication Rule
 
-Never make the user infer what the agent wants them to verify, decide, approve, or do next.
-
-When user action or judgment is requested:
-
-- Lead with **I need you to check**, **I need you to decide**, or **I need your approval**, whichever accurately describes the request.
-- Give a prioritized numbered list. For every item, state the starting location, exact action, expected or decision-relevant result, and exactly what the user should report back.
-- Label every requested action as **no data change**, **changes test data**, or **potentially destructive**.
-- Separate requested checks into **Check now**, **Optional**, and **Do not check** when all three categories are relevant.
-- State which findings are already confirmed, which are inconclusive, and which were not executed. Do not present an observation or unsubmitted client-side risk as a confirmed end-to-end defect.
-- Explicitly say what the user does not need to inspect and why.
-- State whether the request blocks the next step and what the agent will do after receiving the answer.
-- Avoid vague handoffs such as “review the findings,” “let me know what you think,” or “confirm the behavior” without a concrete checklist and response format.
-- Give the complete first check in chat, with the exact setup/control actions, any case-specific observation window and clear outcome choices. State browser filter/display changes separately from business-record changes. A link to a report does not replace these instructions.
-
-## Qase Workflow Rules
-
-Use [[05 Tooling/qasectl]] as the required operating guide for Qase reads, gap analysis, creates, and updates. Use [[06 Prompts/Showpass Qase Gap Analysis]] for gap-analysis procedure and output: focused, standalone Qase-ready cases first, compact analysis and evidence afterward. Split distinct behaviors instead of combining several tests into one large case.
-
-Apply [[05 Tooling/Qase Test Case Writing Rules#Package Events And Guest Information]] to package cases: the **parent event** sells the package ticket; **child events** are different events supplying included tickets. Make each case's event count, ticket relationships and guest-collection settings explicit. Use Inventory/Capacity wording. Keep readable Single-parameter value explanations in Description, preserve Platform/View as context, and verify the actual saved Single fields across every requested case. Review all fields and the canonical note after a setup correction; do not leave the clarification only in chat.
-
-Apply [[05 Tooling/Qase Test Case Writing Rules#Explain Showpass Terms And Where To Find Them]] to every Qase-ready case. Explain required Showpass terms and give the exact Dashboard/UI or Admin location and required value. Distinguish saved settings, actual feature flags, employee permissions and custom questions. Say whose details are entered and which tickets need them; do not rely on unexplained attendee-form counts. Verify hidden-control preparation and supported UI/Admin setup. Treat readability feedback as a whole-case review that preserves coverage, not a synonym change or a chat-only explanation.
-
-Apply [[05 Tooling/Qase Test Case Writing Rules#Scannable Preconditions And Explicit Event Setup]] by default. Use short prerequisite sections, one requirement per bullet, and compact Event/ticket or settings tables when useful. State how many separate Events and orders exist, what each Event supplies, ticket quantities, required values and the starting order/balance state. Keep simple cases short; do not replace dense paragraphs with dense bullets or add irrelevant setup. Carry clarified labels and relationships through the whole case while preserving coverage.
-
-To avoid repeated permission prompts and inconsistent Qase payloads:
-
-- Prefer one bulk Qase read plus local filtering for gap analysis. Use the read-only bulk search workflow in `05 Tooling/qasectl.md` and save temporary API output under `/private/tmp`.
-- Do not make many ad hoc `curl` calls with slightly different shapes. If a Qase read is needed after the first query, reuse the documented bulk output or the reusable script when possible.
-- For Qase creates and updates, use `05 Tooling/scripts/create-or-update-qase-case.mjs`.
-- For multi-case Qase writes, use `--batch-plan` so dry-run, apply, and verification happen through one stable command path.
-- Always dry-run Qase writes before applying them, and summarize the exact case IDs, local draft labels, titles, suite IDs, tags, parameters, and step counts.
-- Do not run Qase apply commands until the user has explicitly confirmed the write scope.
-- Do not delete Qase cases unless the user explicitly requests deletion and confirms the exact case IDs.
-- If network approval is required, ask for approval on the stable bulk read or batch script command rather than introducing new one-off command shapes.
+For a user check, decision, or approval, lead with **I need you to check**, **I need you to decide**, or **I need your approval**. Follow [[00 Start Here/World-Class Software Quality Standard#12. Human Verification Without Guessing|Human Verification Without Guessing]]. In a prioritized list, give the exact start, action, expected result or options, and what to report back. Label each action **no data change**, **changes test data**, or **potentially destructive**. State what is confirmed, what remains uncertain or unrun, what the user can skip, whether anything is blocked, and the next authorized step. Include the complete first check and any observation window in chat.

@@ -8,19 +8,7 @@ Use [[04 Automation/00 Index]] for delivery through actual execution and CI evid
 
 Start with the vault repo note: [[01 Repositories/QA Automation - showpass-playwright]].
 
-Use the specs README to choose the right automation workflow:
-`/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/specs/README.md`
-
-That README explains when to use browser specs, browser verification, new Playwright generation, or updates to existing Playwright tests.
-
-## Canonical Automation Workflows
-
-- Create new automation from a validated spec:
-  `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/workflows/write-playwright-test.md`
-- Update existing automation:
-  `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/workflows/update-playwright-test.md`
-- Shared principles:
-  `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/standards/playwright-principles.md`
+Use the [Playwright workflow index](../../showpass-playwright/docs/agent-workflows/README.md#choose-the-procedure) to choose browser specification, browser verification, writing a new test, or updating an existing test. It links to the [Playwright Handbook](../../showpass-playwright/docs/playwright-handbook/README.md) for shared conventions.
 
 Resolve prerequisites, inputs, intended outcomes, selector provenance and cleanup before dependent implementation. Do not require invented readiness labels or a completed browser run when verified facts support implementation. Unknown behavior remains a named gap. Source/POM evidence alone does not establish an executed browser pass. The current repository README makes a browser spec optional; the vault's canonical coverage and safety requirements still apply.
 
@@ -33,8 +21,8 @@ Start from the vault repo notes:
 Follow existing patterns in:
 /Users/christianvaldez/Documents/Showpass/repos/showpass-playwright
 
-Before writing code, read:
-/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/specs/README.md
+Before writing code, pick the current procedure from:
+/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/README.md
 
 Use backend behavior as the source of truth:
 /Users/christianvaldez/Documents/Showpass/repos/web-app

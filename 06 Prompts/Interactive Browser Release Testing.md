@@ -478,7 +478,7 @@ Final response:
 The reusable report shape was traced on 2026-10-23 at local Playwright revision `d32ac168`:
 
 - [Write browser test](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/workflows/write-browser-test.md>) routes to [SPEC_TEMPLATE.md](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/specs/SPEC_TEMPLATE.md>) for setup, numbered actions, expected results, screenshots and cleanup.
-- [Browser spec lifecycle](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/standards/browser-spec-lifecycle.md>) supplies real local screenshots beneath steps, concise captions and preserving a handed-off guide.
+- [Browser spec lifecycle](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/playwright-handbook/running/browser-plans.md>) supplies real local screenshots beneath steps, concise captions and preserving a handed-off guide.
 - [Run browser test](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/docs/agent-workflows/workflows/run-browser-test.md>) supplies execution, stopping dependent actions when blocked and separating tool limits from product failures. Locator/evidence and verification/reporting standards supply grounded targets and bounded retries.
 
 Adopt these reusable mechanics without copying the repository workflow wholesale. The vault retains backend-first business investigation, its canonical quality standard, the user's browser-sidebar preference, one canonical run note, ignored archive images, temporary-file cleanup, and the user's requested **final results table**. Upstream preferences against tables or vault evidence accounting do not override these local requirements.
