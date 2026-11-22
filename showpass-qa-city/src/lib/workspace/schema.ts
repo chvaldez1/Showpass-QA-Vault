@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { browserResultSchema, revisionSchema } from "./qa-workflow";
 
 export const agentKinds = ["browser", "coverage", "triage", "custom"] as const;
 export const agentRoles = ["public-tester", "customer-tester", "organizer-tester", "box-office-tester"] as const;
@@ -42,6 +43,10 @@ const runSchema = runFormSchema.extend({
   target: assignmentDetails.target.default(""),
   sourceRunId: assignmentDetails.sourceRunId.default(""),
   sample: z.boolean().default(false),
+  revision: revisionSchema.optional(),
+  revisionHistory: z.array(revisionSchema).optional(),
+  changeRequest: z.string().max(1000).optional(),
+  browserResult: browserResultSchema.optional(),
 });
 
 export const workspaceSchema = z.object({

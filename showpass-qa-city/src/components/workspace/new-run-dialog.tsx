@@ -34,7 +34,7 @@ function AssignmentForm({ agents, runs, agentId, onSaved }: AssignmentInputs & {
     try {
       await queueRun(values);
       onSaved();
-      toast.success("Assignment saved to the local queue");
+      toast.success("Assignment saved. Open it in Runs to prepare the plan.");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Couldn’t save the assignment.");
     }
@@ -120,7 +120,7 @@ export function NewRunDialog({
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-lg">
         <DialogHeader className="pr-7">
           <DialogTitle>New assignment</DialogTitle>
-          <DialogDescription>Record what to test and who should drive. This saves the assignment locally.</DialogDescription>
+          <DialogDescription>Choose who owns the assignment and how to run it. Open the saved assignment to prepare its plan.</DialogDescription>
         </DialogHeader>
         <AssignmentForm agents={agents} runs={runs} agentId={agentId} onSaved={() => setOpen(false)} />
       </DialogContent>

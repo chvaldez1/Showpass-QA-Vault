@@ -37,7 +37,7 @@ State the environment, requested page/version, signed-in or signed-out state, se
 
 Keep the chat plan readable. For a deep review, summarize groups of checks and link their full scope in the run note. For a focused quest, name the actual pages and variations selected, and why they matter. A version-bump request does not require inventing feature changes: inspect the supplied exact diff when present, then select affected behavior and useful regression checks. State when the deployed version is unknown.
 
-**Default: show the plan, then execute the requested checks within the existing authorization.** The plan is visible before testing; it is not an extra approval request. Do not add a waiting period or ask for the same permission again. If the user says `Plan only` or `Wait for my approval`, stop after the reviewable plan and wait. Ask a targeted question when a missing fact or an action outside the authorized scope genuinely blocks a check; continue independent authorized checks meanwhile.
+Show the plan before testing. The four Showpass role testers send their plan to the QA Lead and wait for approval of that revision. If the plan changes, return it to the Lead before continuing. For other browser runs, proceed within the user's authorization after showing the plan unless the user asks for a plan only or wants to approve it first. Ask a targeted question when a missing fact or authorization blocks a check. Continue independent authorized checks meanwhile.
 
 ### Keep the scope and finish clear
 
@@ -103,6 +103,25 @@ Goal: `Open protected dashboard pages directly while signed out. Confirm no prot
 - Open each selected protected URL directly and reload it. Observe the page while it loads as well as its final state. Check for the source-defined login/access response and for customer, order, sales, financial or other protected content appearing before it. A redirect alone is insufficient proof. Direct URLs belong in these test steps because direct access is the behavior under test.
 - Use supported browser evidence to check responses or the loading sequence when available. If the available tool cannot observe an early data flash, initial response or protected API response, name that limit. Report only the visible checks actually proven; leave the stronger no-data-exposure conclusion unverified when necessary. Do not turn source review into an executed security pass.
 - Save the checked URLs, verified session state, observed loading/final results and evidence. If protected data appears, preserve only the minimum safe proof and stop exploring those records. Report the exposure and continue only checks that do not increase it. Do not submit forms, trigger jobs or modify Qase as part of this quest.
+
+## UX and UI checks
+
+Test the interface from the person's point of view as part of every in-scope role test. Include the checks and expected evidence in the plan. Use the intended starting page, visible controls and ordinary clues the person would have. Watch where they could choose the wrong action, lose work, misunderstand a price or state, or get stuck without a recovery path.
+
+| Role | What to challenge in the approved flow |
+| --- | --- |
+| Public Tester | Can a first-time visitor find the Event, understand local date, venue, access and ticket differences, and find the next action or help? Does the same information remain readable on a narrow screen? For Account, can a returning Customer tell where to find an existing order? |
+| Customer Tester | Can a buyer tell what is included, what they will pay, and whether payment succeeded? Check fee and total wording, validation beside the right field, recovery from the approved failure state, and where the buyer finds their order or tickets. |
+| Organizer Tester | Can an Organizer find the owning screen, tell which fields are required, understand defaults and visibility, and see what is saved versus still being edited? Check whether errors explain how to fix the problem and whether Preview matches the saved Event. |
+| Box Office Tester | Under realistic time pressure, can an employee find the right order, distinguish lookup from Check In, and understand whether an action succeeded or should be retried? Inspect feedback and recovery on the client or device named in the plan. |
+
+Check relevant accessibility and layout details in the available client, such as keyboard order, visible focus, actionable labels, contrast, clipped controls, and readable feedback at realistic widths. Record the specific control and state. A partial keyboard or layout check establishes only what was tested.
+
+For each finding, record the screen, environment, role and state, the action, the expected and actual result, who is affected and how, and the screenshot or report link. Classify a repeatable break in expected behavior as a confirmed bug and add a local Jira-ready draft. Label demonstrated friction as a usability finding, uncertainty as an observation, and missing access or test data as a blocker. Record when an important path remains untested.
+
+Use [[06 Prompts/Showpass QA Competitor Comparisons]] when a comparable ticketing flow can clarify the problem. Start with Eventbrite, Leap Event Technology, Ticketmaster or Tixr and add a peer when it better matches the job. Cite current official sources and explain how the comparison applies to the observed Showpass friction.
+
+The QA Lead challenges the proposal before approving. Ask what a new or rushed user could misread, what happens if the first path fails, and what evidence would show the difference between a functional pass and a hard-to-use flow. Builders surface setup problems they encounter and give the receiving tester saved record references. The receiving tester independently plans the experience check.
 
 ## Choose the Depth
 

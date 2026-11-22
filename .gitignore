@@ -2,6 +2,9 @@
 .DS_Store
 Thumbs.db
 
+# Local pnpm cache
+/.pnpm-store/
+
 # Local secrets
 .env
 .env.*

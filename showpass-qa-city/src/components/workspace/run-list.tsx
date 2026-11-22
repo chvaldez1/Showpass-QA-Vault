@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { runModeLabels, type Agent, type Run, type RunStatus } from "@/lib/workspace/schema";
 import { cancelRun } from "@/lib/workspace/store";
+import { QaAssignment } from "./qa-assignment";
 
 export const statusDisplay = {
   queued: {
@@ -57,9 +58,10 @@ export function RunStatusBadge({ status }: { status: RunStatus }) {
   );
 }
 
-function RunRow({ run, agentName, previousRun }: { run: Run; agentName: string; previousRun?: Run }) {
+function RunRow({ run, agent, previousRun }: { run: Run; agent?: Agent; previousRun?: Run }) {
   const [cancelling, setCancelling] = useState(false);
   const date = new Date(run.createdAt);
+  const agentName = agent?.name ?? "Unknown agent";
 
   async function handleCancelRun() {
     setCancelling(true);
@@ -122,6 +124,7 @@ function RunRow({ run, agentName, previousRun }: { run: Run; agentName: string; 
               <p className="text-muted-foreground wrap-anywhere whitespace-pre-wrap">{run.instructions}</p>
             </div>
           )}
+          {!run.sample && agent?.role && <QaAssignment run={run} role={agent.role} previousRun={previousRun} />}
           <DialogFooter>
             <DialogClose render={<Button variant="outline" />}>Close</DialogClose>
             {run.status === "queued" && (
@@ -156,7 +159,7 @@ export function RunList({
     );
   }
 
-  const names = new Map(agents.map(({ id, name }) => [id, name]));
+  const agentsById = new Map(agents.map((agent) => [agent.id, agent]));
   const runsById = new Map(history.map((run) => [run.id, run]));
   return (
     <ul className="divide-y">
@@ -164,7 +167,7 @@ export function RunList({
         <RunRow
           key={run.id}
           run={run}
-          agentName={names.get(run.agentId) ?? "Unknown agent"}
+          agent={agentsById.get(run.agentId)}
           previousRun={runsById.get(run.sourceRunId)}
         />
       ))}
