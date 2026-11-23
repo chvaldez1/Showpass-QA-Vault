@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { codexHandoffStatusSchema, codexStatusLabels, isCodexPending, type CodexHandoffStatus } from "@/lib/codex/handoff-schema";
+import { withAssignmentLock } from "@/lib/workspace/assignment-lock";
 
 import { CodexActivity } from "./codex-activity";
 
@@ -61,18 +63,12 @@ export function CodexHandoff({ runId, revision, token, disabled }: {
   }, [runId, revision, token, check, launching]);
 
   async function launch() {
-    if (!authorized || result?.status !== "ready") return;
+    if (disabled || launching || !authorized || result?.status !== "ready") return;
     setLaunching(true);
     setError("");
 
     try {
-      const send = () => requestHandoff({ action: "launch", runId, revision, token, authorized: true });
-      const next = navigator.locks
-        ? await navigator.locks.request(`qa-city-work:${runId}`, { ifAvailable: true }, (lock) => {
-          if (!lock) throw new Error("This assignment is already running in another tab.");
-          return send();
-        })
-        : await send();
+      const next = await withAssignmentLock(runId, () => requestHandoff({ action: "launch", runId, revision, token, authorized: true }));
       setResult(next);
       setAuthorized(false);
     } catch (cause) {
@@ -90,11 +86,9 @@ export function CodexHandoff({ runId, revision, token, disabled }: {
       {(error || refreshError) && <p role="alert" className="text-destructive">{error || refreshError}</p>}
       {result?.status === "ready" && (
         <>
-          <label className="flex items-start gap-2">
-            <input type="checkbox" className="mt-0.5 size-4 accent-primary"
-              checked={authorized} onChange={(event) => setAuthorized(event.target.checked)} />
+          <Checkbox checked={authorized} onChange={(event) => setAuthorized(event.target.checked)}>
             I authorize the actions and data changes in Plan {revision} in the paired Codex chat.
-          </label>
+          </Checkbox>
           <Button className="justify-self-start" disabled={disabled || launching || !authorized} onClick={launch}>
             Run in Codex
           </Button>
@@ -105,7 +99,7 @@ export function CodexHandoff({ runId, revision, token, disabled }: {
       )}
       {(result || refreshError) && (
         <div className="flex flex-wrap items-center gap-2">
-          {result && <a href={`codex://threads/${result.threadId}`} className={buttonVariants({ variant: "outline" })}>View paired chat</a>}
+          {result && <ButtonLink href={`codex://threads/${result.threadId}`} variant="outline" prefetch={false}>View paired chat</ButtonLink>}
           {(refreshError || isCodexPending(result?.status)) && <Button variant="outline" onClick={() => setCheck((value) => value + 1)}>Refresh Codex status</Button>}
         </div>
       )}

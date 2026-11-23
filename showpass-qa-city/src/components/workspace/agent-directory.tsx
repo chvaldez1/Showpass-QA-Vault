@@ -1,16 +1,14 @@
 "use client";
 
-import { ArrowRightIcon } from "lucide-react";
-import Link from "next/link";
 import type { CSSProperties } from "react";
 import { LocationIcon } from "@/components/city/location-icon";
-import { buttonVariants } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { locations } from "@/lib/workspace/city";
 import { agentRoles } from "@/lib/workspace/schema";
 import { AddAgentDialog } from "./add-agent-dialog";
-import { AgentMark, agentDisplay } from "./agent-display";
+import { AgentMark, AgentProfileLink, agentDisplay } from "./agent-display";
 import { NewRunDialog } from "./new-run-dialog";
 import { PageHeader } from "./page-header";
 
@@ -30,7 +28,7 @@ export function AgentDirectory() {
           <h2 className="font-semibold">Release team</h2>
           <p className="text-sm text-muted-foreground">Backend Master, Frontend Master, Release Engineer, and QA Lead.</p>
         </div>
-        <Link href="/releases" className={buttonVariants({ variant: "outline" })}>Open Releases</Link>
+        <ButtonLink href="/releases" variant="outline">Open Releases</ButtonLink>
       </Card>
 
       <ul aria-label="City agents" className="grid gap-4 md:grid-cols-2">
@@ -54,9 +52,7 @@ export function AgentDirectory() {
                 </div>
                 <p className="text-sm leading-6 text-muted-foreground">{location.description}</p>
                 <div className="mt-auto flex flex-wrap gap-2">
-                  <Link href={`/agents/${role}`} className={buttonVariants({ variant: "outline" })}>
-                    View profile <ArrowRightIcon aria-hidden="true" />
-                  </Link>
+                  <AgentProfileLink role={role} />
                   <NewRunDialog agents={agents} runs={runs} agentId={role} variant="outline" />
                 </div>
               </Card>

@@ -2,15 +2,13 @@
 
 import { ArrowRightIcon, BoxIcon, Layers2Icon, MousePointer2Icon } from "lucide-react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useCallback, useState, type CSSProperties } from "react";
-import { buttonVariants } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button, ButtonLink } from "@/components/ui/button";
+import { AgentProfileLink } from "@/components/workspace/agent-display";
 import { NewRunDialog } from "@/components/workspace/new-run-dialog";
 import { PageHeader } from "@/components/workspace/page-header";
-import { RunList, RunStatusBadge } from "@/components/workspace/run-list";
+import { RunHistory, RunStatusBadge } from "@/components/workspace/run-list";
 import { useWorkspace } from "@/hooks/use-workspace";
-import { cn } from "@/lib/utils";
 import { locations } from "@/lib/workspace/city";
 import { agentRoles, type AgentRole, type Workspace } from "@/lib/workspace/schema";
 import { LocationIcon } from "./location-icon";
@@ -47,17 +45,18 @@ function CityMap({ selected, onSelect }: {
         </div>
         <div role="group" aria-label="Map view" className="flex items-center gap-0.5 rounded-lg bg-muted p-0.5">
           {views.map(({ id, label, icon: Icon }) => (
-            <button
+            <Button
               key={id}
               type="button"
+              variant="ghost"
               aria-pressed={id === view}
               disabled={id === "3d" && unavailable3D}
               onClick={() => setRequestedView(id)}
-              className="inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-semibold text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:opacity-45 aria-pressed:bg-card aria-pressed:text-foreground aria-pressed:shadow-sm"
+              className="rounded-md text-xs font-semibold text-muted-foreground aria-pressed:bg-card aria-pressed:text-foreground aria-pressed:shadow-sm"
             >
               <Icon aria-hidden="true" className="size-3.5" />
               {label}
-            </button>
+            </Button>
           ))}
         </div>
       </header>
@@ -76,16 +75,17 @@ function CityMap({ selected, onSelect }: {
       </div>
       <div aria-label="City locations" role="group" className="grid grid-cols-2 gap-1 p-2 sm:grid-cols-3 2xl:grid-cols-5">
         {agentRoles.map((role) => (
-          <button
+          <Button
             key={role}
             type="button"
+            variant="ghost"
             aria-pressed={role === selected}
             onClick={() => onSelect(role)}
-            className="flex min-h-9 min-w-0 items-center gap-2 rounded-lg px-2 text-left text-xs font-medium text-muted-foreground hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring aria-pressed:bg-accent aria-pressed:text-accent-foreground"
+            className="h-auto min-h-9 min-w-0 justify-start gap-2 px-2 text-left text-xs text-muted-foreground whitespace-normal aria-pressed:bg-accent aria-pressed:text-accent-foreground"
           >
             <span aria-hidden="true" className="size-2 shrink-0 rounded-sm border border-black/15" style={{ backgroundColor: locations[role].color }} />
             {locations[role].name}
-          </button>
+          </Button>
         ))}
       </div>
     </section>
@@ -119,9 +119,7 @@ function CityWorkspace({ agents, runs }: Workspace) {
         </div>
         <div className="mt-auto grid w-full gap-2 sm:grid-cols-2 xl:grid-cols-1">
           <NewRunDialog key={selected} agents={agents} runs={runs} agentId={selected} className="h-9 w-full px-3" />
-          <Link href={`/agents/${selected}`} className={buttonVariants({ variant: "outline", size: "lg" })}>
-            View profile <ArrowRightIcon aria-hidden="true" />
-          </Link>
+          <AgentProfileLink role={selected} size="lg" />
         </div>
       </section>
     </div>
@@ -157,17 +155,13 @@ export function CityDashboard() {
       <PageHeader title="City map" description="Choose an agent, save an assignment, or follow a handoff." />
       <CityWorkspace {...workspace} />
       <CitySummary {...workspace} />
-      <Card className="gap-0 py-0">
-        <section aria-labelledby="recent-runs">
-          <div className="flex items-center justify-between gap-4 border-b p-4 sm:px-5">
-            <h2 id="recent-runs" className="font-semibold tracking-tight">Recent runs</h2>
-            <Link href="/runs" className={cn(buttonVariants({ variant: "ghost" }), "text-primary")}>
-              All runs <ArrowRightIcon aria-hidden="true" />
-            </Link>
-          </div>
-          <RunList runs={runs.slice(0, 4)} agents={agents} history={runs} />
-        </section>
-      </Card>
+      <RunHistory
+        title="Recent runs"
+        runs={runs.slice(0, 4)}
+        agents={agents}
+        history={runs}
+        actions={<ButtonLink href="/runs" variant="ghost" className="text-primary">All runs <ArrowRightIcon aria-hidden="true" /></ButtonLink>}
+      />
     </>
   );
 }

@@ -1,17 +1,15 @@
 "use client";
 
 import { CheckIcon, ChevronLeftIcon } from "lucide-react";
-import Link from "next/link";
 import { LocationIcon } from "@/components/city/location-icon";
-import { buttonVariants } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useWorkspace } from "@/hooks/use-workspace";
-import { cn } from "@/lib/utils";
 import { locations } from "@/lib/workspace/city";
 import type { AgentRole } from "@/lib/workspace/schema";
 import { NewRunDialog } from "./new-run-dialog";
 import { PageHeader } from "./page-header";
-import { RunList } from "./run-list";
+import { RunHistory } from "./run-list";
 
 export function AgentProfile({ role }: { role: AgentRole }) {
   const { agents, runs } = useWorkspace();
@@ -20,9 +18,9 @@ export function AgentProfile({ role }: { role: AgentRole }) {
   return (
     <>
       <div className="space-y-4">
-        <Link href="/agents" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "-ml-2 text-primary")}>
+        <ButtonLink href="/agents" variant="ghost" size="sm" className="-ml-2 text-primary">
           <ChevronLeftIcon aria-hidden="true" /> All agents
-        </Link>
+        </ButtonLink>
         <div className="flex flex-wrap items-start gap-3">
           <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-accent text-accent-foreground" style={{ borderBottom: `2px solid ${location.color}` }}>
             <LocationIcon role={role} className="size-5.5" />
@@ -56,16 +54,12 @@ export function AgentProfile({ role }: { role: AgentRole }) {
         </Card>
       </div>
 
-      <Card className="gap-0 py-0">
-        <section aria-labelledby="agent-runs">
-          <h2 id="agent-runs" className="border-b p-5 font-semibold tracking-tight">Recent assignments</h2>
-          <RunList
-            agents={agents}
-            runs={runs.filter(({ agentId }) => agentId === role).slice(0, 8)}
-            history={runs}
-          />
-        </section>
-      </Card>
+      <RunHistory
+        title="Recent assignments"
+        agents={agents}
+        runs={runs.filter(({ agentId }) => agentId === role).slice(0, 8)}
+        history={runs}
+      />
     </>
   );
 }

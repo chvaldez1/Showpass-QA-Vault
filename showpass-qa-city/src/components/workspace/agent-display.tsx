@@ -1,6 +1,7 @@
-import { BotIcon, ClipboardCheckIcon, MonitorIcon, ScanSearchIcon } from "lucide-react";
+import { ArrowRightIcon, BotIcon, ClipboardCheckIcon, MonitorIcon, ScanSearchIcon } from "lucide-react";
+import { ButtonLink } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { AgentKind } from "@/lib/workspace/schema";
+import type { AgentKind, AgentRole } from "@/lib/workspace/schema";
 
 export const agentDisplay = {
   browser: {
@@ -31,5 +32,13 @@ export function AgentMark({ kind, className }: { kind: AgentKind; className?: st
     <span className={cn("grid size-10 shrink-0 place-items-center rounded-xl", tone, className)}>
       <Icon aria-hidden="true" className="size-4.5" strokeWidth={1.8} />
     </span>
+  );
+}
+
+export function AgentProfileLink({ role, size }: { role: AgentRole; size?: "lg" }) {
+  return (
+    <ButtonLink href={`/agents/${role}`} variant="outline" size={size}>
+      View profile <ArrowRightIcon aria-hidden="true" />
+    </ButtonLink>
   );
 }

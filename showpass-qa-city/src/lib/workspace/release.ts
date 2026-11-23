@@ -24,9 +24,9 @@ const note = z.string().trim().min(1).max(3000);
 const notes = z.array(note).max(12);
 
 export const releaseInputSchema = z.object({
-  title: z.string().trim().min(1).max(100),
-  candidate: z.string().trim().min(1).max(240),
-  scope: z.string().trim().min(1).max(3000),
+  title: z.string().trim().min(1, "Enter the release or change name.").max(100),
+  candidate: z.string().trim().min(1, "Enter the candidate build and environment.").max(240),
+  scope: z.string().trim().min(1, "Describe the affected workflows, clients, and Organizations.").max(3000),
   backendSource: z.string().trim().max(6000),
   frontendSource: z.string().trim().max(6000),
   testEvidence: z.string().trim().max(6000),

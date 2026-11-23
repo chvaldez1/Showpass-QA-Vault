@@ -1,0 +1,6 @@
+# Frontend design guidelines
+
+- **Start with the workflow.** Find the route the user takes and the control and state they need. Use the shared workspace navigation, `AppShell`, and `PageHeader` so people can find the screen and tell where they are. Give the main action visual priority and group related controls.
+- **Use labels that tell people what happens.** Follow City and Showpass terminology and the visible labels on the corresponding Showpass screen. Distinguish preparing a draft, starting execution, and recording a result. Add explanatory text where it helps someone navigate, decide, or recover. A failure message should say what happened and give the next step when one exists.
+- **Design for real content and screen sizes.** Keep spacing and alignment consistent with nearby screens. Make room for long assignment names and validation messages, including inside dialogs and menus. Keep the important information and actions visible at narrow widths and legible in light and dark themes.
+- **Keep the change focused.** Trace the specific control before editing. If its shared component already works elsewhere, adjust the affected screen's usage. Extract a shared implementation when more than one screen needs the same behavior. Add abstractions, dependencies, and optimizations when they solve a concrete problem.

@@ -7,22 +7,23 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter,
+  Dialog, DialogContent, DialogDescription, DialogFormActions,
   DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import { SelectField } from "@/components/ui/select-field";
 import { Textarea } from "@/components/ui/textarea";
 import { agentFormSchema, agentKinds, type AgentFormValues } from "@/lib/workspace/schema";
 import { addAgent } from "@/lib/workspace/store";
 import { agentDisplay } from "./agent-display";
 
 const defaults: AgentFormValues = { name: "", kind: "custom", description: "" };
+const kindOptions = agentKinds.map((value) => ({ value, label: agentDisplay[value].label }));
 
 export function AddAgentDialog() {
   const [open, setOpen] = useState(false);
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } =
+  const { register, control, handleSubmit, reset, formState: { errors, isSubmitting } } =
     useForm<AgentFormValues>({ resolver: zodResolver(agentFormSchema), defaultValues: defaults });
 
   async function submit(values: AgentFormValues) {
@@ -44,8 +45,8 @@ export function AddAgentDialog() {
       <DialogTrigger render={<Button className="h-10 px-4" />}>
         <PlusIcon aria-hidden="true" /> Add agent
       </DialogTrigger>
-      <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-md">
-        <DialogHeader className="pr-7">
+      <DialogContent>
+        <DialogHeader>
           <DialogTitle>Add an agent</DialogTitle>
           <DialogDescription>Save an agent profile in this workspace.</DialogDescription>
         </DialogHeader>
@@ -53,20 +54,11 @@ export function AddAgentDialog() {
           <FormField label="Name" error={errors.name?.message}>
             {(field) => <Input {...field} {...register("name")} maxLength={60} className="h-10" />}
           </FormField>
-          <FormField label="Type" error={errors.kind?.message}>
-            {(field) => (
-              <Select {...field} {...register("kind")}>
-                {agentKinds.map((kind) => <option key={kind} value={kind}>{agentDisplay[kind].label}</option>)}
-              </Select>
-            )}
-          </FormField>
+          <SelectField control={control} name="kind" label="Type" options={kindOptions} />
           <FormField label="Description (optional)" error={errors.description?.message}>
             {(field) => <Textarea {...field} {...register("description")} rows={3} maxLength={240} />}
           </FormField>
-          <DialogFooter>
-            <DialogClose render={<Button variant="outline" />}>Cancel</DialogClose>
-            <Button type="submit" disabled={isSubmitting}>Add agent</Button>
-          </DialogFooter>
+          <DialogFormActions label="Add agent" pending={isSubmitting} />
         </form>
       </DialogContent>
     </Dialog>

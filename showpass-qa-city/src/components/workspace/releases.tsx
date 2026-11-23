@@ -1,8 +1,11 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Disclosure } from "@/components/ui/disclosure";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,49 +16,48 @@ import {
   type Release, type ReleaseInput, type ReleaseRevision, type ReleaseStage,
 } from "@/lib/workspace/release";
 import { saveRelease, saveReleaseStage } from "@/lib/workspace/store";
+import { EvidenceList } from "./evidence-list";
 import { PageHeader } from "./page-header";
 
 const fields = [
-  { name: "title", label: "Release or change", limit: 100, single: true, required: true },
-  { name: "candidate", label: "Candidate build and environment", limit: 240, single: true, required: true },
-  { name: "scope", label: "Affected workflows, clients, and Organizations", limit: 3000, required: true },
-  { name: "backendSource", label: "Backend source evidence", limit: 6000, hint: "Add the revision, file or symbol references, and relevant excerpts or findings." },
-  { name: "frontendSource", label: "Frontend source evidence", limit: 6000, hint: "Add the revision, file or symbol references, and relevant excerpts or findings." },
-  { name: "testEvidence", label: "Executed test evidence", limit: 6000, hint: "Add results and evidence from this build and configuration. Leave empty if nothing ran." },
+  { name: "title", label: "Release or change", single: true },
+  { name: "candidate", label: "Candidate build and environment", single: true },
+  { name: "scope", label: "Affected workflows, clients, and Organizations" },
+  { name: "backendSource", label: "Backend source evidence", hint: "Add the revision, file or symbol references, and relevant excerpts or findings." },
+  { name: "frontendSource", label: "Frontend source evidence", hint: "Add the revision, file or symbol references, and relevant excerpts or findings." },
+  { name: "testEvidence", label: "Executed test evidence", hint: "Add results and evidence from this build and configuration. Leave empty if nothing ran." },
 ] as const satisfies {
-  name: keyof ReleaseInput; label: string; limit: number; single?: boolean; required?: boolean; hint?: string;
+  name: keyof ReleaseInput; label: string; single?: boolean; hint?: string;
 }[];
 
 function ReleaseForm({ release, onFinish }: { release?: Release; onFinish: () => void }) {
-  const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
+  const { handleSubmit, register, formState: { errors, isSubmitting } } = useForm<ReleaseInput>({
+    resolver: zodResolver(releaseInputSchema),
+    defaultValues: release?.current.input,
+  });
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setPending(true);
+  async function submit(input: ReleaseInput) {
     setError("");
     try {
-      const data = Object.fromEntries(new FormData(event.currentTarget));
-      const input = releaseInputSchema.parse(data);
       const previous = release && { id: release.id, number: release.current.number };
       await saveRelease(input, previous);
       onFinish();
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Couldn’t save the release.");
-    } finally {
-      setPending(false);
     }
   }
 
   return (
     <Card className="p-5">
-      <form className="grid gap-4" onSubmit={submit}>
+      <form className="grid gap-4" onSubmit={handleSubmit(submit)} noValidate>
         <h2 className="font-semibold">{release ? "New handoff revision" : "New release handoff"}</h2>
         {fields.map((field) => {
-          const { name, label, limit } = field;
-          const props = { name, maxLength: limit, defaultValue: release?.current.input[name], required: "required" in field };
+          const { name, label } = field;
+          const { minLength, maxLength } = releaseInputSchema.shape[name];
+          const props = { ...register(name), maxLength: maxLength ?? undefined, required: !!minLength };
           return (
-            <FormField key={name} label={label}>
+            <FormField key={name} label={label} error={errors[name]?.message}>
               {(control) => "single" in field
                 ? <Input {...control} {...props} />
                 : <Textarea {...control} {...props} rows={3} placeholder={"hint" in field ? field.hint : undefined} />}
@@ -65,23 +67,11 @@ function ReleaseForm({ release, onFinish }: { release?: Release; onFinish: () =>
         <p className="text-sm text-muted-foreground">City reviews the source and results you provide. Paste only the evidence this review needs.</p>
         {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
         <div className="flex flex-wrap gap-2">
-          <Button type="submit" disabled={pending}>{release ? "Save new revision" : "Save release"}</Button>
-          <Button type="button" variant="outline" onClick={onFinish} disabled={pending}>Cancel</Button>
+          <Button type="submit" disabled={isSubmitting}>{isSubmitting ? "Saving…" : release ? "Save new revision" : "Save release"}</Button>
+          <Button type="button" variant="outline" onClick={onFinish} disabled={isSubmitting}>Cancel</Button>
         </div>
       </form>
     </Card>
-  );
-}
-
-function EvidenceList({ label, entries }: { label: string; entries: string[] }) {
-  if (!entries.length) return null;
-  return (
-    <div className="space-y-1">
-      <h4 className="font-medium">{label}</h4>
-      <ul className="list-disc space-y-1 pl-5">
-        {entries.map((entry, index) => <li key={index}>{entry}</li>)}
-      </ul>
-    </div>
   );
 }
 
@@ -159,6 +149,7 @@ function ReleaseCard({ release }: { release: Release }) {
   const legacyReview = isLegacyReleaseReview(current);
 
   async function run(stage: ReleaseStage) {
+    if (busy) return;
     setBusy(stage);
     setError("");
     try {
@@ -201,13 +192,11 @@ function ReleaseCard({ release }: { release: Release }) {
         ))}
       </div>
       {release.history.length > 0 && (
-        <details className="text-sm">
-          <summary className="cursor-pointer font-medium">Earlier revisions</summary>
-          <ul className="mt-2 space-y-2">
+        <Disclosure label="Earlier revisions">
+          <ul className="space-y-2">
             {release.history.map((revision) => (
               <li key={revision.number}>
-                <details className="space-y-2">
-                  <summary className="cursor-pointer">Revision {revision.number} · {revision.input.candidate} · {revision.lead?.handoff ?? "Review incomplete"}</summary>
+                <Disclosure label={`Revision ${revision.number} · ${revision.input.candidate} · ${revision.lead?.handoff ?? "Review incomplete"}`}>
                   <p>{revision.input.scope}</p>
                   {releaseStages.map((stage) => revision[stage] && (
                     <section key={stage} className="space-y-2 p-2">
@@ -215,11 +204,11 @@ function ReleaseCard({ release }: { release: Release }) {
                       <StageResult stage={stage} revision={revision} />
                     </section>
                   ))}
-                </details>
+                </Disclosure>
               </li>
             ))}
           </ul>
-        </details>
+        </Disclosure>
       )}
     </Card>
   );

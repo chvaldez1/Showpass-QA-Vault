@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { Button } from "@/components/ui/button";
 import { locations } from "@/lib/workspace/city";
 import { agentRoles, type AgentRole } from "@/lib/workspace/schema";
 import { LocationIcon } from "./location-icon";
@@ -19,11 +20,12 @@ export function Map2D({
         const { color, position: [x, z], name } = locations[role];
 
         return (
-          <button
+          <Button
             key={role}
             type="button"
+            variant="ghost"
             aria-pressed={selected === role}
-            className="city-plot"
+            className="city-plot h-auto whitespace-normal"
             style={{ "--location-color": color, gridColumn: x < 0 ? 1 : x === 0 ? 2 : 3, gridRow: z < 0 ? 1 : 2 } as CSSProperties}
             onClick={() => onSelect(role)}
           >
@@ -31,7 +33,7 @@ export function Map2D({
               <LocationIcon role={role} className="size-5 sm:size-6" />
             </span>
             <span className="city-plot-label">{name}</span>
-          </button>
+          </Button>
         );
       })}
     </div>

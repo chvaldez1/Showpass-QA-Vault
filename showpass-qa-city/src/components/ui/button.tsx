@@ -1,5 +1,7 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
+import Link from "next/link"
+import type { ComponentProps } from "react"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
@@ -54,4 +56,8 @@ function Button({
   )
 }
 
-export { Button, buttonVariants }
+function ButtonLink({ className, variant, size, ...props }: ComponentProps<typeof Link> & VariantProps<typeof buttonVariants>) {
+  return <Link className={cn(buttonVariants({ variant, size }), className)} {...props} />
+}
+
+export { Button, ButtonLink, buttonVariants }

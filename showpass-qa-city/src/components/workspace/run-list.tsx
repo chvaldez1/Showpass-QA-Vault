@@ -1,10 +1,11 @@
 "use client";
 
 import { ActivityIcon, ChevronRightIcon } from "lucide-react";
-import { useState } from "react";
+import { useId, useState, type ComponentProps, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle, DialogTrigger,
@@ -88,7 +89,10 @@ function RunRow({ run, agent, previousRun, activity }: {
   return (
     <li>
       <Dialog>
-        <DialogTrigger className="group flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-muted/70 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring sm:gap-4 sm:px-5">
+        <DialogTrigger
+          render={<Button variant="ghost" />}
+          className="group h-auto w-full justify-start gap-3 rounded-none px-4 py-3.5 text-left font-normal whitespace-normal hover:bg-muted/70 focus-visible:-outline-offset-2 sm:gap-4 sm:px-5"
+        >
           <span className="min-w-0 flex-1">
             <span className="block truncate text-sm font-medium">{run.title}</span>
             <span className="mt-1 flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
@@ -101,8 +105,8 @@ function RunRow({ run, agent, previousRun, activity }: {
           <RunStatusBadge status={status} draftOnly={draftOnly} codex={badge} />
           <ChevronRightIcon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground group-hover:text-foreground" />
         </DialogTrigger>
-        <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-md">
-          <DialogHeader className="pr-7">
+        <DialogContent>
+          <DialogHeader>
             <DialogTitle className="leading-snug wrap-anywhere">{run.title}</DialogTitle>
             <DialogDescription>{run.sample ? "Sample run" : run.recoveredCodexRevision ? "Recovered Codex handoff" : "Shared City assignment"}</DialogDescription>
           </DialogHeader>
@@ -150,7 +154,7 @@ function RunRow({ run, agent, previousRun, activity }: {
   );
 }
 
-export function RunList({
+function RunList({
   runs,
   agents,
   history = runs,
@@ -186,5 +190,32 @@ export function RunList({
         />
       ))}
     </ul>
+  );
+}
+
+export function RunHistory({ title, actions, showCount, ...list }: ComponentProps<typeof RunList> & {
+  title: string;
+  actions?: ReactNode;
+  showCount?: boolean;
+}) {
+  const headingId = useId();
+
+  return (
+    <Card className="gap-0 py-0">
+      <section aria-labelledby={headingId}>
+        <header className="flex flex-wrap items-center justify-between gap-3 border-b p-4 sm:px-5">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h2 id={headingId} className="font-semibold tracking-tight">{title}</h2>
+            {showCount && (
+              <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground" aria-live="polite">
+                {list.runs.length} {list.runs.length === 1 ? "run" : "runs"}
+              </span>
+            )}
+          </div>
+          {actions}
+        </header>
+        <RunList {...list} />
+      </section>
+    </Card>
   );
 }

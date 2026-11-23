@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 
 type FieldAttributes = {
   id: string;
+  "aria-labelledby": string;
   "aria-invalid": boolean;
   "aria-describedby"?: string;
 };
@@ -19,13 +20,15 @@ export function FormField({
   children: (attributes: FieldAttributes) => ReactNode;
 }) {
   const id = useId();
+  const labelId = `${id}-label`;
   const errorId = `${id}-error`;
 
   return (
     <div className="grid gap-2">
-      <Label htmlFor={id}>{label}</Label>
+      <Label id={labelId} htmlFor={id}>{label}</Label>
       {children({
         id,
+        "aria-labelledby": labelId,
         "aria-invalid": Boolean(error),
         "aria-describedby": error ? errorId : undefined,
       })}

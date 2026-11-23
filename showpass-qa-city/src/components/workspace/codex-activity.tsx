@@ -1,6 +1,7 @@
 import { ActivityIcon, AppWindowIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { Disclosure } from "@/components/ui/disclosure";
 import { codexStatusLabels, isCodexPending, type CodexHandoffStatus, type LiveCodexRuns } from "@/lib/codex/handoff-schema";
 import type { Run, RunStatus } from "@/lib/workspace/schema";
 import { codexRevision } from "@/lib/workspace/shared-schema";
@@ -46,10 +47,9 @@ export function CodexActivity({ result, limit = 10 }: {
         </p>
       )}
       {result.text && !isCodexPending(result.status) && (
-        <details className="rounded-lg border bg-background p-3">
-          <summary className="cursor-pointer text-sm font-medium">Read Codex reply</summary>
-          <pre className="mt-2 max-h-84 overflow-auto font-sans text-sm wrap-anywhere whitespace-pre-wrap">{result.text}</pre>
-        </details>
+        <Disclosure label="Read Codex reply" className="rounded-lg border bg-background p-3">
+          <pre className="max-h-84 overflow-auto font-sans text-sm wrap-anywhere whitespace-pre-wrap">{result.text}</pre>
+        </Disclosure>
       )}
     </div>
   );
