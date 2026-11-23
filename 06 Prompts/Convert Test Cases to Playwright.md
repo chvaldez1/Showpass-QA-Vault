@@ -1,5 +1,7 @@
 # Prompt: Convert Test Cases to Playwright
 
+Apply [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|the shared review layer]] to the requested planning or implementation scope. Reuse current sign-off when this implements an already reviewed revision.
+
 Use this prompt for a requested Playwright implementation or update. Validated manual cases are useful input when available. Sufficient verified requirements, source and existing automation patterns can support direct implementation without a separate browser-spec or manual-case pass.
 
 Use [[04 Automation/00 Index]] for delivery through actual execution and CI evidence. A planning-only request still ends with a bounded handoff; an implementation request continues through code and focused verification within the authorized scope.
@@ -13,6 +15,8 @@ Use the [Playwright workflow index](../../showpass-playwright/docs/agent-workflo
 Resolve prerequisites, inputs, intended outcomes, selector provenance and cleanup before dependent implementation. Do not require invented readiness labels or a completed browser run when verified facts support implementation. Unknown behavior remains a named gap. Source/POM evidence alone does not establish an executed browser pass. The current repository README makes a browser spec optional; the vault's canonical coverage and safety requirements still apply.
 
 ```text
+Follow [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|the shared review layer]] for this scoped work.
+
 You are implementing or updating the selected Showpass Playwright coverage, or preparing a plan only when that is the requested mode.
 
 Start from the vault repo notes:

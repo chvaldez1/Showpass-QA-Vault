@@ -8,31 +8,29 @@ import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { askLocalCodex } from "@/lib/codex/client";
 import { builderRecordsSchema } from "@/lib/workspace/builder-result";
-import { browserOutcomeLabels, browserOutcomes, browserResultSchema, getQaWorkflow, leadDecisionSchema, proposalSchema, workflowSkills, type Revision } from "@/lib/workspace/qa-workflow";
+import {
+  browserOutcomeLabels, browserOutcomes, browserResultSchema, getPlanReviewMode, getQaWorkflow,
+  isPlanReviewReady, leadDecisionSchema, liveProposalSchema, planReviewLabels, proposalSchema, workflowSkills, type Revision,
+} from "@/lib/workspace/qa-workflow";
 import { type AgentRole, type Run } from "@/lib/workspace/schema";
-import { requestRevision, saveBrowserResult, saveProposal, saveReview } from "@/lib/workspace/store";
+import { canRunEngineeringStage, engineeringActionLabels, engineeringStages, type EngineeringStage } from "@/lib/workspace/release";
+import { requestRevision, saveBrowserResult, savePlanStage, saveProposal, saveReview, saveShortReview } from "@/lib/workspace/store";
 
-type Action = "propose" | "review" | "save" | "save-revision";
-
-async function askLocalCodex(payload: object) {
-  const response = await fetch("/api/qa-assignment", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  const body = await response.json().catch(() => null);
-  if (!response.ok || !body) throw new Error(body?.error ?? "The local Codex request failed.");
-  return body.result as unknown;
-}
+type Action = "propose" | EngineeringStage | "short-review" | "review" | "save" | "save-revision";
 
 function handoffText(run: Run, revision: Revision, source: Run["browserResult"]) {
   const { plan, review, number, workflow, change } = revision;
   const skill = workflowSkills[workflow];
+  const engineeringHandoff = revision.engineering?.engineer;
+  const shortReview = revision.shortReview;
   const steps = plan.steps.map(({ action, proof }, index) => `${index + 1}. ${action} Expected proof: ${proof}`);
   return [
     `$${skill} — ${run.title}`,
     `QA City handoff for assignment ${run.id}, Plan ${number}. The City's independent QA Lead approved this version: ${review?.rationale}`,
+    engineeringHandoff && `Release Engineer handoff informed by both source reviews: ${engineeringHandoff.impact}\n${[...engineeringHandoff.checks, ...engineeringHandoff.concerns].map((item) => "- " + item).join("\n")}`,
+    !engineeringHandoff && shortReview && `Release Engineer short review: ${shortReview.impact}\n${[...shortReview.checks, ...shortReview.concerns].map((item) => "- " + item).join("\n")}\nReview stop point: ${shortReview.stop}`,
     `Mode: ${run.mode === "drive" ? "drive in the Codex in-app browser" : "guide me through the approved checks"}`,
     run.target && `Target: ${run.target}`,
     run.instructions && `Assignment details: ${run.instructions}`,
@@ -81,7 +79,7 @@ function parseRecords(text: string) {
 }
 
 function Plan({ revision }: { revision: Revision }) {
-  const { plan, review, number, change } = revision;
+  const { plan, engineer, engineering, review, number, change, shortReview } = revision;
   return (
     <section className="space-y-3 rounded-lg border p-3 text-sm wrap-anywhere">
       <h3 className="font-semibold">Plan {number}</h3>
@@ -101,6 +99,52 @@ function Plan({ revision }: { revision: Revision }) {
       <p><strong className="font-medium">Cleanup:</strong> {plan.cleanup}</p>
       <p><strong className="font-medium">Stop:</strong> {plan.stop}</p>
       <Items title="References" items={plan.sources} />
+      {shortReview && (
+        <div className="space-y-2 border-t pt-3">
+          <h4 className="font-semibold">Release Engineer short review</h4>
+          <p>{shortReview.impact}</p>
+          <Items title="Checks" items={shortReview.checks} />
+          <p><strong>Stop point</strong> {shortReview.stop}</p>
+          <Items title={shortReview.requiredReview === "full" ? "Why full review is needed" : "Concerns"} items={shortReview.concerns} />
+        </div>
+      )}
+      {engineer && (
+        <div className="space-y-2 border-t pt-3">
+          <h4 className="font-semibold">Earlier consultation on Plan {number}</h4>
+          <p>{engineer.impact}</p>
+          <Items title="Suggested checks" items={engineer.checks} />
+          <Items title="Concerns for the QA Lead" items={engineer.concerns} />
+        </div>
+      )}
+      {engineering?.intake && (
+        <div className="space-y-2 border-t pt-3">
+          <h4 className="font-semibold">Release Engineer scope</h4>
+          <p>{engineering.intake.scope}</p>
+          <Items title="Questions for the Masters" items={engineering.intake.questions} />
+        </div>
+      )}
+      {engineering?.backend && (
+        <div className="space-y-2 border-t pt-3">
+          <h4 className="font-semibold">Backend Master review</h4>
+          <Items title="Findings" items={engineering.backend.findings} />
+          <Items title="Missing proof" items={engineering.backend.gaps} />
+        </div>
+      )}
+      {engineering?.frontend && (
+        <div className="space-y-2 border-t pt-3">
+          <h4 className="font-semibold">Frontend Master review</h4>
+          <Items title="Findings" items={engineering.frontend.findings} />
+          <Items title="Missing proof" items={engineering.frontend.gaps} />
+        </div>
+      )}
+      {engineering?.engineer && (
+        <div className="space-y-2 border-t pt-3">
+          <h4 className="font-semibold">Release Engineer handoff</h4>
+          <p>{engineering.engineer.impact}</p>
+          <Items title="Suggested checks" items={engineering.engineer.checks} />
+          <Items title="Concerns for the QA Lead" items={engineering.engineer.concerns} />
+        </div>
+      )}
       {review && (
         <div className="space-y-2 border-t pt-3">
           <h4 className="font-semibold">QA Lead {review.decision} Plan {number}</h4>
@@ -124,11 +168,14 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
   if (!workflow) return null;
 
   const builder = workflow === "event-builder" || workflow === "offering-builder";
-  const current = ["queued", "needs-input"].includes(run.status);
-  const canReview = current && revision && !revision.review && !changeRequest;
-  const canHandoff = current && revision?.review?.decision === "approved" && !changeRequest;
+  const reviewMode = getPlanReviewMode(run.reviewMode, revision);
+  const draftOnly = reviewMode === "draft";
+  const current = ["queued", "needs-input"].includes(run.status) || (draftOnly && run.status === "completed");
+  const awaitingReview = current && !draftOnly && revision && !revision.review && !changeRequest;
+  const engineeringReady = isPlanReviewReady(run.reviewMode, revision);
+  const canHandoff = current && engineeringReady && revision?.review?.decision === "approved" && !changeRequest;
   const source = previousRun?.browserResult;
-  const assignment = { role, title: run.title, instructions: run.instructions, mode: run.mode, target: run.target, sourceRecords: source?.records };
+  const assignment = { role, title: run.title, instructions: run.instructions, mode: run.mode, reviewMode: run.reviewMode, target: run.target, sourceRecords: source?.records };
 
   async function perform(action: Action, work: () => Promise<void>) {
     setError("");
@@ -149,12 +196,14 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
     }
   }
 
-  function propose(change = "") {
+  function propose(change = "", requireFullReview = false) {
     void perform("propose", async () => {
       if (!workflow) return;
-      if (revision) await requestRevision(run.id, number, change);
-      const data = await askLocalCodex({ action: "propose", assignment, previous: revision, change });
-      await saveProposal(run.id, { number: number + 1, workflow, change, plan: proposalSchema.parse(data) });
+      if (revision) await requestRevision(run.id, number, change, requireFullReview);
+      const nextAssignment = requireFullReview ? { ...assignment, reviewMode: "full" as const } : assignment;
+      const data = await askLocalCodex({ action: "propose", assignment: nextAssignment, previous: revision, change });
+      const risk = draftOnly ? undefined : liveProposalSchema.parse(data).risk;
+      await saveProposal(run.id, { number: number + 1, workflow, change, plan: proposalSchema.parse(data), risk });
       setRevising(false);
     });
   }
@@ -166,19 +215,35 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
     });
   }
 
+  function shortReview() {
+    void perform("short-review", async () => {
+      const data = await askLocalCodex({ action: "short-review", assignment, revision });
+      await saveShortReview(run.id, number, data);
+    });
+  }
+
+  function runEngineering(stage: EngineeringStage) {
+    void perform(stage, async () => {
+      const data = await askLocalCodex({ action: "engineering", stage, assignment, revision });
+      await savePlanStage(run.id, number, stage, data);
+    });
+  }
+
   function submitRevision(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const change = String(new FormData(event.currentTarget).get("change") ?? "").trim();
+    const fields = new FormData(event.currentTarget);
+    const change = String(fields.get("change") ?? "").trim();
     if (!change) return;
+    const requireFullReview = fields.get("require-full-review") === "on";
     if ((event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "save-revision") {
       void perform("save-revision", async () => {
-        await requestRevision(run.id, number, change);
+        await requestRevision(run.id, number, change, requireFullReview);
         setRevising(false);
         toast.success("Revision request saved");
       });
       return;
     }
-    propose(change);
+    propose(change, requireFullReview);
   }
 
   function submitResult(event: FormEvent<HTMLFormElement>) {
@@ -202,6 +267,11 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
   const codexPrompt = handoff && new URLSearchParams({ prompt: handoff, ...(workspacePath ? { path: workspacePath } : {}) });
   const actionLabel = {
     propose: "Preparing the tester plan…",
+    "short-review": "Release Engineer is checking the routine plan…",
+    intake: "Release Engineer is scoping the plan…",
+    backend: "Backend Master is reviewing the plan…",
+    frontend: "Frontend Master is reviewing the plan…",
+    engineer: "Release Engineer is preparing the handoff…",
     review: "QA Lead is reviewing the plan…",
     save: "Saving the browser result…",
     "save-revision": "Saving the revision request…",
@@ -218,18 +288,31 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
         </details>
       ))}
       {revision && <Plan revision={revision} />}
-      {changeRequest && <p className="text-muted-foreground">Revision requested. The prior decision cannot be used for browser work.</p>}
+      {revision && (
+        <p className="text-muted-foreground">
+          {planReviewLabels[reviewMode]}. {draftOnly ? "Execution is not run." : revision.risk?.reason}
+          {revision.shortReview?.requiredReview === "full" && " The Release Engineer escalated this plan to full review."}
+        </p>
+      )}
+      {current && revision?.review && !engineeringReady && !changeRequest && (
+        <p className="text-muted-foreground">This decision used the earlier review flow. Revise the plan for the full engineering review before browser work.</p>
+      )}
+      {changeRequest && <p className="text-muted-foreground">{draftOnly ? "Draft revision requested." : "Revision requested. The prior decision cannot be used for browser work."}</p>}
       {current && !revision && (
         <p className="text-muted-foreground">
-          The {builder ? "Organizer Builder" : "tester"} prepares the plan first. The QA Lead reviews it before browser work.
+          The {builder ? "Organizer Builder" : "tester"} prepares the plan. {draftOnly ? "The assignment ends with the written draft." : "The Release Engineer reviews it at the required depth before QA Lead sign-off."}
         </p>
       )}
       {busy && <p role="status">{actionLabel[busy]}</p>}
       {error && <p role="alert" className="text-destructive">{error}</p>}
       {current && (
         <div className="flex flex-wrap items-center gap-2">
-          {!revision && <Button onClick={() => propose()} disabled={!!busy}>Prepare plan</Button>}
-          {canReview && <Button onClick={review} disabled={!!busy}>Send to QA Lead</Button>}
+          {!revision && <Button onClick={() => propose()} disabled={!!busy}>{draftOnly ? "Prepare draft plan" : "Prepare plan"}</Button>}
+          {awaitingReview && reviewMode === "short" && !revision.shortReview && <Button onClick={shortReview} disabled={!!busy}>Run short review</Button>}
+          {awaitingReview && reviewMode === "full" && engineeringStages.filter((stage) => canRunEngineeringStage(stage, revision.engineering)).map((stage) => (
+            <Button key={stage} onClick={() => runEngineering(stage)} disabled={!!busy}>{engineeringActionLabels[stage]}</Button>
+          ))}
+          {awaitingReview && engineeringReady && <Button onClick={review} disabled={!!busy}>Send to QA Lead</Button>}
           {revision && !revising && (
             <Button variant="outline" disabled={!!busy} onClick={() => setRevising(true)}>
               {changeRequest ? "Retry revision" : "Revise plan"}
@@ -242,6 +325,12 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
           <FormField label="What needs to change?">
             {(field) => <Textarea {...field} name="change" maxLength={1000} rows={3} defaultValue={changeRequest ?? ""} required />}
           </FormField>
+          {run.reviewMode === "short" && (
+            <label className="flex items-center gap-2">
+              <input name="require-full-review" type="checkbox" className="size-4 accent-primary" />
+              Use full review on the next revision
+            </label>
+          )}
           <div className="flex flex-wrap gap-2">
             <Button type="submit" disabled={!!busy}>Prepare revised plan</Button>
             <Button type="submit" value="save-revision" variant="outline" disabled={!!busy}>Save for later</Button>

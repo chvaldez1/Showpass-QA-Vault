@@ -115,7 +115,7 @@ function CityWorkspace({ agents, runs }: Workspace) {
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs text-muted-foreground">{latestRun?.sample ? "Latest sample run" : "Latest run"}</span>
-          {latestRun ? <RunStatusBadge status={latestRun.status} /> : <span className="text-xs">No runs yet</span>}
+          {latestRun ? <RunStatusBadge status={latestRun.status} draftOnly={latestRun.reviewMode === "draft"} /> : <span className="text-xs">No runs yet</span>}
         </div>
         <div className="mt-auto grid w-full gap-2 sm:grid-cols-2 xl:grid-cols-1">
           <NewRunDialog key={selected} agents={agents} runs={runs} agentId={selected} className="h-9 w-full px-3" />

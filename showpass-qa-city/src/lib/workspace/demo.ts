@@ -9,6 +9,7 @@ const sample = {
 
 export const demoWorkspace: Workspace = {
   agents: cityAgents,
+  releases: [],
   runs: [
     {
       ...sample,

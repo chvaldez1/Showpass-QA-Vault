@@ -10,7 +10,14 @@ import {
   type Workspace,
 } from "./schema";
 import { isMatchingBetaPreview } from "./builder-result";
-import { browserResultSchema, getQaWorkflow, type LeadDecision, type Revision } from "./qa-workflow";
+import {
+  browserResultSchema, getPlanReviewMode, getQaWorkflow, isPlanReviewReady, planStageSchemas, shortReviewSchema,
+  type LeadDecision, type Revision,
+} from "./qa-workflow";
+import {
+  canRunEngineeringStage, canRunReleaseStage, releaseDecisionMatchesEvidence,
+  releaseDecisionSchema, releaseInputSchema, stageSchemas, type EngineeringStage, type ReleaseInput, type ReleaseStage,
+} from "./release";
 
 const storageKey = "showpass-qa-city:workspace:v1";
 const workspaceChanged = "qa-city-workspace-changed";
@@ -30,9 +37,10 @@ export function decodeWorkspace(snapshot: string | null): Workspace {
   try {
     const result = workspaceSchema.safeParse(JSON.parse(snapshot));
     if (!result.success) return demoWorkspace;
-    const { agents, runs } = result.data;
+    const { agents, runs, releases } = result.data;
     return {
       agents: [...cityAgents, ...agents.filter(({ id }) => !cityAgentIds.has(id))],
+      releases,
       runs: runs.map((run) =>
         /^demo-10[1-4]$/.test(run.id) ? { ...run, sample: true } : run,
       ),
@@ -136,10 +144,45 @@ export function cancelRun(id: string) {
   });
 }
 
+export function saveRelease(input: ReleaseInput, previous?: { id: string; number: number }) {
+  const data = releaseInputSchema.parse(input);
+  return updateWorkspace((workspace) => {
+    if (!previous) {
+      const release = { id: crypto.randomUUID(), current: { number: 1, input: data }, history: [] };
+      return { ...workspace, releases: [release, ...workspace.releases] };
+    }
+    const release = workspace.releases.find(({ id }) => id === previous.id);
+    if (!release || release.current.number !== previous.number) throw new Error("Open the latest revision before editing.");
+    const next = {
+      ...release,
+      current: { number: previous.number + 1, input: data },
+      history: [...release.history, release.current],
+    };
+    return { ...workspace, releases: workspace.releases.map((entry) => entry.id === previous.id ? next : entry) };
+  });
+}
+
+export function saveReleaseStage(id: string, number: number, stage: ReleaseStage, value: unknown) {
+  const result = stageSchemas[stage].parse(value);
+  return updateWorkspace((workspace) => {
+    const release = workspace.releases.find((entry) => entry.id === id);
+    const current = release?.current;
+    if (!current || current.number !== number || !canRunReleaseStage(stage, current)) {
+      throw new Error("This stage is no longer open for the current revision.");
+    }
+    if (stage === "lead" && !releaseDecisionMatchesEvidence(current, releaseDecisionSchema.parse(result))) {
+      throw new Error("The release recommendation conflicts with the required test evidence.");
+    }
+    const next = { ...release, current: { ...current, [stage]: result } };
+    return { ...workspace, releases: workspace.releases.map((entry) => entry.id === id ? next : entry) };
+  });
+}
+
 function updateRun(id: string, revise: (run: Run) => Run) {
   return updateWorkspace((workspace) => {
     const run = workspace.runs.find((entry) => entry.id === id);
-    if (!run || run.sample || !["queued", "needs-input"].includes(run.status)) {
+    const editableDraft = run?.reviewMode === "draft" && run.status === "completed";
+    if (!run || run.sample || (!editableDraft && !["queued", "needs-input"].includes(run.status))) {
       throw new Error("This assignment is no longer open.");
     }
     const next = revise(run);
@@ -153,10 +196,13 @@ function assertCurrentRevision(run: Run, number: number) {
   }
 }
 
-export function requestRevision(id: string, number: number, change: string) {
+export function requestRevision(id: string, number: number, change: string, requireFullReview = false) {
   return updateRun(id, (run) => {
     assertCurrentRevision(run, number);
-    return { ...run, status: "queued", changeRequest: change };
+    return {
+      ...run, status: "queued", changeRequest: change,
+      reviewMode: requireFullReview && run.reviewMode === "short" ? "full" : run.reviewMode,
+    };
   });
 }
 
@@ -171,7 +217,7 @@ export function saveProposal(id: string, revision: Revision) {
       revision,
       revisionHistory: run.revision ? [...(run.revisionHistory ?? []), run.revision] : undefined,
       changeRequest: undefined,
-      status: "queued",
+      status: run.reviewMode === "draft" ? "completed" : "queued",
     };
   });
 }
@@ -179,8 +225,8 @@ export function saveProposal(id: string, revision: Revision) {
 export function saveReview(id: string, number: number, review: LeadDecision) {
   return updateRun(id, (run) => {
     assertCurrentRevision(run, number);
-    if (!run.revision || run.changeRequest || run.revision.review) {
-      throw new Error("This plan is no longer waiting for review.");
+    if (!run.revision || !isPlanReviewReady(run.reviewMode, run.revision) || run.changeRequest || run.revision.review) {
+      throw new Error("Complete the required review on the current live plan first.");
     }
     return {
       ...run,
@@ -190,12 +236,37 @@ export function saveReview(id: string, number: number, review: LeadDecision) {
   });
 }
 
+export function saveShortReview(id: string, number: number, value: unknown) {
+  const shortReview = shortReviewSchema.parse(value);
+  return updateRun(id, (run) => {
+    assertCurrentRevision(run, number);
+    const { revision } = run;
+    if (!revision || run.changeRequest || revision.review || revision.shortReview ||
+      getPlanReviewMode(run.reviewMode, revision) !== "short") {
+      throw new Error("This plan is no longer waiting for short review.");
+    }
+    return { ...run, revision: { ...revision, shortReview } };
+  });
+}
+
+export function savePlanStage(id: string, number: number, stage: EngineeringStage, value: unknown) {
+  const result = planStageSchemas[stage].parse(value);
+  return updateRun(id, (run) => {
+    assertCurrentRevision(run, number);
+    if (!run.revision || run.revision.review || run.changeRequest ||
+      getPlanReviewMode(run.reviewMode, run.revision) !== "full" || !canRunEngineeringStage(stage, run.revision.engineering)) {
+      throw new Error("This review stage is no longer open for the current plan.");
+    }
+    return { ...run, revision: { ...run.revision, engineering: { ...run.revision.engineering, [stage]: result } } };
+  });
+}
+
 export function saveBrowserResult(id: string, number: number, values: Run["browserResult"]) {
   const browserResult = browserResultSchema.parse(values);
   return updateWorkspace((workspace) => {
     const run = workspace.runs.find((entry) => entry.id === id);
     if (run?.status !== "needs-input" || run.changeRequest || run.revision?.number !== number ||
-      run.revision.review?.decision !== "approved") {
+      !isPlanReviewReady(run.reviewMode, run.revision) || run.revision.review?.decision !== "approved") {
       throw new Error("Record results against the current approved plan.");
     }
 
@@ -234,6 +305,7 @@ export function saveBrowserResult(id: string, number: number, values: Run["brows
         target: browserResult.preview,
         sourceRunId: run.id,
         mode: run.mode,
+        reviewMode: "short",
         createdAt: new Date().toISOString(),
         status: "queued",
         sample: false,

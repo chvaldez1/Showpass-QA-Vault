@@ -6,6 +6,8 @@ tags:
 
 # Showpass QA Competitor Comparisons
 
+A source comparison can finish with the requested findings. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] for live Showpass checks or a release handoff.
+
 Use Showpass as the product under test and other ticketing platforms as independent examples. When the user requests a comparison, or when a peer pattern could explain a specific usability problem, compare the same job from the same person's perspective. A straightforward field edit can finish once the requested values are saved and verified.
 
 ## Compare the scenario

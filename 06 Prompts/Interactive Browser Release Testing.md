@@ -22,7 +22,9 @@ Read [[00 Start Here/World-Class Software Quality Standard]] first. It defines t
 
 Reuse relevant cases from [[06 Prompts/Showpass QA Test Case Generator]] when available. A focused smoke check can start from the requested page without first generating a full test suite. Trace the selected behavior in source and use the relevant handbook sections. Creating cases and comparing Qase coverage remain separate tasks.
 
-## Standard for Every Run: Plan → Test → Evidence
+## Standard for Every Run
+
+Plan → short or full review and QA Lead sign-off → test → evidence. A draft-only plan ends at the draft.
 
 Act as the QA tester responsible for carrying the requested checks through to a clear result. The user supplies the goal and any necessary boundaries. Resolve known details from the conversation, source, existing notes and the authorized browser session. Choose useful checks, execute them, investigate failures and preserve proof. Ask the user to perform a check only when their access, judgment, physical device or independent reproduction is actually needed.
 
@@ -37,7 +39,7 @@ State the environment, requested page/version, signed-in or signed-out state, se
 
 Keep the chat plan readable. For a deep review, summarize groups of checks and link their full scope in the run note. For a focused quest, name the actual pages and variations selected, and why they matter. A version-bump request does not require inventing feature changes: inspect the supplied exact diff when present, then select affected behavior and useful regression checks. State when the deployed version is unknown.
 
-Show the plan before testing. The four Showpass role testers send their plan to the QA Lead and wait for approval of that revision. If the plan changes, return it to the Lead before continuing. For other browser runs, proceed within the user's authorization after showing the plan unless the user asks for a plan only or wants to approve it first. Ask a targeted question when a missing fact or authorization blocks a check. Continue independent authorized checks meanwhile.
+Show the plan before testing. Apply [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|the shared review layer]] to the exact plan and wait for independent QA Lead sign-off before live or guided work. Reuse a current sign-off when this prompt supports an already approved workflow. Apply the user's authorization separately, including a plan-only or wait-for-approval request. Ask a targeted question when a missing fact or authorization blocks a check.
 
 ### Keep the scope and finish clear
 
@@ -121,7 +123,7 @@ For each finding, record the screen, environment, role and state, the action, th
 
 Use [[06 Prompts/Showpass QA Competitor Comparisons]] when a comparable ticketing flow can clarify the problem. Start with Eventbrite, Leap Event Technology, Ticketmaster or Tixr and add a peer when it better matches the job. Cite current official sources and explain how the comparison applies to the observed Showpass friction.
 
-The QA Lead challenges the proposal before approving. Ask what a new or rushed user could misread, what happens if the first path fails, and what evidence would show the difference between a functional pass and a hard-to-use flow. Builders surface setup problems they encounter and give the receiving tester saved record references. The receiving tester independently plans the experience check.
+The Release Engineer identifies the affected business outcomes and the QA Lead challenges the proposal before approving. Ask what a new or rushed user could misread, what happens if the first path fails, and what evidence would show the difference between a functional pass and a hard-to-use flow. Builders surface setup problems they encounter and give the receiving tester saved record references. The receiving tester independently plans the experience check.
 
 ## Choose the Depth
 

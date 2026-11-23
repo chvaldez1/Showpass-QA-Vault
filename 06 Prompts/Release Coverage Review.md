@@ -10,6 +10,8 @@ tags:
 
 Use this when asked what coverage a change has, what needs testing before release, or whether existing tests are enough. Produce the coverage table from [[03 Test Cases/Release Decision Template]] in the request's existing canonical note. Owner/sign-off fields and a document checker are not required.
 
+For a release readiness decision or engineering release handoff, use [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|full review]] with this same evidence. A coverage inventory requested as planning can finish with the draft coverage and gaps. Record handoff readiness separately from the release recommendation.
+
 ## Run the review
 
 1. **Establish the actual scope.** For a Jira ticket, read description, status, priority and comments through Rovo. For a branch/PR, confirm branch/base and inspect the exact diff first. Describe changed user behavior, affected clients and final outcomes. Do not inspect an unrelated current branch as a substitute for a missing target.

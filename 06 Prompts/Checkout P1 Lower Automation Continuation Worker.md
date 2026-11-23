@@ -10,6 +10,8 @@ status: active
 
 # Checkout P1 Lower Automation Continuation Worker
 
+Keep this continuation at planning scope. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] when the work moves to live execution or release readiness.
+
 Use this prompt when the P0 checkout planning loop has preserved the current top risks and you want the worker to continue into P1/P2/lower candidates.
 
 Related notes:
@@ -22,6 +24,8 @@ Related notes:
 - [[06 Prompts/Checkout Recursive Automation Prioritization Worker]]
 
 ```text
+Keep this continuation at planning scope. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] when the work moves to live execution or release readiness.
+
 Run the checkout P1/lower automation continuation worker.
 
 Primary question:

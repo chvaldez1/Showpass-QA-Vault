@@ -9,7 +9,7 @@ tags:
 
 Use `$showpass-qa-tester` to have the agent act as your QA tester in the browser sidebar, guided by the repos and vault. Focused smoke checks help identify what matters most; deep reviews work through the full agreed scope. [[06 Prompts/Interactive Browser Release Testing]] maintains the detailed execution and evidence rules used by the skill.
 
-Every run follows **Plan → Test → Evidence**. The agent shows its checks and expected results, executes within the allowed scope, and returns results with proof. Add `Plan only — wait for my approval` when you want a review before execution.
+Every live run follows **Plan → [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|short or full review and QA Lead sign-off]] → Test → Evidence**. The agent shows its checks and expected results, executes within the allowed scope, and returns results with proof. Add `Plan only` to finish with a draft plan.
 
 Reports follow [[03 Test Cases/Browser Test Report Template]]: a short overview, one summary row per distinct confirmed bug, a clickable test index, numbered steps with Expected and Actual results, and screenshots beneath the steps. The final table uses **Check and step / Status / Bug / What happened**, with check names linked directly to their evidence and Passed / Failed / Blocked / Not run kept clear. Images remain local and ignored by Git.
 
@@ -31,7 +31,7 @@ Context: Next.js version bump on beta.
 Quest: Open protected dashboard pages directly while signed out.
 Confirm no protected data appears.
 
-Show the exact pages, checks and expected results first, then test.
+Show the exact pages, checks and expected results. Follow [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer]] and wait for QA Lead sign-off on this plan before testing.
 Preserve my current signed-in session. Use an available authorized signed-out
 test session; tell me if the required session is unavailable.
 Do not change saved records or Qase.

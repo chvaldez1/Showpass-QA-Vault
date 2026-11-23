@@ -10,6 +10,8 @@ status: Ready to use; adoption and release results not yet measured
 
 Help the team release with evidence, turn repeated checks into reliable automation, and change the process when a better approach works. [[00 Start Here/World-Class Software Quality Standard]] governs scope, safety, evidence and release decisions. This note puts it into daily use.
 
+Use [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|the shared review policy]] to choose full review, short review, or draft-only scope. Keep any reviewer findings and QA Lead sign-off in the same work note and reuse them when the same revision moves between prompts.
+
 ## Choose the work
 
 | Request | Start with | Finish with |
@@ -44,6 +46,8 @@ Manual exploration should challenge assumptions and unfamiliar combinations. Fee
 4. Execute the remaining manual/device/exploratory checks. A previously green run is reusable only when the relevant code, build, dependencies and configuration are shown to be unchanged; record that reasoning.
 5. Keep every unrun, failed, blocked or deferred outcome visible. Give each gap a concrete missing check or next action. An accepted risk never changes the test result to Passed.
 6. Verify cleanup or safe isolation. Explain the recommendation using actual test results and remaining business risk. Owner/sign-off fields are not required in this template.
+
+Record the QA Lead's decision on the Release Engineer handoff in the same note. Keep it separate from the release recommendation.
 
 ## After rollout: learn and follow through
 

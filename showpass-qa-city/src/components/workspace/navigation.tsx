@@ -3,6 +3,7 @@
 import {
   ActivityIcon,
   BotIcon,
+  ClipboardCheckIcon,
   MapIcon,
   Settings2Icon,
 } from "lucide-react";
@@ -14,6 +15,7 @@ const destinations = [
   { href: "/", label: "City map", icon: MapIcon },
   { href: "/agents", label: "Agents", icon: BotIcon },
   { href: "/runs", label: "Runs", icon: ActivityIcon },
+  { href: "/releases", label: "Releases", icon: ClipboardCheckIcon },
   { href: "/settings", label: "Settings", icon: Settings2Icon },
 ];
 
@@ -23,7 +25,7 @@ export function WorkspaceNavigation() {
   return (
     <nav
       aria-label="Workspace"
-      className="grid grid-cols-4 gap-1 px-2 pb-2 md:flex md:flex-1 md:flex-col md:gap-1.5 md:px-4 md:pb-5"
+      className="grid grid-cols-3 gap-1 px-2 pb-2 sm:grid-cols-5 md:flex md:flex-1 md:flex-col md:gap-1.5 md:px-4 md:pb-5"
     >
       {destinations.map(({ href, label, icon: Icon }) => {
         const active = href === pathname || (href !== "/" && pathname.startsWith(`${href}/`));

@@ -1,5 +1,7 @@
 # Checkout Money Movement Exploration Goal
 
+The coverage exploration stays at planning scope. If it becomes a live checkout assignment or release handoff, use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]].
+
 Use this prompt when launching an open-ended checkout QA exploration goal focused on the highest-risk money movement paths.
 
 Related notes:
@@ -10,6 +12,8 @@ Related notes:
 - [[03 Test Cases/Checkout/Checkout Money Movement Test Drafts]]
 
 ```text
+The coverage exploration stays at planning scope. If it becomes a live checkout assignment or release handoff, use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]].
+
 Explore checkout money-movement coverage as an open-ended QA goal.
 
 Goal contract:

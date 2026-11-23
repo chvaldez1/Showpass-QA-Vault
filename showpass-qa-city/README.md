@@ -9,11 +9,21 @@ pnpm dev
 
 Open [QA City Runs](http://127.0.0.1:3000/runs). Planning uses the local Codex App Server and the installed Showpass skills. The City starts a turn only after Codex confirms included usage and reports that workspace credits are unavailable. The City uses loopback and browser storage.
 
-1. Create an Organizer assignment titled **create a single day rave event**.
-2. Open the assignment and select **Prepare plan**. The Organizer Builder proposes the setup, including how to prove the Event and ticket types saved.
-3. Read the proposal and select **Send to QA Lead**. An independent Codex session reviews this version. Select **Revise plan** for any change and send the replacement plan back for approval.
-4. After approval, select **Open in Codex** or **Copy handoff**. The next chat uses the approved plan and confirms the target and permissions before any browser work. Add your own Event images in Showpass.
-5. Record the outcome in the City. For a passed Event build, paste the builder's saved records and the matching beta Preview URL. The City queues a linked Public Tester assignment, which needs its own plan and Lead approval. The builder can also record partial saves with a failed or blocked result.
+Choose the assignment's **Review path**. An Event saved in Showpass with the status Draft is live setup.
+
+| Review path | What to do in Runs |
+| --- | --- |
+| Draft plan only | Select **Prepare draft plan**. City saves the plan with execution Not run. |
+| Short review | Prepare the plan, select **Run short review** for the Release Engineer's check, then **Send to QA Lead**. City switches to full review when the plan or short review identifies high risk. |
+| Full review | Prepare the plan, select **Scope with Release Engineer**, then run the Backend Master and Frontend Master reviews. Select **Prepare engineering handoff**, then **Send to QA Lead**. |
+
+After live plan approval, select **Open in Codex** or **Copy handoff**. Confirm the target and permissions in Codex before browser work. A revised live plan needs fresh review and sign-off. Use **Use full review on the next revision** to raise a short assignment to full review.
+
+Record the outcome in the City. For a passed Event build, paste the saved records and matching beta Preview URL. The City queues a Public Tester assignment to assess and review separately. The builder can also record partial saves with a failed or blocked result. Add your own Event images in Showpass.
+
+## Release engineering
+
+**Releases** always uses full review. Add the candidate, affected workflows, source evidence and executed test evidence. Scope it with the Release Engineer, run the two source reviews, prepare the engineering handoff, and send it to the QA Lead. The City reviews evidence you supply. For a tester plan, include relevant source references or excerpts in the assignment instructions. The installed source-review skills can trace the repositories directly from a Codex workspace. The handoff decision and release recommendation are recorded separately. Revisions keep earlier decisions in history while the current revision waits for its own review. [Vault release workflow](../06%20Prompts/Showpass%20Release%20Engineering%20Handoff.md)
 
 Assignments, plans, reviews, and reported results are stored in the browser. Open a saved builder result to inspect its JSON. Each record has a City `kind` and a `record` with verified fields from the Showpass backend's venue-based serializers:
 

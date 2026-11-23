@@ -11,6 +11,8 @@ status: Working guide; current CI protection must be verified per outcome
 
 Automate repeated work where it gives reliable proof or saves recurring effort. The aim includes product tests, safe test setup, result collection and coverage checks. Test counts and planning-ready packets do not measure protection.
 
+Apply [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|the shared review layer]] to the selected automation scope. Carry its review record across planning, implementation, and evidence collection for the same revision.
+
 ## Existing work to use
 
 | Need | Canonical starting point | Evidence boundary |

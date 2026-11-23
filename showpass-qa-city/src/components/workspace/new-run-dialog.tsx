@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,7 @@ import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { planReviewLabels, planReviewModes } from "@/lib/workspace/qa-workflow";
 import { runFormSchema, runModeLabels, runModes, type Agent, type Run, type RunFormValues } from "@/lib/workspace/schema";
 import { queueRun } from "@/lib/workspace/store";
 
@@ -24,11 +25,12 @@ type AssignmentInputs = {
 };
 
 function AssignmentForm({ agents, runs, agentId, onSaved }: AssignmentInputs & { onSaved: () => void }) {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } =
+  const { register, control, handleSubmit, formState: { errors, isSubmitting } } =
     useForm<RunFormValues>({
       resolver: zodResolver(runFormSchema),
-      defaultValues: { agentId, title: "", instructions: "", mode: "drive", target: "", sourceRunId: "" },
+      defaultValues: { agentId, title: "", instructions: "", mode: "drive", target: "", sourceRunId: "", reviewMode: "short" },
     });
+  const reviewMode = useWatch({ control, name: "reviewMode" });
 
   async function submit(values: RunFormValues) {
     try {
@@ -51,6 +53,16 @@ function AssignmentForm({ agents, runs, agentId, onSaved }: AssignmentInputs & {
             </Select>
           )}
         </FormField>
+        <FormField label="Review path" error={errors.reviewMode?.message}>
+          {(field) => (
+            <Select {...field} {...register("reviewMode")}>
+              {planReviewModes.map((mode) => <option key={mode} value={mode}>{planReviewLabels[mode]}</option>)}
+            </Select>
+          )}
+        </FormField>
+      </div>
+      {reviewMode === "short" && <p className="text-sm text-muted-foreground">If the plan or Release Engineer finds high risk, City switches it to full review.</p>}
+      {reviewMode !== "draft" && (
         <FormField label="Who drives?" error={errors.mode?.message}>
           {(field) => (
             <Select {...field} {...register("mode")}>
@@ -58,7 +70,7 @@ function AssignmentForm({ agents, runs, agentId, onSaved }: AssignmentInputs & {
             </Select>
           )}
         </FormField>
-      </div>
+      )}
       <FormField label="Title" error={errors.title?.message}>
         {(field) => <Input {...field} {...register("title")} maxLength={100} className="h-10" />}
       </FormField>

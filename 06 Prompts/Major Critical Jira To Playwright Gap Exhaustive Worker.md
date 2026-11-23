@@ -1,5 +1,7 @@
 # Major Critical Jira To Playwright Gap Exhaustive Worker
 
+Keep the worker’s gap findings at planning scope. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] when this becomes a live assignment or release handoff.
+
 Use this prompt in a fresh session when you want to mine the exported Major/Critical Jira history and identify the highest-value Playwright automation gaps.
 
 Related notes:
@@ -10,6 +12,8 @@ Related notes:
 - [[04 Automation/Checkout Money Movement Automation Backlog]]
 
 ```text
+Keep the worker’s gap findings at planning scope. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] when this becomes a live assignment or release handoff.
+
 Run an exhaustive Major/Critical Jira to Playwright gap-analysis worker.
 
 Primary question:

@@ -1,10 +1,14 @@
 # Example: Generate Test Cases Prompt
 
+Deliver the requested case draft. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] if the assignment moves to live execution or a release handoff.
+
 Use for new source-backed manual cases. The linked workflow supplies repository paths, handbook selection, source order, browser boundaries, and Qase format; do not paste those rules into every request.
 
 Related: [[06 Prompts/Showpass QA Test Case Generator]] · [[06 Prompts/Jira Card To Test Cases]] · [[06 Prompts/Example - Qase Gap Analysis]].
 
 ```text
+Deliver the requested case draft. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] if the assignment moves to live execution or a release handoff.
+
 Use [[06 Prompts/Showpass QA Test Case Generator]].
 
 Goal:

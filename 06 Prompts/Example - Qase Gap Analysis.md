@@ -1,8 +1,12 @@
 # Example: Qase Gap Analysis Prompt
 
+Keep the gap analysis and case draft in planning scope. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] if the assignment moves to live execution or a release handoff.
+
 Use the dedicated [[06 Prompts/Showpass Qase Gap Analysis]] workflow. It reads existing coverage and delivers focused, standalone Qase-ready cases, with brief supporting analysis afterward.
 
 ```text
+Keep the gap analysis and case draft in planning scope. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] if the assignment moves to live execution or a release handoff.
+
 Use [[06 Prompts/Showpass Qase Gap Analysis]] and [[05 Tooling/qasectl]].
 
 Goal:

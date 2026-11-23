@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { browserResultSchema, revisionSchema } from "./qa-workflow";
+import { browserResultSchema, planReviewModes, revisionSchema } from "./qa-workflow";
+import { releaseSchema } from "./release";
 
 export const agentKinds = ["browser", "coverage", "triage", "custom"] as const;
 export const agentRoles = ["public-tester", "customer-tester", "organizer-tester", "box-office-tester"] as const;
@@ -21,6 +22,7 @@ const assignmentDetails = {
   mode: z.enum(runModes),
   target: z.string().trim().max(180),
   sourceRunId: z.string(),
+  reviewMode: z.enum(planReviewModes).optional(),
 };
 
 export const runFormSchema = z.object({
@@ -52,6 +54,7 @@ const runSchema = runFormSchema.extend({
 export const workspaceSchema = z.object({
   agents: z.array(agentSchema),
   runs: z.array(runSchema),
+  releases: z.array(releaseSchema).default([]),
 });
 
 export type AgentFormValues = z.infer<typeof agentFormSchema>;

@@ -32,6 +32,18 @@ const turnCompletedSchema = z.object({
 
 export class CodexError extends Error {}
 
+export function outputSchema(schema: z.ZodType) {
+  return z.toJSONSchema(schema, {
+    override: ({ jsonSchema }) => {
+      delete jsonSchema.$schema;
+      delete jsonSchema.minLength;
+      delete jsonSchema.maxLength;
+      delete jsonSchema.minItems;
+      delete jsonSchema.maxItems;
+    },
+  });
+}
+
 export async function askCodex({
   cwd, prompt, context, outputSchema, signal,
 }: {

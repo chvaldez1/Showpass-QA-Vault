@@ -8,6 +8,8 @@ tags:
 
 # Escaped Bug To Regression
 
+Apply [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|the shared review layer]] to the regression plan or handoff. Use the original incident and exact missing protection as review evidence.
+
 Use this after a significant confirmed bug, including a source-verified Sentry/support investigation, when prevention or test implementation is requested. Apply [[00 Start Here/Showpass QA Handbook/08 Escaped Bugs and Lessons]] and the canonical standard. An investigation alone does not authorize application changes or live mutations.
 
 1. **Recover the original failure.** Preserve affected client/configuration, relevant old records, actual action and first wrong result. Read the incident through its permitted integration. Separate reported evidence from agent execution; identify the source of the expected behavior.

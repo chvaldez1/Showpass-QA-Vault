@@ -13,6 +13,8 @@ status: Manual creation from scratch tested and passed; 7 min 43 sec including f
 
 # Generate Showpass Test Events
 
+Apply [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|the shared review layer]] to the setup plan and wait for sign-off before live setup.
+
 **Manually create a new Event from scratch in the user's already-signed-in Codex browser sidebar.** Use Create event and a blank form. The purpose is to reduce repeated work while exercising the same Event/TT creation flow, then flag any problems found along the way.
 
 **Do not run a script, make direct API requests, start another login/session, clone an Event, or generate from a saved Event template unless the user explicitly requests that separate approach.** Saved local data is a reference for entering fields; it does not change the requested creation method. In this workflow, “repeat the test faster” means repeat the same manual journey with less repeated investigation and more efficient form entry.
@@ -123,7 +125,7 @@ Have one compact field checklist ready:
 
 If required data is missing, ask once for the exact grouped missing details. State what is already known, what action is blocked and what will happen next. Do not invent defaults to make a package look complete or request another production read without authorization.
 
-Show a short check table before live test actions, with the requested finishing point and retained-data plan. No extra approval round is needed for creation already authorized by the user.
+Show a short check table before live test actions, with the requested finishing point and retained-data plan. Use the shared review layer for the exact setup plan. Reuse the user's creation authorization for the same scope.
 
 ## 2. Create a fresh Event manually
 

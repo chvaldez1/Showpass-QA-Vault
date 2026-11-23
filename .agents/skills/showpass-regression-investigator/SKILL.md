@@ -5,6 +5,8 @@ description: Investigate a Showpass behavior that fails for one record or Venue 
 
 # Showpass Regression Investigator
 
+Use the [shared engineering review layer](</Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/06 Prompts/Showpass Release Engineering Handoff.md#apply-the-review-layer>) when a finding or draft moves into live testing or a release handoff. Keep draft-only requests at draft scope. If this skill contributes evidence to an existing review, add it to that revision's record.
+
 Find the smallest supported explanation for the difference. A broken outcome can be verified before its cause is known; keep those conclusions separate. Do not turn a suspected code change into a confirmed regression merely because it is recent.
 
 ## Ground the investigation

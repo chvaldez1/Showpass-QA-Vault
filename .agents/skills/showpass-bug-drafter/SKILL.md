@@ -5,6 +5,8 @@ description: Draft a copy-ready Showpass bug from a verified investigation or te
 
 # Showpass Bug Drafter
 
+Use the [shared engineering review layer](</Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/06 Prompts/Showpass Release Engineering Handoff.md#apply-the-review-layer>) when a finding or draft moves into live testing or a release handoff. Keep draft-only requests at draft scope. If this skill contributes evidence to an existing review, add it to that revision's record.
+
 Turn a verified Showpass failure into one clear, reproducible draft. Read the QA Vault's `AGENTS.md` and `00 Start Here/World-Class Software Quality Standard.md`, especially **Finding Classification** and **Executable Reproduction Handoff**. The vault is `/Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault`.
 
 ## Establish what is verified

@@ -48,12 +48,12 @@ const fullDate = new Intl.DateTimeFormat("en-CA", {
   dateStyle: "medium", timeStyle: "short", timeZone: "UTC",
 });
 
-export function RunStatusBadge({ status }: { status: RunStatus }) {
+export function RunStatusBadge({ status, draftOnly }: { status: RunStatus; draftOnly?: boolean }) {
   const { label, className } = statusDisplay[status];
   return (
     <Badge variant="secondary" className={className}>
       <span aria-hidden="true" className="size-1.5 rounded-full bg-current" />
-      {label}
+      {draftOnly && status === "completed" ? "Draft ready" : label}
     </Badge>
   );
 }
@@ -62,6 +62,7 @@ function RunRow({ run, agent, previousRun }: { run: Run; agent?: Agent; previous
   const [cancelling, setCancelling] = useState(false);
   const date = new Date(run.createdAt);
   const agentName = agent?.name ?? "Unknown agent";
+  const draftOnly = run.reviewMode === "draft";
 
   async function handleCancelRun() {
     setCancelling(true);
@@ -88,7 +89,7 @@ function RunRow({ run, agent, previousRun }: { run: Run; agent?: Agent; previous
               {run.sample && <span>· Sample</span>}
             </span>
           </span>
-          <RunStatusBadge status={run.status} />
+          <RunStatusBadge status={run.status} draftOnly={draftOnly} />
           <ChevronRightIcon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground group-hover:text-foreground" />
         </DialogTrigger>
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-md">
@@ -100,9 +101,9 @@ function RunRow({ run, agent, previousRun }: { run: Run; agent?: Agent; previous
             <dt className="text-muted-foreground">Agent</dt>
             <dd className="wrap-anywhere">{agentName}</dd>
             <dt className="text-muted-foreground">Status</dt>
-            <dd><RunStatusBadge status={run.status} /></dd>
+            <dd><RunStatusBadge status={run.status} draftOnly={draftOnly} /></dd>
             <dt className="text-muted-foreground">Mode</dt>
-            <dd>{runModeLabels[run.mode]}</dd>
+            <dd>{draftOnly ? "Draft plan only" : runModeLabels[run.mode]}</dd>
             {run.target && (
               <>
                 <dt className="text-muted-foreground">Test target</dt>

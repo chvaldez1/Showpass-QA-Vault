@@ -1,5 +1,14 @@
 import { z } from "zod";
 import { builderRecordsSchema } from "./builder-result";
+import { engineeringSourceSchema, hasEngineeringHandoff, stageSchemas } from "./release";
+
+export const planReviewModes = ["short", "full", "draft"] as const;
+export type PlanReviewMode = (typeof planReviewModes)[number];
+export const planReviewLabels = {
+  short: "Short review · routine live work",
+  full: "Full review · high-risk live work",
+  draft: "Draft plan only",
+} satisfies Record<PlanReviewMode, string>;
 
 export const qaWorkflows = [
   "event-builder", "offering-builder", "organizer-tester",
@@ -29,6 +38,13 @@ export const proposalSchema = z.object({
   sources: notes,
 });
 
+const planRiskSchema = z.object({
+  level: z.enum(["routine", "high-risk"]),
+  reason: description,
+});
+
+export const liveProposalSchema = proposalSchema.extend({ risk: planRiskSchema });
+
 export const leadDecisionSchema = z.object({
   decision: z.enum(["approved", "disapproved"]),
   rationale: description,
@@ -38,11 +54,34 @@ export const leadDecisionSchema = z.object({
   decision === "approved" ? !requiredChanges.length : requiredChanges.length > 0,
 );
 
+const planHandoffSchema = z.object({
+  impact: description,
+  checks: notes,
+  concerns: notes,
+});
+
+export const shortReviewSchema = planHandoffSchema.extend({
+  requiredReview: z.enum(["short", "full"]),
+  stop: description,
+}).refine(({ requiredReview, concerns }) => requiredReview !== "full" || concerns.length > 0);
+
+const planEngineeringSchema = engineeringSourceSchema.extend({ engineer: planHandoffSchema.optional() });
+export const planStageSchemas = {
+  intake: stageSchemas.intake,
+  backend: stageSchemas.backend,
+  frontend: stageSchemas.frontend,
+  engineer: planHandoffSchema,
+};
+
 export const revisionSchema = z.object({
   number: z.number().int().positive(),
   workflow: z.enum(qaWorkflows),
   change: z.string().max(1000),
   plan: proposalSchema,
+  risk: planRiskSchema.optional(),
+  shortReview: shortReviewSchema.optional(),
+  engineer: planHandoffSchema.optional(), // Saved consultation from before the full review layer.
+  engineering: planEngineeringSchema.optional(),
   review: leadDecisionSchema.optional(),
 });
 
@@ -61,6 +100,20 @@ export const browserResultSchema = z.object({
 export type Proposal = z.infer<typeof proposalSchema>;
 export type Revision = z.infer<typeof revisionSchema>;
 export type LeadDecision = z.infer<typeof leadDecisionSchema>;
+
+export function getPlanReviewMode(requested?: PlanReviewMode, revision?: Revision): PlanReviewMode {
+  if (requested === "draft") return "draft";
+  if (requested === "short" && revision?.risk?.level === "routine" && revision.shortReview?.requiredReview !== "full") {
+    return "short";
+  }
+  return "full";
+}
+
+export function isPlanReviewReady(requested: PlanReviewMode | undefined, revision?: Revision) {
+  const mode = getPlanReviewMode(requested, revision);
+  if (mode === "short") return revision?.shortReview?.requiredReview === "short";
+  return mode === "full" && hasEngineeringHandoff(revision?.engineering);
+}
 
 export function getQaWorkflow(role: string, title: string) {
   if (role === "organizer-tester" &&

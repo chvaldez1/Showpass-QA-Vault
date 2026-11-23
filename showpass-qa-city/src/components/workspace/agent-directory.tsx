@@ -25,6 +25,13 @@ export function AgentDirectory() {
         description="Choose a Showpass tester or create an additional profile."
         actions={<AddAgentDialog />}
       />
+      <Card className="flex flex-row flex-wrap items-center justify-between gap-3 p-4">
+        <div>
+          <h2 className="font-semibold">Release team</h2>
+          <p className="text-sm text-muted-foreground">Backend Master, Frontend Master, Release Engineer, and QA Lead.</p>
+        </div>
+        <Link href="/releases" className={buttonVariants({ variant: "outline" })}>Open Releases</Link>
+      </Card>
 
       <ul aria-label="City testers" className="grid gap-4 md:grid-cols-2">
         {agentRoles.map((role) => {

@@ -1,5 +1,7 @@
 # Checkout Recursive Automation Prioritization Worker
 
+Keep this worker at planning scope. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] when the work moves to live execution or release readiness.
+
 Use this prompt for a persistent checkout QA worker whose live job is to answer:
 
 > What should we automate next to reduce the most checkout money-movement risk?
@@ -15,6 +17,8 @@ Related notes:
 - [[02 Feature QA/Checkout/Checkout Automation Decision Queue]]
 
 ```text
+Keep this worker at planning scope. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] when the work moves to live execution or release readiness.
+
 Run the checkout recursive automation prioritization worker.
 
 Bounded planning rule (2026-10-31):
