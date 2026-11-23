@@ -1,20 +1,30 @@
 "use client";
 
 import { ActivityIcon, ChevronRightIcon } from "lucide-react";
-import { useId, useState, type ComponentProps, type ReactNode } from "react";
+import dynamic from "next/dynamic";
+import { useId, useRef, useState, type ComponentProps, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
-  Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter,
+  Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
+import { Disclosure } from "@/components/ui/disclosure";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { runModeLabels, type Agent, type Run, type RunStatus } from "@/lib/workspace/schema";
 import { codexStatusLabels, type CodexHandoffStatus, type LiveCodexRuns } from "@/lib/codex/handoff-schema";
 import { CodexActivity, liveStatus, runFilterStatus } from "./codex-activity";
 import { cancelRun } from "@/lib/workspace/store";
-import { QaAssignment } from "./qa-assignment";
+
+const QaAssignment = dynamic(() => import("./qa-assignment").then((module) => module.QaAssignment), {
+  loading: () => <p role="status" data-testid="run-work-loading" className="text-muted-foreground">Loading assignment actions…</p>,
+});
+
+const Plan = dynamic(() => import("./qa-assignment").then((module) => module.Plan), {
+  loading: () => <p role="status" className="text-muted-foreground">Loading plan…</p>,
+});
 
 export const statusDisplay = {
   queued: {
@@ -56,7 +66,7 @@ export function RunStatusBadge({ status, draftOnly, codex }: {
 }) {
   const { label, className } = statusDisplay[status];
   return (
-    <Badge variant="secondary" className={className}>
+    <Badge data-testid="run-status" variant="secondary" className={className}>
       <span aria-hidden="true" className="size-1.5 rounded-full bg-current" />
       {codex ? codexStatusLabels[codex] : draftOnly && status === "completed" ? "Draft ready" : label}
     </Badge>
@@ -67,12 +77,50 @@ function RunRow({ run, agent, previousRun, activity }: {
   run: Run; agent?: Agent; previousRun?: Run; activity: LiveCodexRuns;
 }) {
   const [cancelling, setCancelling] = useState(false);
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const date = new Date(run.createdAt);
   const agentName = agent?.name ?? "Unknown agent";
   const draftOnly = run.reviewMode === "draft";
   const result = liveStatus(run, activity);
   const status = runFilterStatus(run, activity);
   const badge = result && run.status !== "completed" && run.status !== "failed" ? result.status : undefined;
+  const role = !run.recoveredCodexRevision && !run.sample ? agent?.role : undefined;
+  const recoveredActivity = run.recoveredCodexRevision ? result : undefined;
+  const history = role ? run.revisionHistory : undefined;
+  const hasHistory = Boolean(history?.length);
+  const currentPlan = role ? run.revision : undefined;
+  const showPlanFirst = currentPlan && status !== "queued" && status !== "running" && status !== "needs-input";
+
+  const details = (
+    <div className="max-w-prose space-y-5" data-testid="run-details-content">
+      <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-3 rounded-lg border bg-background p-4">
+        <dt className="text-muted-foreground">Agent</dt>
+        <dd className="wrap-anywhere">{agentName}</dd>
+        <dt className="text-muted-foreground">Mode</dt>
+        <dd>{draftOnly ? "Draft plan only" : runModeLabels[run.mode]}</dd>
+        {run.target && (
+          <>
+            <dt className="text-muted-foreground">Test target</dt>
+            <dd className="wrap-anywhere">{run.target}</dd>
+          </>
+        )}
+        {run.sourceRunId && (
+          <>
+            <dt className="text-muted-foreground">Handoff from</dt>
+            <dd className="wrap-anywhere">{previousRun?.title ?? "Previous run unavailable"}</dd>
+          </>
+        )}
+        <dt className="text-muted-foreground">Created</dt>
+        <dd><time data-testid="run-created-at" dateTime={run.createdAt}>{fullDate.format(date)} UTC</time></dd>
+      </dl>
+      {run.instructions && (
+        <section className="grid gap-2" aria-label="Instructions" data-testid="run-instructions">
+          <h3 className="text-sm font-semibold">Instructions</h3>
+          <p className="leading-relaxed wrap-anywhere whitespace-pre-wrap">{run.instructions}</p>
+        </section>
+      )}
+    </div>
+  );
 
   async function handleCancelRun() {
     setCancelling(true);
@@ -87,9 +135,10 @@ function RunRow({ run, agent, previousRun, activity }: {
   }
 
   return (
-    <li>
+    <li data-testid={`run-row-${run.id}`}>
       <Dialog>
         <DialogTrigger
+          data-testid={`open-run-${run.id}`}
           render={<Button variant="ghost" />}
           className="group h-auto w-full justify-start gap-3 rounded-none px-4 py-3.5 text-left font-normal whitespace-normal hover:bg-muted/70 focus-visible:-outline-offset-2 sm:gap-4 sm:px-5"
         >
@@ -98,52 +147,72 @@ function RunRow({ run, agent, previousRun, activity }: {
             <span className="mt-1 flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
               <span className="max-w-full truncate">{agentName}</span>
               <span aria-hidden="true">·</span>
-              <time dateTime={run.createdAt}>{shortDate.format(date)}</time>
+              <time data-testid="run-list-date" dateTime={run.createdAt}>{shortDate.format(date)}</time>
               {run.sample && <span>· Sample</span>}
             </span>
           </span>
           <RunStatusBadge status={status} draftOnly={draftOnly} codex={badge} />
           <ChevronRightIcon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground group-hover:text-foreground" />
         </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="leading-snug wrap-anywhere">{run.title}</DialogTitle>
-            <DialogDescription>{run.sample ? "Sample run" : run.recoveredCodexRevision ? "Recovered Codex handoff" : "Shared City assignment"}</DialogDescription>
-          </DialogHeader>
-          <dl className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 gap-y-3 rounded-lg border bg-background p-3">
-            <dt className="text-muted-foreground">Agent</dt>
-            <dd className="wrap-anywhere">{agentName}</dd>
-            <dt className="text-muted-foreground">Status</dt>
-            <dd><RunStatusBadge status={status} draftOnly={draftOnly} codex={badge} /></dd>
-            <dt className="text-muted-foreground">Mode</dt>
-            <dd>{draftOnly ? "Draft plan only" : runModeLabels[run.mode]}</dd>
-            {run.target && (
-              <>
-                <dt className="text-muted-foreground">Test target</dt>
-                <dd className="wrap-anywhere">{run.target}</dd>
-              </>
-            )}
-            {run.sourceRunId && (
-              <>
-                <dt className="text-muted-foreground">Handoff from</dt>
-                <dd className="wrap-anywhere">{previousRun?.title ?? "Previous run unavailable"}</dd>
-              </>
-            )}
-            <dt className="text-muted-foreground">Created</dt>
-            <dd><time dateTime={run.createdAt}>{fullDate.format(date)} UTC</time></dd>
-          </dl>
-          {run.instructions && (
-            <div className="grid gap-1">
-              <h3 className="text-sm font-medium">Instructions</h3>
-              <p className="text-muted-foreground wrap-anywhere whitespace-pre-wrap">{run.instructions}</p>
+        <DialogContent testId="run-dialog" width="xl" initialFocus={titleRef} className="max-h-[min(45rem,calc(100dvh-1rem))] sm:max-h-[min(45rem,calc(100dvh-2rem))]">
+          <DialogHeader className="gap-2.5">
+            <DialogTitle ref={titleRef} tabIndex={-1} data-testid="run-dialog-title" className="text-lg leading-snug wrap-anywhere outline-none sm:text-xl">{run.title}</DialogTitle>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+              <DialogDescription>{run.sample ? "Sample run" : run.recoveredCodexRevision ? "Recovered Codex handoff" : agentName}</DialogDescription>
+              <RunStatusBadge status={status} draftOnly={draftOnly} codex={badge} />
             </div>
+          </DialogHeader>
+          {role || recoveredActivity ? (
+            <Tabs defaultValue={showPlanFirst ? "plan" : role ? "work" : "activity"} className="min-h-0 gap-0">
+              <TabsList
+                variant="line"
+                aria-label="Run details"
+                data-testid="run-tabs"
+                className="h-11 w-full shrink-0 justify-start gap-1 border-b px-2 sm:gap-2 sm:px-5 [&_[role=tab]]:flex-none [&_[role=tab]]:px-2"
+              >
+                {role && <TabsTrigger value="work" data-testid="run-tab-work">Current work</TabsTrigger>}
+                {currentPlan && <TabsTrigger value="plan" data-testid="run-tab-plan">Plan</TabsTrigger>}
+                {recoveredActivity && <TabsTrigger value="activity" data-testid="run-tab-activity">Activity</TabsTrigger>}
+                <TabsTrigger value="details" data-testid="run-tab-details">Details</TabsTrigger>
+                {hasHistory && <TabsTrigger value="history" data-testid="run-tab-history">History</TabsTrigger>}
+              </TabsList>
+              {role && (
+                <TabsContent value="work" keepMounted render={<DialogBody />} data-testid="run-panel-work">
+                  <QaAssignment run={run} role={role} previousRun={previousRun} />
+                </TabsContent>
+              )}
+              {currentPlan && (
+                <TabsContent value="plan" render={<DialogBody />} data-testid="run-panel-plan">
+                  <Plan revision={currentPlan} />
+                </TabsContent>
+              )}
+              {recoveredActivity && (
+                <TabsContent value="activity" render={<DialogBody />} data-testid="run-panel-activity">
+                  <CodexActivity result={recoveredActivity} limit={40} />
+                </TabsContent>
+              )}
+              <TabsContent value="details" render={<DialogBody />} data-testid="run-panel-details">{details}</TabsContent>
+              {hasHistory && (
+                <TabsContent value="history" render={<DialogBody />} data-testid="run-panel-history">
+                  <ul className="space-y-3">
+                    {history?.map((previous) => (
+                      <li key={previous.number}>
+                        <Disclosure testId={`run-history-plan-${previous.number}`} label={`Plan ${previous.number} · ${previous.review?.decision ?? "not reviewed"} · superseded`}>
+                          <Plan revision={previous} />
+                        </Disclosure>
+                      </li>
+                    ))}
+                  </ul>
+                </TabsContent>
+              )}
+            </Tabs>
+          ) : (
+            <DialogBody tabIndex={0} role="region" aria-label="Run details" data-testid="run-panel-details">{details}</DialogBody>
           )}
-          {run.recoveredCodexRevision && result && <CodexActivity result={result} limit={40} />}
-          {!run.recoveredCodexRevision && !run.sample && agent?.role && <QaAssignment run={run} role={agent.role} previousRun={previousRun} />}
-          <DialogFooter>
-            <DialogClose render={<Button variant="outline" />}>Close</DialogClose>
+          <DialogFooter data-testid="run-dialog-footer">
+            <DialogClose data-testid="run-dismiss" render={<Button variant="outline" />}>Close</DialogClose>
             {run.status === "queued" && (
-              <Button variant="destructive" onClick={handleCancelRun} disabled={cancelling}>
+              <Button data-testid="run-cancel" variant="destructive" onClick={handleCancelRun} disabled={cancelling}>
                 Cancel run
               </Button>
             )}
@@ -169,7 +238,7 @@ function RunList({
 }) {
   if (runs.length === 0) {
     return (
-      <div className="flex items-center gap-3 p-5 text-sm text-muted-foreground">
+      <div data-testid="run-list-empty" className="flex items-center gap-3 p-5 text-sm text-muted-foreground">
         <ActivityIcon aria-hidden="true" className="size-4 shrink-0" />
         {emptyMessage}
       </div>
@@ -179,7 +248,7 @@ function RunList({
   const agentsById = new Map(agents.map((agent) => [agent.id, agent]));
   const runsById = new Map(history.map((run) => [run.id, run]));
   return (
-    <ul className="divide-y">
+    <ul data-testid="run-list" className="divide-y">
       {runs.map((run) => (
         <RunRow
           key={run.id}
@@ -193,16 +262,17 @@ function RunList({
   );
 }
 
-export function RunHistory({ title, actions, showCount, ...list }: ComponentProps<typeof RunList> & {
+export function RunHistory({ title, actions, showCount, testId, ...list }: ComponentProps<typeof RunList> & {
   title: string;
   actions?: ReactNode;
   showCount?: boolean;
+  testId: string;
 }) {
   const headingId = useId();
 
   return (
     <Card className="gap-0 py-0">
-      <section aria-labelledby={headingId}>
+      <section data-testid={testId} aria-labelledby={headingId}>
         <header className="flex flex-wrap items-center justify-between gap-3 border-b p-4 sm:px-5">
           <div className="flex flex-wrap items-center gap-2.5">
             <h2 id={headingId} className="font-semibold tracking-tight">{title}</h2>

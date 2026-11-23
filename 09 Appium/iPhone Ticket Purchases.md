@@ -17,6 +17,8 @@ Start with [[09 Appium/Showpass Mobile App]] to build and launch the app. [[09 A
 
 ## Shared scenario and safety
 
+Before running either live purchase flow, use [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|full review]] for the exact build and purchase plan. Confirm that the test payment and saved-order scope is authorized for this run.
+
 | Item | Required before either purchase |
 | --- | --- |
 | Build | Use a beta simulator `.app` whose bundle ID, version, and build match `appium-pof/config/app-build.json` (currently **3.7.2 (180)**). Run `npm run app:check` against the installed app first. The verified public purchase used an older **3.6.7 (135)** app; it has not been rerun on the new build. |

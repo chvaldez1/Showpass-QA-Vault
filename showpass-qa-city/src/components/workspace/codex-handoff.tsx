@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Disclosure } from "@/components/ui/disclosure";
 import { codexHandoffStatusSchema, codexStatusLabels, isCodexPending, type CodexHandoffStatus } from "@/lib/codex/handoff-schema";
 import { withAssignmentLock } from "@/lib/workspace/assignment-lock";
 
@@ -80,16 +81,16 @@ export function CodexHandoff({ runId, revision, token, disabled }: {
   }
 
   return (
-    <div className="grid gap-2">
-      {launching && <p role="status">Sending Plan {revision} to Codex…</p>}
-      {!launching && result && <p role="status" className="font-medium">{codexStatusLabels[result.status]}</p>}
-      {(error || refreshError) && <p role="alert" className="text-destructive">{error || refreshError}</p>}
+    <div data-testid="codex-handoff" className="grid gap-2">
+      {launching && <p data-testid="codex-handoff-sending" role="status">Sending Plan {revision} to Codex…</p>}
+      {!launching && result && <p data-testid="codex-handoff-status" role="status" className="font-medium">{codexStatusLabels[result.status]}</p>}
+      {(error || refreshError) && <p data-testid="codex-handoff-error" role="alert" className="text-destructive">{error || refreshError}</p>}
       {result?.status === "ready" && (
         <>
-          <Checkbox checked={authorized} onChange={(event) => setAuthorized(event.target.checked)}>
+          <Checkbox data-testid="codex-handoff-authorize" checked={authorized} onChange={(event) => setAuthorized(event.target.checked)}>
             I authorize the actions and data changes in Plan {revision} in the paired Codex chat.
           </Checkbox>
-          <Button className="justify-self-start" disabled={disabled || launching || !authorized} onClick={launch}>
+          <Button data-testid="codex-handoff-run" className="justify-self-start" disabled={disabled || launching || !authorized} onClick={launch}>
             Run in Codex
           </Button>
         </>
@@ -99,11 +100,15 @@ export function CodexHandoff({ runId, revision, token, disabled }: {
       )}
       {(result || refreshError) && (
         <div className="flex flex-wrap items-center gap-2">
-          {result && <ButtonLink href={`codex://threads/${result.threadId}`} variant="outline" prefetch={false}>View paired chat</ButtonLink>}
-          {(refreshError || isCodexPending(result?.status)) && <Button variant="outline" onClick={() => setCheck((value) => value + 1)}>Refresh Codex status</Button>}
+          {result && <ButtonLink data-testid="codex-handoff-chat" href={`codex://threads/${result.threadId}`} variant="outline" prefetch={false}>View paired chat</ButtonLink>}
+          {(refreshError || isCodexPending(result?.status)) && <Button data-testid="codex-handoff-refresh" variant="outline" onClick={() => setCheck((value) => value + 1)}>Refresh Codex status</Button>}
         </div>
       )}
-      {result && result.status !== "ready" && <CodexActivity result={result} limit={40} />}
+      {result && result.status !== "ready" && (
+        <Disclosure testId="codex-handoff-activity" label="Codex activity">
+          <CodexActivity result={result} limit={40} />
+        </Disclosure>
+      )}
       {result?.status === "completed" && <p className="text-xs text-muted-foreground">Review the evidence before recording a browser outcome.</p>}
     </div>
   );

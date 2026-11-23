@@ -19,24 +19,25 @@ export function AgentDirectory() {
   return (
     <>
       <PageHeader
+        testId="agents-page"
         title="Agents"
         description="Choose a Showpass agent or create an additional profile."
         actions={<AddAgentDialog />}
       />
-      <Card className="flex flex-row flex-wrap items-center justify-between gap-3 p-4">
+      <Card data-testid="release-team" className="flex flex-row flex-wrap items-center justify-between gap-3 p-4">
         <div>
           <h2 className="font-semibold">Release team</h2>
           <p className="text-sm text-muted-foreground">Backend Master, Frontend Master, Release Engineer, and QA Lead.</p>
         </div>
-        <ButtonLink href="/releases" variant="outline">Open Releases</ButtonLink>
+        <ButtonLink data-testid="agents-open-releases" href="/releases" variant="outline">Open Releases</ButtonLink>
       </Card>
 
-      <ul aria-label="City agents" className="grid gap-4 md:grid-cols-2">
+      <ul data-testid="city-agents" aria-label="City agents" className="grid gap-4 md:grid-cols-2">
         {agentRoles.map((role) => {
           const location = locations[role];
 
           return (
-            <li key={role} className="min-w-0">
+            <li data-testid={`agent-card-${role}`} key={role} className="min-w-0">
               <Card
                 className="h-full gap-3 border border-transparent bg-[radial-gradient(ellipse_at_top_right,color-mix(in_srgb,var(--location-color)_17%,transparent),transparent_60%)] p-5"
                 style={{ "--location-color": location.color } as CSSProperties}
@@ -62,11 +63,11 @@ export function AgentDirectory() {
       </ul>
 
       {otherAgents.length > 0 && (
-        <section aria-labelledby="additional-agents" className="space-y-4">
+        <section data-testid="additional-agents" aria-labelledby="additional-agents" className="space-y-4">
           <h2 id="additional-agents" className="text-lg font-semibold tracking-tight">Additional profiles</h2>
           <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {otherAgents.map((agent) => (
-              <li key={agent.id} className="min-w-0">
+              <li data-testid={`agent-card-${agent.id}`} key={agent.id} className="min-w-0">
                 <Card className="h-full gap-4 p-5">
                   <div className="flex items-center gap-3">
                     <AgentMark kind={agent.kind} />

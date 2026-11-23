@@ -11,6 +11,7 @@ type SelectOption<Value extends string> = { value: Value; label: string };
 export type SelectProps<Value extends string> = Pick<ComponentProps<"button">,
   "id" | "ref" | "className" | "disabled" | "onBlur" | "aria-label" | "aria-labelledby" | "aria-invalid" | "aria-describedby"
 > & {
+  "data-testid": string;
   options: readonly SelectOption<Value>[];
   value: string;
   onValueChange: (value: NoInfer<Value>) => void;
@@ -19,7 +20,8 @@ export type SelectProps<Value extends string> = Pick<ComponentProps<"button">,
 };
 
 export function Select<Value extends string>({
-  options, value, onValueChange, placeholder = "Choose an option", required, className, disabled, ...props
+  options, value, onValueChange, placeholder = "Choose an option", required, className, disabled,
+  "data-testid": testId, ...props
 }: SelectProps<Value>) {
   const selected = options.find((option) => option.value === value);
 
@@ -34,6 +36,7 @@ export function Select<Value extends string>({
       <SelectPrimitive.Trigger
         {...props}
         data-slot="select-trigger"
+        data-testid={testId}
         aria-required={required}
         className={cn(
           buttonVariants({ variant: "outline" }),
@@ -50,6 +53,7 @@ export function Select<Value extends string>({
         <SelectPrimitive.Positioner align="start" alignItemWithTrigger={false} sideOffset={5} className="z-[60]">
           <SelectPrimitive.Popup className="w-(--anchor-width) max-w-(--available-width) rounded-lg border bg-popover text-sm text-popover-foreground shadow-md outline-none">
             <SelectPrimitive.List
+              data-testid={`${testId}-options`}
               aria-label={props["aria-label"]}
               aria-labelledby={props["aria-labelledby"]}
               className="max-h-[min(16rem,var(--available-height))] overflow-auto overscroll-contain p-1"
@@ -57,6 +61,7 @@ export function Select<Value extends string>({
               {options.map(({ value: optionValue, label }) => (
                 <SelectPrimitive.Item
                   key={optionValue}
+                  data-testid={`${testId}-option-${optionValue || "default"}`}
                   value={optionValue}
                   className="flex min-h-9 cursor-pointer select-none items-center justify-between gap-2 rounded-md px-2 py-1.5 outline-none wrap-anywhere data-highlighted:bg-accent data-highlighted:text-accent-foreground"
                 >

@@ -24,11 +24,11 @@ export function CodexActivity({ result, limit = 10 }: {
 }) {
   const steps = result.activity?.slice(-limit) ?? [];
   return (
-    <div className="grid gap-3">
+    <div data-testid="codex-activity-details" className="grid min-w-0 gap-3">
       {steps.length > 0 && (
-        <ol aria-label="Codex activity" className="grid gap-2 border-l pl-3">
+        <ol data-testid="codex-activity-steps" aria-label="Codex activity" className="grid gap-2 border-l pl-3">
           {steps.map((item) => (
-            <li key={item.id} className="flex min-w-0 items-start gap-2 text-sm">
+            <li key={item.id} data-testid={`codex-step-${item.id}`} className="flex min-w-0 items-start gap-2 text-sm">
               {item.kind === "browser"
                 ? <AppWindowIcon aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                 : <ActivityIcon aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-primary" />}
@@ -47,8 +47,8 @@ export function CodexActivity({ result, limit = 10 }: {
         </p>
       )}
       {result.text && !isCodexPending(result.status) && (
-        <Disclosure label="Read Codex reply" className="rounded-lg border bg-background p-3">
-          <pre className="max-h-84 overflow-auto font-sans text-sm wrap-anywhere whitespace-pre-wrap">{result.text}</pre>
+        <Disclosure testId="codex-reply" label="Read Codex reply" className="rounded-lg border bg-background p-3">
+          <pre data-testid="codex-reply-text" tabIndex={0} aria-label="Codex reply" className="max-h-84 overflow-auto font-sans text-sm wrap-anywhere whitespace-pre-wrap">{result.text}</pre>
         </Disclosure>
       )}
     </div>
@@ -71,7 +71,7 @@ export function LiveCodexActivity({ runs, activity, disconnected }: {
 
   return (
     <Card className="gap-0 py-0">
-      <section aria-labelledby="live-codex-activity">
+      <section data-testid="live-codex-activity" aria-labelledby="live-codex-activity">
         <header className="flex flex-wrap items-center justify-between gap-2 border-b p-4 sm:px-5">
           <h2 id="live-codex-activity" className="flex items-center gap-2 font-semibold tracking-tight">
             <ActivityIcon aria-hidden="true" className="size-4 text-primary" />
@@ -79,10 +79,10 @@ export function LiveCodexActivity({ runs, activity, disconnected }: {
           </h2>
           {active.length > 0 && <span className="text-xs font-medium text-muted-foreground">{active.length} active</span>}
         </header>
-        {disconnected && <p role="status" className="p-4 text-sm text-muted-foreground">Reconnecting to Codex activity…</p>}
+        {disconnected && <p data-testid="codex-reconnecting" role="status" className="p-4 text-sm text-muted-foreground">Reconnecting to Codex activity…</p>}
         <ul className="divide-y">
           {visible.map(({ run, result }) => (
-            <li key={run.id} className="grid gap-3 p-4 sm:px-5">
+            <li key={run.id} data-testid={`run-activity-${run.id}`} className="grid gap-3 p-4 sm:px-5">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h3 className="text-sm font-medium wrap-anywhere">{run.title}</h3>
                 <Badge variant={isCodexPending(result.status) ? "default" : "secondary"}>

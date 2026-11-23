@@ -8,7 +8,7 @@ tags:
 
 # Showpass Qase Gap Analysis
 
-Keep the gap analysis and case drafts at draft scope. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] when the work becomes a live assignment or release handoff.
+Keep the gap analysis and case drafts at draft scope and mark planned checks **Not run**. When the work becomes a live assignment or engineering handoff, carry forward the reviewed revision, case IDs or draft labels, source references, observed results, and unresolved gaps under the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|shared review policy]].
 
 Compare existing Qase cases with verified product behavior, then deliver **focused, standalone Qase-ready cases**. The analysis supports the cases; the user should not have to read an audit report to execute them.
 

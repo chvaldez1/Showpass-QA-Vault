@@ -8,9 +8,10 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog, DialogContent, DialogDescription, DialogFormActions,
+  Dialog, DialogBody, DialogContent, DialogDescription, DialogFormActions,
   DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
+import { Disclosure } from "@/components/ui/disclosure";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { SelectField } from "@/components/ui/select-field";
@@ -59,45 +60,49 @@ function AssignmentForm({ agents, runs, agentId, onSaved }: AssignmentInputs & {
   }
 
   return (
-    <form onSubmit={handleSubmit(submit)} noValidate className="grid gap-4">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <SelectField
-          control={control} name="agentId" label="Agent" placeholder="Choose an agent" required
-          options={agents.map(({ id, name }) => ({ value: id, label: name }))}
-        />
-        <SelectField control={control} name="reviewMode" label="Review path" options={reviewOptions} />
-      </div>
-      {reviewMode === "short" && <p className="text-sm text-muted-foreground">If the plan or Release Engineer finds high risk, City switches it to full review.</p>}
-      {reviewMode !== "draft" && (
-        <SelectField control={control} name="mode" label="Who drives?" options={modeOptions} />
-      )}
-      <FormField label="Title" error={errors.title?.message}>
-        {(field) => <Input {...field} {...register("title")} maxLength={100} className="h-10" />}
-      </FormField>
-      {selectedAgent?.role === "organizer-builder" && (
-        <SelectField control={control} name="builderWorkflow" label="Build area" options={builderOptions} />
-      )}
-      {runs.length > 0 && (
-        <SelectField
-          control={control} name="sourceRunId" label="Continue from a run (optional)"
-          options={[{ value: "", label: "Start a standalone assignment" }, ...runs.map(({ id, title }) => ({ value: id, label: title }))]}
-        />
-      )}
-      <FormField label="Test target (optional)" error={errors.target?.message}>
-        {(field) => (
-          <Input
-            {...field}
-            {...register("target")}
-            maxLength={180}
-            placeholder="Environment, Event, or order reference"
-            className="h-10"
+    <form data-testid="new-assignment-form" onSubmit={handleSubmit(submit)} noValidate className="flex min-h-0 flex-col">
+      <DialogBody data-testid="new-assignment-body" className="grid gap-4 border-t">
+        <FormField testId="assignment-title" label="Title" error={errors.title?.message}>
+          {(field) => <Input {...field} {...register("title")} required maxLength={100} className="h-10" />}
+        </FormField>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <SelectField
+            testId="assignment-agent" control={control} name="agentId" label="Agent" placeholder="Choose an agent" required
+            options={agents.map(({ id, name }) => ({ value: id, label: name }))}
           />
+          <SelectField
+            testId="assignment-review-path" control={control} name="reviewMode" label="Review path" options={reviewOptions}
+            hint={reviewMode === "short" ? "High-risk plans switch to full review." : undefined}
+          />
+        </div>
+        <div className="grid items-start gap-4 empty:hidden sm:grid-cols-2">
+          {reviewMode !== "draft" && <SelectField testId="assignment-mode" control={control} name="mode" label="Who drives?" options={modeOptions} />}
+          {selectedAgent?.role === "organizer-builder" && <SelectField testId="assignment-build-area" control={control} name="builderWorkflow" label="Build area" options={builderOptions} />}
+        </div>
+        <FormField testId="assignment-target" label="Test target (optional)" error={errors.target?.message}>
+          {(field) => (
+            <Input
+              {...field}
+              {...register("target")}
+              maxLength={180}
+              placeholder="Environment, Event, or order reference"
+              className="h-10"
+            />
+          )}
+        </FormField>
+        <FormField testId="assignment-instructions" label="Instructions (optional)" error={errors.instructions?.message}>
+          {(field) => <Textarea {...field} {...register("instructions")} rows={4} maxLength={2000} />}
+        </FormField>
+        {runs.length > 0 && (
+          <Disclosure testId="assignment-source" label="Continue from a run (optional)">
+            <SelectField
+              testId="assignment-source-run" control={control} name="sourceRunId" label="Previous run"
+              options={[{ value: "", label: "Start a standalone assignment" }, ...runs.map(({ id, title }) => ({ value: id, label: title }))]}
+            />
+          </Disclosure>
         )}
-      </FormField>
-      <FormField label="Instructions (optional)" error={errors.instructions?.message}>
-        {(field) => <Textarea {...field} {...register("instructions")} rows={4} maxLength={2000} />}
-      </FormField>
-      <DialogFormActions label="Save assignment" pending={isSubmitting} />
+      </DialogBody>
+      <DialogFormActions testId="new-assignment" label="Save assignment" pending={isSubmitting} />
     </form>
   );
 }
@@ -119,13 +124,14 @@ export function NewRunDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
+        data-testid={agentId ? `new-assignment-${agentId}` : "new-assignment"}
         render={<Button variant={variant} className={className} />}
         aria-label={defaultAgent ? `New assignment for ${defaultAgent.name}` : undefined}
         disabled={agents.length === 0}
       >
         <PlusIcon aria-hidden="true" /> New assignment
       </DialogTrigger>
-      <DialogContent width="lg">
+      <DialogContent testId="new-assignment-dialog" width="lg">
         <DialogHeader>
           <DialogTitle>New assignment</DialogTitle>
           <DialogDescription>Choose who owns the assignment and how to run it. Open the saved assignment to prepare its plan.</DialogDescription>

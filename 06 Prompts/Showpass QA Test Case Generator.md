@@ -8,7 +8,7 @@ tags:
 
 # Showpass QA Test Case Generator
 
-Deliver the requested case draft and keep planned execution separate. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] for live execution or a release handoff. Follow the existing Qase write rules.
+Deliver the source-backed case draft and mark planned checks **Not run**. If the work moves to live execution or an engineering handoff, carry forward the exact revision, affected business cases and clients, source evidence, observed results, and open gaps. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|shared review policy]] to determine who reviews it. Follow [[05 Tooling/qasectl|the separate Qase write rules]] for any authorized Qase changes.
 
 Generate source-backed, Qase-ready manual cases. For comparison with existing Qase coverage, use [[06 Prompts/Showpass Qase Gap Analysis]]. Optimize for useful proof and repeatable execution; case count alone is not a coverage goal.
 

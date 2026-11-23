@@ -62,7 +62,7 @@ Show the plan before testing. Apply [[06 Prompts/Showpass Release Engineering Ha
 
 Execute the selected checks in risk order using the relevant source rules and handbook guidance. Establish the required starting state before judging the result. An unavailable browser capability or missing test record is a named gap, not a reason to silently substitute another check or claim success.
 
-Investigate suspicious results safely. Check whether the failure repeats and whether the actual configuration explains it. Finish other independent checks when a finding does not prevent them. If new evidence changes the plan, briefly explain the change and update the same note. Expanding into a new feature or an unapproved data change requires its own scope decision.
+Investigate suspicious results safely. Check whether the failure repeats and whether the actual configuration explains it. Continue independent checks covered by the current approval. If new evidence changes the plan, record the revision and the reason in the same note. Use the shared review policy and wait for fresh QA Lead sign-off before acting on the revised plan. Apply the user's authorization to any expanded scope or data change.
 
 ### 3. Bring Back Evidence
 

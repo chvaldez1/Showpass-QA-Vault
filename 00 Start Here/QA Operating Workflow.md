@@ -45,9 +45,9 @@ Manual exploration should challenge assumptions and unfamiliar combinations. Fee
 3. Map each behavior to saved Qase cases, exact Playwright assertions and planned/executed browser checks. State Full, Partial, None or Unknown separately from execution results. Reuse applicable automated results; check the actual build/setup, skipped tests, first-attempt failures and quarantined coverage.
 4. Execute the remaining manual/device/exploratory checks. A previously green run is reusable only when the relevant code, build, dependencies and configuration are shown to be unchanged; record that reasoning.
 5. Keep every unrun, failed, blocked or deferred outcome visible. Give each gap a concrete missing check or next action. An accepted risk never changes the test result to Passed.
-6. Verify cleanup or safe isolation. Explain the recommendation using actual test results and remaining business risk. Owner/sign-off fields are not required in this template.
+6. Verify cleanup or safe isolation. Explain the recommendation using actual test results and remaining business risk.
 
-Record the QA Lead's decision on the Release Engineer handoff in the same note. Keep it separate from the release recommendation.
+For release readiness or an engineering handoff, record the QA Lead's decision on the exact Release Engineer handoff in the same note. Keep it separate from the release recommendation. A planning-only coverage inventory can finish with the evidence and gaps.
 
 ## After rollout: learn and follow through
 

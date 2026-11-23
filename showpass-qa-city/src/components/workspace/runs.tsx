@@ -25,12 +25,14 @@ export function Runs() {
   return (
     <>
       <PageHeader
+        testId="runs-page"
         title="Runs"
         description="Follow live Codex activity and review saved assignments."
         actions={<NewRunDialog agents={agents} runs={runs} className="h-10 px-4" />}
       />
       <LiveCodexActivity runs={runs} activity={activity} disconnected={disconnected} />
       <RunHistory
+        testId="runs-history"
         title="Run history"
         showCount
         runs={visibleRuns}
@@ -40,6 +42,7 @@ export function Runs() {
         emptyMessage={filter === "all" ? undefined : "No runs match this status."}
         actions={(
           <Select
+            data-testid="runs-status-filter"
             aria-label="Filter runs by status"
             value={filter}
             onValueChange={setFilter}

@@ -70,7 +70,7 @@ Trace the backend first for behavior. Use frontend evidence for how people reach
 
 ### Coverage Review And Implementation
 
-- For release readiness or “what coverage do we have?”, use [[06 Prompts/Release Coverage Review]] and `05 Tooling/scripts/collect-release-coverage.mjs`. Compare saved Qase cases, exact Playwright assertions, and browser checks against each changed behavior. Search matches are candidates. Report Full, Partial, None, or Unknown separately from current execution, and name exact remaining checks. Owner and sign-off fields are optional.
+- For release readiness or “what coverage do we have?”, use [[06 Prompts/Release Coverage Review]] and `05 Tooling/scripts/collect-release-coverage.mjs`. Compare saved Qase cases, exact Playwright assertions, and browser checks against each changed behavior. Search matches are candidates. Report Full, Partial, None, or Unknown separately from current execution, and name exact remaining checks. For a release decision or engineering handoff, apply the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|shared review policy]] and record the QA Lead's decision on the exact handoff separately from the release recommendation.
 - For authorized implementation, reuse existing setup and cleanup, make the scoped change, verify the focused behavior, and check actual CI status within scope. Carry through an authorized improvement even if an earlier worker only planned it. Keep failed, unrun, skipped, and retry-only results visible.
 - For requested prevention after a confirmed escaped bug, use [[06 Prompts/Escaped Bug To Regression]]. Tie the regression to the actual failure and verify it catches the missing behavior.
 

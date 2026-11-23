@@ -37,16 +37,17 @@ function CityMap({ selected, onSelect }: {
   const view = unavailable3D ? "2d" : requestedView;
 
   return (
-    <section aria-labelledby="city-view" className="min-w-0 overflow-hidden rounded-2xl border bg-card">
+    <section data-testid="city-map" aria-labelledby="city-view" className="min-w-0 overflow-hidden rounded-2xl border bg-card">
       <header className="flex flex-wrap items-center justify-between gap-3 px-4 py-3.5 sm:px-5">
         <div className="flex items-center gap-3">
           <h2 id="city-view" className="font-semibold tracking-tight">Explore the city</h2>
-          {unavailable3D && <p role="status" className="text-xs text-muted-foreground">3D is unavailable on this device.</p>}
+          {unavailable3D && <p role="status" data-testid="city-map-fallback" className="text-xs text-muted-foreground">3D is unavailable on this device.</p>}
         </div>
-        <div role="group" aria-label="Map view" className="flex items-center gap-0.5 rounded-lg bg-muted p-0.5">
+        <div data-testid="city-map-views" role="group" aria-label="Map view" className="flex items-center gap-0.5 rounded-lg bg-muted p-0.5">
           {views.map(({ id, label, icon: Icon }) => (
             <Button
               key={id}
+              data-testid={`city-map-view-${id}`}
               type="button"
               variant="ghost"
               aria-pressed={id === view}
@@ -60,7 +61,7 @@ function CityMap({ selected, onSelect }: {
           ))}
         </div>
       </header>
-      <div className="city-map-stage">
+      <div data-testid="city-map-stage" className="city-map-stage">
         {view === "3d" ? (
           <Map3D selected={selected} onSelect={onSelect} onUnavailable={handleUnavailable} />
         ) : (
@@ -69,14 +70,15 @@ function CityMap({ selected, onSelect }: {
         {view === "3d" && (
           <p className="pointer-events-none absolute right-3 bottom-3 z-10 hidden sm:flex items-center gap-2 rounded-md bg-[#111527]/85 px-2.5 py-1.5 text-[11px] font-medium text-[#b8c2df]">
             <MousePointer2Icon aria-hidden="true" className="size-3" />
-            Drag to rotate · Scroll to zoom
+            Drag or use arrows to rotate · Scroll or use +/− to zoom
           </p>
         )}
       </div>
-      <div aria-label="City locations" role="group" className="grid grid-cols-2 gap-1 p-2 sm:grid-cols-3 2xl:grid-cols-5">
+      {view === "3d" && <div data-testid="city-locations" aria-label="City locations" role="group" className="grid grid-cols-2 gap-1 p-2 sm:grid-cols-3 2xl:grid-cols-5">
         {agentRoles.map((role) => (
           <Button
             key={role}
+            data-testid={`city-location-${role}`}
             type="button"
             variant="ghost"
             aria-pressed={role === selected}
@@ -87,7 +89,7 @@ function CityMap({ selected, onSelect }: {
             {locations[role].name}
           </Button>
         ))}
-      </div>
+      </div>}
     </section>
   );
 }
@@ -100,7 +102,7 @@ function CityWorkspace({ agents, runs }: Workspace) {
   return (
     <div className="city-workspace-grid">
       <CityMap selected={selected} onSelect={setSelected} />
-      <section aria-labelledby="selected-agent" className="city-location-panel" style={{ "--location-color": location.color } as CSSProperties}>
+      <section data-testid="city-selected-agent" aria-labelledby="selected-agent" className="city-location-panel" style={{ "--location-color": location.color } as CSSProperties}>
         <div className="flex size-11 items-center justify-center rounded-xl bg-[color-mix(in_srgb,var(--location-color),transparent_78%)] text-[color-mix(in_srgb,var(--location-color),var(--foreground)_60%)]">
           <LocationIcon role={selected} className="size-5.5" />
         </div>
@@ -131,7 +133,7 @@ function CitySummary({ agents, runs }: Workspace) {
   const completed = runs.filter(({ status }) => status === "completed").length;
 
   return (
-    <section aria-label="Workspace summary" className="grid grid-cols-3 divide-x rounded-xl border bg-card">
+    <section data-testid="city-workspace-summary" aria-label="Workspace summary" className="grid grid-cols-3 divide-x rounded-xl border bg-card">
       {[
         { value: agents.length, label: "Agents" },
         { value: queued, label: "Queued" },
@@ -152,15 +154,16 @@ export function CityDashboard() {
 
   return (
     <>
-      <PageHeader title="City map" description="Choose an agent, save an assignment, or follow a handoff." />
+      <PageHeader testId="city-map-page" title="City map" description="Choose an agent, save an assignment, or follow a handoff." />
       <CityWorkspace {...workspace} />
       <CitySummary {...workspace} />
       <RunHistory
+        testId="city-recent-runs"
         title="Recent runs"
         runs={runs.slice(0, 4)}
         agents={agents}
         history={runs}
-        actions={<ButtonLink href="/runs" variant="ghost" className="text-primary">All runs <ArrowRightIcon aria-hidden="true" /></ButtonLink>}
+        actions={<ButtonLink data-testid="city-all-runs" href="/runs" variant="ghost" className="text-primary">All runs <ArrowRightIcon aria-hidden="true" /></ButtonLink>}
       />
     </>
   );

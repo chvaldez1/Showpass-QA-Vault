@@ -46,7 +46,7 @@ These are proof targets for the affected launch, not automatically mandatory che
 
 Keep this in the release/feature's one canonical run note, not separate competing summaries:
 
-Use [[03 Test Cases/Release Decision Template]] to answer whether each behavior has a Qase case, full or partial coverage, Playwright automation, a planned/executed browser test and applicable passing results. Follow [[00 Start Here/QA Operating Workflow]] to collect the evidence during the change. The reusable release note focuses on coverage and missing checks; owner/sign-off fields are not required.
+Use [[03 Test Cases/Release Decision Template]] to answer whether each behavior has a Qase case, full or partial coverage, Playwright automation, a planned or executed browser test, and applicable passing results. Follow [[00 Start Here/QA Operating Workflow]] to collect evidence. For release readiness or an engineering handoff, use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|shared review policy]] and record the QA Lead's handoff decision separately from the release recommendation.
 
 | Field | Required content |
 | --- | --- |

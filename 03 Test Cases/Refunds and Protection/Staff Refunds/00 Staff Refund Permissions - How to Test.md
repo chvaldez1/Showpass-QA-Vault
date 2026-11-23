@@ -15,6 +15,8 @@ This is the **employee** side of [SPW-19495](https://showpass.atlassian.net/brow
 
 ## Set up two roles and one order
 
+Before a live run that includes role changes, a refund, or a global switch change, use [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|full review]] for the exact plan. Apply the user's authorization separately, including any shared settings or financial changes.
+
 1. Have the release owner confirm the global backend switch `enable_refund_type_permissions` is **on** for the permission run. Record the original value; it is a global switch, not a Venue field or customer-refund policy. Check the off state separately only with release-owner coordination.
 2. In the selected organization's employee role editor, prepare a role with **Manage Transactions** (`VP_ADMINISTER_TRANSACTIONS`) and none of the five refund-type permissions. Prepare a second role with **Manage Transactions** plus **only one** refund-type permission. The five permissions must be independently selectable in the finance/reporting group. Do not use an all-access role to prove denial.
 3. Prepare a new paid transaction eligible for a refund, with known payment type, original item price, taxes, and fees. Keep it unrefunded and unscanned. A refund type can also be disabled by the invoice, payment source, or organization privilege; choose an order where the selected type would otherwise be valid.

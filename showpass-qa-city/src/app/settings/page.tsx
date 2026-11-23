@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Settings" };
 export default function SettingsPage() {
   return (
     <>
-      <PageHeader title="Settings" description="Manage preferences for this workspace." />
+      <PageHeader testId="settings-page" title="Settings" description="Manage preferences for this workspace." />
       <div className="grid max-w-2xl gap-4">
         <ThemeSettings />
         <Card className="gap-2 p-5 sm:p-6">

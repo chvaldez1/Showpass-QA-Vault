@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { toast } from "sonner";
 import { ZodError } from "zod";
 import { Button, ButtonLink } from "@/components/ui/button";
@@ -59,18 +59,20 @@ function PlanSection({ title, children }: { title: string; children: ReactNode }
   );
 }
 
-function Plan({ revision }: { revision: Revision }) {
+export function Plan({ revision }: { revision: Revision }) {
   const { plan, engineer, engineering, eventDraft, review, number, change, shortReview } = revision;
   return (
-    <section className="space-y-3 rounded-lg border p-3 text-sm wrap-anywhere">
-      <h3 className="font-semibold">Plan {number}</h3>
-      {change && <p className="text-muted-foreground">Revision request: {change}</p>}
-      <p>{plan.approach}</p>
+    <section aria-label={`Plan ${number}`} data-testid={`run-plan-${number}`} className="max-w-prose space-y-4 text-sm leading-relaxed wrap-anywhere">
+      <div className="flex flex-wrap items-baseline gap-x-3">
+        <h3 className="text-base font-semibold">Plan {number}</h3>
+        {review && <p className="text-sm text-muted-foreground">QA Lead {review.decision}</p>}
+      </div>
+      <p className="whitespace-pre-wrap">{plan.approach}</p>
       <p><strong className="font-medium">Start here:</strong> {plan.startingPoint}</p>
       <EvidenceList label="Before starting" entries={plan.prerequisites} />
-      <ol className="list-decimal space-y-2 pl-5">
+      <ol data-testid={`run-plan-${number}-steps`} className="list-decimal space-y-3 pl-5">
         {plan.steps.map(({ action, proof }, index) => (
-          <li key={index}>
+          <li key={index} data-testid={`run-plan-${number}-step-${index + 1}`}>
             <p>{action}</p>
             <p className="text-muted-foreground">Expected: {proof}</p>
           </li>
@@ -89,49 +91,58 @@ function Plan({ revision }: { revision: Revision }) {
         </PlanSection>
       )}
       <EvidenceList label="References" entries={plan.sources} />
-      {shortReview && (
-        <PlanSection title="Release Engineer short review">
-          <p>{shortReview.impact}</p>
-          <EvidenceList label="Checks" entries={shortReview.checks} />
-          <p><strong>Stop point</strong> {shortReview.stop}</p>
-          <EvidenceList label={shortReview.requiredReview === "full" ? "Why full review is needed" : "Concerns"} entries={shortReview.concerns} />
-        </PlanSection>
+      {change && (
+        <Disclosure testId={`run-plan-${number}-revision-request`} label="Revision request">
+          <p className="whitespace-pre-wrap">{change}</p>
+        </Disclosure>
       )}
-      {engineer && (
-        <PlanSection title={`Earlier consultation on Plan ${number}`}>
-          <p>{engineer.impact}</p>
-          <EvidenceList label="Suggested checks" entries={engineer.checks} />
-          <EvidenceList label="Concerns for the QA Lead" entries={engineer.concerns} />
-        </PlanSection>
-      )}
-      {engineering?.intake && (
-        <PlanSection title="Release Engineer scope">
-          <p>{engineering.intake.scope}</p>
-          <EvidenceList label="Questions for the Masters" entries={engineering.intake.questions} />
-        </PlanSection>
-      )}
-      {[
-        { title: "Backend Master review", evidence: engineering?.backend },
-        { title: "Frontend Master review", evidence: engineering?.frontend },
-      ].map(({ title, evidence }) => evidence && (
-        <PlanSection key={title} title={title}>
-          <EvidenceList label="Findings" entries={evidence.findings} />
-          <EvidenceList label="Missing proof" entries={evidence.gaps} />
-        </PlanSection>
-      ))}
-      {engineering?.engineer && (
-        <PlanSection title="Release Engineer handoff">
-          <p>{engineering.engineer.impact}</p>
-          <EvidenceList label="Suggested checks" entries={engineering.engineer.checks} />
-          <EvidenceList label="Concerns for the QA Lead" entries={engineering.engineer.concerns} />
-        </PlanSection>
-      )}
-      {review && (
-        <PlanSection title={`QA Lead ${review.decision} Plan ${number}`}>
-          <p>{review.rationale}</p>
-          <EvidenceList label="Alternatives considered" entries={review.alternatives} />
-          <EvidenceList label="Required changes" entries={review.requiredChanges} />
-        </PlanSection>
+      {(shortReview || engineer || engineering || review) && (
+        <Disclosure testId={`run-plan-${number}-reviews`} label="Review notes">
+          {shortReview && (
+            <PlanSection title="Release Engineer short review">
+              <p>{shortReview.impact}</p>
+              <EvidenceList label="Checks" entries={shortReview.checks} />
+              <p><strong>Stop point</strong> {shortReview.stop}</p>
+              <EvidenceList label={shortReview.requiredReview === "full" ? "Why full review is needed" : "Concerns"} entries={shortReview.concerns} />
+            </PlanSection>
+          )}
+          {engineer && (
+            <PlanSection title={`Earlier consultation on Plan ${number}`}>
+              <p>{engineer.impact}</p>
+              <EvidenceList label="Suggested checks" entries={engineer.checks} />
+              <EvidenceList label="Concerns for the QA Lead" entries={engineer.concerns} />
+            </PlanSection>
+          )}
+          {engineering?.intake && (
+            <PlanSection title="Release Engineer scope">
+              <p>{engineering.intake.scope}</p>
+              <EvidenceList label="Questions for the Masters" entries={engineering.intake.questions} />
+            </PlanSection>
+          )}
+          {[
+            { title: "Backend Master review", evidence: engineering?.backend },
+            { title: "Frontend Master review", evidence: engineering?.frontend },
+          ].map(({ title, evidence }) => evidence && (
+            <PlanSection key={title} title={title}>
+              <EvidenceList label="Findings" entries={evidence.findings} />
+              <EvidenceList label="Missing proof" entries={evidence.gaps} />
+            </PlanSection>
+          ))}
+          {engineering?.engineer && (
+            <PlanSection title="Release Engineer handoff">
+              <p>{engineering.engineer.impact}</p>
+              <EvidenceList label="Suggested checks" entries={engineering.engineer.checks} />
+              <EvidenceList label="Concerns for the QA Lead" entries={engineering.engineer.concerns} />
+            </PlanSection>
+          )}
+          {review && (
+            <PlanSection title={`QA Lead ${review.decision} Plan ${number}`}>
+              <p>{review.rationale}</p>
+              <EvidenceList label="Alternatives considered" entries={review.alternatives} />
+              <EvidenceList label="Required changes" entries={review.requiredChanges} />
+            </PlanSection>
+          )}
+        </Disclosure>
       )}
     </section>
   );
@@ -145,9 +156,27 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
   const [reporting, setReporting] = useState(false);
   const [readyRevision, setReadyRevision] = useState(0);
   const [browserMessage, setBrowserMessage] = useState("");
-  const { revision, changeRequest, browserResult, revisionHistory } = run;
+  const editTrigger = useRef<HTMLButtonElement>(null);
+  const changeInput = useRef<HTMLTextAreaElement>(null);
+  const reportTrigger = useRef<HTMLButtonElement>(null);
+  const workPanel = useRef<HTMLDivElement>(null);
+  const wasRevising = useRef(false);
+  const wasReporting = useRef(false);
+  const { revision, changeRequest, browserResult } = run;
   const number = revision?.number ?? 0;
   const workflow = run.workflow ?? getQaWorkflow(role, run.title, run.builderWorkflow);
+
+  useEffect(() => {
+    if (revising) changeInput.current?.focus();
+    else if (wasRevising.current) (editTrigger.current ?? workPanel.current)?.focus();
+    wasRevising.current = revising;
+  }, [revising]);
+
+  useEffect(() => {
+    if (!reporting && wasReporting.current) (reportTrigger.current ?? workPanel.current)?.focus();
+    wasReporting.current = reporting;
+  }, [reporting]);
+
   if (!workflow) return null;
 
   const builderWorkflow = asBuilderWorkflow(workflow);
@@ -243,6 +272,7 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
     const change = String(fields.get("change") ?? "").trim();
     if (!change) {
       setRevisionError("Describe what needs to change.");
+      changeInput.current?.focus();
       return;
     }
     const requireFullReview = fields.get("require-full-review") === "on";
@@ -255,6 +285,11 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
       return;
     }
     propose(change, requireFullReview);
+  }
+
+  function closeRevision() {
+    setRevising(false);
+    setRevisionError("");
   }
 
   function submitResult(outcome: NonNullable<Run["browserResult"]>["outcome"], fields: FormData) {
@@ -289,18 +324,15 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
   };
 
   return (
-    <div className="grid gap-3 text-sm">
-      {revisionHistory?.map((previous) => (
-        <Disclosure key={previous.number} label={`Plan ${previous.number} · ${previous.review?.decision ?? "not reviewed"} · superseded`}>
-          <Plan revision={previous} />
-        </Disclosure>
-      ))}
-      {revision && <Plan revision={revision} />}
+    <div ref={workPanel} tabIndex={-1} data-testid="run-work" className="grid min-w-0 gap-4 text-sm">
       {revision && (
-        <p className="text-muted-foreground">
-          {planReviewLabels[reviewMode]}. {draftOnly ? "Execution is not run." : revision.risk?.reason}
-          {revision.shortReview?.requiredReview === "full" && " The Release Engineer escalated this plan to full review."}
-        </p>
+        <div className="space-y-1">
+          <p className="font-medium">Plan {number}{revision.review && ` · QA Lead ${revision.review.decision}`}</p>
+          <p className="text-muted-foreground">
+            {planReviewLabels[reviewMode]}. {draftOnly ? "Execution is not run." : revision.risk?.reason}
+            {revision.shortReview?.requiredReview === "full" && " The Release Engineer escalated this plan to full review."}
+          </p>
+        </div>
       )}
       {current && revision?.review && !engineeringReady && !changeRequest && (
         <p className="text-muted-foreground">This decision used the earlier review flow. Revise the plan for the full engineering review before browser work.</p>
@@ -311,19 +343,19 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
           The {builderWorkflow ? "Organizer Builder" : "tester"} prepares the plan. {draftOnly ? "The assignment ends with the written draft." : "The Release Engineer reviews it at the required depth before QA Lead sign-off."}
         </p>
       )}
-      {busy && <p role="status">{actionLabel[busy]}</p>}
-      {error && <p role="alert" className="text-destructive">{error}</p>}
+      {busy && <p role="status" data-testid="run-work-status">{actionLabel[busy]}</p>}
+      {error && <p role="alert" data-testid="run-work-error" className="text-destructive">{error}</p>}
       {current && (
-        <div className="flex flex-wrap items-center gap-2">
-          {!revision && <Button onClick={() => propose()} disabled={!!busy}>{draftOnly ? "Prepare draft plan" : "Prepare plan"}</Button>}
-          {canUseRunner && !revision?.codexHandoffToken && <Button variant="outline" onClick={openBrowser} disabled={!!busy}>Open beta browser</Button>}
-          {awaitingReview && reviewMode === "short" && !revision.shortReview && <Button onClick={shortReview} disabled={!!busy}>Run short review</Button>}
+        <div data-testid="run-plan-actions" className="flex flex-wrap items-center gap-2 empty:hidden">
+          {!revision && <Button data-testid="run-prepare-plan" onClick={() => propose()} disabled={!!busy}>{draftOnly ? "Prepare draft plan" : "Prepare plan"}</Button>}
+          {canUseRunner && !revision?.codexHandoffToken && <Button data-testid="run-open-beta-browser" variant="outline" onClick={openBrowser} disabled={!!busy}>Open beta browser</Button>}
+          {awaitingReview && reviewMode === "short" && !revision.shortReview && <Button data-testid="run-short-review" onClick={shortReview} disabled={!!busy}>Run short review</Button>}
           {awaitingReview && reviewMode === "full" && engineeringStages.filter((stage) => canRunEngineeringStage(stage, revision.engineering)).map((stage) => (
-            <Button key={stage} onClick={() => runEngineering(stage)} disabled={!!busy}>{engineeringActionLabels[stage]}</Button>
+            <Button key={stage} data-testid={`run-review-${stage}`} onClick={() => runEngineering(stage)} disabled={!!busy}>{engineeringActionLabels[stage]}</Button>
           ))}
-          {awaitingReview && engineeringReady && <Button onClick={review} disabled={!!busy}>Send to QA Lead</Button>}
+          {awaitingReview && engineeringReady && <Button data-testid="run-review-lead" onClick={review} disabled={!!busy}>Send to QA Lead</Button>}
           {revision && !revising && (
-            <Button variant="outline" disabled={!!busy} onClick={() => setRevising(true)}>
+            <Button ref={editTrigger} data-testid="run-revise-plan" variant="outline" disabled={!!busy} onClick={() => setRevising(true)}>
               {changeRequest ? "Retry revision" : "Revise plan"}
             </Button>
           )}
@@ -331,44 +363,44 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
       )}
       {current && browserMessage && <p role="status" className="text-muted-foreground">{browserMessage}</p>}
       {current && revising && (
-        <form className="grid gap-2" onSubmit={submitRevision}>
-          <FormField label="What needs to change?" error={revisionError}>
-            {(field) => <Textarea {...field} name="change" maxLength={1000} rows={3} defaultValue={changeRequest ?? ""} onChange={() => setRevisionError("")} required />}
+        <form data-testid="run-revision-form" className="grid gap-3 rounded-lg border p-4" onSubmit={submitRevision}>
+          <FormField testId="run-revision-change" label="What needs to change?" error={revisionError}>
+            {(field) => <Textarea {...field} ref={changeInput} name="change" maxLength={1000} rows={3} defaultValue={changeRequest ?? ""} onChange={() => setRevisionError("")} required />}
           </FormField>
           {run.reviewMode === "short" && (
-            <Checkbox name="require-full-review">
+            <Checkbox data-testid="run-revision-full-review" name="require-full-review">
               Use full review on the next revision
             </Checkbox>
           )}
           <div className="flex flex-wrap gap-2">
-            <Button type="submit" disabled={!!busy}>Prepare revised plan</Button>
-            <Button type="submit" value="save-revision" variant="outline" disabled={!!busy}>Save for later</Button>
+            <Button data-testid="run-revision-prepare" type="submit" disabled={!!busy}>Prepare revised plan</Button>
+            <Button data-testid="run-revision-save" type="submit" value="save-revision" variant="outline" disabled={!!busy}>Save for later</Button>
+            <Button data-testid="run-revision-cancel" type="button" variant="ghost" disabled={!!busy} onClick={closeRevision}>Cancel</Button>
           </div>
         </form>
       )}
       {canExecute && !revising && (
-        <div className="grid gap-3 rounded-lg border p-3">
+        <div data-testid="run-city-execution" className="grid gap-3 rounded-lg border p-3">
           <h3 className="font-semibold">Run in City</h3>
-          <Checkbox checked={readyRevision === number} onChange={(event) => setReadyRevision(event.target.checked ? number : 0)}>
+          <Checkbox data-testid="run-city-readiness" checked={readyRevision === number} onChange={(event) => setReadyRevision(event.target.checked ? number : 0)}>
             I verified the Organization and existing Event location. My Organizer can use the migrated Create event and Order form pages.
           </Checkbox>
-          <Button className="justify-self-start" disabled={!!busy || readyRevision !== number} onClick={executePlan}>
+          <Button data-testid="run-city-execute" className="justify-self-start" disabled={!!busy || readyRevision !== number} onClick={executePlan}>
             Run approved plan
           </Button>
         </div>
       )}
       {revision?.draftExecution && (
-        <div className="space-y-2 rounded-lg border p-3">
-          <h3 className="font-semibold">City result · {browserOutcomeLabels[revision.draftExecution.outcome]}</h3>
+        <Disclosure testId="run-city-result" label={`City result · ${browserOutcomeLabels[revision.draftExecution.outcome]}`} className="rounded-lg border p-3">
           <p>{revision.draftExecution.summary}</p>
           {revision.draftExecution.editorUrl && (
-            <a href={revision.draftExecution.editorUrl} target="_blank" rel="noreferrer" className="inline-block underline">Open Event Draft in Showpass beta</a>
+            <a data-testid="run-event-draft-link" href={revision.draftExecution.editorUrl} target="_blank" rel="noreferrer" className="inline-block underline">Open Event Draft in Showpass beta</a>
           )}
           <EvidenceList label="Verified saved questions" entries={revision.draftExecution.verifiedQuestions} />
-        </div>
+        </Disclosure>
       )}
       {handoff && codexPrompt && !revising && (!canExecute || role === "organizer-builder") && (
-        <div className="grid gap-2 rounded-lg border p-3">
+        <section aria-label="Codex handoff" data-testid="run-codex-handoff" className="grid min-w-0 gap-3 rounded-lg border p-3">
           <h3 className="font-semibold">Ready for Codex handoff</h3>
           {revision?.codexHandoffToken ? (
             <CodexHandoff key={number} runId={run.id} revision={number} token={revision.codexHandoffToken} disabled={!!busy || !!revision.draftExecution} />
@@ -378,8 +410,8 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
             </p>
           )}
           <div className="flex flex-wrap gap-2">
-            {!revision?.codexHandoffToken && <ButtonLink href={`codex://new?${codexPrompt}`} variant="outline" prefetch={false}>Open in Codex</ButtonLink>}
-            <Button variant="outline" onClick={async () => {
+            {!revision?.codexHandoffToken && <ButtonLink data-testid="run-open-codex" href={`codex://new?${codexPrompt}`} variant={canExecute ? "outline" : "default"} prefetch={false}>Open in Codex</ButtonLink>}
+            <Button data-testid="run-copy-handoff" variant="outline" onClick={async () => {
               try {
                 await navigator.clipboard.writeText(handoff);
                 toast.success("Handoff copied");
@@ -387,26 +419,29 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
                 setError("Clipboard access is unavailable. Open the handoff in Codex.");
               }
             }}>Copy handoff</Button>
-            {canRecordResult && !reporting && <Button variant="outline" onClick={() => setReporting(true)}>Record browser result</Button>}
+            {canRecordResult && (
+              <Button ref={reportTrigger} data-testid="run-record-result" variant="outline" aria-expanded={reporting} onClick={() => setReporting(!reporting)}>
+                Record browser result
+              </Button>
+            )}
           </div>
           {canRecordResult && reporting && <BrowserResultForm result={browserResult} workflow={workflow} pending={!!busy} onSubmit={submitResult} />}
-        </div>
+        </section>
       )}
       {browserResult && (
-        <div className="space-y-1 rounded-lg border p-3">
+        <Disclosure testId="run-reported-result" label={`Reported browser result · ${browserOutcomeLabels[browserResult.outcome]}`} className="rounded-lg border p-3">
           {!revision?.draftExecution && (
             <>
-              <h3 className="font-semibold">Reported browser result · {browserOutcomeLabels[browserResult.outcome]}</h3>
               <p className="text-muted-foreground wrap-anywhere whitespace-pre-wrap">{browserResult.summary}</p>
             </>
           )}
           {browserResult.preview && <p className="text-muted-foreground wrap-anywhere">{browserResult.preview}</p>}
           {browserResult.records && (
-            <Disclosure label="Saved Showpass records">
-              <pre className="overflow-auto rounded bg-muted p-2 text-xs">{JSON.stringify(browserResult.records, null, 2)}</pre>
+            <Disclosure testId="run-saved-records" label="Saved Showpass records">
+              <pre tabIndex={0} aria-label="Saved records JSON" className="max-h-64 overflow-auto rounded bg-muted p-2 text-xs">{JSON.stringify(browserResult.records, null, 2)}</pre>
             </Disclosure>
           )}
-        </div>
+        </Disclosure>
       )}
     </div>
   );

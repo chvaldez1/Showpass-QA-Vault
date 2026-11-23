@@ -10,6 +10,7 @@ import { XIcon } from "lucide-react"
 const dialogWidths = {
   md: "sm:max-w-md",
   lg: "sm:max-w-lg",
+  xl: "sm:max-w-3xl",
 }
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
@@ -36,7 +37,7 @@ function DialogOverlay({
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 isolate z-50 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        "fixed inset-0 isolate z-50 bg-black/35 duration-100 supports-backdrop-filter:backdrop-blur-xs motion-safe:data-open:animate-in motion-safe:data-open:fade-in-0 motion-safe:data-closed:animate-out motion-safe:data-closed:fade-out-0",
         className
       )}
       {...props}
@@ -49,18 +50,21 @@ function DialogContent({
   children,
   showCloseButton = true,
   width = "md",
+  testId,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
   width?: keyof typeof dialogWidths
+  testId: string
 }) {
   return (
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Popup
         data-slot="dialog-content"
+        data-testid={testId}
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 grid max-h-[calc(100dvh-2rem)] w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 overflow-y-auto rounded-xl bg-popover p-4 text-sm text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          "fixed top-1/2 left-1/2 z-50 flex max-h-[calc(100dvh-1rem)] w-full max-w-[calc(100%-1rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-xl bg-popover text-sm text-popover-foreground ring-1 ring-foreground/10 outline-none sm:max-h-[calc(100dvh-2rem)] sm:max-w-[calc(100%-2rem)] motion-safe:data-open:animate-in motion-safe:data-open:fade-in-0 motion-safe:data-closed:animate-out motion-safe:data-closed:fade-out-0",
           dialogWidths[width],
           className
         )}
@@ -70,11 +74,12 @@ function DialogContent({
         {showCloseButton && (
           <DialogPrimitive.Close
             data-slot="dialog-close"
+            data-testid={`${testId}-close`}
             render={
               <Button
                 variant="ghost"
                 className="absolute top-2 right-2"
-                size="icon-sm"
+                size="icon-lg"
               />
             }
           >
@@ -92,7 +97,17 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-header"
-      className={cn("flex flex-col gap-2 pr-7", className)}
+      className={cn("flex shrink-0 flex-col gap-2 px-4 pt-4 pb-3 pr-12 sm:px-6 sm:pr-14", className)}
+      {...props}
+    />
+  )
+}
+
+function DialogBody({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="dialog-body"
+      className={cn("min-h-0 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6", className)}
       {...props}
     />
   )
@@ -110,7 +125,7 @@ function DialogFooter({
     <div
       data-slot="dialog-footer"
       className={cn(
-        "-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end",
+        "flex shrink-0 flex-wrap items-center justify-end gap-2 border-t bg-muted/35 px-4 py-3 sm:px-6",
         className
       )}
       {...props}
@@ -125,11 +140,11 @@ function DialogFooter({
   )
 }
 
-function DialogFormActions({ label, pending }: { label: string; pending: boolean }) {
+function DialogFormActions({ label, pending, testId }: { label: string; pending: boolean; testId: string }) {
   return (
     <DialogFooter>
-      <DialogClose render={<Button variant="outline" />}>Cancel</DialogClose>
-      <Button type="submit" disabled={pending}>{pending ? "Saving…" : label}</Button>
+      <DialogClose data-testid={`${testId}-cancel`} render={<Button variant="outline" />}>Cancel</DialogClose>
+      <Button data-testid={`${testId}-save`} type="submit" disabled={pending}>{pending ? "Saving…" : label}</Button>
     </DialogFooter>
   )
 }
@@ -165,6 +180,7 @@ function DialogDescription({
 
 export {
   Dialog,
+  DialogBody,
   DialogClose,
   DialogContent,
   DialogDescription,

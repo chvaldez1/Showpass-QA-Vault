@@ -3,9 +3,9 @@ import type { ComponentProps, ReactNode } from "react";
 
 export function Checkbox({ children, ...props }: Pick<ComponentProps<"input">,
   "name" | "checked" | "onChange" | "disabled"
-> & { children: ReactNode }) {
+> & { "data-testid": string; children: ReactNode }) {
   return (
-    <label className="flex cursor-pointer items-start gap-2 has-disabled:cursor-not-allowed has-disabled:opacity-60">
+    <label className="flex min-h-8 cursor-pointer items-start gap-2 py-1 has-disabled:cursor-not-allowed has-disabled:opacity-60">
       <span className="relative mt-0.5 grid size-4 shrink-0 place-items-center">
         <input
           {...props}

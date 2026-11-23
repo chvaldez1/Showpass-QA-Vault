@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog, DialogContent, DialogDescription, DialogFormActions,
+  Dialog, DialogBody, DialogContent, DialogDescription, DialogFormActions,
   DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import { FormField } from "@/components/ui/form-field";
@@ -42,23 +42,25 @@ export function AddAgentDialog() {
       setOpen(next);
       if (!next) reset();
     }}>
-      <DialogTrigger render={<Button className="h-10 px-4" />}>
+      <DialogTrigger data-testid="add-agent" render={<Button className="h-10 px-4" />}>
         <PlusIcon aria-hidden="true" /> Add agent
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent testId="add-agent-dialog">
         <DialogHeader>
           <DialogTitle>Add an agent</DialogTitle>
           <DialogDescription>Save an agent profile in this workspace.</DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(submit)} noValidate className="grid gap-4">
-          <FormField label="Name" error={errors.name?.message}>
-            {(field) => <Input {...field} {...register("name")} maxLength={60} className="h-10" />}
-          </FormField>
-          <SelectField control={control} name="kind" label="Type" options={kindOptions} />
-          <FormField label="Description (optional)" error={errors.description?.message}>
-            {(field) => <Textarea {...field} {...register("description")} rows={3} maxLength={240} />}
-          </FormField>
-          <DialogFormActions label="Add agent" pending={isSubmitting} />
+        <form data-testid="add-agent-form" onSubmit={handleSubmit(submit)} noValidate className="flex min-h-0 flex-col">
+          <DialogBody data-testid="add-agent-body" className="grid gap-4 border-t">
+            <FormField testId="agent-name" label="Name" error={errors.name?.message}>
+              {(field) => <Input {...field} {...register("name")} required maxLength={60} className="h-10" />}
+            </FormField>
+            <SelectField testId="agent-type" control={control} name="kind" label="Type" options={kindOptions} />
+            <FormField testId="agent-description" label="Description (optional)" error={errors.description?.message}>
+              {(field) => <Textarea {...field} {...register("description")} rows={3} maxLength={240} />}
+            </FormField>
+          </DialogBody>
+          <DialogFormActions testId="add-agent" label="Add agent" pending={isSubmitting} />
         </form>
       </DialogContent>
     </Dialog>

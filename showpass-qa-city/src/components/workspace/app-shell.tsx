@@ -5,9 +5,10 @@ import { CurrentPage, WorkspaceNavigation } from "./navigation";
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-dvh md:grid md:grid-cols-[14rem_minmax(0,1fr)] lg:grid-cols-[15rem_minmax(0,1fr)]">
+    <div data-testid="workspace-shell" className="min-h-dvh md:grid md:grid-cols-[14rem_minmax(0,1fr)] lg:grid-cols-[15rem_minmax(0,1fr)]">
       <a
         href="#main"
+        data-testid="skip-to-content"
         className="sr-only z-50 rounded-lg bg-background p-3 focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
       >
         Skip to content
@@ -15,6 +16,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <aside className="flex flex-col border-b border-sidebar-border bg-sidebar text-white md:sticky md:top-0 md:h-dvh md:border-r md:border-b-0">
         <Link
           href="/"
+          data-testid="workspace-home"
           className="mx-4 my-3 flex w-fit items-center gap-3 rounded-lg focus-visible:outline-2 focus-visible:outline-sidebar-ring md:mx-6 md:my-6"
         >
           <span className="grid size-9 shrink-0 place-items-center rounded-[11px] bg-sidebar-primary text-sidebar-primary-foreground">
@@ -39,7 +41,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             Local prototype
           </div>
         </header>
-        <main id="main" tabIndex={-1} className="mx-auto max-w-350 space-y-7 px-4 py-6 outline-none sm:px-7 sm:py-8 lg:px-10 lg:py-9">
+        <main id="main" data-testid="workspace-main" tabIndex={-1} className="mx-auto max-w-350 space-y-7 px-4 py-6 outline-none sm:px-7 sm:py-8 lg:px-10 lg:py-9">
           {children}
         </main>
       </div>

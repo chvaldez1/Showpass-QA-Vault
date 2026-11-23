@@ -11,7 +11,7 @@ status: active
 
 Use this workflow to create one Qase manual test run from an exact list of existing Qase case IDs.
 
-Apply [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|the shared review layer]] to the run scope. Reuse sign-off for the same scope when the run comes from an already reviewed test plan and obtain the Qase apply confirmation below.
+Qase run creation follows the exact apply confirmation below. For live execution of the selected cases, use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|shared review policy]] on the Showpass test plan and reuse sign-off for the same approved revision.
 
 Use [[05 Tooling/qasectl]] for the general Qase operating rules. Use [[05 Tooling/Qase Test Case Writing Rules]] only when case content is also being created or changed.
 

@@ -5,15 +5,17 @@ import { FormField } from "@/components/ui/form-field";
 import { Select, type SelectProps } from "@/components/ui/select";
 
 export function SelectField<Values extends FieldValues, Output extends FieldValues, Value extends string>({
-  control, name, label, ...props
+  control, name, label, testId, hint, ...props
 }: Pick<SelectProps<Value>, "options" | "placeholder" | "required" | "disabled"> & {
   control: Control<Values, unknown, Output>;
   name: FieldPathByValue<Values, string | undefined>;
   label: string;
+  testId: string;
+  hint?: string;
 }) {
   const { field, fieldState } = useController({ control, name });
   return (
-    <FormField label={label} error={fieldState.error?.message}>
+    <FormField label={label} testId={testId} hint={hint} error={fieldState.error?.message}>
       {(attributes) => (
         <Select
           {...attributes}

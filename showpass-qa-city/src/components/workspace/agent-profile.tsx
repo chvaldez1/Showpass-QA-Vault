@@ -18,7 +18,7 @@ export function AgentProfile({ role }: { role: AgentRole }) {
   return (
     <>
       <div className="space-y-4">
-        <ButtonLink href="/agents" variant="ghost" size="sm" className="-ml-2 text-primary">
+        <ButtonLink data-testid="agent-profile-back" href="/agents" variant="ghost" size="sm" className="-ml-2 text-primary">
           <ChevronLeftIcon aria-hidden="true" /> All agents
         </ButtonLink>
         <div className="flex flex-wrap items-start gap-3">
@@ -28,6 +28,7 @@ export function AgentProfile({ role }: { role: AgentRole }) {
           <div className="min-w-0 flex-1 basis-48">
             <p className="mb-1 text-xs font-medium text-muted-foreground">{location.name}</p>
             <PageHeader
+              testId="agent-profile-page"
               title={location.agentName}
               description={location.description}
               actions={<NewRunDialog agents={agents} runs={runs} agentId={role} className="h-10 px-4" />}
@@ -37,7 +38,7 @@ export function AgentProfile({ role }: { role: AgentRole }) {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
-        <Card className="p-5">
+        <Card data-testid="agent-profile-responsibilities" className="p-5">
           <h2 className="text-base font-semibold tracking-tight">Responsibilities</h2>
           <ul className="grid gap-3 text-sm text-muted-foreground">
             {location.responsibilities.map((responsibility) => (
@@ -48,13 +49,14 @@ export function AgentProfile({ role }: { role: AgentRole }) {
             ))}
           </ul>
         </Card>
-        <Card className="gap-2 p-5">
+        <Card data-testid="agent-profile-example" className="gap-2 p-5">
           <h2 className="text-base font-semibold tracking-tight">Example assignment</h2>
           <p className="text-sm leading-6 text-muted-foreground">{location.example}</p>
         </Card>
       </div>
 
       <RunHistory
+        testId="agent-profile-runs"
         title="Recent assignments"
         agents={agents}
         runs={runs.filter(({ agentId }) => agentId === role).slice(0, 8)}

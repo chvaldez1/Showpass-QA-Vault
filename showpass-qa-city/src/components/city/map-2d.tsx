@@ -12,7 +12,7 @@ export function Map2D({
   onSelect: (role: AgentRole) => void;
 }) {
   return (
-    <div className="city-plan" role="group" aria-label="2D city map">
+    <div data-testid="city-map-2d" className="city-plan" role="group" aria-label="2D city map">
       <div aria-hidden="true" className="city-plan-road city-plan-road-horizontal" />
       <div aria-hidden="true" className="city-plan-road city-plan-road-vertical" style={{ left: "33.333%" }} />
       <div aria-hidden="true" className="city-plan-road city-plan-road-vertical" style={{ left: "66.667%" }} />
@@ -22,6 +22,7 @@ export function Map2D({
         return (
           <Button
             key={role}
+            data-testid={`city-map-plot-${role}`}
             type="button"
             variant="ghost"
             aria-pressed={selected === role}

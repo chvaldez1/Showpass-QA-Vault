@@ -17,6 +17,8 @@ Apply [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|t
 
 **Manually create a new Event from scratch in the user's already-signed-in Codex browser sidebar.** Use Create event and a blank form. The purpose is to reduce repeated work while exercising the same Event/TT creation flow, then flag any problems found along the way.
 
+Leave Event artwork for the user. Save and verify the rest of the requested Draft setup.
+
 **Do not run a script, make direct API requests, start another login/session, clone an Event, or generate from a saved Event template unless the user explicitly requests that separate approach.** Saved local data is a reference for entering fields; it does not change the requested creation method. In this workflow, “repeat the test faster” means repeat the same manual journey with less repeated investigation and more efficient form entry.
 
 Default to **beta**, or demo when requested. **Never access production without explicit authorization for the specific action**, including opening pages, authentication, API reads or database queries. Use the production exports already supplied locally; they do not authorize new production access.
@@ -98,8 +100,8 @@ or an existing Event/template to generate the new Event.
 
 Check all required data first. If a required detail is missing, stop the
 related work and ask for that exact detail. Otherwise create the new Event
-and TT, include the requested fees/shipping/package settings, choose an
-available image, save, and verify the result once after reopening.
+and TT, include the requested fees/shipping/package settings, save, and
+verify the result once after reopening. I’ll add the Event images.
 
 Keep the new Event in Draft. Return its link and TT ID, timing, verified
 settings, issues and anything not completed. Preserve earlier Events.
@@ -121,7 +123,6 @@ Have one compact field checklist ready:
 | Fees | Requested effective fee/tax names, amounts/fractions, payer, payment methods and sale channels. Check inherited rules before adding a TT-only fee; do not change shared rates. |
 | Guest information | Fields, per-ticket collection, before/after-payment setting, complete required questions/options and TT applicability. |
 | Package, when selected | Parent TT; actual included TTs and their Events; quantities/ratios; barcode, child-transfer, guest-information, redemption and revenue settings. Gather required child TT data before package creation. |
-| Image | Choose an available image without trying to match production perfectly. |
 
 If required data is missing, ask once for the exact grouped missing details. State what is already known, what action is blocked and what will happen next. Do not invent defaults to make a package look complete or request another production read without authorization.
 
@@ -142,7 +143,6 @@ Show a short check table before live test actions, with the requested finishing 
 3. In the TT's **Custom fees**, inspect inherited rules first. Add only the missing requested TT fee with its amount, payer, channels and payment methods. Fee changes in this section save immediately. Closing the TT modal does not undo them; do not edit shared Organization rates to configure one TT.
 4. In **Order form**, enter the known guest fields, collection settings and questions/options together. Bind questions to the new TT, not production IDs. Save once after the complete batch.
 5. For a requested package, create the required new child Events/TTs from scratch, then use **Packages** to add the actual included tickets and settings. If a required relationship is missing, stop and ask; do not create a guessed package.
-6. Choose one available media-library image in Basic info, select **Finish Cropping**, then **Save changes**. Do this once; use another available image if the exact source image is unavailable.
 
 Use supported browser interactions. Batch independent field edits on the same stable form. After a page, modal or tab transition, collect only the state needed for the next action. If a control has no effect, inspect the current screen and use its visible control; do not repeat the same ineffective action or bypass the UI through an API/script.
 
@@ -150,7 +150,7 @@ Use supported browser interactions. Batch independent field edits on the same st
 
 After all saves settle, reopen the new Event and check the selected fields in one review pass:
 
-- Event name, Draft state, dates/timezone, Location, categories and saved image.
+- Event name, Draft state, dates/timezone, Location and categories.
 - Exact TT name, price, capacity, limits, ticket/sale dates and requested delivery/transfer/refund settings.
 - Effective fee/tax amount, payer, source and applicable channels/payment methods.
 - Guest fields, required questions, complete options and applicability to the new TT.
@@ -160,7 +160,7 @@ Record actual mismatches and incomplete proof. A displayed value before saving i
 
 Time **fresh-form start → saved Event/TT/settings**, and record **final verification time** separately. Report total manual-flow time, any save failures/retries and workarounds. Keep out-of-scope detours separate. Only report a numerical speed improvement when the earlier comparable run was actually timed; otherwise report the new measured duration and the steps avoided.
 
-The optimizations are: use the existing login, read the supplied data once, reuse known routes/controls and valid Location prerequisites, batch field entry/saves, choose one image, and do one final review. They are **not** a change of creation method or a reduction in requested configuration/verification.
+Save time by reusing the existing login, reading the supplied data once, using known routes and valid Location records, batching field entry and saves, and doing one final review.
 
 ## 5. Evidence and finishing point
 

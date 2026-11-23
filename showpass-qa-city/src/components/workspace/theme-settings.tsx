@@ -17,14 +17,15 @@ export function ThemeSettings() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <Card className="p-5 sm:p-6">
-      <fieldset disabled={!ready}>
+    <Card data-testid="appearance" className="p-5 sm:p-6">
+      <fieldset disabled={!ready} aria-describedby="appearance-hint">
         <legend className="text-base font-semibold tracking-tight">Appearance</legend>
-        <p className="mt-1 text-sm text-muted-foreground">Choose how QA City looks on this device.</p>
+        <p id="appearance-hint" className="mt-1 text-sm text-muted-foreground">Choose how QA City looks on this device.</p>
         <div className="mt-4 grid gap-2 sm:grid-cols-3">
           {options.map(({ value, label, icon: Icon }) => (
             <RadioCard
               key={value}
+              data-testid={`theme-${value}`}
               name="workspace-theme"
               value={value}
               checked={(ready ? theme : "system") === value}

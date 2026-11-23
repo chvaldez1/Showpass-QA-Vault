@@ -8,9 +8,9 @@ tags:
 
 # Release Coverage Review
 
-Use this when asked what coverage a change has, what needs testing before release, or whether existing tests are enough. Produce the coverage table from [[03 Test Cases/Release Decision Template]] in the request's existing canonical note. Owner/sign-off fields and a document checker are not required.
+Use this when asked what coverage a change has, what needs testing before release, or whether existing tests are enough. Produce the coverage table from [[03 Test Cases/Release Decision Template]] in the request's existing canonical note.
 
-For a release readiness decision or engineering release handoff, use [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|full review]] with this same evidence. A coverage inventory requested as planning can finish with the draft coverage and gaps. Record handoff readiness separately from the release recommendation.
+For a release readiness decision or engineering release handoff, use [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|full review]] with this same evidence. Record the QA Lead's decision on the exact handoff separately from the release recommendation. A coverage inventory requested as planning can finish with the draft coverage and gaps.
 
 ## Run the review
 
@@ -20,7 +20,7 @@ For a release readiness decision or engineering release handoff, use [[06 Prompt
 4. **Read the actual checks.** Follow tests into shared functions/page objects. Read full Qase setup, parameters, actions and expected results. Read exact browser steps and their real evidence. Follow [[05 Tooling/qasectl]] for scope completeness; exact-ID reviews do not require a project bulk read. For gap analysis, use one complete project read and reuse it locally.
 5. **Classify each behavior.** Record Full/Partial/None/Unknown for overall coverage and each method, with actual IDs/links and an exact gap. Full means suitable checks cover the declared outcome, not that every tool has a separate case. Unknown means unread/inaccessible evidence; None requires a sufficient search and review. Record current execution separately as Passed/Failed/Blocked/Not run/Not applicable.
 6. **Choose the remaining release checks.** Reuse results only when build/configuration and exact assertions apply. Treat retry-only passes, skipped/quarantined tests, missing native/device checks and incomplete downstream proof explicitly. Name the smallest additional manual/automated/browser check that closes each important gap.
-7. **Follow the requested mode through.** A review ends with the coverage table, focused missing checks and a supported recommendation. An implementation request follows [[06 Prompts/Convert Test Cases to Playwright]] through scoped code and verification; do not end with another ranking pass. Qase writes still require their exact preview/confirmation workflow.
+7. **Follow the requested mode through.** A coverage inventory ends with the coverage table and focused gaps. A release readiness review also records the handoff decision and supported recommendation. An implementation request follows [[06 Prompts/Convert Test Cases to Playwright]] through scoped code and verification. Qase writes still require their exact preview and confirmation workflow.
 
 ## Collect evidence with one command
 

@@ -12,11 +12,11 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const destinations = [
-  { href: "/", label: "City map", icon: MapIcon },
-  { href: "/agents", label: "Agents", icon: BotIcon },
-  { href: "/runs", label: "Runs", icon: ActivityIcon },
-  { href: "/releases", label: "Releases", icon: ClipboardCheckIcon },
-  { href: "/settings", label: "Settings", icon: Settings2Icon },
+  { id: "city-map", href: "/", label: "City map", icon: MapIcon },
+  { id: "agents", href: "/agents", label: "Agents", icon: BotIcon },
+  { id: "runs", href: "/runs", label: "Runs", icon: ActivityIcon },
+  { id: "releases", href: "/releases", label: "Releases", icon: ClipboardCheckIcon },
+  { id: "settings", href: "/settings", label: "Settings", icon: Settings2Icon },
 ];
 
 export function WorkspaceNavigation() {
@@ -25,15 +25,17 @@ export function WorkspaceNavigation() {
   return (
     <nav
       aria-label="Workspace"
+      data-testid="workspace-navigation"
       className="grid grid-cols-3 gap-1 px-2 pb-2 sm:grid-cols-5 md:flex md:flex-1 md:flex-col md:gap-1.5 md:px-4 md:pb-5"
     >
-      {destinations.map(({ href, label, icon: Icon }) => {
+      {destinations.map(({ id, href, label, icon: Icon }) => {
         const active = href === pathname || (href !== "/" && pathname.startsWith(`${href}/`));
         return (
           <Link
             key={href}
             href={href}
-            aria-current={href === pathname ? "page" : undefined}
+            data-testid={`nav-${id}`}
+            aria-current={active ? (href === pathname ? "page" : "location") : undefined}
             className={cn(
               "flex min-h-10 items-center justify-center gap-1 rounded-lg px-1.5 text-xs font-medium text-sidebar-foreground transition-colors hover:bg-white/8 hover:text-white focus-visible:outline-2 focus-visible:outline-sidebar-ring sm:gap-2 sm:text-sm md:justify-start md:gap-3 md:px-3",
               active && "bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/85",
@@ -52,5 +54,5 @@ export function WorkspaceNavigation() {
 export function CurrentPage() {
   const pathname = usePathname();
   const page = destinations.find(({ href }) => href === pathname || (href !== "/" && pathname.startsWith(`${href}/`)));
-  return page && <span aria-current="page" className="text-foreground">{page.label}</span>;
+  return page && <span data-testid="workspace-current-page" className="text-foreground">{page.label}</span>;
 }

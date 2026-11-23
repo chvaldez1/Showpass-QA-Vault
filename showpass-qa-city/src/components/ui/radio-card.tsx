@@ -2,7 +2,7 @@ import type { ComponentProps, ReactNode } from "react";
 
 export function RadioCard({ children, ...props }: Pick<ComponentProps<"input">,
   "name" | "value" | "checked" | "onChange"
-> & { children: ReactNode }) {
+> & { "data-testid": string; children: ReactNode }) {
   return (
     <label className="min-w-0 cursor-pointer has-disabled:cursor-not-allowed">
       <input {...props} type="radio" className="peer sr-only" />

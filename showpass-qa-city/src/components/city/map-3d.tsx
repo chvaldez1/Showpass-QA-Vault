@@ -2,7 +2,7 @@
 
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
 import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
-import { Component, useEffect, useLayoutEffect, useRef, type ReactNode, type RefObject } from "react";
+import { Component, useEffect, useLayoutEffect, useRef, type ComponentRef, type KeyboardEvent, type ReactNode, type RefObject } from "react";
 import { Color, Matrix4, Vector3, type InstancedMesh } from "three";
 import { locations } from "@/lib/workspace/city";
 import { agentRoles, type AgentRole } from "@/lib/workspace/schema";
@@ -60,13 +60,16 @@ function CityGeometry() {
   );
 }
 
-function CityCamera() {
+type CameraControls = ComponentRef<typeof OrbitControls>;
+
+function CityCamera({ controls }: { controls: RefObject<CameraControls | null> }) {
   const zoom = useThree(({ size }) => Math.min(size.width / 36, size.height / 24));
 
   return (
     <>
       <OrthographicCamera makeDefault position={[14, 20, 25]} zoom={zoom} near={0.1} far={120} />
       <OrbitControls
+        ref={controls}
         enablePan={false}
         enableDamping={false}
         minZoom={zoom * 0.75}
@@ -145,17 +148,43 @@ function ProjectLabels({ labels }: { labels: RefObject<HTMLDivElement | null> })
 
 export default function Map3D({ selected, onSelect, onUnavailable }: MapProps) {
   const labels = useRef<HTMLDivElement>(null);
+  const controls = useRef<CameraControls>(null);
+
+  function handleMapKeys(event: KeyboardEvent<HTMLDivElement>) {
+    const camera = controls.current;
+    if (!camera || event.altKey || event.ctrlKey || event.metaKey) return;
+
+    const orbitStep = Math.PI / 18;
+    switch (event.key) {
+      case "ArrowLeft": camera.setAzimuthalAngle(camera.getAzimuthalAngle() + orbitStep); break;
+      case "ArrowRight": camera.setAzimuthalAngle(camera.getAzimuthalAngle() - orbitStep); break;
+      case "ArrowUp": camera.setPolarAngle(camera.getPolarAngle() - orbitStep); break;
+      case "ArrowDown": camera.setPolarAngle(camera.getPolarAngle() + orbitStep); break;
+      case "+":
+      case "=": camera.dollyIn(0.9); break;
+      case "-": camera.dollyOut(0.9); break;
+      default: return;
+    }
+    event.preventDefault();
+    camera.update();
+  }
 
   return (
     <>
       <CanvasBoundary onUnavailable={onUnavailable}>
         <Canvas
+          data-testid="city-map-3d"
+          role="group"
           aria-label="3D city model"
+          aria-describedby="city-map-keyboard-help"
+          tabIndex={0}
+          onKeyDown={handleMapKeys}
+          className="focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
           frameloop="demand"
           dpr={[1, 1.5]}
           gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
         >
-          <CityCamera />
+          <CityCamera controls={controls} />
           <ContextRecovery onUnavailable={onUnavailable} />
           <hemisphereLight args={["#c4d4ff", "#645291", 1.55]} />
           <directionalLight position={[7, 13, 5]} intensity={2.2} color="#fff0e0" />
@@ -164,6 +193,9 @@ export default function Map3D({ selected, onSelect, onUnavailable }: MapProps) {
           <ProjectLabels labels={labels} />
         </Canvas>
       </CanvasBoundary>
+      <p id="city-map-keyboard-help" className="sr-only">
+        Use the arrow keys to rotate the map and plus or minus to zoom. Tab to select a location.
+      </p>
       <div ref={labels} aria-hidden="true" className="pointer-events-none absolute inset-0">
         {agentRoles.map((role) => (
           <span key={role} className="city-model-label" data-active={selected === role}>

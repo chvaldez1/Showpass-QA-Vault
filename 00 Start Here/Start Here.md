@@ -40,8 +40,8 @@ Use [[00 Start Here/Showpass QA Handbook/00 Index|Showpass QA Master Handbook]] 
 2. Inspect backend behavior as first product source of truth.
 3. Confirm how the frontend exposes the behavior and its state-distinct entry paths.
 4. Build the coverage contract and account for controls, states, validation, mutations, outcomes, and cleanup.
-5. Write or execute focused tests and maintain the coverage ledger.
+5. Write focused cases or execute authorized tests under the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|shared review policy]]. Keep the coverage ledger current.
 6. Promote stable high-value coverage into automation.
 7. Make one evidence-backed release recommendation.
 
-Flow: Quality standard → Backend behavior → Frontend entry paths → Coverage contract → Test execution → Automation → Release decision.
+Flow: Quality standard → Backend behavior → Frontend entry paths → Coverage contract → Applicable review → Test execution → Automation → Release decision.

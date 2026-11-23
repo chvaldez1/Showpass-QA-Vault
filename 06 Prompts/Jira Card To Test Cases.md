@@ -1,11 +1,11 @@
 # Jira Card To Test Cases
 
-Deliver the case draft. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] if this work moves to live execution or a release handoff.
+Deliver the case draft and mark planned checks **Not run**. When the work moves to live execution or an engineering handoff, carry the case draft, reviewed source revisions, observed evidence, and open gaps forward in the same note. Apply the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|shared review policy]].
 
 Use this prompt when a user pastes a Jira card link or issue key and wants Qase-ready QA coverage generated from it.
 
 ```text
-Deliver the case draft. Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|review policy]] if this work moves to live execution or a release handoff.
+Deliver the case draft and mark planned checks Not run. When the work moves to live execution or an engineering handoff, carry the draft, reviewed source revisions, observed evidence, and open gaps forward in the same note. Apply the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|shared review policy]].
 
 Use 06 Prompts/Showpass QA Test Case Generator.md.
 

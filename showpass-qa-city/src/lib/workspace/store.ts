@@ -24,7 +24,8 @@ import {
 const storageKey = "showpass-qa-city:workspace:v1";
 const workspaceListeners = new Set<() => void>();
 let activeSnapshot: WorkspaceVersion | undefined;
-let snapshotText: string | undefined;
+let visibleWorkspace = demoWorkspace;
+let browserSnapshot: { text: string; workspace: Workspace } | undefined;
 let initialized = false;
 let initialLoad: Promise<WorkspaceVersion> | undefined;
 let pollTimer: ReturnType<typeof setTimeout> | undefined;
@@ -38,33 +39,42 @@ function readBrowserWorkspace() {
   }
 }
 
-export function readWorkspaceSnapshot() {
-  return snapshotText ?? readBrowserWorkspace();
+function prepareWorkspaceForDisplay(workspace: Workspace): Workspace {
+  return normalizeWorkspace({
+    ...workspace,
+    runs: workspace.runs.map((run) =>
+      /^demo-10[1-4]$/.test(run.id) ? { ...run, sample: true } : run,
+    ),
+  });
 }
 
-export function decodeWorkspace(snapshot: string | null): Workspace {
-  if (snapshot === null) return demoWorkspace;
-
+function decodeBrowserWorkspace(text: string): Workspace {
   try {
-    const result = workspaceSchema.safeParse(JSON.parse(snapshot));
-    if (!result.success) return demoWorkspace;
-    return normalizeWorkspace({
-      ...result.data,
-      runs: result.data.runs.map((run) =>
-        /^demo-10[1-4]$/.test(run.id) ? { ...run, sample: true } : run,
-      ),
-    });
+    const result = workspaceSchema.safeParse(JSON.parse(text));
+    return result.success ? prepareWorkspaceForDisplay(result.data) : demoWorkspace;
   } catch {
     return demoWorkspace;
   }
 }
 
+function cachedBrowserWorkspace(text: string): Workspace {
+  if (browserSnapshot?.text !== text) browserSnapshot = { text, workspace: decodeBrowserWorkspace(text) };
+  return browserSnapshot.workspace;
+}
+
+export function readWorkspaceSnapshot(): Workspace {
+  if (activeSnapshot) return visibleWorkspace;
+
+  const text = readBrowserWorkspace();
+  return text === null ? demoWorkspace : cachedBrowserWorkspace(text);
+}
+
 function publish(snapshot: WorkspaceVersion) {
-  if (activeSnapshot && activeSnapshot.version > snapshot.version) return;
-  if (activeSnapshot?.version === snapshot.version) return;
+  if (activeSnapshot && activeSnapshot.version >= snapshot.version) return;
 
   activeSnapshot = snapshot;
-  snapshotText = JSON.stringify(snapshot.workspace);
+  visibleWorkspace = prepareWorkspaceForDisplay(snapshot.workspace);
+  browserSnapshot = undefined;
   for (const listener of workspaceListeners) listener();
 }
 
@@ -95,7 +105,7 @@ function initializeWorkspace() {
   initialLoad ??= (async () => {
     const stored = readBrowserWorkspace();
     const snapshot = stored
-      ? (await sendWorkspace({ action: "import", workspace: decodeWorkspace(stored) })).snapshot
+      ? (await sendWorkspace({ action: "import", workspace: cachedBrowserWorkspace(stored) })).snapshot
       : await loadWorkspace();
     initialized = true;
     return snapshot;

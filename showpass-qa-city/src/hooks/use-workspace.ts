@@ -1,21 +1,17 @@
 "use client";
 
-import { useMemo, useSyncExternalStore } from "react";
-import {
-  decodeWorkspace,
-  readWorkspaceSnapshot,
-  subscribeToWorkspace,
-} from "@/lib/workspace/store";
+import { useSyncExternalStore } from "react";
+import { demoWorkspace } from "@/lib/workspace/demo";
+import { readWorkspaceSnapshot, subscribeToWorkspace } from "@/lib/workspace/store";
 
 function getServerSnapshot() {
-  return null;
+  return demoWorkspace;
 }
 
 export function useWorkspace() {
-  const snapshot = useSyncExternalStore(
+  return useSyncExternalStore(
     subscribeToWorkspace,
     readWorkspaceSnapshot,
     getServerSnapshot,
   );
-  return useMemo(() => decodeWorkspace(snapshot), [snapshot]);
 }

@@ -37,6 +37,8 @@ Apple's [AVCam documentation](https://developer.apple.com/documentation/avfounda
 
 ## Resume after a working beta build
 
+Use the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|shared review policy]] for the exact plan and build. A live admission check that changes ticket state requires full review and user authorization for that ticket and device.
+
 1. Install or use a beta simulator build that reaches the employee Login form, then run an Appium discovery pass through **Account → Login → select Venue 1547 → Check in → Comic Con → Start scanning → Search customer**. Observe and save stable accessibility labels before adding selectors under `test/screens/ios/check-in/` and the journey under `test/flows/ios/check-in/`.
 2. Add one simulator test that reads the existing ticket barcode at runtime from the verified invoice, searches with **Search for barcode only**, selects that ticket, and taps **Check in** once. Read the venue-scoped ticket and history after submission to prove paid → used and exactly one `pickup`. Keep the barcode and account secret out of logs/screenshots. If the result is ambiguous, read saved state before any retry.
 3. Run a separate physical-iPhone camera test with a QR displayed on another screen. Verify the same saved-state proof and a rejected duplicate. In CI, keep the simulator manual-entry path for repeatable downstream admission coverage; add a device farm or attached iPhone for camera coverage. Do not label a simulator pass as camera coverage.

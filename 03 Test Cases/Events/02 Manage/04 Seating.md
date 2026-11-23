@@ -5771,22 +5771,22 @@ The existing small/medium/large rows and large-map performance cases overlap; pr
 
 ### Browser observations — definitions are not executed proof
 
-> [!warning] Local evidence availability checked 2026-10-31
-> The 15 linked screenshots and Qase JSON receipts under `evidence/seating-review-2026-10-16/` in this review/follow-up are absent from this local vault, including the three embedded screenshots. A vault-wide filename search did not find them elsewhere. Historical observations, publication claims, original dates and links below are preserved; their raw evidence could not be independently rechecked in this vault review. No browser or Qase checks were rerun. Recover original captures/receipts if available; do not recreate proof or treat these missing files as current release evidence.
+> [!warning] Missing local evidence — checked 2026-11-23
+> The October review referenced 15 screenshots and Qase JSON files under `03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/`. Those files and the separately referenced `qase-approved-note.txt` are unavailable in the vault. The historical observations and publication record below remain attributed to the October review. Treat the original files as missing evidence in any new engineering handoff or release decision. Use the original captures or receipts if recovered.
 
 Existing demo tab, authenticated Christian Valdez, Berry Bonanza Hockey recurring parent, Strawberry Rink. The editor displayed **4205 seats and 378 areas**. Exact organization identity, employee permissions and feature-flag values were not independently verified. Opened Edit Space and returned with Cancel; did not edit geometry, click permission/settings toggles, run generators or select Save. No stress loop, new session, purchase or live mutation occurred. Displaying the map is not a save, ownership or financial pass.
 
-![[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/map-editor-visible.png|500]]
+**Missing screenshot** `map-editor-visible.png`
 
 *Demo event → Edit Space: visible map name, totals, Layout Editor/Seat Editor, Seat Score View, Manage Grid, Section and background controls; no edited record.*
 
-![[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/permission-map-visible.png|500]]
+**Missing screenshot** `permission-map-visible.png`
 
 *Demo event → Assigned Seating after returning: map and existing display-setting states. Permission writes remain unexecuted.*
 
 ### Write scope and preservation baseline
 
-Original full case fields, suite/tags/priority/parameters and assertions are preserved in [[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/qase-before-25-cases.json]]. Snapshot completeness is in [[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/qase-snapshot-meta.json]]. The 17 applied updates preserve primary purposes; extracted assertions and source conflicts are accounted for above. The user explicitly approved this scope before apply. Existing IDs and all non-selected content and metadata were retained; SPT-753 and SPT-754 changed only suite_id.
+The October review referenced `qase-before-25-cases.json` for the original full case fields, metadata and assertions, and `qase-snapshot-meta.json` for snapshot completeness. Both files are missing locally. The 17 applied updates preserve primary purposes; extracted assertions and source conflicts are accounted for above. The user explicitly approved this scope before apply. Existing IDs and all non-selected content and metadata were retained; SPT-753 and SPT-754 changed only suite_id.
 
 | Qase ID | Applied action | Child suite | Steps | Parameters |
 | --- | --- | --- | --- | --- |
@@ -5834,7 +5834,7 @@ Original full case fields, suite/tags/priority/parameters and assertions are pre
 
 **Publication and verification:** The user approved the exact scope. Suite and case dry-runs passed before apply. Renamed suite 82, created suite 1184, enhanced 17 cases, created 22 cases (SPT-5536–SPT-5557) and moved 5 existing cases; 753 and 754 were suite-only operations. All 41 case operations were read back, including full text, step actions/data/assertions, native parameters and destinations. Existing tags and unrelated case fields were preserved. The complete post-write snapshot contained **2,021 unique cases across 21 pages and 317 suites across 4 pages**, with stable totals; all 1,999 original project case IDs remain. Seating contains exactly two child suites with **28 + 19 = 47 cases**, and none directly in 1132.
 
-**Evidence:** [[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/qase-approval.json|Approval record]] · [[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/qase-case-preview.json|Frozen approved preview and draft labels]] · [[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/qase-suite-apply.json|Suite receipt]] · [[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/qase-case-dry-run.json|Case dry-run]] · [[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/qase-case-apply.json|Case apply receipt and new ID mapping]] · [[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/qase-publish-verification.json|Full-field verification]] · [[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/qase-after-47-cases.json|Saved full cases]]. The frozen approved source is retained as qase-approved-note.txt in the same evidence folder; the apply plan refers to this note's pre-publication labels.
+**Missing publication evidence** `qase-approval.json` (approval), `qase-case-preview.json` (approved preview and draft labels), `qase-suite-apply.json` (suite receipt), `qase-case-dry-run.json` (case dry-run), `qase-case-apply.json` (apply receipt and new ID mapping), `qase-publish-verification.json` (full-field verification), and `qase-after-47-cases.json` (saved case fields). The October report named `qase-approved-note.txt` as the frozen source for the apply plan's pre-publication labels. That file is also missing.
 
 **Execution status:** Publishing definitions does not prove the implementation passes. No map, permission, transaction or financial state was changed during this review. The financial/ownership gates and explicit legacy stress, scoring and overlap follow-ups above remain unresolved; no release approval is claimed.
 
@@ -5870,10 +5870,10 @@ Original full case fields, suite/tags/priority/parameters and assertions are pre
 
 **Browser facts:** Existing demo tab, authenticated Christian Valdez, Berry Bonanza Hockey recurring parent, Strawberry Rink. Explicitly selected Seat Editor, expanded Seat Settings (Seat size 6, Seat spacing 4), toggled the temporary all-seat view, turned Seat Score View on and off, and zoomed in/out. Restored score view off and the original zoom; left Seat Editor selected with Seat Settings expanded. Attempts to select individual canvas seats did not expose a selected-seat panel, so single/group/area controls are source-backed and not claimed as observed. This is inconclusive selection inspection, not a confirmed selection defect. Organization identity, role permissions and flag values remain unverified. No field value, score, geometry, assignment, flag or transaction was changed; Save, generators and purchase were not used.
 
-![[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/seat-editor-followup.png|500]]
+**Missing screenshot** `seat-editor-followup.png`
 
 **Write boundary:** The previous approval was completed with the 47-case publish. These 15 creates and the SPT-5537 parameter enhancement require their own exact-scope dry-run and user confirmation before any Qase apply. Local labels are not Qase IDs.
 
-**Local follow-up review:** All 15 new drafts passed the reusable Qase parser with complete standalone fields, the intended parameters and step counts. SPT-5537 retains all three options, its existing tags, step count and control-seat assertions, with explicit On/Off runs added. All other published draft fields were compared against the saved 47-case snapshot and remain unchanged. [[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/seat-editor-followup-parser-review.json|Parser and preservation review]].
+**Local follow-up review:** All 15 new drafts passed the reusable Qase parser with complete standalone fields, the intended parameters and step counts. SPT-5537 retains all three options, its existing tags, step count and control-seat assertions, with explicit On/Off runs added. All other published draft fields were compared against the saved 47-case snapshot and remain unchanged. The parser and preservation receipt `seat-editor-followup-parser-review.json` is missing locally.
 
-**Follow-up push status:** Exact 16-operation batch dry-run passed: create TC-323–TC-334 and TC-336–TC-338 in Create Map (82), enhance only Preconditions, Steps and Parameters of SPT-5537. The apply command was rejected by automatic approval review before execution because exact-batch confirmation is required after the preview. No follow-up Qase changes were made; all 15 candidates remain local drafts and SPT-5537 remains unchanged in Qase. [[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/seat-editor-followup-dry-run.json|Exact dry-run]] · [[03 Test Cases/Events/02 Manage/evidence/seating-review-2026-10-16/seat-editor-followup-approval.json|Approval state]].
+**Follow-up push status:** Exact 16-operation batch dry-run passed: create TC-323–TC-334 and TC-336–TC-338 in Create Map (82), enhance only Preconditions, Steps and Parameters of SPT-5537. The apply command was rejected by automatic approval review before execution because exact-batch confirmation is required after the preview. No follow-up Qase changes were made; all 15 candidates remain local drafts and SPT-5537 remains unchanged in Qase. The dry-run and approval receipts `seat-editor-followup-dry-run.json` and `seat-editor-followup-approval.json` are missing locally.

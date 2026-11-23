@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,10 @@ export function BrowserResultForm({ result, workflow, pending, onSubmit }: {
   const summaryRef = useRef<HTMLTextAreaElement>(null);
   const builderWorkflow = asBuilderWorkflow(workflow);
 
+  useEffect(() => {
+    outcomeRef.current?.focus();
+  }, []);
+
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (pending) return;
@@ -44,8 +48,8 @@ export function BrowserResultForm({ result, workflow, pending, onSubmit }: {
   }
 
   return (
-    <form className="grid gap-2 border-t pt-3" onSubmit={submit}>
-      <FormField label="Outcome" error={attempted && !outcome ? "Choose an outcome." : undefined}>
+    <form data-testid="run-browser-result-form" className="grid gap-2 border-t pt-3" onSubmit={submit}>
+      <FormField testId="run-result-outcome" label="Outcome" error={attempted && !outcome ? "Choose an outcome." : undefined}>
         {(field) => (
           <Select
             {...field}
@@ -58,20 +62,20 @@ export function BrowserResultForm({ result, workflow, pending, onSubmit }: {
           />
         )}
       </FormField>
-      <FormField label="What happened?" error={summaryError}>
+      <FormField testId="run-result-summary" label="What happened?" error={summaryError}>
         {(field) => <Textarea {...field} ref={summaryRef} name="summary" maxLength={browserResultSchema.shape.summary.maxLength ?? undefined} rows={3} defaultValue={result?.summary} onChange={() => setSummaryError("")} placeholder="What worked, any issues, and the evidence or report link" required />}
       </FormField>
       {workflow === "event-builder" && (
-        <FormField label="Beta Event Preview URL">
+        <FormField testId="run-result-preview" label="Beta Event Preview URL">
           {(field) => <Input {...field} name="preview" type="url" maxLength={1000} defaultValue={result?.preview} />}
         </FormField>
       )}
       {builderWorkflow && (
-        <FormField label={builderWorkflow === "organizer-builder" ? "Saved Events, Products or Memberships (optional JSON)" : "Saved Showpass records (JSON)"}>
+        <FormField testId="run-result-records" label={builderWorkflow === "organizer-builder" ? "Saved Events, Products or Memberships (optional JSON)" : "Saved Showpass records (JSON)"}>
           {(field) => <Textarea {...field} name="records" rows={5} maxLength={24_000} defaultValue={result?.records ? JSON.stringify(result.records, null, 2) : ""} placeholder="Paste supported saved records returned by the builder in Codex." className="font-mono" />}
         </FormField>
       )}
-      <Button type="submit" className="justify-self-start" disabled={pending}>
+      <Button data-testid="run-result-save" type="submit" className="justify-self-start" disabled={pending}>
         {pending ? "Saving…" : "Save result"}
       </Button>
     </form>
