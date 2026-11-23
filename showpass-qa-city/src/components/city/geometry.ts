@@ -21,7 +21,7 @@ function buildings(role: AgentRole): Block[] {
   const roof = height + 0.2;
 
   const structure = [
-    block(x, 0.05, z, 8.7, 0.21, 6.1, pavement),
+    block(x, 0.05, z, 7.9, 0.21, 6.1, pavement),
     block(x, 0.18, z, width + 0.62, 0.14, depth + 0.62, base),
     block(x, height / 2 + 0.25, z, width, height, depth, color),
     block(x, roof + 0.16, z, width + 0.25, 0.15, depth + 0.25, color),
@@ -54,6 +54,9 @@ function buildings(role: AgentRole): Block[] {
         block(x + 0.75, roof + 0.88, z - 0.45, 0.08, 0.4, 0.08, "#fce2f5"),
       );
       break;
+    case "organizer-builder":
+      structure.push(block(x, roof + 0.34, z, width - 0.55, 0.37, depth - 0.7, color));
+      break;
     case "box-office-tester":
       structure.push(
         block(x, roof + 0.4, z, width - 0.68, 0.22, depth - 0.6, color),
@@ -71,18 +74,20 @@ const terrain = [
   block(0, -0.13, 0, width, 0.22, depth, asphalt),
 ];
 
-for (const offset of [-9.8, -8.1, -6.4, -4.7, -3, 3, 4.7, 6.4, 8.1, 9.8]) {
+for (const offset of [-12, -10.3, -8.6, -6.9, -1.7, 0, 1.7, 6.9, 8.6, 10.3, 12]) {
   terrain.push(block(offset, -0.008, 0, 0.72, 0.02, 0.055, laneMark));
 }
-for (const offset of [-6.8, -5.1, -3.4, 3.4, 5.1, 6.8]) {
-  terrain.push(block(0, -0.008, offset, 0.055, 0.02, 0.72, laneMark));
-}
-for (const offset of [-0.72, -0.36, 0, 0.36, 0.72]) {
-  for (const side of [-1.1, 1.1]) {
-    terrain.push(
-      block(side, -0.004, offset, 0.55, 0.025, 0.14, "#737e9b"),
-      block(offset, -0.004, side, 0.14, 0.025, 0.55, "#737e9b"),
-    );
+for (const roadX of [-4.4, 4.4]) {
+  for (const offset of [-6.8, -5.1, -3.4, 3.4, 5.1, 6.8]) {
+    terrain.push(block(roadX, -0.008, offset, 0.055, 0.02, 0.72, laneMark));
+  }
+  for (const offset of [-0.72, -0.36, 0, 0.36, 0.72]) {
+    for (const side of [-1.1, 1.1]) {
+      terrain.push(
+        block(roadX + side, -0.004, offset, 0.55, 0.025, 0.14, "#737e9b"),
+        block(roadX + offset, -0.004, side, 0.14, 0.025, 0.55, "#737e9b"),
+      );
+    }
   }
 }
 

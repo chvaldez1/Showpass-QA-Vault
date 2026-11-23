@@ -23,7 +23,7 @@ export const locations = {
     ],
     example: "Find a General Admission event and check what a signed-out visitor can see.",
     color: "#72d8f3",
-    position: [-5.7, -4.3],
+    position: [-8.8, -4.3],
     size: [4.1, 2.4, 2.8],
   },
   "customer-tester": {
@@ -37,22 +37,36 @@ export const locations = {
     ],
     example: "Buy one test ticket and verify the charged total and the corresponding order in My Orders.",
     color: "#bda1ff",
-    position: [5.7, -4.3],
+    position: [8.8, -4.3],
     size: [3.9, 2.1, 3.25],
   },
   "organizer-tester": {
     name: "Organizer Studio",
     agentName: "Organizer Tester",
-    description: "Configure Events, Products, and Memberships or test a specific Organizer page.",
+    description: "Test permitted Organizer Dashboard pages for behavior, usability, and recovery.",
     responsibilities: [
-      "Use the Dashboard as an Organizer or authorized Venue Employee.",
-      "Create and verify test configurations or exercise a scoped settings page.",
-      "Reopen saved records and pass relevant details to the next tester.",
+      "Exercise the scoped Dashboard as an Organizer or authorized Venue Employee.",
+      "Check discoverability, permissions, validation, and saved outcomes when the plan calls for an edit.",
+      "Record confirmed bugs, usability issues, and blockers with evidence.",
     ],
-    example: "Create a music event with one General Admission ticket type and reopen it to verify the setup.",
+    example: "Test Organization settings as an Organizer and check whether errors explain how to fix the inputs.",
     color: "#ff99c9",
-    position: [-5.7, 4.3],
+    position: [-8.8, 4.3],
     size: [3.8, 3.25, 3.5],
+  },
+  "organizer-builder": {
+    name: "Organizer Workshop",
+    agentName: "Organizer Builder",
+    description: "Prepare realistic test data and configurations across the permitted Organizer Dashboard.",
+    responsibilities: [
+      "Set up the requested scenario on its owning Dashboard page.",
+      "Configure the relevant Events, offerings, or other Organizer settings within the approved scope.",
+      "Reopen the saved setup and hand verified records to the receiving tester.",
+    ],
+    example: "Set up a promotion for an existing offering and verify the saved eligibility and dates.",
+    color: "#f5bf78",
+    position: [0, 4.3],
+    size: [4, 2.25, 3.3],
   },
   "box-office-tester": {
     name: "Box Office",
@@ -65,7 +79,7 @@ export const locations = {
     ],
     example: "Find the Customer Tester’s order in Box Office and verify that its ticket is available for Check In.",
     color: "#ffc775",
-    position: [5.7, 4.3],
+    position: [8.8, 4.3],
     size: [4.6, 1.75, 3.2],
   },
 } satisfies Record<AgentRole, Location>;
@@ -78,4 +92,4 @@ export const cityAgents: Agent[] = agentRoles.map((role) => ({
   role,
 }));
 
-export const cityDimensions = { width: 22, depth: 16 };
+export const cityDimensions = { width: 28, depth: 16 };

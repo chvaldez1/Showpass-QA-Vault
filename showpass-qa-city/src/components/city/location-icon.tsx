@@ -1,6 +1,7 @@
 import {
   Building2Icon,
   CompassIcon,
+  HammerIcon,
   ShoppingBagIcon,
   TicketIcon,
 } from "lucide-react";
@@ -11,6 +12,7 @@ const icons = {
   "public-tester": CompassIcon,
   "customer-tester": ShoppingBagIcon,
   "organizer-tester": Building2Icon,
+  "organizer-builder": HammerIcon,
   "box-office-tester": TicketIcon,
 };
 

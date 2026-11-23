@@ -10,6 +10,8 @@ import {
   DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import { runModeLabels, type Agent, type Run, type RunStatus } from "@/lib/workspace/schema";
+import { codexStatusLabels, type CodexHandoffStatus, type LiveCodexRuns } from "@/lib/codex/handoff-schema";
+import { CodexActivity, liveStatus, runFilterStatus } from "./codex-activity";
 import { cancelRun } from "@/lib/workspace/store";
 import { QaAssignment } from "./qa-assignment";
 
@@ -48,21 +50,28 @@ const fullDate = new Intl.DateTimeFormat("en-CA", {
   dateStyle: "medium", timeStyle: "short", timeZone: "UTC",
 });
 
-export function RunStatusBadge({ status, draftOnly }: { status: RunStatus; draftOnly?: boolean }) {
+export function RunStatusBadge({ status, draftOnly, codex }: {
+  status: RunStatus; draftOnly?: boolean; codex?: CodexHandoffStatus["status"];
+}) {
   const { label, className } = statusDisplay[status];
   return (
     <Badge variant="secondary" className={className}>
       <span aria-hidden="true" className="size-1.5 rounded-full bg-current" />
-      {draftOnly && status === "completed" ? "Draft ready" : label}
+      {codex ? codexStatusLabels[codex] : draftOnly && status === "completed" ? "Draft ready" : label}
     </Badge>
   );
 }
 
-function RunRow({ run, agent, previousRun }: { run: Run; agent?: Agent; previousRun?: Run }) {
+function RunRow({ run, agent, previousRun, activity }: {
+  run: Run; agent?: Agent; previousRun?: Run; activity: LiveCodexRuns;
+}) {
   const [cancelling, setCancelling] = useState(false);
   const date = new Date(run.createdAt);
   const agentName = agent?.name ?? "Unknown agent";
   const draftOnly = run.reviewMode === "draft";
+  const result = liveStatus(run, activity);
+  const status = runFilterStatus(run, activity);
+  const badge = result && run.status !== "completed" && run.status !== "failed" ? result.status : undefined;
 
   async function handleCancelRun() {
     setCancelling(true);
@@ -89,19 +98,19 @@ function RunRow({ run, agent, previousRun }: { run: Run; agent?: Agent; previous
               {run.sample && <span>· Sample</span>}
             </span>
           </span>
-          <RunStatusBadge status={run.status} draftOnly={draftOnly} />
+          <RunStatusBadge status={status} draftOnly={draftOnly} codex={badge} />
           <ChevronRightIcon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground group-hover:text-foreground" />
         </DialogTrigger>
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-md">
           <DialogHeader className="pr-7">
             <DialogTitle className="leading-snug wrap-anywhere">{run.title}</DialogTitle>
-            <DialogDescription>{run.sample ? "Sample run" : "Local assignment"}</DialogDescription>
+            <DialogDescription>{run.sample ? "Sample run" : run.recoveredCodexRevision ? "Recovered Codex handoff" : "Shared City assignment"}</DialogDescription>
           </DialogHeader>
           <dl className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 gap-y-3 rounded-lg border bg-background p-3">
             <dt className="text-muted-foreground">Agent</dt>
             <dd className="wrap-anywhere">{agentName}</dd>
             <dt className="text-muted-foreground">Status</dt>
-            <dd><RunStatusBadge status={run.status} draftOnly={draftOnly} /></dd>
+            <dd><RunStatusBadge status={status} draftOnly={draftOnly} codex={badge} /></dd>
             <dt className="text-muted-foreground">Mode</dt>
             <dd>{draftOnly ? "Draft plan only" : runModeLabels[run.mode]}</dd>
             {run.target && (
@@ -125,7 +134,8 @@ function RunRow({ run, agent, previousRun }: { run: Run; agent?: Agent; previous
               <p className="text-muted-foreground wrap-anywhere whitespace-pre-wrap">{run.instructions}</p>
             </div>
           )}
-          {!run.sample && agent?.role && <QaAssignment run={run} role={agent.role} previousRun={previousRun} />}
+          {run.recoveredCodexRevision && result && <CodexActivity result={result} limit={40} />}
+          {!run.recoveredCodexRevision && !run.sample && agent?.role && <QaAssignment run={run} role={agent.role} previousRun={previousRun} />}
           <DialogFooter>
             <DialogClose render={<Button variant="outline" />}>Close</DialogClose>
             {run.status === "queued" && (
@@ -144,11 +154,13 @@ export function RunList({
   runs,
   agents,
   history = runs,
+  activity = {},
   emptyMessage = "Saved assignments will appear here.",
 }: {
   runs: Run[];
   agents: Agent[];
   history?: Run[];
+  activity?: LiveCodexRuns;
   emptyMessage?: string;
 }) {
   if (runs.length === 0) {
@@ -170,6 +182,7 @@ export function RunList({
           run={run}
           agent={agentsById.get(run.agentId)}
           previousRun={runsById.get(run.sourceRunId)}
+          activity={activity}
         />
       ))}
     </ul>

@@ -13,7 +13,8 @@ export function Map2D({
   return (
     <div className="city-plan" role="group" aria-label="2D city map">
       <div aria-hidden="true" className="city-plan-road city-plan-road-horizontal" />
-      <div aria-hidden="true" className="city-plan-road city-plan-road-vertical" />
+      <div aria-hidden="true" className="city-plan-road city-plan-road-vertical" style={{ left: "33.333%" }} />
+      <div aria-hidden="true" className="city-plan-road city-plan-road-vertical" style={{ left: "66.667%" }} />
       {agentRoles.map((role) => {
         const { color, position: [x, z], name } = locations[role];
 
@@ -23,7 +24,7 @@ export function Map2D({
             type="button"
             aria-pressed={selected === role}
             className="city-plot"
-            style={{ "--location-color": color, gridColumn: x < 0 ? 1 : 2, gridRow: z < 0 ? 1 : 2 } as CSSProperties}
+            style={{ "--location-color": color, gridColumn: x < 0 ? 1 : x === 0 ? 2 : 3, gridRow: z < 0 ? 1 : 2 } as CSSProperties}
             onClick={() => onSelect(role)}
           >
             <span aria-hidden="true" className="city-plot-footprint">

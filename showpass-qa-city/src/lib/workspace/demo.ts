@@ -44,7 +44,8 @@ export const demoWorkspace: Workspace = {
     {
       ...sample,
       id: "demo-organizer",
-      agentId: "organizer-tester",
+      agentId: "organizer-builder",
+      workflow: "event-builder",
       title: "Set up the Opening Night event",
       instructions: "Create the test event with one General Admission ticket type.",
       status: "completed",

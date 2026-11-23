@@ -74,7 +74,7 @@ function CityMap({ selected, onSelect }: {
           </p>
         )}
       </div>
-      <div aria-label="City locations" role="group" className="grid grid-cols-2 gap-1 p-2 sm:grid-cols-4">
+      <div aria-label="City locations" role="group" className="grid grid-cols-2 gap-1 p-2 sm:grid-cols-3 2xl:grid-cols-5">
         {agentRoles.map((role) => (
           <button
             key={role}
@@ -154,7 +154,7 @@ export function CityDashboard() {
 
   return (
     <>
-      <PageHeader title="City map" description="Choose a tester, save an assignment, or follow a handoff." />
+      <PageHeader title="City map" description="Choose an agent, save an assignment, or follow a handoff." />
       <CityWorkspace {...workspace} />
       <CitySummary {...workspace} />
       <Card className="gap-0 py-0">

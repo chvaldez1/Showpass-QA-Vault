@@ -31,6 +31,8 @@ function AssignmentForm({ agents, runs, agentId, onSaved }: AssignmentInputs & {
       defaultValues: { agentId, title: "", instructions: "", mode: "drive", target: "", sourceRunId: "", reviewMode: "short" },
     });
   const reviewMode = useWatch({ control, name: "reviewMode" });
+  const selectedAgentId = useWatch({ control, name: "agentId" });
+  const selectedAgent = agents.find(({ id }) => id === selectedAgentId);
 
   async function submit(values: RunFormValues) {
     try {
@@ -74,6 +76,18 @@ function AssignmentForm({ agents, runs, agentId, onSaved }: AssignmentInputs & {
       <FormField label="Title" error={errors.title?.message}>
         {(field) => <Input {...field} {...register("title")} maxLength={100} className="h-10" />}
       </FormField>
+      {selectedAgent?.role === "organizer-builder" && (
+        <FormField label="Build area" error={errors.builderWorkflow?.message}>
+          {(field) => (
+            <Select {...field} {...register("builderWorkflow", { setValueAs: (value) => value || undefined })}>
+              <option value="">Choose from the assignment title</option>
+              <option value="event-builder">Event setup</option>
+              <option value="offering-builder">Product or Membership setup</option>
+              <option value="organizer-builder">Other Dashboard setup</option>
+            </Select>
+          )}
+        </FormField>
+      )}
       {runs.length > 0 && (
         <FormField label="Continue from a run (optional)" error={errors.sourceRunId?.message}>
           {(field) => (

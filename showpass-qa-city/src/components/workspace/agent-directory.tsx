@@ -22,7 +22,7 @@ export function AgentDirectory() {
     <>
       <PageHeader
         title="Agents"
-        description="Choose a Showpass tester or create an additional profile."
+        description="Choose a Showpass agent or create an additional profile."
         actions={<AddAgentDialog />}
       />
       <Card className="flex flex-row flex-wrap items-center justify-between gap-3 p-4">
@@ -33,7 +33,7 @@ export function AgentDirectory() {
         <Link href="/releases" className={buttonVariants({ variant: "outline" })}>Open Releases</Link>
       </Card>
 
-      <ul aria-label="City testers" className="grid gap-4 md:grid-cols-2">
+      <ul aria-label="City agents" className="grid gap-4 md:grid-cols-2">
         {agentRoles.map((role) => {
           const location = locations[role];
 

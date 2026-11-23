@@ -1,5 +1,6 @@
-import { cityAgents } from "./city";
+import { workspaceVersionSchema, type WorkspaceVersion } from "./shared-schema";
 import { demoWorkspace } from "./demo";
+import { normalizeWorkspace } from "./normalize";
 import {
   agentFormSchema,
   runFormSchema,
@@ -10,6 +11,7 @@ import {
   type Workspace,
 } from "./schema";
 import { isMatchingBetaPreview } from "./builder-result";
+import type { DraftExecutionResult } from "./event-draft";
 import {
   browserResultSchema, getPlanReviewMode, getQaWorkflow, isPlanReviewReady, planStageSchemas, shortReviewSchema,
   type LeadDecision, type Revision,
@@ -20,15 +22,24 @@ import {
 } from "./release";
 
 const storageKey = "showpass-qa-city:workspace:v1";
-const workspaceChanged = "qa-city-workspace-changed";
-const cityAgentIds = new Set(cityAgents.map(({ id }) => id));
+const workspaceListeners = new Set<() => void>();
+let activeSnapshot: WorkspaceVersion | undefined;
+let snapshotText: string | undefined;
+let initialized = false;
+let initialLoad: Promise<WorkspaceVersion> | undefined;
+let pollTimer: ReturnType<typeof setTimeout> | undefined;
+let watchGeneration = 0;
 
-export function readWorkspaceSnapshot() {
+function readBrowserWorkspace() {
   try {
     return window.localStorage.getItem(storageKey);
   } catch {
     return null;
   }
+}
+
+export function readWorkspaceSnapshot() {
+  return snapshotText ?? readBrowserWorkspace();
 }
 
 export function decodeWorkspace(snapshot: string | null): Workspace {
@@ -37,53 +48,93 @@ export function decodeWorkspace(snapshot: string | null): Workspace {
   try {
     const result = workspaceSchema.safeParse(JSON.parse(snapshot));
     if (!result.success) return demoWorkspace;
-    const { agents, runs, releases } = result.data;
-    return {
-      agents: [...cityAgents, ...agents.filter(({ id }) => !cityAgentIds.has(id))],
-      releases,
-      runs: runs.map((run) =>
+    return normalizeWorkspace({
+      ...result.data,
+      runs: result.data.runs.map((run) =>
         /^demo-10[1-4]$/.test(run.id) ? { ...run, sample: true } : run,
       ),
-    };
+    });
   } catch {
     return demoWorkspace;
   }
 }
 
-export function subscribeToWorkspace(listener: () => void) {
-  function onStorage(event: StorageEvent) {
-    if (event.key === storageKey || event.key === null) listener();
-  }
+function publish(snapshot: WorkspaceVersion) {
+  if (activeSnapshot && activeSnapshot.version > snapshot.version) return;
+  if (activeSnapshot?.version === snapshot.version) return;
 
-  window.addEventListener("storage", onStorage);
-  window.addEventListener(workspaceChanged, listener);
+  activeSnapshot = snapshot;
+  snapshotText = JSON.stringify(snapshot.workspace);
+  for (const listener of workspaceListeners) listener();
+}
+
+async function loadWorkspace() {
+  const suffix = activeSnapshot ? `?since=${activeSnapshot.version}` : "";
+  const response = await fetch(`/api/workspace${suffix}`, { cache: "no-store" });
+  if (response.status === 204 && activeSnapshot) return activeSnapshot;
+  if (!response.ok) throw new Error("City couldn’t load the shared workspace.");
+
+  const snapshot = workspaceVersionSchema.parse(await response.json());
+  publish(snapshot);
+  return activeSnapshot ?? snapshot;
+}
+
+async function sendWorkspace(payload: object) {
+  const response = await fetch("/api/workspace", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok && response.status !== 409) throw new Error("City couldn’t save the shared workspace.");
+  const snapshot = workspaceVersionSchema.parse(await response.json());
+  publish(snapshot);
+  return { conflict: response.status === 409, snapshot: activeSnapshot ?? snapshot };
+}
+
+function initializeWorkspace() {
+  if (initialized) return loadWorkspace();
+  initialLoad ??= (async () => {
+    const stored = readBrowserWorkspace();
+    const snapshot = stored
+      ? (await sendWorkspace({ action: "import", workspace: decodeWorkspace(stored) })).snapshot
+      : await loadWorkspace();
+    initialized = true;
+    return snapshot;
+  })().finally(() => { initialLoad = undefined; });
+  return initialLoad;
+}
+
+async function watchWorkspace(generation: number) {
+  try {
+    await initializeWorkspace();
+  } catch {
+    // Existing data stays visible while a subsequent attempt reconnects.
+  } finally {
+    if (generation === watchGeneration) pollTimer = setTimeout(() => void watchWorkspace(generation), 2500);
+  }
+}
+
+export function subscribeToWorkspace(listener: () => void) {
+  workspaceListeners.add(listener);
+  if (workspaceListeners.size === 1) void watchWorkspace(++watchGeneration);
   return () => {
-    window.removeEventListener("storage", onStorage);
-    window.removeEventListener(workspaceChanged, listener);
+    workspaceListeners.delete(listener);
+    if (workspaceListeners.size === 0) {
+      watchGeneration++;
+      clearTimeout(pollTimer);
+    }
   };
 }
 
-function updateWorkspace(update: (workspace: Workspace) => Workspace) {
-  const save = () => {
-    let current: Workspace;
-    try {
-      current = decodeWorkspace(window.localStorage.getItem(storageKey));
-    } catch {
-      throw new Error("Browser storage is unavailable.");
-    }
-
-    const next = update(current);
-    try {
-      window.localStorage.setItem(storageKey, JSON.stringify(next));
-    } catch {
-      throw new Error("Couldn’t save the workspace in this browser.");
-    }
-    window.dispatchEvent(new Event(workspaceChanged));
-  };
-
-  // Serialize changes across tabs when the browser supports Web Locks.
-  if (navigator.locks) return navigator.locks.request(storageKey, save);
-  return Promise.resolve().then(save);
+async function updateWorkspace(update: (workspace: Workspace) => Workspace) {
+  let current = await initializeWorkspace();
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const saved = await sendWorkspace({
+      action: "replace", version: current.version, workspace: update(current.workspace),
+    });
+    if (!saved.conflict) return;
+    current = saved.snapshot;
+  }
+  throw new Error("The shared workspace changed during this save. Retry the action.");
 }
 
 export function addAgent(input: AgentFormValues) {
@@ -104,7 +155,8 @@ export function addAgent(input: AgentFormValues) {
 export function queueRun(input: RunFormValues) {
   const run = runFormSchema.parse(input);
   return updateWorkspace((workspace) => {
-    if (!workspace.agents.some((agent) => agent.id === run.agentId)) {
+    const agent = workspace.agents.find(({ id }) => id === run.agentId);
+    if (!agent) {
       throw new Error("Choose an agent from the current workspace.");
     }
 
@@ -118,6 +170,8 @@ export function queueRun(input: RunFormValues) {
       runs: [
         {
           ...run,
+          builderWorkflow: agent.role === "organizer-builder" ? run.builderWorkflow : undefined,
+          workflow: getQaWorkflow(agent.role ?? agent.id, run.title, run.builderWorkflow),
           target: run.target || previousRun?.target || "",
           id: crypto.randomUUID(),
           createdAt: new Date().toISOString(),
@@ -209,7 +263,8 @@ export function requestRevision(id: string, number: number, change: string, requ
 export function saveProposal(id: string, revision: Revision) {
   return updateRun(id, (run) => {
     assertCurrentRevision(run, revision.number - 1);
-    if (revision.change !== (run.changeRequest ?? "") || revision.workflow !== getQaWorkflow(run.agentId, run.title)) {
+    if (revision.change !== (run.changeRequest ?? "") ||
+      revision.workflow !== (run.workflow ?? getQaWorkflow(run.agentId, run.title, run.builderWorkflow))) {
       throw new Error("The assignment scope changed. Reload the assignment and try again.");
     }
     return {
@@ -222,7 +277,7 @@ export function saveProposal(id: string, revision: Revision) {
   });
 }
 
-export function saveReview(id: string, number: number, review: LeadDecision) {
+export function saveReview(id: string, number: number, review: LeadDecision, executionToken?: string, codexHandoffToken?: string) {
   return updateRun(id, (run) => {
     assertCurrentRevision(run, number);
     if (!run.revision || !isPlanReviewReady(run.reviewMode, run.revision) || run.changeRequest || run.revision.review) {
@@ -230,8 +285,25 @@ export function saveReview(id: string, number: number, review: LeadDecision) {
     }
     return {
       ...run,
-      revision: { ...run.revision, review },
+      revision: { ...run.revision, review, executionToken, codexHandoffToken },
       status: review.decision === "approved" ? "needs-input" : "queued",
+    };
+  });
+}
+
+export function saveDraftExecution(id: string, number: number, result: DraftExecutionResult) {
+  return updateRun(id, (run) => {
+    assertCurrentRevision(run, number);
+    if (!run.revision?.executionToken || run.revision.review?.decision !== "approved" || run.changeRequest) {
+      throw new Error("Record results against the current approved plan.");
+    }
+    return {
+      ...run,
+      status: result.outcome === "passed" ? "completed" : "needs-input",
+      revision: { ...run.revision, draftExecution: result },
+      browserResult: result.outcome === "passed"
+        ? { outcome: result.outcome, summary: result.summary, preview: "", records: result.records }
+        : undefined,
     };
   });
 }

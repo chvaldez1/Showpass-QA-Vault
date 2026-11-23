@@ -61,7 +61,7 @@ function CityGeometry() {
 }
 
 function CityCamera() {
-  const zoom = useThree(({ size }) => Math.min(size.width / 30, size.height / 21));
+  const zoom = useThree(({ size }) => Math.min(size.width / 36, size.height / 24));
 
   return (
     <>

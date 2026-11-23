@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { builderRecordsSchema } from "./builder-result";
+import { draftExecutionResultSchema, eventDraftSchema } from "./event-draft";
 import { engineeringSourceSchema, hasEngineeringHandoff, stageSchemas } from "./release";
 
 export const planReviewModes = ["short", "full", "draft"] as const;
@@ -10,14 +11,15 @@ export const planReviewLabels = {
   draft: "Draft plan only",
 } satisfies Record<PlanReviewMode, string>;
 
-export const qaWorkflows = [
-  "event-builder", "offering-builder", "organizer-tester",
-  "public-tester", "customer-tester", "box-office-tester",
-] as const;
+export const builderWorkflows = ["event-builder", "offering-builder", "organizer-builder"] as const;
+const testerWorkflows = ["organizer-tester", "public-tester", "customer-tester", "box-office-tester"] as const;
+export const qaWorkflows = [...builderWorkflows, ...testerWorkflows] as const;
+export type BuilderWorkflow = (typeof builderWorkflows)[number];
 
 export const workflowSkills = {
   "event-builder": "showpass-beef-up-event",
   "offering-builder": "showpass-beef-up-event",
+  "organizer-builder": "showpass-beef-up-event",
   "organizer-tester": "showpass-organizer-tester",
   "public-tester": "showpass-public-tester",
   "customer-tester": "showpass-customer-tester",
@@ -44,6 +46,7 @@ const planRiskSchema = z.object({
 });
 
 export const liveProposalSchema = proposalSchema.extend({ risk: planRiskSchema });
+export const eventDraftProposalSchema = liveProposalSchema.extend({ eventDraft: eventDraftSchema.nullable() });
 
 export const leadDecisionSchema = z.object({
   decision: z.enum(["approved", "disapproved"]),
@@ -53,6 +56,11 @@ export const leadDecisionSchema = z.object({
 }).refine(({ decision, requiredChanges }) =>
   decision === "approved" ? !requiredChanges.length : requiredChanges.length > 0,
 );
+
+export const leadResponseSchema = leadDecisionSchema.safeExtend({
+  executionToken: z.string().optional(),
+  codexHandoffToken: z.uuid().optional(),
+});
 
 const planHandoffSchema = z.object({
   impact: description,
@@ -79,6 +87,10 @@ export const revisionSchema = z.object({
   change: z.string().max(1000),
   plan: proposalSchema,
   risk: planRiskSchema.optional(),
+  eventDraft: eventDraftSchema.optional(),
+  executionToken: z.string().optional(),
+  codexHandoffToken: z.uuid().optional(),
+  draftExecution: draftExecutionResultSchema.optional(),
   shortReview: shortReviewSchema.optional(),
   engineer: planHandoffSchema.optional(), // Saved consultation from before the full review layer.
   engineering: planEngineeringSchema.optional(),
@@ -115,13 +127,20 @@ export function isPlanReviewReady(requested: PlanReviewMode | undefined, revisio
   return mode === "full" && hasEngineeringHandoff(revision?.engineering);
 }
 
-export function getQaWorkflow(role: string, title: string) {
-  if (role === "organizer-tester" &&
-    /^(?:(?:please|can you)\s+)?(?:create|build|make|set up|draft|beef up)\b/i.test(title)) {
-    if (/\b(products?|membership|memberships)\b/i.test(title) && !/\bevents?\b/i.test(title)) {
-      return "offering-builder";
-    }
-    if (/\b(events?|raves?|concerts?|shows?)\b/i.test(title)) return "event-builder";
+export function inferBuilderWorkflow(subject: string): BuilderWorkflow {
+  if (/\b(products?|memberships?)\b/i.test(subject) && !/\bevents?\b/i.test(subject)) return "offering-builder";
+  if (/\b(events?|raves?|concerts?|shows?)\b/i.test(subject)) return "event-builder";
+  return "organizer-builder";
+}
+
+export function asBuilderWorkflow(workflow: string | undefined) {
+  return z.enum(builderWorkflows).safeParse(workflow).data;
+}
+
+export function getQaWorkflow(role: string, title: string, builderWorkflow?: BuilderWorkflow) {
+  if (role === "organizer-builder") {
+    const subject = title.split(/\s+(?:at|for|from|in|of|on|to|under|using|with)\s+/i, 1)[0];
+    return builderWorkflow ?? inferBuilderWorkflow(subject);
   }
-  return z.enum(qaWorkflows.slice(2)).safeParse(role).data;
+  return z.enum(testerWorkflows).safeParse(role).data;
 }

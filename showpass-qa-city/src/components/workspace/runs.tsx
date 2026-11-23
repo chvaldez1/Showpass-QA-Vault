@@ -3,8 +3,11 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
+import { useLiveCodexRuns } from "@/hooks/use-live-codex-runs";
+import { codexRevision } from "@/lib/workspace/shared-schema";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { runStatuses, type RunStatus } from "@/lib/workspace/schema";
+import { LiveCodexActivity, runFilterStatus } from "./codex-activity";
 import { NewRunDialog } from "./new-run-dialog";
 import { PageHeader } from "./page-header";
 import { RunList, statusDisplay } from "./run-list";
@@ -12,15 +15,17 @@ import { RunList, statusDisplay } from "./run-list";
 export function Runs() {
   const { runs, agents } = useWorkspace();
   const [filter, setFilter] = useState<RunStatus | "all">("all");
-  const visibleRuns = filter === "all" ? runs : runs.filter(({ status }) => status === filter);
+  const { activity, disconnected } = useLiveCodexRuns(runs.some((run) => Boolean(codexRevision(run))));
+  const visibleRuns = filter === "all" ? runs : runs.filter((run) => runFilterStatus(run, activity) === filter);
 
   return (
     <>
       <PageHeader
         title="Runs"
-        description="Review saved assignments, sample results, and tester handoffs."
+        description="Follow live Codex activity and review saved assignments."
         actions={<NewRunDialog agents={agents} runs={runs} className="h-10 px-4" />}
       />
+      <LiveCodexActivity runs={runs} activity={activity} disconnected={disconnected} />
       <Card className="gap-0 py-0">
         <section aria-labelledby="run-history">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b p-4 sm:p-5">
@@ -46,6 +51,7 @@ export function Runs() {
             runs={visibleRuns}
             agents={agents}
             history={runs}
+            activity={activity}
             emptyMessage={filter === "all" ? undefined : "No runs match this status."}
           />
         </section>

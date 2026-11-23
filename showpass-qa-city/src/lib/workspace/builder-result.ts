@@ -30,6 +30,10 @@ const eventRecord = z.strictObject({
     inventory: quantity.nullable().optional(),
     is_recurring: z.boolean().nullable().optional(),
     assigned_space: id.nullable().optional(),
+    collect_info_custom_questions: z.array(z.object({
+      id: z.string().optional(), name: z.string().optional(), title: z.string(), type: z.string(),
+      required: z.boolean(), collect_after_checkout: z.boolean().nullish(), ticket_types: z.array(id).optional(),
+    })).optional(),
     tickettype_set: z.array(saleOption.extend({
       name: name.max(100),
       inventory: quantity.optional(),
