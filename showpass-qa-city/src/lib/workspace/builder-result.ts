@@ -84,9 +84,22 @@ const membershipBenefitRecord = z.strictObject({
   }),
 });
 
-export const builderRecordsSchema = z.array(z.discriminatedUnion("kind", [
+export const builderRecordSchema = z.discriminatedUnion("kind", [
   eventRecord, productRecord, membershipGroupRecord, membershipBenefitRecord,
-])).max(25);
+]);
+
+export const builderRecordsSchema = z.array(builderRecordSchema).max(25);
+export const buildReferenceSchema = z.object({
+  kind: z.enum(["event", "product", "membership_group", "membership_benefit"]),
+  recordId: id,
+});
+
+export type BuilderRecord = z.infer<typeof builderRecordSchema>;
+export type BuildReference = z.infer<typeof buildReferenceSchema>;
+
+export function matchesBuild(record: BuilderRecord, reference: BuildReference) {
+  return record.kind === reference.kind && record.record.id === reference.recordId;
+}
 
 export function isMatchingBetaPreview(value: string, slug: string) {
   try {

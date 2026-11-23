@@ -13,6 +13,9 @@ import {
 } from "@/components/ui/dialog";
 import { Disclosure } from "@/components/ui/disclosure";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { buildKindLabels, sourceRecordsFor } from "@/lib/workspace/build-catalog";
+import { jobLabels } from "@/lib/workspace/job";
+import { nextRunAction } from "@/lib/workspace/run-queue";
 import { runModeLabels, type Agent, type Run, type RunStatus } from "@/lib/workspace/schema";
 import { codexStatusLabels, type CodexHandoffStatus, type LiveCodexRuns } from "@/lib/codex/handoff-schema";
 import { CodexActivity, liveStatus, runFilterStatus } from "./codex-activity";
@@ -73,8 +76,8 @@ export function RunStatusBadge({ status, draftOnly, codex }: {
   );
 }
 
-function RunRow({ run, agent, previousRun, activity }: {
-  run: Run; agent?: Agent; previousRun?: Run; activity: LiveCodexRuns;
+function RunRow({ run, agent, previousRun, activity, showNextAction }: {
+  run: Run; agent?: Agent; previousRun?: Run; activity: LiveCodexRuns; showNextAction: boolean;
 }) {
   const [cancelling, setCancelling] = useState(false);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -82,6 +85,7 @@ function RunRow({ run, agent, previousRun, activity }: {
   const agentName = agent?.name ?? "Unknown agent";
   const draftOnly = run.reviewMode === "draft";
   const result = liveStatus(run, activity);
+  const next = showNextAction ? nextRunAction(run, result) : undefined;
   const status = runFilterStatus(run, activity);
   const badge = result && run.status !== "completed" && run.status !== "failed" ? result.status : undefined;
   const role = !run.recoveredCodexRevision && !run.sample ? agent?.role : undefined;
@@ -90,6 +94,12 @@ function RunRow({ run, agent, previousRun, activity }: {
   const hasHistory = Boolean(history?.length);
   const currentPlan = role ? run.revision : undefined;
   const showPlanFirst = currentPlan && status !== "queued" && status !== "running" && status !== "needs-input";
+  const sourceRecords = sourceRecordsFor(run, previousRun) ?? [];
+  const sourceBuilds = sourceRecords.map(({ kind, record }) => ({ kind, recordId: record.id, name: record.name }));
+  const buildReference = run.sourceRecord;
+  const builds = sourceBuilds.length || !buildReference
+    ? sourceBuilds
+    : [{ ...buildReference, name: "Record details unavailable" }];
 
   const details = (
     <div className="max-w-prose space-y-5" data-testid="run-details-content">
@@ -98,16 +108,55 @@ function RunRow({ run, agent, previousRun, activity }: {
         <dd className="wrap-anywhere">{agentName}</dd>
         <dt className="text-muted-foreground">Mode</dt>
         <dd>{draftOnly ? "Draft plan only" : runModeLabels[run.mode]}</dd>
+        {run.job && <>
+          <dt className="text-muted-foreground">Job</dt>
+          <dd className="wrap-anywhere">{jobLabels[run.job]}</dd>
+        </>}
         {run.target && (
           <>
             <dt className="text-muted-foreground">Test target</dt>
             <dd className="wrap-anywhere">{run.target}</dd>
           </>
         )}
+        {run.qaVenue && (
+          <>
+            <dt className="text-muted-foreground">QA venue</dt>
+            <dd className="wrap-anywhere">{run.qaVenue.environment} · {run.qaVenue.organization}{run.qaVenue.location && ` · ${run.qaVenue.location}`}</dd>
+          </>
+        )}
+        {run.qaAccountEmail && (
+          <>
+            <dt className="text-muted-foreground">Showpass test account</dt>
+            <dd className="wrap-anywhere">{run.qaAccountEmail}</dd>
+          </>
+        )}
         {run.sourceRunId && (
           <>
             <dt className="text-muted-foreground">Handoff from</dt>
             <dd className="wrap-anywhere">{previousRun?.title ?? "Previous run unavailable"}</dd>
+          </>
+        )}
+        {run.pilotInput?.orderReference && <>
+          <dt className="text-muted-foreground">Original order</dt>
+          <dd className="wrap-anywhere">{run.pilotInput.orderReference}</dd>
+        </>}
+        {run.pilotInput?.transferReference && <>
+          <dt className="text-muted-foreground">Transfer</dt>
+          <dd className="wrap-anywhere">{run.pilotInput.transferReference}</dd>
+        </>}
+        {builds.length > 0 && (
+          <>
+            <dt className="text-muted-foreground">{builds.length === 1 ? "Saved build" : "Saved builds"}</dt>
+            <dd data-testid="run-source-builds" className="min-w-0">
+              <ul className="space-y-2">
+                {builds.map(({ kind, recordId, name }) => (
+                  <li key={`${kind}-${recordId}`} className="wrap-anywhere">
+                    <span className="block font-medium">{name}</span>
+                    <span className="block text-xs text-muted-foreground">{buildKindLabels[kind]} · ID {recordId}</span>
+                  </li>
+                ))}
+              </ul>
+            </dd>
           </>
         )}
         <dt className="text-muted-foreground">Created</dt>
@@ -150,6 +199,8 @@ function RunRow({ run, agent, previousRun, activity }: {
               <time data-testid="run-list-date" dateTime={run.createdAt}>{shortDate.format(date)}</time>
               {run.sample && <span>· Sample</span>}
             </span>
+            {next && <span data-testid="run-next-action" className="mt-1 block text-xs font-medium">{next.label}</span>}
+            {next?.blocker && <span data-testid="run-queue-blocker" className="mt-1 line-clamp-2 text-xs text-muted-foreground wrap-anywhere">{next.blocker}</span>}
           </span>
           <RunStatusBadge status={status} draftOnly={draftOnly} codex={badge} />
           <ChevronRightIcon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground group-hover:text-foreground" />
@@ -228,12 +279,14 @@ function RunList({
   agents,
   history = runs,
   activity = {},
+  showNextAction = false,
   emptyMessage = "Saved assignments will appear here.",
 }: {
   runs: Run[];
   agents: Agent[];
   history?: Run[];
   activity?: LiveCodexRuns;
+  showNextAction?: boolean;
   emptyMessage?: string;
 }) {
   if (runs.length === 0) {
@@ -256,6 +309,7 @@ function RunList({
           agent={agentsById.get(run.agentId)}
           previousRun={runsById.get(run.sourceRunId)}
           activity={activity}
+          showNextAction={showNextAction}
         />
       ))}
     </ul>

@@ -12,11 +12,13 @@ QA City gives Showpass's AI manual testers and assistants a shared way to take a
 
 ## UI
 
-The local City app presents the agents and their responsibilities. **Runs** is where an assignment lives, including who owns it, whether the agent drives or guides the user, its plan revisions, and its evidence. **Releases** is where the team reviews a release candidate and its supporting evidence. The app uses Next.js, TypeScript, Tailwind, and shadcn/ui with pnpm. [[showpass-qa-city/README|City app setup and capabilities]]
+Select a building on the **City map** to see its open assignments, blockers, and next actions. Review queues show tester plans waiting for each review role. Open a queue item to work on its current revision. **Runs** holds the full assignment history, and **Releases** holds candidate reviews. [[showpass-qa-city/README|City app setup and capabilities]]
 
 ## Agents, roles, and skills
 
 An **agent** is a named assignee in City. A **role** defines the perspective and work it owns. A **skill** gives that role reusable Showpass knowledge and guidance. An **assignment** gives it a specific job.
+
+Each assignment owns one job, one starting session, and one stopping point. A role can take different jobs in separate assignments. When work crosses into another job or account, hand off the verified record and have the receiving assignment go through the shared review policy. [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|Shared review policy]]
 
 ### Codex skill directory
 
@@ -26,9 +28,9 @@ Use the skill name in a Codex request. Open its skill file to see or tune its in
 | --- | --- | --- |
 | Organizer Builder | `$showpass-beef-up-event` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-beef-up-event/SKILL.md>) | Configure test scenarios across permitted Organizer Dashboard pages and verify saved setup. |
 | Organizer Tester | `$showpass-organizer-tester` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-organizer-tester/SKILL.md>) | Test behavior, permissions, usability, and recovery across permitted Organizer Dashboard pages. |
-| Public Tester | `$showpass-public-tester` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-public-tester/SKILL.md>) | Check discovery, Event Preview, and existing Account records without placing an order. |
-| Customer Tester | `$showpass-customer-tester` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-customer-tester/SKILL.md>) | Run an authorized test purchase and verify the saved order and issued items. |
-| Box Office Tester | `$showpass-box-office-tester` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-box-office-tester/SKILL.md>) | Check staff order lookup, sales, delivery, and Check In. |
+| Guest Tester | `$showpass-public-tester` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-public-tester/SKILL.md>) | Test signed-out discovery or guest checkout on an approved public website or widget. An assigned read-only Event Preview can use its authorized Preview session. |
+| Customer Tester | `$showpass-customer-tester` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-customer-tester/SKILL.md>) | Test signed-in discovery, public website or widget checkout, or one Account action. Sending and accepting transfers are separate jobs in the applicable accounts. |
+| Box Office Tester | `$showpass-box-office-tester` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-box-office-tester/SKILL.md>) | Verify one staff operation, such as lookup, sale, Check In, or a specified post-sale action. |
 | QA Lead | `$showpass-qa-lead` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-qa-lead/SKILL.md>) | Challenge plans and independently decide whether to approve the exact revision or engineering handoff. |
 | Release Engineer | `$showpass-release-engineer` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-release-engineer/SKILL.md>) | Review business risks and assemble the engineering handoff. |
 | Backend Master | `$showpass-backend-master` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-backend-master/SKILL.md>) | Trace backend rules, permissions, and saved outcomes for the reviewed revision. |
@@ -61,12 +63,17 @@ QA Lead approval applies to the reviewed plan. A changed plan needs another deci
 
 City uses the local Codex App Server and installed skills for planning and review. **Run in Codex** sends an approved Organizer assignment to its agent's paired chat for execution in the authorized in-app browser. The existing **Organizer builder** chat belongs to the Builder. The Tester can use **Open in Codex** or its own paired chat. City retains the dedicated Playwright runner in code and shows its earlier results. [[showpass-qa-city/README|Execution options and local prerequisites]]
 
-Builders use realistic scenario details and carry verified Showpass record fields forward using backend names. The user supplies Event images. A Public Tester can independently review the saved Event's Preview under its own approved scope. Testers and builders can record suspected bugs, confirmed bugs, usability issues, observations, and blockers as separate findings in the run, with evidence and any missing proof. Competitor examples can inform what to look for. [[06 Prompts/Interactive Browser Release Testing]] · [[06 Prompts/Showpass QA Competitor Comparisons]]
+Builders use realistic scenario details, stop after verifying saved setup, and carry verified Showpass record fields forward using backend names. The user supplies Event images. The Guest Tester can independently review the saved Event's Preview under an approved read-only plan. Testers and builders record findings observed in their assigned job with evidence and any missing proof. [[06 Prompts/Interactive Browser Release Testing]] · [[06 Prompts/Showpass QA Competitor Comparisons]]
+
+For a named Qase case, carry its saved ID, selected parameter, quantities, and expected results across the handoffs. Route public checkout to Guest Tester or Customer Tester based on session state. Box Office Tester owns staff-side checkout. [[06 Prompts/Interactive Browser Release Testing#Run a named Qase case|Named Qase case workflow]]
+
+From **Organizer Workshop**, choose **Start transfer pilot** and supply the buyer and recipient test emails. The Organizer Builder verifies the Event and Ticket Type, then the Customer Tester takes three separately reviewed jobs in order. Buy four tickets, send three from the original buyer account and verify one remains, then accept three in the recipient account. City queues each next job after the previous result is verified. [[06 Prompts/Interactive Browser Release Testing#Builder, purchase and transfer handoff|Transfer evidence and stopping points]]
 
 ## Examples to build on
 
-- [[03 Test Cases/Events/Northern Cage MMA Draft and Preview - 2026-11-22|MMA Draft and Preview]] shows the Builder and Public Tester handoff with two saved ticket tiers.
+- [[03 Test Cases/Events/Northern Cage MMA Draft and Preview - 2026-11-22|MMA Draft and Preview]] shows the Builder and read-only Preview handoff with two saved ticket tiers.
 - [[03 Test Cases/Events/Toronto Christmas Market City Draft - 2026-11-22|Christmas market]] shows the dedicated runner saving and reopening a Draft with two custom questions.
 - [[03 Test Cases/Events/Bouncy House Fun Day for Kids - QA City Draft|Bouncy house]] shows the paired Organizer agent creating and verifying a Draft. That run needed a manual status refresh. Shared run visibility and live progress across sessions are being developed.
+- [[03 Test Cases/Group Sales and Transfers/Partial Ticket Transfer Pilot - 2026-11-23|Partial ticket transfer pilot]] shows the handoff and sender-side evidence from a separate four-ticket purchase and three-ticket send. The pilot records [SPT-6025](https://app.qase.io/case/SPT-6025) parameter coverage independently.
 
 For a new role or workflow, document its owner, the scope it can handle, and the evidence it returns. Link its first verified run so a new session can see what was actually exercised.

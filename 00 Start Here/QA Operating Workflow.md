@@ -19,12 +19,15 @@ Use [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|the
 | Review a change before development | [[00 Start Here/Showpass QA Handbook/02 Early Risk Review and Test Design]] | Expected behavior, affected clients, largest risks and testability needs |
 | Test a branch or PR | Exact diff, then backend rules and all affected clients | Focused execution, remaining risks and a recommendation in the existing feature/run note |
 | Draft or compare manual cases | [[06 Prompts/Showpass QA Test Case Generator]] or [[06 Prompts/Showpass Qase Gap Analysis]] | Standalone cases; distinguish drafted, published and executed coverage |
+| Execute a named Qase case | [[06 Prompts/Interactive Browser Release Testing#Run a named Qase case|Exact saved case, parameter combinations, and setup]] | One execution result per selected combination with evidence for the case's final assertion |
 | Run a browser check | [[06 Prompts/Interactive Browser Release Testing]] | Agreed checks, actual evidence, cleanup and honest results |
 | Automate a repeated check | [[04 Automation/00 Index]] | Working assertions, focused run, cleanup, actual CI status and the remaining manual check |
 | Decide whether to release | [[06 Prompts/Release Coverage Review]] and [[03 Test Cases/Release Decision Template]] | Qase, Playwright and browser coverage; Full/Partial/None/Unknown; actual results, gaps and recommendation |
 | Improve the process after a problem | [[06 Prompts/Escaped Bug To Regression]] and [[00 Start Here/QA Improvement Log]] | Missing protection tied to the incident; implemented/executed status and a keep/change/stop decision |
 
 Use one canonical note for each request or release. Add the release decision section to that note; do not create another summary that needs separate updates. Choose depth by business impact. A copy change needs less work than a payment or admission change.
+
+For City work, assign one job at a time using the [[00 Start Here/Showpass QA City#Agents, roles, and skills|City role directory]]. Route signed-out buyer work to Guest Tester and signed-in buyer work to Customer Tester. Keep each job's proof with the handoff to the next assignment.
 
 ## Before development: make the change testable
 

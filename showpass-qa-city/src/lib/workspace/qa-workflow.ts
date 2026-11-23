@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { jobSchema } from "./job";
+import { pilotProofSchema } from "./transfer-pilot";
 import { browserFindingsSchema } from "./browser-finding";
 import { builderRecordsSchema } from "./builder-result";
 import { draftExecutionResultSchema, eventDraftSchema } from "./event-draft";
@@ -84,6 +86,7 @@ export const planStageSchemas = {
 
 export const revisionSchema = z.object({
   number: z.number().int().positive(),
+  job: jobSchema.optional(),
   workflow: z.enum(qaWorkflows),
   change: z.string().max(1000),
   plan: proposalSchema,
@@ -91,6 +94,7 @@ export const revisionSchema = z.object({
   eventDraft: eventDraftSchema.optional(),
   executionToken: z.string().optional(),
   codexHandoffToken: z.uuid().optional(),
+  executionKind: z.enum(["codex", "playwright"]).optional(),
   draftExecution: draftExecutionResultSchema.optional(),
   shortReview: shortReviewSchema.optional(),
   engineer: planHandoffSchema.optional(), // Saved consultation from before the full review layer.
@@ -109,6 +113,7 @@ export const browserResultSchema = z.object({
   preview: z.string().trim().max(1000),
   records: builderRecordsSchema.optional(),
   findings: browserFindingsSchema.optional(),
+  pilotProof: pilotProofSchema.optional(),
 });
 
 export type Proposal = z.infer<typeof proposalSchema>;

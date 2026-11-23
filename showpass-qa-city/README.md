@@ -7,7 +7,28 @@ pnpm install
 pnpm dev
 ```
 
-Open [QA City Runs](http://127.0.0.1:3000/runs). Planning uses the local Codex App Server and the installed Showpass skills. The City starts a turn only after Codex confirms included usage and reports that workspace credits are unavailable. The City uses loopback and stores the shared workspace on this Mac.
+Open [QA City Runs](http://127.0.0.1:3000/runs). Planning uses the local Codex App Server and the installed Showpass skills. The City starts a turn only after Codex confirms included usage and reports that workspace credits are unavailable. The City uses loopback. Workspace storage uses Convex when configured and the local workspace file otherwise.
+
+## Connect Convex
+
+Use a dedicated QA City project on the Convex Free plan. From this folder, run `pnpm exec convex dev` and select that project's development deployment. This pushes the City schema and functions.
+
+Generate a random server secret of at least 32 characters. Set it on that deployment with `pnpm exec convex env set QA_CITY_CONVEX_SECRET`. Enter it at the prompt or pipe it from a local secret manager. Add the same secret and the deployment's HTTP Actions URL to your private `.env.local`.
+
+```dotenv
+QA_CITY_CONVEX_SITE_URL=https://your-deployment.convex.site
+QA_CITY_CONVEX_SECRET=your-random-server-secret
+```
+
+Restart City and open **Runs**. On first load, an empty Convex workspace imports the saved local workspace, including run history and release reviews. The local file remains as a backup. Convex takes over subsequent workspace saves. Use an empty deployment for the initial import. Codex dispatch receipts, execution approvals, browser sessions, and Showpass passwords stay local.
+
+## Save QA defaults and reuse builds
+
+In **Settings**, save the **QA venue** with the environment, Organization, and optional existing Event location. Assignments copy those values when saved. Clear **Use QA venue** when a run needs a different target. A follow-up assignment inherits its source run's venue when available.
+
+Under **Showpass test accounts**, enter the Showpass test email for each role that needs one. The approved handoff checks for the matching signed-in Codex browser session and respects signed-out scope. Sign in once per browser session and use your password manager's autofill where available. City has no password field and does not read Showpass passwords from `.env.local`.
+
+**Builds** lists the saved Showpass records from runs. Search by record name, ID, type, or venue and use **Use in assignment** to pass that specific record to another agent.
 
 Choose the assignment's **Review path**. An Event saved in Showpass with the status Draft is live setup.
 
@@ -19,6 +40,12 @@ Choose the assignment's **Review path**. An Event saved in Showpass with the sta
 
 **Organizer Tester** and **Organizer Builder** have separate assignments and skills. Both cover permitted Organizer Dashboard pages. Assign behavior, access, and UX checks to the Tester. Assign configuration and test-data setup to the Builder. Use **Build area** to choose the Event, Product or Membership, or general Dashboard workflow when the title is ambiguous.
 
+Choose one **Job** for each assignment. Guest Tester owns signed-out discovery and guest checkout. Customer Tester owns signed-in discovery, checkout, and Account work, including separate send and accept jobs. Both checkout roles cover public websites and widgets. Box Office Tester chooses one staff job. On the **City map**, select a building for its queue, blockers, and next actions, or use the review queue filters.
+
+### Start the transfer pilot
+
+Select **Organizer Workshop → Start transfer pilot**, enter the buyer and recipient test emails, and save the Builder assignment. The Builder records the verified Event and Ticket Type ID. The Customer Tester buys four tickets and records the issued order, sends three and records the pending transfer and retained ticket, then uses the recipient account to accept and verify three tickets. Each verified result queues the next assignment, which goes through the existing review and QA Lead approval.
+
 After live plan approval, paired Organizer assignments can use **Run in Codex**. Other assignments can continue through **Open in Codex** or **Copy handoff**. A revised live plan needs fresh review and sign-off. Use **Use full review on the next revision** to raise a short assignment to full review.
 
 ### Run an approved Organizer plan in Codex
@@ -29,7 +56,7 @@ In `.env.local`, `QA_CITY_ORGANIZER_CODEX_THREAD_ID` pairs the Organizer Builder
 
 Use **Record browser result** on the assignment to save the outcome. Use **Add finding** for each suspected bug, confirmed bug, usability issue, observation, or blocker. Record what happened and include the expectation, impact, and evidence you have. Mark missing proof or follow-up on the finding.
 
-For a passed Event build, paste the saved records and matching beta Preview URL. City queues a Public Tester assignment to review the Preview separately. The builder can also record partial saves with a failed or blocked result. Add your own Event images in Showpass.
+For a passed Event build outside the transfer pilot, paste the saved records and matching beta Preview URL. City queues a Guest Tester assignment to review the Preview separately. The Builder can record partial saves with a failed or blocked result. Add your own Event images in Showpass.
 
 ### Retained Playwright runner
 

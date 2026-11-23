@@ -10,13 +10,21 @@ import { browserFindingsSchema, type BrowserFinding } from "@/lib/workspace/brow
 import { asBuilderWorkflow, browserOutcomeLabels, browserOutcomes, browserResultSchema } from "@/lib/workspace/qa-workflow";
 import type { Run } from "@/lib/workspace/schema";
 import { FindingFields } from "./browser-findings";
+import type { QaJob } from "@/lib/workspace/job";
 
 type Outcome = typeof browserOutcomes[number];
 const outcomeOptions = browserOutcomes.map((value) => ({ value, label: browserOutcomeLabels[value] }));
 
-export function BrowserResultForm({ result, workflow, pending, onSubmit }: {
+const pilotFields = {
+  purchase: [{ name: "orderReference", label: "Saved order reference" }, { name: "issued", label: "Tickets issued", count: true }],
+  "send-transfer": [{ name: "transferReference", label: "Safe transfer reference" }, { name: "pending", label: "Tickets pending", count: true }, { name: "retained", label: "Tickets retained", count: true }],
+  "accept-transfer": [{ name: "accepted", label: "Tickets accepted and found in Account", count: true }],
+} satisfies Record<string, { name: string; label: string; count?: boolean }[]>;
+
+export function BrowserResultForm({ result, workflow, pilotJob, pending, onSubmit }: {
   result: Run["browserResult"];
   workflow: NonNullable<Run["workflow"]>;
+  pilotJob?: QaJob;
   pending: boolean;
   onSubmit: (outcome: Outcome, fields: FormData, findings: BrowserFinding[]) => void;
 }) {
@@ -92,11 +100,21 @@ export function BrowserResultForm({ result, workflow, pending, onSubmit }: {
       <FormField testId="run-result-summary" label="What happened?" error={summaryError}>
         {(field) => <Textarea {...field} ref={summaryRef} name="summary" maxLength={browserResultSchema.shape.summary.maxLength ?? undefined} rows={3} defaultValue={result?.summary} onChange={() => setSummaryError("")} placeholder="What worked, any issues, and the evidence or report link" required />}
       </FormField>
-      {workflow === "event-builder" && (
+      {workflow === "event-builder" && !pilotJob && (
         <FormField testId="run-result-preview" label="Beta Event Preview URL">
           {(field) => <Input {...field} name="preview" type="url" maxLength={1000} defaultValue={result?.preview} />}
         </FormField>
       )}
+      {outcome === "passed" && pilotJob && pilotJob in pilotFields &&
+        pilotFields[pilotJob as keyof typeof pilotFields].map(({ name, label, ...options }) => {
+          const count = "count" in options && options.count;
+          return (
+            <FormField key={name} testId={`run-pilot-${name}`} label={label}>
+              {(field) => <Input {...field} name={name} type={count ? "number" : "text"} min={count ? 0 : undefined} maxLength={count ? undefined : 80} required />}
+            </FormField>
+          );
+        })
+      }
       {builderWorkflow && (
         <FormField testId="run-result-records" label={builderWorkflow === "organizer-builder" ? "Saved Events, Products or Memberships (optional JSON)" : "Saved Showpass records (JSON)"}>
           {(field) => <Textarea {...field} name="records" rows={5} maxLength={24_000} defaultValue={result?.records ? JSON.stringify(result.records, null, 2) : ""} placeholder="Paste supported saved records returned by the builder in Codex." className="font-mono" />}

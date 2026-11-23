@@ -4,10 +4,14 @@ date: 2026-11-23
 tags:
   - qa/test-cases
   - transfers
-status: Draft
+status: Published to Qase
 ---
 
 # Required questions when accepting a ticket transfer
+
+## Qase publication
+
+TC-1 was published as [SPT-6025](https://app.qase.io/case/SPT-6025) in [Transfers (suite 1162)](https://app.qase.io/project/SPT?suite=1162) on 2026-11-23. Readback matched the approved case, including all nine steps and the Single parameter **QuestionScope** with **PerOrder** and **PerTicket**. The [[03 Test Cases/Group Sales and Transfers/SPT-6025 Transfer Acceptance Browser Run - 2026-11-23|browser run]] records the public PerOrder purchase and the requested Web Box Office PerTicket variation, including the expanded four-ticket partial-transfer checks.
 
 ## Testing intent and scope
 
@@ -104,4 +108,4 @@ Separate checks are needed for two-purchase conditional questions, edited questi
 - Backend companion [PR #12542](https://bitbucket.org/showpass/web-app/pull-requests/12542), landed `42c035874a69f7ff65f3ba22b8dd1dfe034cc5e5` over `ef5a35b7d70e88b85a7ad37cc3a41dca355f917d`. The [transfer test](https://bitbucket.org/showpass/web-app/src/42c035874a69f7ff65f3ba22b8dd1dfe034cc5e5/apps/tickets/tests/api/venue/transfers/test_api_venue_based_ticket_transfer.py#lines-382) covers order and ticket answers, required validation, recipient readback, and preservation of the sender’s answer.
 - Frontend PR comparison `e3be7d04ba1d90161f75f67543ae071fdc37762d` → `52f00849d8147862c4dcd1584fee10d0b39db8a0`. Local UI evidence was reviewed at squash commit `d54411c294c9896504cd11f5cec5ec3c96df5842` over `b4de0109da1068b5eed944e2101874a8494d2696`. The [recipient component test](https://github.com/showpass/showpass-frontend/blob/d54411c294c9896504cd11f5cec5ec3c96df5842/packages/core/src/app-contexts/public/features/checkout/components/checkout-accept-transfer/CheckoutAcceptTransfer.test.tsx#L1004-L1052) checks the blank input, required error, and separate acceptance action. [My Orders answer actions](https://github.com/showpass/showpass-frontend/blob/d54411c294c9896504cd11f5cec5ec3c96df5842/packages/core/src/app-contexts/user/features/account/features/my-orders/ui/components/PostPurchaseQuestionActions/PostPurchaseQuestionActions.web.tsx#L65-L78) define the saved-answer controls.
 - Setup and customer navigation were cross-checked against the [Showpass Order Form guide](https://help.showpass.com/hc/en-us/articles/4408550127255-Organizer-guide-Collecting-ticket-buyer-information-using-custom-questions), [transfer limit guide](https://help.showpass.com/hc/en-us/articles/44076428706711-Organizer-guide-Setting-ticket-transfer-limits), [sender guide](https://help.showpass.com/hc/en-us/articles/360023831873-Ticket-buyer-guide-How-to-transfer-tickets-or-products), and [[00 Start Here/Showpass QA Handbook/Playbooks/15 Delivery Check-In Transfers and Resale#Transfer to a different Customer|Transfer to a different Customer]].
-- Browser execution is **Not run**. This is a local Qase draft.
+- Purchases and sender steps were verified in the [[03 Test Cases/Group Sales and Transfers/SPT-6025 Transfer Acceptance Browser Run - 2026-11-23|browser run]]. The recipient proof targets above are still **Not run**.

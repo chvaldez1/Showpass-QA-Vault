@@ -1,8 +1,14 @@
 import { workspaceVersionSchema, type WorkspaceVersion } from "./shared-schema";
 import { demoWorkspace } from "./demo";
 import { normalizeWorkspace } from "./normalize";
+import { savedBuildRecords } from "./build-catalog";
+import { jobNeedsFullReview, jobsFor } from "./job";
+import { pilotAccountsSchema, pilotPurchaseQuantity, pilotStages, pilotTransferQuantity, type PilotAccounts } from "./transfer-pilot";
 import {
   agentFormSchema,
+  qaAccountsSchema,
+  qaAccountRoles,
+  qaVenueSchema,
   runFormSchema,
   workspaceSchema,
   type AgentFormValues,
@@ -10,7 +16,7 @@ import {
   type Run,
   type Workspace,
 } from "./schema";
-import { isMatchingBetaPreview } from "./builder-result";
+import { isMatchingBetaPreview, matchesBuild } from "./builder-result";
 import type { DraftExecutionResult } from "./event-draft";
 import {
   browserResultSchema, getPlanReviewMode, getQaWorkflow, isPlanReviewReady, planStageSchemas, shortReviewSchema,
@@ -119,7 +125,10 @@ async function watchWorkspace(generation: number) {
   } catch {
     // Existing data stays visible while a subsequent attempt reconnects.
   } finally {
-    if (generation === watchGeneration) pollTimer = setTimeout(() => void watchWorkspace(generation), 2500);
+    if (generation === watchGeneration) {
+      const delay = document.visibilityState === "hidden" ? 30_000 : 2500;
+      pollTimer = setTimeout(() => void watchWorkspace(generation), delay);
+    }
   }
 }
 
@@ -162,17 +171,43 @@ export function addAgent(input: AgentFormValues) {
   });
 }
 
-export function queueRun(input: RunFormValues) {
+export function saveQaVenue(input: unknown) {
+  const qaVenue = qaVenueSchema.parse(input);
+  return updateWorkspace((workspace) => ({ ...workspace, qaVenue }));
+}
+
+export function saveQaAccounts(input: unknown) {
+  const qaAccounts = qaAccountsSchema.parse(input);
+  return updateWorkspace((workspace) => ({ ...workspace, qaAccounts }));
+}
+
+export function queueRun(input: RunFormValues, useQaVenue = true, pilotAccounts?: PilotAccounts) {
   const run = runFormSchema.parse(input);
+  const pilot = pilotAccounts && { ...pilotAccountsSchema.parse(pilotAccounts), id: crypto.randomUUID() };
   return updateWorkspace((workspace) => {
     const agent = workspace.agents.find(({ id }) => id === run.agentId);
     if (!agent) {
       throw new Error("Choose an agent from the current workspace.");
     }
+    const accountRole = qaAccountRoles.find((role) => role === agent.role);
+    const allowedJobs = jobsFor(agent.role);
+    const job = run.job ?? (allowedJobs.length === 1 ? allowedJobs[0] : undefined);
+    if ((job && !allowedJobs.includes(job)) || (!job && allowedJobs.length > 1)) {
+      throw new Error("Choose one job that belongs to this agent.");
+    }
+    if (pilot && (agent.role !== "organizer-builder" || run.builderWorkflow !== "event-builder" ||
+      run.sourceRunId || run.reviewMode === "draft")) {
+      throw new Error("Start the transfer pilot with a new live Event setup assigned to the Organizer Builder.");
+    }
 
     const previousRun = workspace.runs.find(({ id }) => id === run.sourceRunId);
     if (run.sourceRunId && !previousRun) {
       throw new Error("The handoff run is no longer in the workspace.");
+    }
+    const reference = run.sourceRecord;
+    const savedSourceRecord = reference && savedBuildRecords(previousRun)?.find((record) => matchesBuild(record, reference));
+    if (reference && !savedSourceRecord) {
+      throw new Error("The selected build record is no longer available in its source run.");
     }
 
     return {
@@ -180,9 +215,16 @@ export function queueRun(input: RunFormValues) {
       runs: [
         {
           ...run,
+          job,
+          pilot,
+          reviewMode: run.reviewMode !== "draft" && jobNeedsFullReview(job) ? "full" : run.reviewMode,
           builderWorkflow: agent.role === "organizer-builder" ? run.builderWorkflow : undefined,
           workflow: getQaWorkflow(agent.role ?? agent.id, run.title, run.builderWorkflow),
           target: run.target || previousRun?.target || "",
+          qaVenue: useQaVenue ? (previousRun ? previousRun.qaVenue : workspace.qaVenue) : undefined,
+          qaAccountEmail: accountRole && job !== "accept-transfer" && (accountRole !== "public-tester" || job === "inspect-public")
+            ? workspace.qaAccounts?.[accountRole] : undefined,
+          savedSourceRecord,
           id: crypto.randomUUID(),
           createdAt: new Date().toISOString(),
           status: "queued",
@@ -273,7 +315,7 @@ export function requestRevision(id: string, number: number, change: string, requ
 export function saveProposal(id: string, revision: Revision) {
   return updateRun(id, (run) => {
     assertCurrentRevision(run, revision.number - 1);
-    if (revision.change !== (run.changeRequest ?? "") ||
+    if (revision.change !== (run.changeRequest ?? "") || revision.job !== run.job ||
       revision.workflow !== (run.workflow ?? getQaWorkflow(run.agentId, run.title, run.builderWorkflow))) {
       throw new Error("The assignment scope changed. Reload the assignment and try again.");
     }
@@ -295,7 +337,10 @@ export function saveReview(id: string, number: number, review: LeadDecision, exe
     }
     return {
       ...run,
-      revision: { ...run.revision, review, executionToken, codexHandoffToken },
+      revision: {
+        ...run.revision, review, executionToken, codexHandoffToken,
+        executionKind: codexHandoffToken ? "codex" : executionToken ? "playwright" : undefined,
+      },
       status: review.decision === "approved" ? "needs-input" : "queued",
     };
   });
@@ -355,6 +400,7 @@ export function saveBrowserResult(id: string, number: number, values: Run["brows
     const eventBuild = run.revision.workflow === "event-builder";
     const offeringBuild = run.revision.workflow === "offering-builder";
     const completed = browserResult.outcome === "passed";
+    if (run.job && run.revision.job !== run.job) throw new Error("Record the result for the approved job.");
     if (completed && (eventBuild || offeringBuild) && !browserResult.records?.length) {
       throw new Error("Add the verified Showpass records before marking the build passed.");
     }
@@ -362,9 +408,9 @@ export function saveBrowserResult(id: string, number: number, values: Run["brows
     if (completed && eventBuild) {
       const records = browserResult.records?.filter((entry) => entry.kind === "event");
       if (records?.length !== 1 || !records[0].record.tickettype_set?.length) {
-        throw new Error("Add one saved Event with its ticket types for the Public Tester.");
+        throw new Error("Add one saved Event with its ticket types.");
       }
-      if (!isMatchingBetaPreview(browserResult.preview, records[0].record.slug)) {
+      if (!run.pilot && !isMatchingBetaPreview(browserResult.preview, records[0].record.slug)) {
         throw new Error("Enter the beta Preview URL for the saved Event’s slug.");
       }
     }
@@ -378,7 +424,10 @@ export function saveBrowserResult(id: string, number: number, values: Run["brows
     const runs = workspace.runs.map((entry): Run => entry.id === id
       ? { ...entry, browserResult, status: status[browserResult.outcome] } : entry);
 
-    if (eventBuild && completed) {
+    if (run.pilot && completed) {
+      const followUp = nextPilotRun(run, browserResult);
+      if (followUp) runs.unshift(followUp);
+    } else if (eventBuild && completed) {
       runs.unshift({
         id: crypto.randomUUID(),
         agentId: "public-tester",
@@ -386,6 +435,9 @@ export function saveBrowserResult(id: string, number: number, values: Run["brows
         instructions: "Use the authorized Draft Preview session. Review the page as a buyer and compare the visible Event and ticket details with the builder’s saved records. Stop at Preview with zero tickets selected.",
         target: browserResult.preview,
         sourceRunId: run.id,
+        job: "inspect-public",
+        qaVenue: run.qaVenue,
+        qaAccountEmail: workspace.qaAccounts?.["public-tester"],
         mode: run.mode,
         reviewMode: "short",
         createdAt: new Date().toISOString(),
@@ -395,4 +447,39 @@ export function saveBrowserResult(id: string, number: number, values: Run["brows
     }
     return { ...workspace, runs };
   });
+}
+
+function nextPilotRun(run: Run, result: NonNullable<Run["browserResult"]>): Run | undefined {
+  const stage = pilotStages.findIndex(({ job }) => job === run.job);
+  const next = pilotStages[stage + 1];
+  if (stage < 0 || !run.pilot) throw new Error("This assignment does not own a transfer pilot step.");
+  const proof = result.pilotProof;
+  const event = run.job === "setup" ? result.records?.find(({ kind }) => kind === "event") : run.savedSourceRecord;
+  if (event?.kind !== "event" || event.record.tickettype_set?.length !== 1 || !event.record.tickettype_set[0].id) {
+    throw new Error("The pilot needs the verified Event with one saved Ticket Type ID.");
+  }
+  if (run.job === "purchase" && (proof?.kind !== "purchase" || proof.issued !== pilotPurchaseQuantity)) {
+    throw new Error("Record the saved order and all four issued tickets before handing off to the sender.");
+  }
+  if (run.job === "send-transfer" && (proof?.kind !== "send-transfer" || proof.pending !== pilotTransferQuantity ||
+    proof.retained !== pilotPurchaseQuantity - pilotTransferQuantity || !run.pilotInput?.orderReference)) {
+    throw new Error("Record the transfer reference, three pending tickets and one retained ticket on the original order.");
+  }
+  if (run.job === "accept-transfer" && (proof?.kind !== "accept-transfer" || proof.accepted !== pilotTransferQuantity ||
+    !run.pilotInput?.orderReference || !run.pilotInput.transferReference)) {
+    throw new Error("Verify three accepted tickets on the designated recipient account.");
+  }
+  if (!next) return;
+
+  return {
+    id: crypto.randomUUID(), agentId: next.role, workflow: next.role, job: next.job, title: next.title,
+    pilot: run.pilot, savedSourceRecord: event, sourceRunId: run.id,
+    pilotInput: {
+      orderReference: proof?.kind === "purchase" ? proof.orderReference : run.pilotInput?.orderReference,
+      transferReference: proof?.kind === "send-transfer" ? proof.transferReference : run.pilotInput?.transferReference,
+    },
+    qaAccountEmail: next.job === "accept-transfer" ? run.pilot.recipientEmail : run.pilot.buyerEmail,
+    qaVenue: run.qaVenue, mode: run.mode, reviewMode: "full", target: "",
+    instructions: "", createdAt: new Date().toISOString(), status: "queued", sample: false,
+  };
 }

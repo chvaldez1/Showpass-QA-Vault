@@ -52,6 +52,10 @@ async function readApproval(runId: string, revision: number) {
   return parsed.success && parsed.data.revision === revision ? parsed.data : undefined;
 }
 
+export async function savedCodexHandoffToken(runId: string, revision: number) {
+  return (await readApproval(runId, revision))?.token;
+}
+
 async function readReceipt(runId: string, revision: number) {
   const value = await readLocalState(receiptFile(runId, revision));
   return value === undefined ? undefined : receiptSchema.parse(value);

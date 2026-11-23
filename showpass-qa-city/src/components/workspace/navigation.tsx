@@ -3,6 +3,7 @@
 import {
   ActivityIcon,
   BotIcon,
+  BoxesIcon,
   ClipboardCheckIcon,
   MapIcon,
   Settings2Icon,
@@ -15,6 +16,7 @@ const destinations = [
   { id: "city-map", href: "/", label: "City map", icon: MapIcon },
   { id: "agents", href: "/agents", label: "Agents", icon: BotIcon },
   { id: "runs", href: "/runs", label: "Runs", icon: ActivityIcon },
+  { id: "builds", href: "/builds", label: "Builds", icon: BoxesIcon },
   { id: "releases", href: "/releases", label: "Releases", icon: ClipboardCheckIcon },
   { id: "settings", href: "/settings", label: "Settings", icon: Settings2Icon },
 ];
@@ -26,7 +28,7 @@ export function WorkspaceNavigation() {
     <nav
       aria-label="Workspace"
       data-testid="workspace-navigation"
-      className="grid grid-cols-3 gap-1 px-2 pb-2 sm:grid-cols-5 md:flex md:flex-1 md:flex-col md:gap-1.5 md:px-4 md:pb-5"
+      className="grid grid-cols-3 gap-1 px-2 pb-2 sm:grid-cols-6 md:flex md:flex-1 md:flex-col md:gap-1.5 md:px-4 md:pb-5"
     >
       {destinations.map(({ id, href, label, icon: Icon }) => {
         const active = href === pathname || (href !== "/" && pathname.startsWith(`${href}/`));

@@ -1,9 +1,14 @@
 import { z } from "zod";
+import { builderRecordSchema, buildReferenceSchema } from "./builder-result";
 import { browserResultSchema, builderWorkflows, planReviewModes, qaWorkflows, revisionSchema } from "./qa-workflow";
 import { releaseSchema } from "./release";
+import { jobSchema } from "./job";
+import { pilotInputSchema, transferPilotSchema } from "./transfer-pilot";
 
 export const agentKinds = ["browser", "coverage", "triage", "custom"] as const;
-export const agentRoles = ["public-tester", "customer-tester", "organizer-tester", "organizer-builder", "box-office-tester", "qase-grammar-police"] as const;
+export const qaAccountRoles = ["public-tester", "customer-tester", "organizer-tester", "organizer-builder", "box-office-tester"] as const;
+export const agentRoles = [...qaAccountRoles, "qase-grammar-police"] as const;
+export const qaAccountsSchema = z.partialRecord(z.enum(qaAccountRoles), z.string().trim().pipe(z.email().max(254)));
 export const runModes = ["drive", "guide"] as const;
 export const runStatuses = ["queued", "running", "needs-input", "completed", "failed", "cancelled"] as const;
 
@@ -22,9 +27,17 @@ const assignmentDetails = {
   mode: z.enum(runModes),
   target: z.string().trim().max(180),
   sourceRunId: z.string(),
+  sourceRecord: buildReferenceSchema.optional(),
+  job: jobSchema.optional(),
   reviewMode: z.enum(planReviewModes).optional(),
   builderWorkflow: z.enum(builderWorkflows).optional(),
 };
+
+export const qaVenueSchema = z.object({
+  environment: z.string().trim().min(1, "Enter the environment.").max(80),
+  organization: z.string().trim().min(1, "Enter the Organization.").max(120),
+  location: z.string().trim().max(120),
+});
 
 export const runFormSchema = z.object({
   agentId: z.string().min(1, "Choose an agent."),
@@ -46,6 +59,11 @@ const savedRunSchema = runFormSchema.extend({
   target: assignmentDetails.target.default(""),
   sourceRunId: assignmentDetails.sourceRunId.default(""),
   sample: z.boolean().default(false),
+  qaVenue: qaVenueSchema.optional(),
+  qaAccountEmail: z.email().optional(),
+  pilot: transferPilotSchema.optional(),
+  pilotInput: pilotInputSchema.optional(),
+  savedSourceRecord: builderRecordSchema.optional(),
   workflow: z.enum(qaWorkflows).optional(),
   recoveredCodexRevision: z.number().int().positive().optional(),
   revision: revisionSchema.optional(),
@@ -58,6 +76,8 @@ export const workspaceSchema = z.object({
   agents: z.array(agentSchema),
   runs: z.array(savedRunSchema),
   releases: z.array(releaseSchema).default([]),
+  qaVenue: qaVenueSchema.optional(),
+  qaAccounts: qaAccountsSchema.optional(),
 });
 
 export type AgentFormValues = z.infer<typeof agentFormSchema>;
@@ -67,4 +87,6 @@ export type AgentRole = (typeof agentRoles)[number];
 export type Agent = z.infer<typeof agentSchema>;
 export type Run = z.infer<typeof savedRunSchema>;
 export type RunStatus = Run["status"];
+export type QaVenue = z.infer<typeof qaVenueSchema>;
+export type QaAccounts = z.infer<typeof qaAccountsSchema>;
 export type Workspace = z.infer<typeof workspaceSchema>;

@@ -22,6 +22,14 @@ Read [[00 Start Here/World-Class Software Quality Standard]] first. It defines t
 
 Reuse relevant cases from [[06 Prompts/Showpass QA Test Case Generator]] when available. A focused smoke check can start from the requested page without first generating a full test suite. Trace the selected behavior in source and use the relevant handbook sections. Creating cases and comparing Qase coverage remain separate tasks.
 
+### Run a named Qase case
+
+Read the exact saved case through [[05 Tooling/qasectl#Exact-ID Review Workflow|the exact-ID Qase read workflow]]. Record its ID, Platform/View, preconditions, saved parameters and mappings, steps, expected results, and postconditions in the run plan. Use the case's declared combinations. For one Single parameter, plan one run per saved value unless the user explicitly selects a subset. Give each run its own row and record which setup, order, and result belong to it.
+
+Use the saved case to choose the required data, quantities, actions, and finishing point. Investigate source or deployment differences that could affect execution. If the case is inaccessible or a proposed change would alter its proof, name the gap before running a substitute. Record any user-approved variation as a separate check and keep the original case row's execution status accurate.
+
+For [SPT-6025](https://app.qase.io/case/SPT-6025), plan one fresh one-ticket order for **PerOrder** with **Collect guest information per ticket** off and another for **PerTicket** with it on. Save and reopen the setting before each purchase. In both runs, verify the blank **Pickup note**, the required error on **Continue**, successful acceptance, and the recipient's own saved answer in the section the case specifies. A pending send is a handoff between roles.
+
 ## Standard for Every Run
 
 Plan → short or full review and QA Lead sign-off → test → evidence. A draft-only plan ends at the draft.
@@ -49,6 +57,31 @@ Show the plan before testing. Apply [[06 Prompts/Showpass Release Engineering Ha
 - Widen investigation when an in-scope failure blocks the selected journey or suggests harm to money, saved data, inventory or access. Explain that reason. An unrelated page, an available integration or another handbook example is not by itself a reason to expand the run.
 - Apply user corrections immediately to the active plan, report and conclusion. If the user narrows the work to public pages, cancel the pending staff-login request and remove that requirement from the remaining scope. Preserve earlier evidence with its original context; do not count it as a new run.
 - Separate known issues, unsupported/deprecated controls and new findings. Record a known issue's exact affected attempt and use a safe recovery when useful; do not repeatedly reproduce it without a new question to answer. A known failure still cannot be marked Passed or clear an unresolved financial/access gate. Withdraw a finding when the user establishes that the tested control is deprecated, retaining the reason in the note.
+
+### Builder, purchase and transfer handoff
+
+For a named case, carry the case ID and the selected parameter values through every handoff. The Organizer Builder chooses incidental details the case leaves open, such as a plausible event theme, title, future schedule, realistic prices in the venue currency, and enough available tickets. Use an authorized test Organization and a suitable saved location. Keep test records clearly identified and choose the visibility needed for the test. Ask the user about a setup detail only when the choice changes the proof, access, spending, or data ownership.
+
+When a transfer assignment leaves quantities open and partial transfer is applicable, buy four eligible tickets, transfer three, and verify that one stays with the sender. Use the exact quantities in a named case or an explicit assignment. When purchase channels differ across runs, record the channel next to each parameter and hand the public checkout to the assigned public buyer and staff checkout to the Box Office Tester.
+
+| Owner | Work and handoff |
+| --- | --- |
+| Organizer Builder | Prepare and reopen the settings for each case value before the matching purchase. Hand the Customer Tester the case ID, parameter value, Event link, ticket type and exact quantity, saved price, and any remaining prerequisite. |
+| Checkout job | The Customer Tester owns signed-in checkout. Use Guest Tester for an explicit guest case and Box Office Tester for a staff sale. Verify the saved order and issued items for the exact quantity and parameter. Stop at that order and give the sender a safe reference. |
+| Customer Tester · Send transfer | Use the original buyer account. Send the authorized quantity to the designated recipient, reopen the order, and record the transfer reference, pending count and retained count. Keep claim links and barcodes out of the handoff. |
+| Customer Tester · Accept transfer | Use the designated recipient account for the recorded transfer. Verify the case’s applicable validation, acceptance and saved items. A pending transfer is evidence for the send job. |
+
+Give checkout, send, and acceptance separate assignments, account scopes, stopping points and review decisions. Use the original case’s supported path. The City partial-transfer pilot uses the four-ticket and three-ticket defaults, with a distinct buyer and recipient.
+
+Pause at the first blocked action. Leave the browser on the relevant screen for sign-in, a verification code, agreement to terms, or an approved payment handoff. For sandbox checkout, use the approved test card and billing details when they are available and verify the active payment method is in test mode. State the record, quantity, expected outcome, and exact action the user needs to take. If a submit times out or its outcome is unclear, reopen the order or transfer state before considering another submit. Resume at the first unfinished action using the same record and proof. Keep the shared review policy for plan changes and reuse earlier readiness answers that still apply.
+
+#### Sandbox checkout defaults
+
+Use these defaults when the case does not specify a payment or protection scenario and the venue has approved Stripe sandbox. Verify test mode on each purchase's active card form, including Web Box Office.
+
+1. For **Refund Protection**, choose **No, I agree with the organizers refund policy** after any required checkout-time approval of that wording.
+2. In **Billing address**, type `showpass` and select **Showpass, Macleod Trail, Calgary, AB, Canada** from the results. Press **Down Arrow** if the list stays closed. If the suggestion is unavailable and the form requires an address, use the approved Showpass Calgary test address.
+3. Use Stripe's synthetic Visa `4242 4242 4242 4242`, expiry `05/35` or another future month and year, and CVC `123`. Use `QA Team` as the cardholder. Leave saved-card options off and check the final amount before submitting.
 
 ### Check test data and cleanup before changing it
 
@@ -112,9 +145,9 @@ Test the interface from the person's point of view as part of every in-scope rol
 
 | Role | What to challenge in the approved flow |
 | --- | --- |
-| Public Tester | Can a first-time visitor find the Event, understand local date, venue, access and ticket differences, and find the next action or help? Does the same information remain readable on a narrow screen? For Account, can a returning Customer tell where to find an existing order? |
-| Customer Tester | Can a buyer tell what is included, what they will pay, and whether payment succeeded? Check fee and total wording, validation beside the right field, recovery from the approved failure state, and where the buyer finds their order or tickets. |
-| Organizer Tester | Can an Organizer find the owning screen, tell which fields are required, understand defaults and visibility, and see what is saved versus still being edited? Check whether errors explain how to fix the problem and whether Preview matches the saved Event. |
+| Guest Tester | Can a signed-out visitor find the Event, understand ticket choices, and continue through guest checkout when assigned? For an authorized Event Preview, compare the exact visible details with the saved setup. |
+| Customer Tester | Can the signed-in buyer understand the total, find their order, or tell whether the assigned Account action succeeded? For discovery, check whether the signed-in visitor can use the requested filters and find the right result. |
+| Organizer Tester | Can an Organizer find the owning screen, tell which fields are required, understand defaults and visibility, and see what is saved versus still being edited? Check whether validation explains what to fix. |
 | Box Office Tester | Under realistic time pressure, can an employee find the right order, distinguish lookup from Check In, and understand whether an action succeeded or should be retried? Inspect feedback and recovery on the client or device named in the plan. |
 
 Check relevant accessibility and layout details in the available client, such as keyboard order, visible focus, actionable labels, contrast, clipped controls, and readable feedback at realistic widths. Record the specific control and state. A partial keyboard or layout check establishes only what was tested.

@@ -7,10 +7,17 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { AgentAction } from "@/components/workspace/agent-action";
 import { AgentProfileLink } from "@/components/workspace/agent-display";
 import { PageHeader } from "@/components/workspace/page-header";
-import { RunHistory, RunStatusBadge } from "@/components/workspace/run-list";
+import { RunHistory, statusDisplay } from "@/components/workspace/run-list";
+import { liveStatus } from "@/components/workspace/codex-activity";
+import { NewRunDialog } from "@/components/workspace/new-run-dialog";
+import { useLiveCodexRuns } from "@/hooks/use-live-codex-runs";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { locations } from "@/lib/workspace/city";
+import { jobLabels } from "@/lib/workspace/job";
 import { agentRoles, type AgentRole, type Workspace } from "@/lib/workspace/schema";
+import { codexRevision } from "@/lib/workspace/shared-schema";
+import { nextRunAction, queueReviewers } from "@/lib/workspace/run-queue";
+import { pilotStages } from "@/lib/workspace/transfer-pilot";
 import { LocationIcon } from "./location-icon";
 import { Map2D } from "./map-2d";
 import "./city.css";
@@ -96,12 +103,26 @@ function CityMap({ selected, onSelect }: {
 
 function CityWorkspace({ agents, runs }: Workspace) {
   const [selected, setSelected] = useState<AgentRole>("organizer-tester");
+  const [reviewer, setReviewer] = useState<(typeof queueReviewers)[number]>();
   const location = locations[selected];
-  const latestRun = runs.find(({ agentId }) => agentId === selected);
+  const { activity, disconnected } = useLiveCodexRuns(runs.some((run) => Boolean(codexRevision(run))));
+  const pending = runs.flatMap((run) => {
+    const next = nextRunAction(run, liveStatus(run, activity));
+    return next ? [{ run, next }] : [];
+  });
+  const roleQueue = pending.filter(({ run, next }) => reviewer ? next.reviewer === reviewer : run.agentId === selected);
+  const blockers = roleQueue.filter(({ next }) => next.blocker).length;
+  const latestPilot = runs.find(({ pilot }) => pilot)?.pilot;
+
+  function selectRole(role: AgentRole) {
+    setSelected(role);
+    setReviewer(undefined);
+  }
 
   return (
+    <>
     <div className="city-workspace-grid">
-      <CityMap selected={selected} onSelect={setSelected} />
+      <CityMap selected={selected} onSelect={selectRole} />
       <section data-testid="city-selected-agent" aria-labelledby="selected-agent" className="city-location-panel" style={{ "--location-color": location.color } as CSSProperties}>
         <div className="flex size-11 items-center justify-center rounded-xl bg-[color-mix(in_srgb,var(--location-color),transparent_78%)] text-[color-mix(in_srgb,var(--location-color),var(--foreground)_60%)]">
           <LocationIcon role={selected} className="size-5.5" />
@@ -111,20 +132,54 @@ function CityWorkspace({ agents, runs }: Workspace) {
           <h2 id="selected-agent" className="mt-1 text-2xl font-semibold tracking-tight">{location.agentName}</h2>
         </div>
         <p className="text-sm leading-6 text-muted-foreground">{location.description}</p>
-        <div className="rounded-xl border bg-background/70 p-3.5">
-          <p className="text-xs font-medium text-muted-foreground">Example assignment</p>
-          <p className="mt-1.5 text-sm leading-5">{location.example}</p>
-        </div>
-        {!location.codexPrompt && <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted-foreground">{latestRun?.sample ? "Latest sample run" : "Latest run"}</span>
-          {latestRun ? <RunStatusBadge status={latestRun.status} draftOnly={latestRun.reviewMode === "draft"} /> : <span className="text-xs">No runs yet</span>}
-        </div>}
+        <a href="#city-role-queue" onClick={() => setReviewer(undefined)} className="text-sm font-medium underline underline-offset-4">
+          {pending.filter(({ run }) => run.agentId === selected).length} open assignments · View queue
+        </a>
         <div className="mt-auto grid w-full gap-2 sm:grid-cols-2 xl:grid-cols-1">
           <AgentAction key={selected} agents={agents} runs={runs} role={selected} className="h-9 w-full px-3" />
+          {selected === "organizer-builder" &&
+            <NewRunDialog agentId={selected} agents={agents} runs={runs} transferPilot variant="outline" className="h-9 w-full px-3" />}
           <AgentProfileLink role={selected} size="lg" />
         </div>
       </section>
     </div>
+    {latestPilot && (
+      <section data-testid="city-transfer-pilot" aria-label="Latest transfer pilot" className="grid gap-3 rounded-xl border bg-card p-4">
+        <h2 className="font-semibold">Latest transfer pilot</h2>
+        <ol className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {pilotStages.map(({ role, job }) => {
+            const run = runs.find((entry) => entry.pilot?.id === latestPilot.id && entry.job === job);
+            const next = run && nextRunAction(run, liveStatus(run, activity));
+            const status = next?.blocker ? "Blocked" : next?.label ?? (run ? statusDisplay[run.status].label : "Waiting for prior step");
+            return (
+              <li key={job}>
+                <Button type="button" variant="outline" data-testid={`city-pilot-${job}`} onClick={() => selectRole(role)}
+                  className="h-auto w-full flex-col items-start gap-1 px-3 py-2 text-left whitespace-normal">
+                  {jobLabels[job]}
+                  <span className="text-xs font-normal text-muted-foreground">{status}</span>
+                </Button>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+    )}
+    <div id="city-role-queue" className="grid gap-2">
+      <div className="flex flex-wrap gap-1" role="group" aria-label="Review queues">
+        <Button type="button" variant={!reviewer ? "secondary" : "outline"} aria-pressed={!reviewer} onClick={() => setReviewer(undefined)}>Selected role</Button>
+        {queueReviewers.map((name) => (
+          <Button key={name} type="button" variant={reviewer === name ? "secondary" : "outline"} aria-pressed={reviewer === name} onClick={() => setReviewer(name)}>
+            {name} · {pending.filter(({ next }) => next.reviewer === name).length}
+          </Button>
+        ))}
+      </div>
+      {disconnected && <p role="status" className="text-sm text-muted-foreground">Live Codex status is unavailable.</p>}
+      <RunHistory testId="city-queue" title={`${reviewer ?? location.agentName} queue`} showCount
+        runs={roleQueue.map(({ run }) => run)} agents={agents} history={runs} activity={activity} showNextAction
+        emptyMessage="No open assignments in this queue."
+        actions={<p className="text-sm text-muted-foreground">{blockers} blocked</p>} />
+    </div>
+    </>
   );
 }
 
@@ -154,7 +209,7 @@ export function CityDashboard() {
 
   return (
     <>
-      <PageHeader testId="city-map-page" title="City map" description="Choose an agent, save an assignment, or follow a handoff." />
+      <PageHeader testId="city-map-page" title="City map" description="Choose a building to see its queue and open the next action." />
       <CityWorkspace {...workspace} />
       <CitySummary {...workspace} />
       <RunHistory

@@ -14,6 +14,9 @@ import { ReportedFindings } from "./browser-findings";
 import { CodexHandoff } from "./codex-handoff";
 import { EvidenceList } from "./evidence-list";
 import { withAssignmentLock } from "@/lib/workspace/assignment-lock";
+import { sourceRecordsFor } from "@/lib/workspace/build-catalog";
+import { jobLabels, jobStops } from "@/lib/workspace/job";
+import { pilotProofSchema } from "@/lib/workspace/transfer-pilot";
 import type { BrowserFinding } from "@/lib/workspace/browser-finding";
 import { builderRecordsSchema } from "@/lib/workspace/builder-result";
 import { handoffText } from "@/lib/workspace/handoff";
@@ -176,11 +179,14 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
   const engineeringReady = isPlanReviewReady(run.reviewMode, revision);
   const canHandoff = current && engineeringReady && revision?.review?.decision === "approved" && !changeRequest;
   const canRecordResult = run.status === "needs-input";
-  const requiresCodexRevision = Boolean(revision?.executionToken && !revision.codexHandoffToken);
-  const source = previousRun?.browserResult;
+  const requiresCodexRevision = revision?.executionKind === "playwright" || Boolean(revision?.executionToken && !revision.codexHandoffToken);
+  const needsLocalCodex = revision?.executionKind === "codex" && !revision.codexHandoffToken;
+  const sourceRecords = sourceRecordsFor(run, previousRun);
   const assignment = {
     role, builderWorkflow, runId: run.id, title: run.title, instructions: run.instructions,
-    mode: run.mode, reviewMode: run.reviewMode, target: run.target, sourceRecords: source?.records, executionPath: "codex" as const,
+    mode: run.mode, reviewMode: run.reviewMode, target: run.target, sourceRecords,
+    qaVenue: run.qaVenue, qaAccountEmail: run.qaAccountEmail, executionPath: "codex" as const,
+    job: run.job, pilot: run.pilot, pilotInput: run.pilotInput,
   };
 
   async function perform(action: Action, work: () => Promise<void>) {
@@ -204,7 +210,7 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
       const data = await askLocalCodex({ action: "propose", assignment: nextAssignment, previous: revision, change });
       const risk = draftOnly ? undefined : liveProposalSchema.parse(data).risk;
       await saveProposal(run.id, {
-        number: number + 1, workflow, change, plan: proposalSchema.parse(data), risk,
+        number: number + 1, workflow, job: run.job, change, plan: proposalSchema.parse(data), risk,
       });
       setRevising(false);
     });
@@ -267,20 +273,31 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
 
   function submitResult(outcome: NonNullable<Run["browserResult"]>["outcome"], fields: FormData, findings: BrowserFinding[]) {
     void perform("save", async () => {
+      const pilotProof = run.pilot && outcome === "passed" && run.job !== "setup" ? pilotProofSchema.parse({
+        kind: run.job,
+        orderReference: fields.get("orderReference"),
+        transferReference: fields.get("transferReference"),
+        issued: Number(fields.get("issued")),
+        pending: Number(fields.get("pending")),
+        retained: Number(fields.get("retained")),
+        accepted: Number(fields.get("accepted")),
+      }) : undefined;
       const result = browserResultSchema.parse({
         outcome,
         summary: String(fields.get("summary") ?? ""),
         preview: String(fields.get("preview") ?? ""),
         records: parseRecords(String(fields.get("records") ?? "").trim()),
         findings: findings.length ? findings : undefined,
+        pilotProof,
       });
       await saveBrowserResult(run.id, number, result);
       setReporting(false);
-      toast.success(workflow === "event-builder" && result.outcome === "passed" ? "Result saved and Public Tester assignment queued" : "Result saved");
+      const queuedNext = result.outcome === "passed" && (run.pilot ? run.job !== "accept-transfer" : workflow === "event-builder");
+      toast.success(queuedNext ? "Result saved and next assignment queued" : "Result saved");
     });
   }
 
-  const handoff = canHandoff ? handoffText(run, revision, source?.records) : undefined;
+  const handoff = canHandoff ? handoffText(run, revision, sourceRecords) : undefined;
   const workspacePath = process.env.NEXT_PUBLIC_QA_CITY_VAULT_PATH;
   const codexPrompt = handoff && new URLSearchParams({ prompt: handoff, ...(workspacePath ? { path: workspacePath } : {}) });
   const actionLabel = {
@@ -297,6 +314,10 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
 
   return (
     <div ref={workPanel} tabIndex={-1} data-testid="run-work" className="grid min-w-0 gap-4 text-sm">
+      {run.job && <div data-testid="run-assigned-job">
+        <p className="font-medium">{jobLabels[run.job]}</p>
+        <p className="text-muted-foreground">{jobStops[run.job]}</p>
+      </div>}
       {revision && (
         <div className="space-y-1">
           <p className="font-medium">Plan {number}{revision.review && ` · QA Lead ${revision.review.decision}`}</p>
@@ -363,6 +384,8 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
           <h3 className="font-semibold">Codex handoff</h3>
           {requiresCodexRevision ? (
             <p className="text-muted-foreground">Revise this plan for the Codex browser before running it.</p>
+          ) : needsLocalCodex ? (
+            <p className="text-muted-foreground">Open this handoff on the Mac that approved the plan.</p>
           ) : revision?.codexHandoffToken ? (
             <CodexHandoff key={number} runId={run.id} revision={number} token={revision.codexHandoffToken} disabled={!!busy || !!revision.draftExecution} />
           ) : (
@@ -371,8 +394,8 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
             </p>
           )}
           <div className="flex flex-wrap gap-2">
-            {!requiresCodexRevision && !revision?.codexHandoffToken && <ButtonLink data-testid="run-open-codex" href={`codex://new?${codexPrompt}`} prefetch={false}>Open in Codex</ButtonLink>}
-            {!requiresCodexRevision && <Button data-testid="run-copy-handoff" variant="outline" onClick={async () => {
+            {!requiresCodexRevision && !needsLocalCodex && !revision?.codexHandoffToken && <ButtonLink data-testid="run-open-codex" href={`codex://new?${codexPrompt}`} prefetch={false}>Open in Codex</ButtonLink>}
+            {!requiresCodexRevision && !needsLocalCodex && <Button data-testid="run-copy-handoff" variant="outline" onClick={async () => {
               try {
                 await navigator.clipboard.writeText(handoff);
                 toast.success("Handoff copied");
@@ -386,7 +409,7 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
               </Button>
             )}
           </div>
-          {canRecordResult && reporting && <BrowserResultForm result={browserResult} workflow={workflow} pending={!!busy} onSubmit={submitResult} />}
+          {canRecordResult && reporting && <BrowserResultForm result={browserResult} workflow={workflow} pilotJob={run.pilot ? run.job : undefined} pending={!!busy} onSubmit={submitResult} />}
         </section>
       )}
       {browserResult && (
@@ -396,6 +419,15 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
           )}
           {!!browserResult.findings?.length && <ReportedFindings findings={browserResult.findings} />}
           {browserResult.preview && <p className="text-muted-foreground wrap-anywhere">{browserResult.preview}</p>}
+          {browserResult.pilotProof && (
+            <p data-testid="run-pilot-proof" className="wrap-anywhere">
+              {browserResult.pilotProof.kind === "purchase"
+                ? `Order ${browserResult.pilotProof.orderReference} · ${browserResult.pilotProof.issued} issued`
+                : browserResult.pilotProof.kind === "send-transfer"
+                  ? `Transfer ${browserResult.pilotProof.transferReference} · ${browserResult.pilotProof.pending} pending · ${browserResult.pilotProof.retained} retained`
+                  : `${browserResult.pilotProof.accepted} accepted and verified`}
+            </p>
+          )}
           {browserResult.records && (
             <Disclosure testId="run-saved-records" label="Saved Showpass records">
               <pre tabIndex={0} aria-label="Saved records JSON" className="max-h-64 overflow-auto rounded bg-muted p-2 text-xs">{JSON.stringify(browserResult.records, null, 2)}</pre>

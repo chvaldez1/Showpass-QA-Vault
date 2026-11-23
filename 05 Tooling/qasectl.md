@@ -42,7 +42,7 @@ Before proposing splits or new cases, record the suite's reported count, cases r
 
 ## Exact-ID Review Workflow
 
-Use this instead of keyword or bulk search when the user provides exact Qase case IDs and asks to review or enhance those cases.
+Use this instead of keyword or bulk search when the user provides exact Qase case IDs and asks to review, enhance, or execute those cases. For browser execution, pass the saved fields to [[06 Prompts/Interactive Browser Release Testing#Run a named Qase case|the named-case workflow]].
 
 1. Treat the named case IDs as the complete working scope.
 2. Read only those Qase cases, the linked bug or specification, and the relevant source behavior.

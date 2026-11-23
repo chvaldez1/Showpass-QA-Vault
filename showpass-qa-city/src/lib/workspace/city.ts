@@ -16,14 +16,14 @@ type Location = {
 export const locations: Record<AgentRole, Location> = {
   "public-tester": {
     name: "Welcome Centre",
-    agentName: "Public Tester",
-    description: "Explore Showpass as a visitor or signed-in customer, up to the point of purchase.",
+    agentName: "Guest Tester",
+    description: "Test signed-out discovery or guest checkout. Verify assigned Event Previews as read-only handoffs.",
     responsibilities: [
-      "Find events and Organizer profiles through public navigation.",
-      "Check public event details, ticket availability, and prices.",
-      "Review existing orders and tickets in Account.",
+      "Test the assigned discovery page while signed out.",
+      "Verify guest checkout on the public website or widget named in the plan.",
+      "Check an assigned Event Preview with its approved access.",
     ],
-    example: "Find a General Admission event and check what a signed-out visitor can see.",
+    example: "Open Calgary discovery while signed out and verify the requested filters.",
     color: "#72d8f3",
     position: [-8.8, -4.3],
     size: [4.1, 2.4, 2.8],
@@ -31,11 +31,11 @@ export const locations: Record<AgentRole, Location> = {
   "customer-tester": {
     name: "Ticket Shop",
     agentName: "Customer Tester",
-    description: "Follow an approved test purchase from selection to the saved order and issued items.",
+    description: "Test one signed-in checkout, Account, discovery, or transfer job.",
     responsibilities: [
-      "Check ticket selection, basket contents, and checkout totals.",
-      "Exercise the approved payment outcome in the test environment.",
-      "Verify the saved order and issued tickets, Products, or Memberships.",
+      "Test discovery in the assigned signed-in session when requested.",
+      "Verify checkout on the assigned public website or widget through the saved order and issued items.",
+      "Verify one Account action, sender action, or recipient action as its own assignment.",
     ],
     example: "Buy one test ticket and verify the charged total and the corresponding order in My Orders.",
     color: "#bda1ff",
@@ -73,7 +73,7 @@ export const locations: Record<AgentRole, Location> = {
   "box-office-tester": {
     name: "Box Office",
     agentName: "Box Office Tester",
-    description: "Exercise order lookup, sales, ticket delivery, and Check In as a Venue Employee.",
+    description: "Verify one assigned staff operation as a Venue Employee.",
     responsibilities: [
       "Find the saved order and identify the matching tickets.",
       "Check authorized staff-side sales or Check In workflows.",

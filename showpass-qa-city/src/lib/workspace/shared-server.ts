@@ -3,6 +3,7 @@ import "server-only";
 import { readLocalState, writeLocalState } from "../execution/authorization";
 import { recoverCodexRuns } from "../codex/handoff";
 import { demoWorkspace } from "./demo";
+import { commitConvexWorkspace, loadConvexWorkspace, usesConvex, withLocalExecutionTokens } from "./convex-server";
 import { normalizeWorkspace } from "./normalize";
 import { codexRevision, workspaceVersionSchema, type WorkspaceVersion } from "./shared-schema";
 import type { Workspace } from "./schema";
@@ -34,7 +35,7 @@ function upgraded(snapshot: WorkspaceVersion | undefined) {
     !snapshot.workspace.runs.some(({ agentId, workflow }) => agentId === "organizer-tester" && !workflow);
 }
 
-export async function readSharedWorkspace() {
+async function readFileWorkspace() {
   const saved = await loadSavedWorkspace();
   if (saved && upgraded(saved)) return saved;
 
@@ -62,6 +63,21 @@ export async function readSharedWorkspace() {
   });
 }
 
+async function readConvexOrMigrate() {
+  const saved = await loadConvexWorkspace();
+  if (saved) return saved;
+
+  const local = await readFileWorkspace();
+  await commitConvexWorkspace(local);
+  const migrated = await loadConvexWorkspace();
+  if (!migrated) throw new Error("Convex could not initialize the QA City workspace.");
+  return migrated;
+}
+
+export async function readSharedWorkspace() {
+  return usesConvex() ? withLocalExecutionTokens(await readConvexOrMigrate()) : readFileWorkspace();
+}
+
 function mergeBrowserWorkspace(current: Workspace, browser: Workspace) {
   const agents = new Map(current.agents.map((agent) => [agent.id, agent]));
   const runs = new Map(current.runs.map((run) => [run.id, run]));
@@ -87,7 +103,7 @@ function mergeBrowserWorkspace(current: Workspace, browser: Workspace) {
   }
   if (!changed) return current;
 
-  return { agents: [...agents.values()], runs: [...runs.values()], releases: [...releases.values()] };
+  return { ...current, agents: [...agents.values()], runs: [...runs.values()], releases: [...releases.values()] };
 }
 
 export async function writeSharedWorkspace(input: {
@@ -97,14 +113,26 @@ export async function writeSharedWorkspace(input: {
 }) {
   await readSharedWorkspace();
   return exclusive(async () => {
-    const current = workspaceVersionSchema.parse(await readLocalState(stateFile));
+    const convex = usesConvex();
+    const current = convex
+      ? await loadConvexWorkspace()
+      : workspaceVersionSchema.parse(await readLocalState(stateFile));
+    if (!current) throw new Error("The workspace could not be loaded before saving.");
     if (input.action === "replace" && input.version !== current.version) {
-      return { snapshot: current, conflict: true };
+      return { snapshot: convex ? await withLocalExecutionTokens(current) : current, conflict: true };
     }
     const workspace = input.action === "import" ? mergeBrowserWorkspace(current.workspace, input.workspace) : input.workspace;
-    if (workspace === current.workspace) return { snapshot: current, conflict: false };
+    if (workspace === current.workspace) {
+      return { snapshot: convex ? await withLocalExecutionTokens(current) : current, conflict: false };
+    }
 
     const snapshot = { ...current, version: current.version + 1, workspace: normalize(workspace) };
+    if (convex) {
+      const committed = await commitConvexWorkspace(snapshot, current);
+      const saved = await loadConvexWorkspace();
+      if (!saved) throw new Error("The workspace could not be loaded after saving.");
+      return { snapshot: await withLocalExecutionTokens(saved), conflict: !committed };
+    }
     await writeLocalState(stateFile, snapshot);
     return { snapshot, conflict: false };
   });

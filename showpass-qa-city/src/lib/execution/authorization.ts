@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
+import { z } from "zod";
 import { approvedDraftSchema, type ApprovedDraft } from "../workspace/event-draft";
 
 export function runtimeDirectory() {
@@ -44,4 +45,10 @@ export async function verifyApprovedDraft(runId: string, revision: number, execu
   const approved = approvedDraftSchema.safeParse(value);
   if (approved.success && approved.data.revision === revision &&
     (value as { executionToken: string }).executionToken === executionToken) return approved.data;
+}
+
+export async function savedDraftExecutionToken(runId: string, revision: number) {
+  const value = await readLocalState(`approval-${runId}.json`);
+  const approved = approvedDraftSchema.extend({ executionToken: z.uuid() }).safeParse(value);
+  return approved.success && approved.data.revision === revision ? approved.data.executionToken : undefined;
 }
