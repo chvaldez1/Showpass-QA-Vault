@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { useWorkspace } from "@/hooks/use-workspace";
 import { locations } from "@/lib/workspace/city";
 import type { AgentRole } from "@/lib/workspace/schema";
-import { NewRunDialog } from "./new-run-dialog";
+import { AgentAction } from "./agent-action";
 import { PageHeader } from "./page-header";
 import { RunHistory } from "./run-list";
 
@@ -31,7 +31,7 @@ export function AgentProfile({ role }: { role: AgentRole }) {
               testId="agent-profile-page"
               title={location.agentName}
               description={location.description}
-              actions={<NewRunDialog agents={agents} runs={runs} agentId={role} className="h-10 px-4" />}
+              actions={<AgentAction agents={agents} runs={runs} role={role} className="h-10 px-4" />}
             />
           </div>
         </div>
@@ -55,13 +55,13 @@ export function AgentProfile({ role }: { role: AgentRole }) {
         </Card>
       </div>
 
-      <RunHistory
+      {!location.codexPrompt && <RunHistory
         testId="agent-profile-runs"
         title="Recent assignments"
         agents={agents}
         runs={runs.filter(({ agentId }) => agentId === role).slice(0, 8)}
         history={runs}
-      />
+      />}
     </>
   );
 }

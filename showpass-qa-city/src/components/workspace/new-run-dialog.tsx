@@ -16,6 +16,7 @@ import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { SelectField } from "@/components/ui/select-field";
 import { Textarea } from "@/components/ui/textarea";
+import { locations } from "@/lib/workspace/city";
 import { planReviewLabels, planReviewModes } from "@/lib/workspace/qa-workflow";
 import { runFormSchema, runModeLabels, runModes, type Agent, type Run, type RunFormValues } from "@/lib/workspace/schema";
 import { queueRun } from "@/lib/workspace/store";
@@ -119,7 +120,8 @@ export function NewRunDialog({
   variant?: "default" | "outline";
 }) {
   const [open, setOpen] = useState(false);
-  const defaultAgent = agents.find((agent) => agent.id === agentId);
+  const assignableAgents = agents.filter(({ role }) => !role || !locations[role].codexPrompt);
+  const defaultAgent = assignableAgents.find((agent) => agent.id === agentId);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -127,7 +129,7 @@ export function NewRunDialog({
         data-testid={agentId ? `new-assignment-${agentId}` : "new-assignment"}
         render={<Button variant={variant} className={className} />}
         aria-label={defaultAgent ? `New assignment for ${defaultAgent.name}` : undefined}
-        disabled={agents.length === 0}
+        disabled={assignableAgents.length === 0}
       >
         <PlusIcon aria-hidden="true" /> New assignment
       </DialogTrigger>
@@ -136,7 +138,7 @@ export function NewRunDialog({
           <DialogTitle>New assignment</DialogTitle>
           <DialogDescription>Choose who owns the assignment and how to run it. Open the saved assignment to prepare its plan.</DialogDescription>
         </DialogHeader>
-        <AssignmentForm agents={agents} runs={runs} agentId={agentId} onSaved={() => setOpen(false)} />
+        <AssignmentForm agents={assignableAgents} runs={runs} agentId={defaultAgent?.id ?? ""} onSaved={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );

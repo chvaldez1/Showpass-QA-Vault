@@ -19,21 +19,21 @@ Choose the assignment's **Review path**. An Event saved in Showpass with the sta
 
 **Organizer Tester** and **Organizer Builder** have separate assignments and skills. Both cover permitted Organizer Dashboard pages. Assign behavior, access, and UX checks to the Tester. Assign configuration and test-data setup to the Builder. Use **Build area** to choose the Event, Product or Membership, or general Dashboard workflow when the title is ambiguous.
 
-After live plan approval, paired Organizer assignments can use **Run in Codex**. Supported beta Event Draft assignments can use the dedicated City runner when the Builder chat is unpaired. Other assignments can continue through **Open in Codex** or **Copy handoff**. A revised live plan needs fresh review and sign-off. Use **Use full review on the next revision** to raise a short assignment to full review.
+After live plan approval, paired Organizer assignments can use **Run in Codex**. Other assignments can continue through **Open in Codex** or **Copy handoff**. A revised live plan needs fresh review and sign-off. Use **Use full review on the next revision** to raise a short assignment to full review.
 
 ### Run an approved Organizer plan in Codex
 
 In `.env.local`, `QA_CITY_ORGANIZER_CODEX_THREAD_ID` pairs the Organizer Builder with its local Codex chat. `QA_CITY_ORGANIZER_TESTER_CODEX_THREAD_ID` optionally pairs the Organizer Tester with its own chat. In Runs, open an assignment approved by the QA Lead after pairing, confirm the plan, and select **Run in Codex**. Runs displays live status, commentary, and browser action labels from the paired chat. The reply appears there after the turn finishes. Review the evidence before using **Record browser result**.
 
-### Run an approved beta Event Draft
+### Record a browser result
 
-For the local browser runner, install Chromium once with `pnpm exec playwright install chromium`. Create an **Organizer Builder** assignment with **Agent drives** and **Event setup**. Supply the beta Organization, an existing Event location, the Event timezone, and a request for a single-day Event Draft with optional Short text questions. The plan shows the proposed Event details and questions before review.
+Use **Record browser result** on the assignment to save the outcome. Use **Add finding** for each suspected bug, confirmed bug, usability issue, observation, or blocker. Record what happened and include the expectation, impact, and evidence you have. Mark missing proof or follow-up on the finding.
 
-Select **Open beta browser** and sign in to Showpass as an authorized Organizer. City reuses beta-only Cloudflare Access cookies from the sibling Showpass Playwright repo's ignored `playwright/.auth/cloudflare.json`, when available. Set `QA_CITY_BETA_ACCESS_STATE` if that file lives elsewhere. City keeps its separate browser profile and execution checkpoints under `~/Library/Application Support/Showpass QA City` by default.
+For a passed Event build, paste the saved records and matching beta Preview URL. City queues a Public Tester assignment to review the Preview separately. The builder can also record partial saves with a failed or blocked result. Add your own Event images in Showpass.
 
-After QA Lead sign-off, confirm the existing location and access to the migrated Create event and Order form pages, then select **Run approved plan**. City creates the Draft and reopens Order form to verify the optional questions. It records the saved Event fields and gives you the Draft editor link. Ticket setup, artwork, public Preview, checkout, and purchase verification are outside this runner.
+### Retained Playwright runner
 
-Record the outcome in the City. For a passed Event build, paste the saved records and matching beta Preview URL. The City queues a Public Tester assignment to assess and review separately. The builder can also record partial saves with a failed or blocked result. Add your own Event images in Showpass.
+The dedicated beta Event Draft runner and its local API remain in the project. Past runs still show their saved **Playwright result**. An open assignment approved for that runner needs a revised plan and fresh review before it can run in the Codex browser.
 
 ## Release engineering
 

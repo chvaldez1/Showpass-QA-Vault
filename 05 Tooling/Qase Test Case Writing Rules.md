@@ -230,11 +230,19 @@ Keep this review focused on the requested scope. Reuse existing proof where suit
 
 Before delivering, apply [[#Case Strength Review]], then read each case without the surrounding note. Can a product-team member tell **what must exist, how to prepare it, what to do, and what should happen**? Remove shared-setup references, unnecessary environment/identity constraints, draft-to-draft commentary, and duplicate cleanup. Check that every stated field, flag, permission, route, and outcome has evidence or an explicit unresolved status outside the case. A Qase-ready label must mean the case fields are already complete.
 
+Apply [[#Qase Grammar Police]] to the complete case before delivery or publication.
+
 Apply [[#Scannable Preconditions And Explicit Event Setup]] before accepting the case: can the reader identify the Events, tickets, quantities, order grouping, settings and starting state by scanning Preconditions? For cases without Events, apply the same check to the actual records involved. Break up dense bullets and resolve ambiguous relationships across the whole case without removing coverage.
 
 When the user corrects the workflow or simplifies setup, review the entire case: Description, parameter mapping, Preconditions, Steps, Data, Expected Results, and Postconditions, plus surrounding test-data and execution notes. Remove stale assumptions everywhere, update numbered stopping points, and preserve the requested behavioral coverage. Updating only the entry step or mentioning the correction in a final reply is not enough.
 
 For settings with multiple choices, also apply [[#Readable Parameters And Combination Accounting]]. Verify that parameter tables survive the Markdown-to-Qase parser, the selected combinations match the claimed scope, and setup checks are not presented as completed customer or financial proof.
+
+### Qase Grammar Police
+
+- **Keep only prerequisites the case needs.** Keep exact flags, permissions and saved settings that affect the result. Name an environment only when the behavior or safe execution depends on it. If the case just needs approved test payments and a controlled recipient inbox, say that.
+- **Read the copied fields aloud.** Use the actual screen and button names. Write actions as direct instructions and expected results as what the person sees or can read back. Cut filler, repeated instructions and vague phrases such as “verify the flow works as expected.” Keep defect-specific assertions and saved outcomes.
+- **Check for meaningful variants.** Use a Qase Single parameter when supported variants share the same steps and outcome. Map each value to its setup and expected result in the Description, and state the run count. Keep a fixed setup when it is the only meaningful scenario. Check that the local parser reads the parameter values before calling the draft Qase-ready.
 
 ## Plain-Language Wording
 

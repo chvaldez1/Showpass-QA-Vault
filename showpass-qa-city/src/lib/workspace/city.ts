@@ -6,12 +6,14 @@ type Location = {
   description: string;
   responsibilities: string[];
   example: string;
+  kind?: Agent["kind"];
+  codexPrompt?: string;
   color: string;
   position: [x: number, z: number];
   size: [width: number, height: number, depth: number];
 };
 
-export const locations = {
+export const locations: Record<AgentRole, Location> = {
   "public-tester": {
     name: "Welcome Centre",
     agentName: "Public Tester",
@@ -82,13 +84,29 @@ export const locations = {
     position: [8.8, 4.3],
     size: [4.6, 1.75, 3.2],
   },
-} satisfies Record<AgentRole, Location>;
+  "qase-grammar-police": {
+    name: "Qase Review",
+    agentName: "Qase Grammar Police",
+    description: "Review a manual Qase case for clear wording, necessary setup, and useful parameters.",
+    responsibilities: [
+      "Keep the prerequisites a person needs to run the case.",
+      "Use exact Showpass labels and expected results the person can observe.",
+      "Group supported variants into one Qase parameter when they share the same steps.",
+    ],
+    example: "Review a ticket transfer case for unnecessary prerequisites and check whether order and guest questions can share one case.",
+    kind: "coverage",
+    codexPrompt: "Use $qase-grammar-police to review a Showpass Qase case draft. Ask me for the draft or its vault path and any source notes.",
+    color: "#8bdfb9",
+    position: [0, -4.3],
+    size: [4.1, 2.4, 3.2],
+  },
+};
 
 export const cityAgents: Agent[] = agentRoles.map((role) => ({
   id: role,
   name: locations[role].agentName,
   description: locations[role].description,
-  kind: "browser",
+  kind: locations[role].kind ?? "browser",
   role,
 }));
 

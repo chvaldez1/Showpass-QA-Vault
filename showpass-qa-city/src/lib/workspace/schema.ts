@@ -3,7 +3,7 @@ import { browserResultSchema, builderWorkflows, planReviewModes, qaWorkflows, re
 import { releaseSchema } from "./release";
 
 export const agentKinds = ["browser", "coverage", "triage", "custom"] as const;
-export const agentRoles = ["public-tester", "customer-tester", "organizer-tester", "organizer-builder", "box-office-tester"] as const;
+export const agentRoles = ["public-tester", "customer-tester", "organizer-tester", "organizer-builder", "box-office-tester", "qase-grammar-police"] as const;
 export const runModes = ["drive", "guide"] as const;
 export const runStatuses = ["queued", "running", "needs-input", "completed", "failed", "cancelled"] as const;
 

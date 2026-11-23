@@ -17,7 +17,10 @@ import {
 } from "@/lib/workspace/qa-workflow";
 
 const assignmentSchema = runFormSchema.pick({ title: true, instructions: true, mode: true, target: true, reviewMode: true, builderWorkflow: true })
-  .extend({ role: z.enum(agentRoles), runId: z.uuid().optional(), sourceRecords: builderRecordsSchema.optional() });
+  .extend({
+    role: z.enum(agentRoles), runId: z.uuid().optional(), sourceRecords: builderRecordsSchema.optional(),
+    executionPath: z.literal("codex").optional(),
+  });
 const requestSchema = z.discriminatedUnion("action", [
   z.object({
     action: z.literal("propose"), assignment: assignmentSchema,
@@ -155,7 +158,8 @@ ${uxChecks}
 
 ${references[5]}`;
     const draftOnly = input.assignment.reviewMode === "draft";
-    const canUseRunner = workflow === "event-builder" && !draftOnly && input.assignment.mode === "drive";
+    const usesCodexBrowser = input.assignment.executionPath === "codex";
+    const canUseRunner = !usesCodexBrowser && workflow === "event-builder" && !draftOnly && input.assignment.mode === "drive";
     if (!review && input.assignment.runId && input.previous) {
       if (input.previous.codexHandoffToken) {
         await revokeApprovedCodexHandoff(input.assignment.runId, input.previous.number, request.signal);
@@ -171,7 +175,9 @@ ${references[5]}`;
 
     const value = await askCodex({
       cwd, context, outputSchema: outputSchema(schema), signal: request.signal,
-      prompt: `${task}\n\n${canUseRunner ? cityDraftPolicy : ""}\n\nAssignment data:\n${JSON.stringify(input)}`,
+      prompt: `${task}\n\n${usesCodexBrowser
+        ? "Plan live execution in the Codex in-app browser. If reviewing a plan that requires the dedicated Playwright browser, request a revision for the Codex in-app browser."
+        : canUseRunner ? cityDraftPolicy : ""}\n\nAssignment data:\n${JSON.stringify(input)}`,
     });
     const result = schema.safeParse(value);
     if (!result.success) throw new CodexError("Codex returned an incomplete plan or decision. Try the same step again.");

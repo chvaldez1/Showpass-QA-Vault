@@ -1,5 +1,6 @@
 import {
   Building2Icon,
+  ClipboardCheckIcon,
   CompassIcon,
   HammerIcon,
   ShoppingBagIcon,
@@ -14,6 +15,7 @@ const icons = {
   "organizer-tester": Building2Icon,
   "organizer-builder": HammerIcon,
   "box-office-tester": TicketIcon,
+  "qase-grammar-police": ClipboardCheckIcon,
 };
 
 export function LocationIcon({ role, ...props }: ComponentProps<typeof CompassIcon> & { role: AgentRole }) {

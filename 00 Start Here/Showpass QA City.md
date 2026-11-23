@@ -18,17 +18,38 @@ The local City app presents the agents and their responsibilities. **Runs** is w
 
 An **agent** is a named assignee in City. A **role** defines the perspective and work it owns. A **skill** gives that role reusable Showpass knowledge and guidance. An **assignment** gives it a specific job.
 
-| Built-in agent | Role and scope |
-| --- | --- |
-| Public Tester | Browses as a visitor or signed-in Customer, checks Preview and existing Account records, and stops before purchase. |
-| Customer Tester | Exercises an authorized test purchase and verifies the saved order and issued items. |
-| Organizer Tester | Tests behavior and UX across permitted `/manage/` pages as an Organizer or Venue Employee. It can verify an authorized edit when the save is part of the test. |
-| Organizer Builder | Builds or updates the requested configuration across permitted `/manage/` pages, such as Events, Products, Memberships, promotions, and Organization settings. It verifies the saved setup and hands it off. |
-| Box Office Tester | Tests authorized staff sales, order lookup, ticket delivery, and Check In as a Venue Employee. |
+### Codex skill directory
 
-City lists **Organizer Tester** and **Organizer Builder** separately. They have their own profiles and skills, `showpass-organizer-tester` and `showpass-beef-up-event`. Both can work on the same Dashboard page. “Test Organization contact settings” goes to the Tester. “Configure Organization contact settings for this scenario” goes to the Builder. The Builder can also use the specialized Event or Offering workflows when they fit the assignment. The user's permission and the selected Organization determine which controls either agent can use.
+Use the skill name in a Codex request. Open its skill file to see or tune its instructions.
 
-The **QA Lead**, **Release Engineer**, **Backend Master**, and **Frontend Master** are review roles. The QA Lead challenges whether the scenario is realistic, considers alternatives, and signs off on the exact revision. The Release Engineer identifies business exposure and assembles the engineering handoff. The Masters trace the exact scope using the [[01 Repositories/Backend - web-app|backend]] and [[01 Repositories/Frontend - showpass-frontend|frontend]] references.
+| Agent or workflow | Codex skill | Use it for |
+| --- | --- | --- |
+| Organizer Builder | `$showpass-beef-up-event` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-beef-up-event/SKILL.md>) | Configure test scenarios across permitted Organizer Dashboard pages and verify saved setup. |
+| Organizer Tester | `$showpass-organizer-tester` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-organizer-tester/SKILL.md>) | Test behavior, permissions, usability, and recovery across permitted Organizer Dashboard pages. |
+| Public Tester | `$showpass-public-tester` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-public-tester/SKILL.md>) | Check discovery, Event Preview, and existing Account records without placing an order. |
+| Customer Tester | `$showpass-customer-tester` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-customer-tester/SKILL.md>) | Run an authorized test purchase and verify the saved order and issued items. |
+| Box Office Tester | `$showpass-box-office-tester` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-box-office-tester/SKILL.md>) | Check staff order lookup, sales, delivery, and Check In. |
+| QA Lead | `$showpass-qa-lead` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-qa-lead/SKILL.md>) | Challenge plans and independently decide whether to approve the exact revision or engineering handoff. |
+| Release Engineer | `$showpass-release-engineer` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-release-engineer/SKILL.md>) | Review business risks and assemble the engineering handoff. |
+| Backend Master | `$showpass-backend-master` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-backend-master/SKILL.md>) | Trace backend rules, permissions, and saved outcomes for the reviewed revision. |
+| Frontend Master | `$showpass-frontend-master` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-frontend-master/SKILL.md>) | Trace frontend entry points, shared clients, visible behavior, and recovery. |
+| Browser QA | `$showpass-qa-tester` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-qa-tester/SKILL.md>) | Run exploratory checks, focused smoke tests, and regressions in the Codex browser. |
+| Qase Grammar Police | `$qase-grammar-police` · [Skill file](</Users/christianvaldez/.codex/skills/qase-grammar-police/SKILL.md>) | Review manual Qase drafts for clear wording, necessary setup, and useful parameters. |
+| Bug Drafter | `$showpass-bug-drafter` · [Skill file](</Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/.agents/skills/showpass-bug-drafter/SKILL.md>) | Turn a verified finding into a copy-ready Jira draft. |
+| Regression Investigator | `$showpass-regression-investigator` · [Skill file](</Users/christianvaldez/Documents/Showpass/repos/Showpass QA Vault/.agents/skills/showpass-regression-investigator/SKILL.md>) | Trace failures that differ across records or Organizations to configuration or a code change. |
+| Sentry Investigator | `$showpass-sentry-investigator` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-sentry-investigator/SKILL.md>) | Investigate a Sentry issue through read-only access and trace its impact in source. |
+| Branch Digest | `$showpass-branch-digest` · [Skill file](</Users/christianvaldez/.codex/skills/showpass-branch-digest/SKILL.md>) | Summarize changes between Showpass branches and identify regression checks. |
+| Jira and PR explainer | `$deslop-jira-pr` · [Skill file](</Users/christianvaldez/.codex/skills/deslop-jira-pr/SKILL.md>) | Explain or rewrite Jira and PR descriptions and turn QA checklists into runnable walkthroughs. |
+
+City lists **Organizer Tester** and **Organizer Builder** separately. Both can work on the same Dashboard page. “Test Organization contact settings” goes to the Tester. “Configure Organization contact settings for this scenario” goes to the Builder. The Builder can also use the specialized Event or Offering workflows when they fit the assignment. The user's permission and the selected Organization determine which controls either agent can use.
+
+The **QA Lead**, **Release Engineer**, **Backend Master**, and **Frontend Master** are review roles. The Masters use the [[01 Repositories/Backend - web-app|backend]] and [[01 Repositories/Frontend - showpass-frontend|frontend]] references to locate evidence for the exact scope.
+
+### Qase Grammar Police
+
+**Qase Grammar Police** reviews manual Qase case drafts before they’re copied into Qase. Give the reviewer the case and its source notes. They check for unnecessary prerequisites, use the exact Showpass screen and button names, cut filler, and check whether supported variants can share one Qase Single parameter. They return copy-ready case fields, including the setup and expected result for each parameter value, and flag anything they couldn’t verify. [[05 Tooling/Qase Test Case Writing Rules#Qase Grammar Police|Review checklist]]
+
+This is a draft review role. In City, open **Qase Grammar Police** from **Agents** or select **Qase Review** on the City map. Choose **Review in Codex** and provide the draft or its vault path. You can also invoke `$qase-grammar-police` directly in Codex. The [[03 Test Cases/Group Sales and Transfers/spw-21449-required-ticket-transfer-question-test-cases#Manual case|ticket transfer case]] shows the result. Its order-level and per-ticket variants share one case and both are marked **Not run**.
 
 ## Review and scope
 
@@ -38,9 +59,9 @@ QA Lead approval applies to the reviewed plan. A changed plan needs another deci
 
 ## Execution and evidence
 
-City uses the local Codex App Server and installed skills for planning and review. **Run in Codex** sends an approved Organizer assignment to its agent's paired chat for execution in the authorized in-app browser. The existing **Organizer builder** chat belongs to the Builder. The Tester can use **Open in Codex** or its own paired chat. **Run approved plan** has its own dedicated local Playwright browser for the supported beta single-day Event Draft and custom-question workflow. Existing Codex access and local tooling support the current prototype. [[showpass-qa-city/README|Execution options and local prerequisites]]
+City uses the local Codex App Server and installed skills for planning and review. **Run in Codex** sends an approved Organizer assignment to its agent's paired chat for execution in the authorized in-app browser. The existing **Organizer builder** chat belongs to the Builder. The Tester can use **Open in Codex** or its own paired chat. City retains the dedicated Playwright runner in code and shows its earlier results. [[showpass-qa-city/README|Execution options and local prerequisites]]
 
-Builders use realistic scenario details and carry verified Showpass record fields forward using backend names. The user supplies Event images. A Public Tester can independently review the saved Event's Preview under its own approved scope. Testers assess the UX alongside functional behavior and report confirmed bugs, usability friction, observations, and blockers with evidence. Competitor examples can inform what to look for. [[06 Prompts/Interactive Browser Release Testing]] · [[06 Prompts/Showpass QA Competitor Comparisons]]
+Builders use realistic scenario details and carry verified Showpass record fields forward using backend names. The user supplies Event images. A Public Tester can independently review the saved Event's Preview under its own approved scope. Testers and builders can record suspected bugs, confirmed bugs, usability issues, observations, and blockers as separate findings in the run, with evidence and any missing proof. Competitor examples can inform what to look for. [[06 Prompts/Interactive Browser Release Testing]] · [[06 Prompts/Showpass QA Competitor Comparisons]]
 
 ## Examples to build on
 

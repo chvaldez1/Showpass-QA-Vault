@@ -7,7 +7,7 @@ This vault is the local source of truth for Showpass QA standards, test design, 
 Our goals are to help the team release with more confidence, automate useful repeatable work, and keep improving how QA works.
 
 - [[00 Start Here/QA Operating Workflow|Run QA from early risk review through release and follow-up]].
-- [[00 Start Here/Showpass QA City|See how the City UI, agents, and review layers fit together]].
+- [[00 Start Here/Showpass QA City|See how the City UI, agents, and review layers fit together]]. [[00 Start Here/Showpass QA City#Codex skill directory|Find a Showpass Codex skill by name]].
 - [[06 Prompts/Release Coverage Review|Gather and compare actual Qase, Playwright and browser coverage for a change]].
 - [[03 Test Cases/Release Decision Template|See Qase, Playwright and browser coverage, actual results and remaining release checks in one note]].
 - [[04 Automation/00 Index|Turn automation candidates into verified, running protection]].

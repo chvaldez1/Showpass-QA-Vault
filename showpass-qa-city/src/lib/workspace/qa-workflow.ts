@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { browserFindingsSchema } from "./browser-finding";
 import { builderRecordsSchema } from "./builder-result";
 import { draftExecutionResultSchema, eventDraftSchema } from "./event-draft";
 import { engineeringSourceSchema, hasEngineeringHandoff, stageSchemas } from "./release";
@@ -107,6 +108,7 @@ export const browserResultSchema = z.object({
   summary: z.string().trim().min(1, "Enter what was verified in Codex.").max(2000),
   preview: z.string().trim().max(1000),
   records: builderRecordsSchema.optional(),
+  findings: browserFindingsSchema.optional(),
 });
 
 export type Proposal = z.infer<typeof proposalSchema>;

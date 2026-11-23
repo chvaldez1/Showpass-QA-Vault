@@ -10,31 +10,22 @@ import { FormField } from "@/components/ui/form-field";
 import { Textarea } from "@/components/ui/textarea";
 import { askLocalCodex } from "@/lib/codex/client";
 import { BrowserResultForm } from "./browser-result-form";
+import { ReportedFindings } from "./browser-findings";
 import { CodexHandoff } from "./codex-handoff";
 import { EvidenceList } from "./evidence-list";
 import { withAssignmentLock } from "@/lib/workspace/assignment-lock";
+import type { BrowserFinding } from "@/lib/workspace/browser-finding";
 import { builderRecordsSchema } from "@/lib/workspace/builder-result";
-import { draftExecutionResultSchema } from "@/lib/workspace/event-draft";
 import { handoffText } from "@/lib/workspace/handoff";
 import {
-  asBuilderWorkflow, browserOutcomeLabels, browserResultSchema, eventDraftProposalSchema, getPlanReviewMode, getQaWorkflow,
+  asBuilderWorkflow, browserOutcomeLabels, browserResultSchema, getPlanReviewMode, getQaWorkflow,
   isPlanReviewReady, leadResponseSchema, liveProposalSchema, planReviewLabels, proposalSchema, type Revision,
 } from "@/lib/workspace/qa-workflow";
 import { type AgentRole, type Run } from "@/lib/workspace/schema";
 import { canRunEngineeringStage, engineeringActionLabels, engineeringStages, type EngineeringStage } from "@/lib/workspace/release";
-import { requestRevision, saveBrowserResult, saveDraftExecution, savePlanStage, saveProposal, saveReview, saveShortReview } from "@/lib/workspace/store";
+import { requestRevision, saveBrowserResult, savePlanStage, saveProposal, saveReview, saveShortReview } from "@/lib/workspace/store";
 
-type Action = "propose" | EngineeringStage | "short-review" | "review" | "save" | "save-revision" | "open-browser" | "run";
-
-async function requestBetaBrowser(payload: object) {
-  const response = await fetch("/api/run-approved-plan", {
-    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload),
-  });
-  const body = await response.json().catch(() => null);
-  if (!response.ok || !body) throw new Error(body?.error ?? "The dedicated beta browser could not finish.");
-  return body.result as unknown;
-}
-
+type Action = "propose" | EngineeringStage | "short-review" | "review" | "save" | "save-revision";
 
 function parseRecords(text: string) {
   if (!text) return undefined;
@@ -154,8 +145,6 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
   const [revising, setRevising] = useState(false);
   const [revisionError, setRevisionError] = useState("");
   const [reporting, setReporting] = useState(false);
-  const [readyRevision, setReadyRevision] = useState(0);
-  const [browserMessage, setBrowserMessage] = useState("");
   const editTrigger = useRef<HTMLButtonElement>(null);
   const changeInput = useRef<HTMLTextAreaElement>(null);
   const reportTrigger = useRef<HTMLButtonElement>(null);
@@ -187,10 +176,12 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
   const engineeringReady = isPlanReviewReady(run.reviewMode, revision);
   const canHandoff = current && engineeringReady && revision?.review?.decision === "approved" && !changeRequest;
   const canRecordResult = run.status === "needs-input";
-  const canUseRunner = workflow === "event-builder" && !draftOnly && run.mode === "drive";
-  const canExecute = canHandoff && revision.executionToken;
+  const requiresCodexRevision = Boolean(revision?.executionToken && !revision.codexHandoffToken);
   const source = previousRun?.browserResult;
-  const assignment = { role, builderWorkflow, runId: run.id, title: run.title, instructions: run.instructions, mode: run.mode, reviewMode: run.reviewMode, target: run.target, sourceRecords: source?.records };
+  const assignment = {
+    role, builderWorkflow, runId: run.id, title: run.title, instructions: run.instructions,
+    mode: run.mode, reviewMode: run.reviewMode, target: run.target, sourceRecords: source?.records, executionPath: "codex" as const,
+  };
 
   async function perform(action: Action, work: () => Promise<void>) {
     if (busy) return;
@@ -211,10 +202,9 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
       if (revision) await revise(change, requireFullReview);
       const nextAssignment = requireFullReview ? { ...assignment, reviewMode: "full" as const } : assignment;
       const data = await askLocalCodex({ action: "propose", assignment: nextAssignment, previous: revision, change });
-      const executable = canUseRunner ? eventDraftProposalSchema.parse(data) : undefined;
-      const risk = draftOnly ? undefined : (executable ?? liveProposalSchema.parse(data)).risk;
+      const risk = draftOnly ? undefined : liveProposalSchema.parse(data).risk;
       await saveProposal(run.id, {
-        number: number + 1, workflow, change, plan: proposalSchema.parse(data), risk, eventDraft: executable?.eventDraft ?? undefined,
+        number: number + 1, workflow, change, plan: proposalSchema.parse(data), risk,
       });
       setRevising(false);
     });
@@ -233,23 +223,6 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
       await askLocalCodex({ action: "revoke-execution", runId: run.id, revision: number });
     }
     await requestRevision(run.id, number, change, requireFullReview);
-  }
-
-  function openBrowser() {
-    void perform("open-browser", async () => {
-      const result = await requestBetaBrowser({ action: "open-browser" });
-      if (typeof result === "string") setBrowserMessage(result);
-    });
-  }
-
-  function executePlan() {
-    void perform("run", async () => {
-      const result = await requestBetaBrowser({
-        action: "run", runId: run.id, revision: number, executionToken: revision?.executionToken,
-        ready: readyRevision === number,
-      });
-      await saveDraftExecution(run.id, number, draftExecutionResultSchema.parse(result));
-    });
   }
 
   function shortReview() {
@@ -292,13 +265,14 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
     setRevisionError("");
   }
 
-  function submitResult(outcome: NonNullable<Run["browserResult"]>["outcome"], fields: FormData) {
+  function submitResult(outcome: NonNullable<Run["browserResult"]>["outcome"], fields: FormData, findings: BrowserFinding[]) {
     void perform("save", async () => {
       const result = browserResultSchema.parse({
         outcome,
         summary: String(fields.get("summary") ?? ""),
         preview: String(fields.get("preview") ?? ""),
         records: parseRecords(String(fields.get("records") ?? "").trim()),
+        findings: findings.length ? findings : undefined,
       });
       await saveBrowserResult(run.id, number, result);
       setReporting(false);
@@ -319,8 +293,6 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
     review: "QA Lead is reviewing the plan…",
     save: "Saving the browser result…",
     "save-revision": "Saving the revision request…",
-    "open-browser": "Opening the dedicated beta browser…",
-    run: "Running the approved plan in the dedicated beta browser…",
   };
 
   return (
@@ -348,7 +320,6 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
       {current && (
         <div data-testid="run-plan-actions" className="flex flex-wrap items-center gap-2 empty:hidden">
           {!revision && <Button data-testid="run-prepare-plan" onClick={() => propose()} disabled={!!busy}>{draftOnly ? "Prepare draft plan" : "Prepare plan"}</Button>}
-          {canUseRunner && !revision?.codexHandoffToken && <Button data-testid="run-open-beta-browser" variant="outline" onClick={openBrowser} disabled={!!busy}>Open beta browser</Button>}
           {awaitingReview && reviewMode === "short" && !revision.shortReview && <Button data-testid="run-short-review" onClick={shortReview} disabled={!!busy}>Run short review</Button>}
           {awaitingReview && reviewMode === "full" && engineeringStages.filter((stage) => canRunEngineeringStage(stage, revision.engineering)).map((stage) => (
             <Button key={stage} data-testid={`run-review-${stage}`} onClick={() => runEngineering(stage)} disabled={!!busy}>{engineeringActionLabels[stage]}</Button>
@@ -361,7 +332,6 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
           )}
         </div>
       )}
-      {current && browserMessage && <p role="status" className="text-muted-foreground">{browserMessage}</p>}
       {current && revising && (
         <form data-testid="run-revision-form" className="grid gap-3 rounded-lg border p-4" onSubmit={submitRevision}>
           <FormField testId="run-revision-change" label="What needs to change?" error={revisionError}>
@@ -379,19 +349,8 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
           </div>
         </form>
       )}
-      {canExecute && !revising && (
-        <div data-testid="run-city-execution" className="grid gap-3 rounded-lg border p-3">
-          <h3 className="font-semibold">Run in City</h3>
-          <Checkbox data-testid="run-city-readiness" checked={readyRevision === number} onChange={(event) => setReadyRevision(event.target.checked ? number : 0)}>
-            I verified the Organization and existing Event location. My Organizer can use the migrated Create event and Order form pages.
-          </Checkbox>
-          <Button data-testid="run-city-execute" className="justify-self-start" disabled={!!busy || readyRevision !== number} onClick={executePlan}>
-            Run approved plan
-          </Button>
-        </div>
-      )}
       {revision?.draftExecution && (
-        <Disclosure testId="run-city-result" label={`City result · ${browserOutcomeLabels[revision.draftExecution.outcome]}`} className="rounded-lg border p-3">
+        <Disclosure testId="run-city-result" label={`Playwright result · ${browserOutcomeLabels[revision.draftExecution.outcome]}`} className="rounded-lg border p-3">
           <p>{revision.draftExecution.summary}</p>
           {revision.draftExecution.editorUrl && (
             <a data-testid="run-event-draft-link" href={revision.draftExecution.editorUrl} target="_blank" rel="noreferrer" className="inline-block underline">Open Event Draft in Showpass beta</a>
@@ -399,10 +358,12 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
           <EvidenceList label="Verified saved questions" entries={revision.draftExecution.verifiedQuestions} />
         </Disclosure>
       )}
-      {handoff && codexPrompt && !revising && (!canExecute || role === "organizer-builder") && (
+      {handoff && codexPrompt && !revising && (
         <section aria-label="Codex handoff" data-testid="run-codex-handoff" className="grid min-w-0 gap-3 rounded-lg border p-3">
-          <h3 className="font-semibold">Ready for Codex handoff</h3>
-          {revision?.codexHandoffToken ? (
+          <h3 className="font-semibold">Codex handoff</h3>
+          {requiresCodexRevision ? (
+            <p className="text-muted-foreground">Revise this plan for the Codex browser before running it.</p>
+          ) : revision?.codexHandoffToken ? (
             <CodexHandoff key={number} runId={run.id} revision={number} token={revision.codexHandoffToken} disabled={!!busy || !!revision.draftExecution} />
           ) : (
             <p className="text-muted-foreground">
@@ -410,15 +371,15 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
             </p>
           )}
           <div className="flex flex-wrap gap-2">
-            {!revision?.codexHandoffToken && <ButtonLink data-testid="run-open-codex" href={`codex://new?${codexPrompt}`} variant={canExecute ? "outline" : "default"} prefetch={false}>Open in Codex</ButtonLink>}
-            <Button data-testid="run-copy-handoff" variant="outline" onClick={async () => {
+            {!requiresCodexRevision && !revision?.codexHandoffToken && <ButtonLink data-testid="run-open-codex" href={`codex://new?${codexPrompt}`} prefetch={false}>Open in Codex</ButtonLink>}
+            {!requiresCodexRevision && <Button data-testid="run-copy-handoff" variant="outline" onClick={async () => {
               try {
                 await navigator.clipboard.writeText(handoff);
                 toast.success("Handoff copied");
               } catch {
                 setError("Clipboard access is unavailable. Open the handoff in Codex.");
               }
-            }}>Copy handoff</Button>
+            }}>Copy handoff</Button>}
             {canRecordResult && (
               <Button ref={reportTrigger} data-testid="run-record-result" variant="outline" aria-expanded={reporting} onClick={() => setReporting(!reporting)}>
                 Record browser result
@@ -430,11 +391,10 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
       )}
       {browserResult && (
         <Disclosure testId="run-reported-result" label={`Reported browser result · ${browserOutcomeLabels[browserResult.outcome]}`} className="rounded-lg border p-3">
-          {!revision?.draftExecution && (
-            <>
-              <p className="text-muted-foreground wrap-anywhere whitespace-pre-wrap">{browserResult.summary}</p>
-            </>
+          {browserResult.summary !== revision?.draftExecution?.summary && (
+            <p className="text-muted-foreground wrap-anywhere whitespace-pre-wrap">{browserResult.summary}</p>
           )}
+          {!!browserResult.findings?.length && <ReportedFindings findings={browserResult.findings} />}
           {browserResult.preview && <p className="text-muted-foreground wrap-anywhere">{browserResult.preview}</p>}
           {browserResult.records && (
             <Disclosure testId="run-saved-records" label="Saved Showpass records">

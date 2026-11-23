@@ -4,8 +4,8 @@ import { ArrowRightIcon, BoxIcon, Layers2Icon, MousePointer2Icon } from "lucide-
 import dynamic from "next/dynamic";
 import { useCallback, useState, type CSSProperties } from "react";
 import { Button, ButtonLink } from "@/components/ui/button";
+import { AgentAction } from "@/components/workspace/agent-action";
 import { AgentProfileLink } from "@/components/workspace/agent-display";
-import { NewRunDialog } from "@/components/workspace/new-run-dialog";
 import { PageHeader } from "@/components/workspace/page-header";
 import { RunHistory, RunStatusBadge } from "@/components/workspace/run-list";
 import { useWorkspace } from "@/hooks/use-workspace";
@@ -115,12 +115,12 @@ function CityWorkspace({ agents, runs }: Workspace) {
           <p className="text-xs font-medium text-muted-foreground">Example assignment</p>
           <p className="mt-1.5 text-sm leading-5">{location.example}</p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        {!location.codexPrompt && <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs text-muted-foreground">{latestRun?.sample ? "Latest sample run" : "Latest run"}</span>
           {latestRun ? <RunStatusBadge status={latestRun.status} draftOnly={latestRun.reviewMode === "draft"} /> : <span className="text-xs">No runs yet</span>}
-        </div>
+        </div>}
         <div className="mt-auto grid w-full gap-2 sm:grid-cols-2 xl:grid-cols-1">
-          <NewRunDialog key={selected} agents={agents} runs={runs} agentId={selected} className="h-9 w-full px-3" />
+          <AgentAction key={selected} agents={agents} runs={runs} role={selected} className="h-9 w-full px-3" />
           <AgentProfileLink role={selected} size="lg" />
         </div>
       </section>

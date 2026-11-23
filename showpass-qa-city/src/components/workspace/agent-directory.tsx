@@ -8,6 +8,7 @@ import { useWorkspace } from "@/hooks/use-workspace";
 import { locations } from "@/lib/workspace/city";
 import { agentRoles } from "@/lib/workspace/schema";
 import { AddAgentDialog } from "./add-agent-dialog";
+import { AgentAction } from "./agent-action";
 import { AgentMark, AgentProfileLink, agentDisplay } from "./agent-display";
 import { NewRunDialog } from "./new-run-dialog";
 import { PageHeader } from "./page-header";
@@ -54,7 +55,7 @@ export function AgentDirectory() {
                 <p className="text-sm leading-6 text-muted-foreground">{location.description}</p>
                 <div className="mt-auto flex flex-wrap gap-2">
                   <AgentProfileLink role={role} />
-                  <NewRunDialog agents={agents} runs={runs} agentId={role} variant="outline" />
+                  <AgentAction agents={agents} runs={runs} role={role} variant="outline" />
                 </div>
               </Card>
             </li>
