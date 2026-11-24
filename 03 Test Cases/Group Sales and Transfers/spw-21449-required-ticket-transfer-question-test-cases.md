@@ -98,7 +98,9 @@ QuestionScope: PerOrder, PerTicket
 | Blank required question appears on the recipient’s form. | TC-1 steps 4–5 | PerOrder and PerTicket · Not run |
 | The recipient can accept and see their own saved answer. | TC-1 steps 6–9 | PerOrder and PerTicket · Not run |
 
-**Minimum execution set** · Two desktop-web runs, one per **QuestionScope**. Confirm the deployed builds include the change before running. If an expected screen is missing, record the last screen and any error.
+**Minimum execution set** · Run the case twice on desktop web with a fresh one-ticket order each time. Set **Collect guest information per ticket** off for **PerOrder** and on for **PerTicket**. Save and reopen the Order Form to verify the setting before each purchase. Hand off the pending transfer to the recipient assignment. In both runs, verify the blank **Pickup note**, the required error on **Continue**, successful acceptance, and the recipient’s own answer in the section specified for that parameter.
+
+Confirm the deployed builds include the change before running. If an expected screen is missing, record the last screen and any error.
 
 Separate checks are needed for two-purchase conditional questions, edited question versions, historical **Other**, consent, and shipping. The backend test checks sender answer preservation. TC-1 checks the recipient’s answer.
 

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <style>
+    :root { --ink:#11142D; --teal:#14595F; --dark:#00292C; --coral:#F87171; --mint:#C2F3F7; --paper:#F7F7F7; --stroke:#D1D5DB; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:#dfe7e6; font:17px/1.6 Lato,Arial,sans-serif; }
+    main { max-width:1160px; margin:auto; padding:32px clamp(20px,4vw,56px) 64px; background:radial-gradient(circle at 8% 2%,#f8717126,transparent 24%),linear-gradient(#fff,var(--paper) 60%,#eaf7f6); }
+    .folio { display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; border-bottom:3px solid var(--ink); padding-bottom:16px; font-size:14px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; }
+    .brand { color:#DD3333; font-size:20px; letter-spacing:-.03em; }
+    header { padding:36px 0 24px; }
+    h1,h2,h3 { font-family:"Martian Grotesk",Lato,Arial,sans-serif; line-height:1.12; }
+    h1 { font-size:clamp(36px,6vw,68px); letter-spacing:-.04em; margin:8px 0 20px; }
+    h2 { font-size:30px; margin:36px 0 18px; }
+    h3 { font-size:25px; margin:10px 0 16px; }
+    p { margin:12px 0; }
+    a { color:#14595F; text-decoration:underline; text-underline-offset:3px; overflow-wrap:anywhere; }
+    a:focus-visible { outline:3px solid var(--coral); outline-offset:4px; }
+    .intro { max-width:80ch; font-size:20px; }
+    .meta { color:#495363; font-size:15px; }
+    nav { display:flex; flex-wrap:wrap; gap:10px 24px; padding:18px 0; }
+    .notice { padding:18px 22px; border-left:5px solid var(--coral); background:#fff4f1; border-radius:0 14px 14px 0; }
+    .highlights { padding:24px 28px; border-radius:24px; background:var(--dark); color:#fff; }
+    .highlights h2 { margin:0 0 16px; color:var(--coral); }
+    .highlights a { color:var(--mint); }
+    .card { padding:24px 28px; margin:18px 0; border:1px solid var(--stroke); border-radius:24px; background:#fff; box-shadow:0 8px 24px #11142d0a; scroll-margin-top:20px; }
+    .card.primary { color:#fff; background:var(--teal); border-color:var(--teal); }
+    .primary a { color:var(--mint); }
+    .pill { display:inline-block; padding:5px 12px; margin:0 6px 6px 0; color:var(--ink); background:var(--coral); border-radius:999px; font-size:13px; font-weight:800; }
+        .priority-critical { background:#fecaca; color:#7f1d1d; }
+        .priority-major { background:#fed7aa; color:#7c2d12; }
+        .priority-medium { background:#dbeafe; color:#1e3a8a; }
+        .priority-low { background:#e5e7eb; color:#374151; }
+        .regression-check h4 { margin:1.25rem 0 .5rem; font-size:1.05rem; }
+        .regression-tests > li { margin-bottom:1.25rem; padding-left:.25rem; }
+        .regression-tests > li > p { margin:.4rem 0 0; }
+        .regression-limit { padding:.8rem 1rem; background:#eaf7f6; border-radius:10px; }
+        .qase-match-notes { font-size:.88rem; }
+        .regression-actions { margin:.6rem 0 .8rem; }
+        .regression-actions > li { margin:.4rem 0; }
+        .regression-tests > li > ul { margin:.35rem 0 0; }
+    .change-tracking { font-size:.88rem; }
+    .change-summaries > li { margin:1.3rem 0; padding-bottom:1rem; border-bottom:1px solid var(--stroke); }
+    .card > h4 { margin:1.8rem 0 1rem; font-size:1.2rem; color:var(--teal); }
+    .regression-check { padding:1rem 0; border-top:1px solid var(--stroke); }
+    .regression-check h5 { margin:.5rem 0; font-size:1.05rem; }
+    .regression-instructions { font-size:1rem; }
+    .change-entry > summary { padding:1rem .2rem; color:var(--ink); font-size:1.02rem; }
+    .entry-status { display:block; font-size:.8rem; color:#495363; font-weight:400; }
+    .entry-body { padding:.2rem .5rem 1.5rem; }
+    .test-check,.shared-check { border-left:3px solid var(--teal); padding:.5rem 1rem; margin:1rem 0; background:#f5fbfa; }
+    .risk { padding:.5rem .7rem; background:#eaf7f6; border-radius:8px; }
+    .tracking { display:flex; flex-wrap:wrap; gap:8px 24px; border-top:1px solid #8885; margin-top:20px; padding-top:14px; font-size:15px; }
+    details { margin-top:16px; border-top:1px solid var(--stroke); padding-top:12px; font-size:14px; }
+    summary { cursor:pointer; color:var(--teal); font-weight:700; }
+    .qase-links,.qase-note { font-size:.88rem; line-height:1.5; }
+    .qase-note { color:#495363; }
+    .qase-titles { margin:.35rem 0 .8rem; }
+    .qase-titles summary { font-size:.88rem; }
+    .table-wrap { max-width:100%; overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:15px; background:#fff; }
+    th,td { text-align:left; vertical-align:top; padding:12px; border-bottom:1px solid var(--stroke); }
+    th { background:#eaf7f6; }
+    ul,ol { padding-left:24px; }
+    li { margin:8px 0; }
+    code { font-size:.88em; overflow-wrap:anywhere; }
+    .evidence { font-size:14px; }
+    footer { margin-top:40px; border-top:1px solid var(--stroke); padding-top:18px; font-size:14px; color:#495363; }
+    @media(max-width:600px) { .card,.highlights { padding:20px; border-radius:18px; } h2 { font-size:26px; } .tracking { display:block; } .tracking>span { display:block; margin:8px 0; } }
+    @media print { details > :not(summary) { display:block !important; } body { background:#fff; font-size:11pt; } main { max-width:none; padding:0; background:#fff; } .card { box-shadow:none; break-inside:auto; } a { text-decoration:underline; } .table-wrap { overflow:visible; } th,td { overflow-wrap:anywhere; } .highlights,.primary { print-color-adjust:exact; -webkit-print-color-adjust:exact; } }
+  </style>
+</head>
+<body>
+<main>
+  <div class="folio"><span class="brand">showpass</span><span>Branch digest</span><span>{{DATE}}</span></div>
+  <header>
+    <span class="pill">On this branch</span>
+    <h1>{{TITLE}}</h1>
+    <p class="intro">{{INTRO}}</p>
+    <div class="meta">{{STATUS_HTML}}</div>
+  </header>
+  <nav aria-label="Report sections"><a href="#what-matters">What matters</a><a href="#comparison">Compared branches</a><a href="#changes">Changes</a><a href="#evidence">Evidence</a></nav>
+  <section class="highlights" id="what-matters"><h2>What matters</h2>{{HIGHLIGHTS_HTML}}</section>
+  <section id="comparison"><h2>Compared branches</h2>{{COMPARISON_HTML}}</section>
+  <details class="regression-guidance"><summary>Regression setup, clients and recording results</summary>{{REGRESSION_GUIDANCE_HTML}}</details>
+  <section id="changes"><h2>Upcoming changes</h2>{{CHANGES_HTML}}</section>
+  {{INTERNAL_SECTION_HTML}}
+  {{LIMITS_SECTION_HTML}}
+  <section class="evidence" id="evidence"><h2>Scope and supporting evidence</h2>{{EVIDENCE_HTML}}</section>
+</main>
+<script>
+function revealLinkedCheck(){const id=decodeURIComponent(location.hash.slice(1));if(!id)return;const target=document.getElementById(id);if(!target)return;let n=target;while(n){if(n.tagName==='DETAILS')n.open=true;n=n.parentElement;}if(target.classList.contains('test-check')){const d=target.querySelector('.test-instructions');if(d)d.open=true;}requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));}
+window.addEventListener('hashchange',revealLinkedCheck);window.addEventListener('DOMContentLoaded',revealLinkedCheck);
+</script>
+</body>
+</html>

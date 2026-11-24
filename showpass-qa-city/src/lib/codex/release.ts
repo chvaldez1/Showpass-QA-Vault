@@ -1,5 +1,4 @@
 import { readFile } from "node:fs/promises";
-import { homedir } from "node:os";
 import { resolve } from "node:path";
 import type { z } from "zod";
 import {
@@ -54,7 +53,7 @@ export async function runEngineeringRole(stage: ReleaseStage, schema: z.ZodType,
   const { name, skill } = releaseRoles[stage];
   const sourceRole = stage === "backend" || stage === "frontend";
   const files = [
-    resolve(homedir(), ".codex", "skills", skill, "SKILL.md"),
+    resolve(cwd, ".agents", "skills", skill, "SKILL.md"),
     resolve(cwd, "06 Prompts", "Showpass Release Engineering Handoff.md"),
     ...(sourceRole ? [resolve(cwd, "01 Repositories", guides[stage])] : []),
   ];

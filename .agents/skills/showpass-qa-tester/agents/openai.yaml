@@ -1,0 +1,4 @@
+interface:
+  display_name: "Showpass QA Tester"
+  short_description: "Test Showpass in the sidebar and bring back proof"
+  default_prompt: "Use $showpass-qa-tester to test this Showpass workflow in the browser sidebar. Show the plan, run the agreed checks, and write a step-by-step report with visible screenshots and a final results table."

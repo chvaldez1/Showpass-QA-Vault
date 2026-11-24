@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { builderRecordSchema, buildReferenceSchema } from "./builder-result";
+import { buildPresetSchema, buildThemeSchema } from "./build-presets";
 import { browserResultSchema, builderWorkflows, planReviewModes, qaWorkflows, revisionSchema } from "./qa-workflow";
 import { releaseSchema } from "./release";
 import { jobSchema } from "./job";
@@ -31,6 +32,9 @@ const assignmentDetails = {
   job: jobSchema.optional(),
   reviewMode: z.enum(planReviewModes).optional(),
   builderWorkflow: z.enum(builderWorkflows).optional(),
+  buildPreset: buildPresetSchema.optional(),
+  buildTheme: buildThemeSchema.optional(),
+  publishSupportingEvents: z.boolean().optional(),
 };
 
 export const qaVenueSchema = z.object({
@@ -50,6 +54,10 @@ const agentSchema = agentFormSchema.extend({
   id: z.string().min(1),
   role: z.enum(agentRoles).optional(),
 });
+
+const retiredTransferAgentSchema = agentSchema.extend({
+  role: z.enum(["transfer-sender", "transfer-recipient"]),
+}).transform(() => undefined);
 
 const savedRunSchema = runFormSchema.extend({
   id: z.string().min(1),
@@ -73,7 +81,8 @@ const savedRunSchema = runFormSchema.extend({
 });
 
 export const workspaceSchema = z.object({
-  agents: z.array(agentSchema),
+  agents: z.array(z.union([agentSchema, retiredTransferAgentSchema]))
+    .transform((agents) => agents.filter((agent) => agent !== undefined)),
   runs: z.array(savedRunSchema),
   releases: z.array(releaseSchema).default([]),
   qaVenue: qaVenueSchema.optional(),

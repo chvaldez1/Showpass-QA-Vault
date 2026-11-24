@@ -2,7 +2,9 @@ import { workspaceVersionSchema, type WorkspaceVersion } from "./shared-schema";
 import { demoWorkspace } from "./demo";
 import { normalizeWorkspace } from "./normalize";
 import { savedBuildRecords } from "./build-catalog";
+import { buildPresets, inferBuildPreset, inferBuildTheme } from "./build-presets";
 import { jobNeedsFullReview, jobsFor } from "./job";
+import { nextPollRetryDelay } from "./poll-retry";
 import { pilotAccountsSchema, pilotPurchaseQuantity, pilotStages, pilotTransferQuantity, type PilotAccounts } from "./transfer-pilot";
 import {
   agentFormSchema,
@@ -19,7 +21,7 @@ import {
 import { isMatchingBetaPreview, matchesBuild } from "./builder-result";
 import type { DraftExecutionResult } from "./event-draft";
 import {
-  browserResultSchema, getPlanReviewMode, getQaWorkflow, isPlanReviewReady, planStageSchemas, shortReviewSchema,
+  asBuilderWorkflow, browserResultSchema, builderSourceReviewsSchema, canReviewBuilderSources, getPlanReviewMode, getQaWorkflow, isPlanReviewReady, planStageSchemas, shortReviewSchema,
   type LeadDecision, type Revision,
 } from "./qa-workflow";
 import {
@@ -84,13 +86,16 @@ function publish(snapshot: WorkspaceVersion) {
   for (const listener of workspaceListeners) listener();
 }
 
-async function loadWorkspace() {
+async function fetchWorkspaceSnapshot() {
   const suffix = activeSnapshot ? `?since=${activeSnapshot.version}` : "";
   const response = await fetch(`/api/workspace${suffix}`, { cache: "no-store" });
   if (response.status === 204 && activeSnapshot) return activeSnapshot;
   if (!response.ok) throw new Error("City couldn’t load the shared workspace.");
+  return workspaceVersionSchema.parse(await response.json());
+}
 
-  const snapshot = workspaceVersionSchema.parse(await response.json());
+async function loadWorkspace() {
+  const snapshot = await fetchWorkspaceSnapshot();
   publish(snapshot);
   return activeSnapshot ?? snapshot;
 }
@@ -110,24 +115,28 @@ function initializeWorkspace() {
   if (initialized) return loadWorkspace();
   initialLoad ??= (async () => {
     const stored = readBrowserWorkspace();
-    const snapshot = stored
-      ? (await sendWorkspace({ action: "import", workspace: cachedBrowserWorkspace(stored) })).snapshot
-      : await loadWorkspace();
+    const snapshot = await fetchWorkspaceSnapshot();
+    if (stored) {
+      await sendWorkspace({ action: "import", workspace: cachedBrowserWorkspace(stored) });
+    } else {
+      publish(snapshot);
+    }
     initialized = true;
-    return snapshot;
+    return activeSnapshot ?? snapshot;
   })().finally(() => { initialLoad = undefined; });
   return initialLoad;
 }
 
-async function watchWorkspace(generation: number) {
+async function watchWorkspace(generation: number, retryDelay = 0) {
+  let nextRetryDelay = 0;
   try {
     await initializeWorkspace();
   } catch {
-    // Existing data stays visible while a subsequent attempt reconnects.
+    nextRetryDelay = nextPollRetryDelay(retryDelay);
   } finally {
     if (generation === watchGeneration) {
-      const delay = document.visibilityState === "hidden" ? 30_000 : 2500;
-      pollTimer = setTimeout(() => void watchWorkspace(generation), delay);
+      const pollInterval = document.visibilityState === "hidden" ? 30_000 : 2500;
+      pollTimer = setTimeout(() => void watchWorkspace(generation, nextRetryDelay), Math.max(pollInterval, nextRetryDelay));
     }
   }
 }
@@ -210,6 +219,15 @@ export function queueRun(input: RunFormValues, useQaVenue = true, pilotAccounts?
       throw new Error("The selected build record is no longer available in its source run.");
     }
 
+    const isBuilder = agent.role === "organizer-builder";
+    const preset = isBuilder && !pilot ? run.buildPreset : undefined;
+    const builderWorkflow = preset ? buildPresets[preset].workflow : isBuilder ? run.builderWorkflow : undefined;
+    const workflow = getQaWorkflow(agent.role ?? agent.id, run.title, builderWorkflow);
+    const builder = asBuilderWorkflow(workflow);
+    const buildPreset = builder && !pilot ? preset ?? inferBuildPreset(run.title, builder) : undefined;
+    const buildTheme = builder && !pilot ? run.buildTheme ?? inferBuildTheme(run.title) ?? inferBuildTheme(run.instructions) : undefined;
+    const publishSupportingEvents = isBuilder && !pilot && run.reviewMode !== "draft" && run.publishSupportingEvents;
+
     return {
       ...workspace,
       runs: [
@@ -217,9 +235,8 @@ export function queueRun(input: RunFormValues, useQaVenue = true, pilotAccounts?
           ...run,
           job,
           pilot,
-          reviewMode: run.reviewMode !== "draft" && jobNeedsFullReview(job) ? "full" : run.reviewMode,
-          builderWorkflow: agent.role === "organizer-builder" ? run.builderWorkflow : undefined,
-          workflow: getQaWorkflow(agent.role ?? agent.id, run.title, run.builderWorkflow),
+          reviewMode: run.reviewMode !== "draft" && (publishSupportingEvents || jobNeedsFullReview(job)) ? "full" : run.reviewMode,
+          builderWorkflow, buildPreset, buildTheme, publishSupportingEvents: publishSupportingEvents || undefined, workflow,
           target: run.target || previousRun?.target || "",
           qaVenue: useQaVenue ? (previousRun ? previousRun.qaVenue : workspace.qaVenue) : undefined,
           qaAccountEmail: accountRole && job !== "accept-transfer" && (accountRole !== "public-tester" || job === "inspect-public")
@@ -388,6 +405,19 @@ export function savePlanStage(id: string, number: number, stage: EngineeringStag
   });
 }
 
+export function saveBuilderSourceReviews(id: string, number: number, value: unknown) {
+  const reviews = builderSourceReviewsSchema.parse(value);
+  return updateRun(id, (run) => {
+    assertCurrentRevision(run, number);
+    const { revision } = run;
+    if (!revision || revision.review || run.changeRequest || getPlanReviewMode(run.reviewMode, revision) !== "full" ||
+      !canReviewBuilderSources(revision)) {
+      throw new Error("The source reviews are no longer open for the current Builder plan.");
+    }
+    return { ...run, revision: { ...revision, engineering: { ...revision.engineering, ...reviews } } };
+  });
+}
+
 export function saveBrowserResult(id: string, number: number, values: Run["browserResult"]) {
   const browserResult = browserResultSchema.parse(values);
   return updateWorkspace((workspace) => {
@@ -414,8 +444,13 @@ export function saveBrowserResult(id: string, number: number, values: Run["brows
         throw new Error("Enter the beta Preview URL for the saved Event’s slug.");
       }
     }
-    if (completed && offeringBuild && !browserResult.records?.some(({ kind }) => kind === "product" || kind === "membership_group")) {
-      throw new Error("Add the saved Product or Membership Group for this assignment.");
+    if (completed && offeringBuild) {
+      const requiredKind = run.buildPreset === "product" ? "product" : run.buildPreset === "membership" ? "membership_group" : undefined;
+      if (!browserResult.records?.some(({ kind }) => requiredKind ? kind === requiredKind : kind === "product" || kind === "membership_group")) {
+        throw new Error(requiredKind === "product" ? "Add the saved Product for this assignment."
+          : requiredKind === "membership_group" ? "Add the saved Membership Group for this assignment."
+            : "Add the saved Product or Membership Group for this assignment.");
+      }
     }
 
     const status = {

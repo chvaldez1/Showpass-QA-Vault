@@ -1,0 +1,4 @@
+interface:
+  display_name: "Showpass Organizer Builder"
+  short_description: "Build authorized setups across the Organizer Dashboard"
+  default_prompt: "Use $showpass-beef-up-event to create or enrich this Showpass configuration or test scenario, verify the saved setup, and flag bugs found during setup."

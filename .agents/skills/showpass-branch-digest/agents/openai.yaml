@@ -1,0 +1,4 @@
+interface:
+  display_name: "Showpass Branch Digest"
+  short_description: "Changes, source links, test reasons and Qase coverage"
+  default_prompt: "Use $showpass-branch-digest to use the release number I supply in the title and filenames, refresh both Showpass repositories and summarize grouped changes against master/main with Jira/PR/Qase links and title-only suggestions for missing tests, giving each change its Jira/PR/commit links, specific tests with reasons and Qase coverage; keep one full copy of shared tests; feature teams own acceptance testing."

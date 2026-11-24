@@ -22,6 +22,10 @@ Thumbs.db
 07 Personal Notes/Personal Notes/
 
 assets/
+# The Branch Digest skill uses this source template to render its HTML reports.
+!/.agents/skills/showpass-branch-digest/assets/
+/.agents/skills/showpass-branch-digest/assets/*
+!/.agents/skills/showpass-branch-digest/assets/report-shell.html
 
 # Images stay local by default; necessary repository assets need a narrow exception.
 /99 Archive/QA Evidence/

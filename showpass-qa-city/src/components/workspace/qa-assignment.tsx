@@ -20,15 +20,16 @@ import { pilotProofSchema } from "@/lib/workspace/transfer-pilot";
 import type { BrowserFinding } from "@/lib/workspace/browser-finding";
 import { builderRecordsSchema } from "@/lib/workspace/builder-result";
 import { handoffText } from "@/lib/workspace/handoff";
+import { buildPresets, buildThemes } from "@/lib/workspace/build-presets";
 import {
-  asBuilderWorkflow, browserOutcomeLabels, browserResultSchema, getPlanReviewMode, getQaWorkflow,
+  asBuilderWorkflow, browserOutcomeLabels, browserResultSchema, builderSourceReviewsSchema, canReviewBuilderSources, getPlanReviewMode, getQaWorkflow,
   isPlanReviewReady, leadResponseSchema, liveProposalSchema, planReviewLabels, proposalSchema, type Revision,
 } from "@/lib/workspace/qa-workflow";
 import { type AgentRole, type Run } from "@/lib/workspace/schema";
 import { canRunEngineeringStage, engineeringActionLabels, engineeringStages, type EngineeringStage } from "@/lib/workspace/release";
-import { requestRevision, saveBrowserResult, savePlanStage, saveProposal, saveReview, saveShortReview } from "@/lib/workspace/store";
+import { requestRevision, saveBrowserResult, saveBuilderSourceReviews, savePlanStage, saveProposal, saveReview, saveShortReview } from "@/lib/workspace/store";
 
-type Action = "propose" | EngineeringStage | "short-review" | "review" | "save" | "save-revision";
+type Action = "propose" | EngineeringStage | "engineering-sources" | "short-review" | "review" | "save" | "save-revision";
 
 function parseRecords(text: string) {
   if (!text) return undefined;
@@ -64,6 +65,7 @@ export function Plan({ revision }: { revision: Revision }) {
       <p className="whitespace-pre-wrap">{plan.approach}</p>
       <p><strong className="font-medium">Start here:</strong> {plan.startingPoint}</p>
       <EvidenceList label="Before starting" entries={plan.prerequisites} />
+      <h4 className="font-medium">Checks and expected proof</h4>
       <ol data-testid={`run-plan-${number}-steps`} className="list-decimal space-y-3 pl-5">
         {plan.steps.map(({ action, proof }, index) => (
           <li key={index} data-testid={`run-plan-${number}-step-${index + 1}`}>
@@ -74,7 +76,10 @@ export function Plan({ revision }: { revision: Revision }) {
       </ol>
       <p><strong className="font-medium">Data changes:</strong> {plan.changes}</p>
       <p><strong className="font-medium">Cleanup:</strong> {plan.cleanup}</p>
-      <p><strong className="font-medium">Stop:</strong> {plan.stop}</p>
+      <div className="space-y-1">
+        <h4 className="font-medium">When to stop</h4>
+        <p>{plan.stop}</p>
+      </div>
       {eventDraft && (
         <PlanSection title="Event Draft in Showpass beta">
           <p>{eventDraft.name} · {eventDraft.category}</p>
@@ -176,6 +181,7 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
   const draftOnly = reviewMode === "draft";
   const current = ["queued", "needs-input"].includes(run.status) || (draftOnly && run.status === "completed");
   const awaitingReview = current && !draftOnly && revision && !revision.review && !changeRequest;
+  const reviewSourcesTogether = awaitingReview && reviewMode === "full" && canReviewBuilderSources(revision);
   const engineeringReady = isPlanReviewReady(run.reviewMode, revision);
   const canHandoff = current && engineeringReady && revision?.review?.decision === "approved" && !changeRequest;
   const canRecordResult = run.status === "needs-input";
@@ -184,6 +190,7 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
   const sourceRecords = sourceRecordsFor(run, previousRun);
   const assignment = {
     role, builderWorkflow, runId: run.id, title: run.title, instructions: run.instructions,
+    buildPreset: run.buildPreset, buildTheme: run.buildTheme,
     mode: run.mode, reviewMode: run.reviewMode, target: run.target, sourceRecords,
     qaVenue: run.qaVenue, qaAccountEmail: run.qaAccountEmail, executionPath: "codex" as const,
     job: run.job, pilot: run.pilot, pilotInput: run.pilotInput,
@@ -242,6 +249,16 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
     void perform(stage, async () => {
       const data = await askLocalCodex({ action: "engineering", stage, assignment, revision });
       await savePlanStage(run.id, number, stage, data);
+    });
+  }
+
+  function reviewBuilderSources() {
+    void perform("engineering-sources", async () => {
+      const result = builderSourceReviewsSchema.parse(await askLocalCodex({ action: "engineering-sources", assignment, revision }));
+      await saveBuilderSourceReviews(run.id, number, result);
+      if (!result.backend || !result.frontend) {
+        setError(`One review saved. Retry the ${result.backend ? "Frontend Master" : "Backend Master"} review.`);
+      }
     });
   }
 
@@ -306,6 +323,7 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
     intake: "Release Engineer is scoping the plan…",
     backend: "Backend Master is reviewing the plan…",
     frontend: "Frontend Master is reviewing the plan…",
+    "engineering-sources": "Both source reviewers are checking the same plan…",
     engineer: "Release Engineer is preparing the handoff…",
     review: "QA Lead is reviewing the plan…",
     save: "Saving the browser result…",
@@ -318,6 +336,13 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
         <p className="font-medium">{jobLabels[run.job]}</p>
         <p className="text-muted-foreground">{jobStops[run.job]}</p>
       </div>}
+      {builderWorkflow && (run.buildPreset || run.buildTheme || run.publishSupportingEvents) && (
+        <div data-testid="run-build-scenario" className="space-y-1">
+          <p className="font-medium">{[run.buildPreset && buildPresets[run.buildPreset].label, run.buildTheme && buildThemes[run.buildTheme].label].filter(Boolean).join(" · ") || "Builder scope"}</p>
+          {run.buildPreset && <p className="text-muted-foreground">{buildPresets[run.buildPreset].summary}</p>}
+          {run.publishSupportingEvents && <p className="text-muted-foreground">Full review for supporting Event publication on beta.</p>}
+        </div>
+      )}
       {revision && (
         <div className="space-y-1">
           <p className="font-medium">Plan {number}{revision.review && ` · QA Lead ${revision.review.decision}`}</p>
@@ -342,7 +367,8 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
         <div data-testid="run-plan-actions" className="flex flex-wrap items-center gap-2 empty:hidden">
           {!revision && <Button data-testid="run-prepare-plan" onClick={() => propose()} disabled={!!busy}>{draftOnly ? "Prepare draft plan" : "Prepare plan"}</Button>}
           {awaitingReview && reviewMode === "short" && !revision.shortReview && <Button data-testid="run-short-review" onClick={shortReview} disabled={!!busy}>Run short review</Button>}
-          {awaitingReview && reviewMode === "full" && engineeringStages.filter((stage) => canRunEngineeringStage(stage, revision.engineering)).map((stage) => (
+          {reviewSourcesTogether && <Button data-testid="run-review-sources" onClick={reviewBuilderSources} disabled={!!busy}>Review backend and frontend</Button>}
+          {awaitingReview && reviewMode === "full" && !reviewSourcesTogether && engineeringStages.filter((stage) => canRunEngineeringStage(stage, revision.engineering)).map((stage) => (
             <Button key={stage} data-testid={`run-review-${stage}`} onClick={() => runEngineering(stage)} disabled={!!busy}>{engineeringActionLabels[stage]}</Button>
           ))}
           {awaitingReview && engineeringReady && <Button data-testid="run-review-lead" onClick={review} disabled={!!busy}>Send to QA Lead</Button>}

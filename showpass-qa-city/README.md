@@ -36,9 +36,15 @@ Choose the assignment's **Review path**. An Event saved in Showpass with the sta
 | --- | --- |
 | Draft plan only | Select **Prepare draft plan**. City saves the plan with execution Not run. |
 | Short review | Prepare the plan, select **Run short review** for the Release Engineer's check, then **Send to QA Lead**. City switches to full review when the plan or short review identifies high risk. |
-| Full review | Prepare the plan, select **Scope with Release Engineer**, then run the Backend Master and Frontend Master reviews. Select **Prepare engineering handoff**, then **Send to QA Lead**. |
+| Full review | Prepare the plan and select **Scope with Release Engineer**. For Builder runs, select **Review backend and frontend** to start both source reviews together. Complete any remaining review, select **Prepare engineering handoff**, then **Send to QA Lead**. |
 
-**Organizer Tester** and **Organizer Builder** have separate assignments and skills. Both cover permitted Organizer Dashboard pages. Assign behavior, access, and UX checks to the Tester. Assign configuration and test-data setup to the Builder. Use **Build area** to choose the Event, Product or Membership, or general Dashboard workflow when the title is ambiguous.
+Plans show what each action will verify, what evidence to capture, and when to stop. QA Lead approval can cover a bounded beta check that gathers its evidence during execution, with preflight checks and stopping conditions in the approved plan. [Shared plan and proof guidance](../06%20Prompts/Showpass%20Release%20Engineering%20Handoff.md#plan-the-proof-and-stopping-point)
+
+**Organizer Tester** and **Organizer Builder** have separate assignments and skills. Both cover permitted Organizer Dashboard pages. Assign behavior, access, and UX checks to the Tester. Assign configuration and test-data setup to the Builder. City chooses a **Build preset** and **Scenario theme** from the request. You can select them explicitly when needed.
+
+City presets cover Events, Products, Memberships, discounts, Ticket Credits, Packages, and other Dashboard setup. Themes cover Sports (including Basketball, Volleyball, Soccer, Football, and MMA), Music (including festivals, Rave or EDM, Folk festivals, and Jazz), Comedy, Seasonal (including Valentine’s, Halloween, and Christmas), and Comic Con. A Product preset includes distinct variants, SKUs, stock, purchase limits, and its actual sales and fulfillment path. Assignment instructions override defaults.
+
+The Builder reviews the primary setup and its required supporting records as one plan. City supplies verified same-venue candidates from saved builds. The plan states how to verify reuse, when to create a supporting record, and which details to reopen after saving. Use **Allow publication of supporting Events named in the approved beta plan** when the dependency needs publication. This selects full review for the assignment. The QA Lead signs off on the whole plan.
 
 Choose one **Job** for each assignment. Guest Tester owns signed-out discovery and guest checkout. Customer Tester owns signed-in discovery, checkout, and Account work, including separate send and accept jobs. Both checkout roles cover public websites and widgets. Box Office Tester chooses one staff job. On the **City map**, select a building for its queue, blockers, and next actions, or use the review queue filters.
 
@@ -64,7 +70,7 @@ The dedicated beta Event Draft runner and its local API remain in the project. P
 
 ## Release engineering
 
-**Releases** always uses full review. Add the candidate, affected workflows, source evidence and executed test evidence. Scope it with the Release Engineer, run the two source reviews, prepare the engineering handoff, and send it to the QA Lead. The City reviews evidence you supply. For a tester plan, include relevant source references or excerpts in the assignment instructions. The installed source-review skills can trace the repositories directly from a Codex workspace. The handoff decision and release recommendation are recorded separately. Revisions keep earlier decisions in history while the current revision waits for its own review. [Vault release workflow](../06%20Prompts/Showpass%20Release%20Engineering%20Handoff.md)
+**Releases** always uses full review. Add the candidate, affected workflows, source evidence and executed test evidence. Scope it with the Release Engineer, run the two source reviews, prepare the engineering handoff, and send it to the QA Lead. The City reviews evidence you supply. For a tester plan, include relevant source references or excerpts in the assignment instructions. The QA Vault’s source-review skills can trace the repositories directly from a Codex workspace. The handoff decision and release recommendation are recorded separately. Revisions keep earlier decisions in history while the current revision waits for its own review. [Vault release workflow](../06%20Prompts/Showpass%20Release%20Engineering%20Handoff.md)
 
 Assignments, plans, reviews, and reported results are shared across browser views connected to the same local City server. Existing browser records import when that view opens City. Saved Codex handoffs can be recovered from their local dispatch records. Open a saved builder result to inspect its JSON. Each record has a City `kind` and a `record` with verified fields from the Showpass backend's venue-based serializers:
 
@@ -72,9 +78,9 @@ Assignments, plans, reviews, and reported results are shared across browser view
 | --- | --- |
 | Event | `id`, `slug`, `status`, `starts_on`, `ends_on`, `opens_at`, `collect_info_custom_questions`, `tickettype_set` |
 | Product | `id`, `venue`, `is_active`, `product_attributes` |
-| Membership Group | `id`, `venue`, `status`, `membership_levels` |
+| Membership Group | `id`, `venue`, `status`, `renewal_frequency`, `renewals_enabled`, `membership_levels` |
 | Membership Benefit | `id`, `membership_group`, `membership_level`, `ticket_type` |
 
 Keep dates in ISO 8601 and prices as two-decimal strings. Leave fields out when they cannot be verified through the authorized workflow. This is a subset of the backend response fields for sharing saved test data. [Backend repository guide](../01%20Repositories/Backend%20-%20web-app.md)
 
-Set `NEXT_PUBLIC_QA_CITY_VAULT_PATH` to the absolute QA Vault path if you want **Open in Codex** to select that project when opening the draft.
+Set `NEXT_PUBLIC_QA_CITY_VAULT_PATH` to the absolute QA Vault path so **Open in Codex** and **Review in Codex** open the project that contains the `.agents/skills/` directory. The [City skill directory](../00%20Start%20Here/Showpass%20QA%20City.md#codex-skill-directory) lists the available skills and their source files.

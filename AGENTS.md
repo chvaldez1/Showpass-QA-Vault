@@ -17,6 +17,8 @@ For a mixed request, deliver the part that is clear. If “prototype” could me
 
 Use the package manager the user specifies. For an existing project, otherwise follow its declared `packageManager` or lockfile. Default to `pnpm` for new Showpass JavaScript and TypeScript projects, including the commands you give the user.
 
+For a scenario build, start with what the next tester needs to exercise. Use saved QA venue and scenario defaults where they fit. Include essential supporting records and the conditions for reusing or creating them in one plan. Batch related form edits and reopen the saved record once for the agreed proof. Use the existing review policy for material changes, including publication.
+
 ## Permissions
 
 ### Projects and changes
@@ -110,6 +112,12 @@ Keep original and replacement records distinct. Verify and label the lookup type
 | `99 Archive/` | Inactive notes and local QA evidence |
 
 Keep one active output note per QA request, ticket, feature, or Qase work item. Reuse the existing canonical note and preserve the user's edits, links, IDs, headings, and surrounding content. Treat `*Template.md` files as reusable scaffolds and write generated outputs to a feature-specific note unless the user requests a template edit. Reference source paths instead of copying repositories or large snippets into the vault.
+
+### Skills and Workflows
+
+- Create or update skills for the QA Vault and QA City in `.agents/skills/<skill-name>/`. Keep their supporting files and any required license notices in Git. Link the repository copy from [[00 Start Here/Showpass QA City#Codex skill directory|the skill directory]] and use repo-relative paths for vault references.
+- Save reusable Showpass QA workflows in `06 Prompts/`, or update the existing note that owns the procedure. Link to code-specific workflows in their owning repositories so the instructions follow the code they apply to.
+- Before handing off a new skill or workflow, verify its files and links resolve from the vault checkout and that new files are included in Git.
 
 ## Browser Reports And Evidence
 

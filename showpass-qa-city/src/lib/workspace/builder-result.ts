@@ -63,6 +63,7 @@ const membershipGroupRecord = z.strictObject({
     id, name: name.max(128), description, venue: id.optional(),
     slug: name.optional(),
     status: name.optional(),
+    renewal_frequency: name.max(30).optional(),
     renewals_enabled: z.boolean().optional(),
     custom_expiry_date: date,
     membership_levels: z.array(saleOption).max(100).optional(),

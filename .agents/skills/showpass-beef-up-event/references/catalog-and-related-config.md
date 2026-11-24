@@ -1,0 +1,13 @@
+# Products and connected Showpass configuration
+
+Use the shared process in SKILL.md. Start with the requested object, not an Event shell. Find its supported Dashboard workflow and exact backend rules; load only the relevant Handbook playbook. These are configuration recipes, not authorization to issue money, transact or change Organization-wide settings.
+
+| Object | Minimum useful setup and proof |
+| --- | --- |
+| Product | Load `Playbooks/10 Products Variants and Stock.md`. Configure realistic copy and distinct purchasable variants when useful: name, SKU, price, variant Inventory and Purchase Limit. Save eligibility for the actual standalone/Event/Membership path and supported pickup/delivery messages. Reopen every selected variant and record the eligible sales path for the checkout tester. |
+| Discount | Load `Playbooks/06 Discounts and Ticket Credits.md`. Record the actual discount type/value, currency where relevant, date window, eligible/excluded items, quantity/use limits and audience. Reuse owned definitions when compatible. Verify saved eligibility and hand basket application to the checkout tester. |
+| Ticket Credit | Use the same playbook and case guide. Distinguish its definition, issuing items, redemption items and an actual Customer-issued code with available/used balance. Do not call it usable merely because assignments saved. Applying an existing code requires authorized scope and understood reservations; purchases/issuance are separate actions. |
+| Package | Load `Playbooks/03 Packages and Parent-Child Items.md`. The parent Event sells the Package; child Events supply included tickets. Map exact included items/quantities, Inventory, prices/fee allocation and guest collection. Preserve genuinely required separate Events; do not collapse parent/child identities to minimize a record count. Test the supported parent sales path and actual child grouping, not a ticket merely named “bundle.” |
+| Other configuration | Read its matching Handbook chapter and backend model/service, find the owning supported Dashboard controls, establish dependencies and readiness, save and reopen selected values, and name the affected consumer for follow-up. Name unsupported controls and missing permissions instead of substituting Admin/API writes. |
+
+Reuse existing owned records and prefer zero new Events when they are unnecessary. Record relationship direction and exclusions explicitly. Configuring a Gift Card, payment plan, communication, rate card or integration does not authorize issuing credit, enrolling a Customer, sending messages, changing shared fees or running an external job. Distinguish a saved rule from an executed downstream outcome in the result and handoff.

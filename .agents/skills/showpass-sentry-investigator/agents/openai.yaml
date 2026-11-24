@@ -1,0 +1,4 @@
+interface:
+  display_name: "Showpass Sentry Investigator"
+  short_description: "Trace Sentry errors and draft manual reproduction"
+  default_prompt: "Use $showpass-sentry-investigator to investigate this Sentry issue through the API and give me source-backed manual reproduction steps."

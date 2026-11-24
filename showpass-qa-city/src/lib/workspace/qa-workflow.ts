@@ -58,6 +58,7 @@ export const leadDecisionSchema = z.object({
   requiredChanges: notes,
 }).refine(({ decision, requiredChanges }) =>
   decision === "approved" ? !requiredChanges.length : requiredChanges.length > 0,
+  { path: ["requiredChanges"] },
 );
 
 export const leadResponseSchema = leadDecisionSchema.safeExtend({
@@ -77,6 +78,8 @@ export const shortReviewSchema = planHandoffSchema.extend({
 }).refine(({ requiredReview, concerns }) => requiredReview !== "full" || concerns.length > 0);
 
 const planEngineeringSchema = engineeringSourceSchema.extend({ engineer: planHandoffSchema.optional() });
+export const builderSourceReviewsSchema = engineeringSourceSchema.pick({ backend: true, frontend: true })
+  .refine(({ backend, frontend }) => Boolean(backend || frontend));
 export const planStageSchemas = {
   intake: stageSchemas.intake,
   backend: stageSchemas.backend,
@@ -134,9 +137,14 @@ export function isPlanReviewReady(requested: PlanReviewMode | undefined, revisio
   return mode === "full" && hasEngineeringHandoff(revision?.engineering);
 }
 
+export function canReviewBuilderSources(revision?: Revision) {
+  const review = revision?.engineering;
+  return Boolean(asBuilderWorkflow(revision?.workflow) && review?.intake && !review.backend && !review.frontend);
+}
+
 export function inferBuilderWorkflow(subject: string): BuilderWorkflow {
   if (/\b(products?|memberships?)\b/i.test(subject) && !/\bevents?\b/i.test(subject)) return "offering-builder";
-  if (/\b(events?|raves?|concerts?|shows?)\b/i.test(subject)) return "event-builder";
+  if (/\b(events?|raves?|concerts?|shows?|festivals?|fests?|tournaments?|games?|matches|fight night|comedy night|comic[ -]?cons?|holiday market|christmas market)\b/i.test(subject)) return "event-builder";
   return "organizer-builder";
 }
 

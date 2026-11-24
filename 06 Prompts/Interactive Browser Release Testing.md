@@ -28,8 +28,6 @@ Read the exact saved case through [[05 Tooling/qasectl#Exact-ID Review Workflow|
 
 Use the saved case to choose the required data, quantities, actions, and finishing point. Investigate source or deployment differences that could affect execution. If the case is inaccessible or a proposed change would alter its proof, name the gap before running a substitute. Record any user-approved variation as a separate check and keep the original case row's execution status accurate.
 
-For [SPT-6025](https://app.qase.io/case/SPT-6025), plan one fresh one-ticket order for **PerOrder** with **Collect guest information per ticket** off and another for **PerTicket** with it on. Save and reopen the setting before each purchase. In both runs, verify the blank **Pickup note**, the required error on **Continue**, successful acceptance, and the recipient's own saved answer in the section the case specifies. A pending send is a handoff between roles.
-
 ## Standard for Every Run
 
 Plan → short or full review and QA Lead sign-off → test → evidence. A draft-only plan ends at the draft.
@@ -44,6 +42,8 @@ State the environment, requested page/version, signed-in or signed-out state, se
 
 | Check | Starting page / record / state | What I will do | Expected result and proof |
 | --- | --- | --- | --- |
+
+Give the successful stopping point and the conditions that would make you stop early. Use the [[06 Prompts/Showpass Release Engineering Handoff#Plan the proof and stopping point|plan and proof guidance]] to put safe beta verification in the approved run.
 
 Keep the chat plan readable. For a deep review, summarize groups of checks and link their full scope in the run note. For a focused quest, name the actual pages and variations selected, and why they matter. A version-bump request does not require inventing feature changes: inspect the supplied exact diff when present, then select affected behavior and useful regression checks. State when the deployed version is unknown.
 

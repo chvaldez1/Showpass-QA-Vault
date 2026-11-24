@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { liveCodexRunsSchema, type LiveCodexRuns } from "@/lib/codex/handoff-schema";
+import { nextPollRetryDelay } from "@/lib/workspace/poll-retry";
 
 export function useLiveCodexRuns(enabled: boolean) {
   const [activity, setActivity] = useState<LiveCodexRuns>({});
@@ -12,6 +13,7 @@ export function useLiveCodexRuns(enabled: boolean) {
     const controller = new AbortController();
     let timer: ReturnType<typeof setTimeout> | undefined;
     let etag: string | undefined;
+    let retryDelay = 0;
 
     async function refresh() {
       try {
@@ -27,11 +29,15 @@ export function useLiveCodexRuns(enabled: boolean) {
           setActivity(next);
           etag = response.headers.get("etag") ?? undefined;
         }
+        retryDelay = 0;
         setDisconnected(false);
       } catch {
-        if (!controller.signal.aborted) setDisconnected(true);
+        if (!controller.signal.aborted) {
+          retryDelay = nextPollRetryDelay(retryDelay);
+          setDisconnected(true);
+        }
       } finally {
-        if (!controller.signal.aborted) timer = setTimeout(refresh, 3500);
+        if (!controller.signal.aborted) timer = setTimeout(refresh, Math.max(3500, retryDelay));
       }
     }
 

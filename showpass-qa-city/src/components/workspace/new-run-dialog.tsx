@@ -19,10 +19,11 @@ import { SelectField } from "@/components/ui/select-field";
 import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "@/hooks/use-workspace";
 import type { BuildReference } from "@/lib/workspace/builder-result";
+import { buildPresetSchema, buildPresets, buildThemeSchema, buildThemes, inferBuildPreset, inferBuildTheme } from "@/lib/workspace/build-presets";
 import { jobLabels, jobNeedsFullReview, jobsFor } from "@/lib/workspace/job";
 import { pilotAccountsSchema } from "@/lib/workspace/transfer-pilot";
 import { locations } from "@/lib/workspace/city";
-import { planReviewLabels, planReviewModes } from "@/lib/workspace/qa-workflow";
+import { asBuilderWorkflow, getQaWorkflow, planReviewLabels, planReviewModes } from "@/lib/workspace/qa-workflow";
 import { runFormSchema, runModeLabels, runModes, type Agent, type QaVenue, type Run, type RunFormValues } from "@/lib/workspace/schema";
 import { queueRun } from "@/lib/workspace/store";
 
@@ -35,17 +36,20 @@ type AssignmentInputs = {
 };
 
 const assignmentFormSchema = runFormSchema.extend({
-  builderWorkflow: runFormSchema.shape.builderWorkflow.or(z.literal("")).transform((value) => value || undefined),
+  buildPreset: buildPresetSchema.optional().or(z.literal("")).transform((value) => value || undefined),
+  buildTheme: buildThemeSchema.optional().or(z.literal("")).transform((value) => value || undefined),
 });
 
 const reviewOptions = planReviewModes.map((value) => ({ value, label: planReviewLabels[value] }));
 const modeOptions = runModes.map((value) => ({ value, label: runModeLabels[value] }));
-const builderOptions = [
-  { value: "", label: "Choose from the assignment title" },
-  { value: "event-builder", label: "Event setup" },
-  { value: "offering-builder", label: "Product or Membership setup" },
-  { value: "organizer-builder", label: "Other Dashboard setup" },
-] as const;
+const presetOptions = [
+  { value: "", label: "Choose from the title" },
+  ...buildPresetSchema.options.map((value) => ({ value, label: buildPresets[value].label })),
+];
+const themeOptions = [
+  { value: "", label: "Choose from the request" },
+  ...buildThemeSchema.options.map((value) => ({ value, label: buildThemes[value].label })),
+];
 
 function AssignmentForm({ agents, runs, agentId, source, transferPilot, defaultBuyer, qaVenue, onSaved }: AssignmentInputs & {
   defaultBuyer?: string; qaVenue?: QaVenue; onSaved: () => void;
@@ -54,22 +58,33 @@ function AssignmentForm({ agents, runs, agentId, source, transferPilot, defaultB
   const [buyerEmail, setBuyerEmail] = useState(defaultBuyer ?? "");
   const [recipientEmail, setRecipientEmail] = useState("");
   const [accountError, setAccountError] = useState("");
+  const [allowSupportingPublication, setAllowSupportingPublication] = useState(false);
   const { register, control, setError, handleSubmit, formState: { errors, isSubmitting } } =
     useForm<z.input<typeof assignmentFormSchema>, unknown, RunFormValues>({
       resolver: zodResolver(assignmentFormSchema),
       defaultValues: {
         agentId, title: transferPilot ? "Prepare the partial ticket transfer Event" : "",
         instructions: "", mode: "drive", target: "", sourceRunId: source?.runId ?? "",
-        reviewMode: "short", builderWorkflow: transferPilot ? "event-builder" : "",
+        reviewMode: "short", builderWorkflow: transferPilot ? "event-builder" : undefined, buildPreset: "", buildTheme: "",
       },
     });
   const reviewMode = useWatch({ control, name: "reviewMode" });
   const selectedAgentId = useWatch({ control, name: "agentId" });
   const selectedAgent = agents.find(({ id }) => id === selectedAgentId);
+  const showPresets = selectedAgent?.role === "organizer-builder" && !transferPilot;
+  const title = useWatch({ control, name: "title" });
+  const selectedPreset = useWatch({ control, name: "buildPreset" });
+  const selectedTheme = useWatch({ control, name: "buildTheme" });
+  const instructions = useWatch({ control, name: "instructions" });
+  const inferredWorkflow = asBuilderWorkflow(getQaWorkflow("organizer-builder", title));
+  const preset = selectedPreset || (inferredWorkflow && inferBuildPreset(title, inferredWorkflow));
+  const inferredTheme = inferBuildTheme(title) ?? inferBuildTheme(instructions);
+  const theme = selectedTheme || inferredTheme;
   const availableJobs = jobsFor(selectedAgent?.role);
   const selectedJob = useWatch({ control, name: "job" });
   const job = availableJobs.length === 1 ? availableJobs[0] : selectedJob;
-  const fullReview = reviewMode !== "draft" && jobNeedsFullReview(job);
+  const publishSupportingEvents = showPresets && reviewMode !== "draft" && allowSupportingPublication;
+  const fullReview = reviewMode !== "draft" && (publishSupportingEvents || jobNeedsFullReview(job));
   const sourceRunId = useWatch({ control, name: "sourceRunId" });
   const venue = sourceRunId ? runs.find(({ id }) => id === sourceRunId)?.qaVenue : qaVenue;
 
@@ -87,7 +102,9 @@ function AssignmentForm({ agents, runs, agentId, source, transferPilot, defaultB
     try {
       await queueRun({
         ...values, job: availableJobs.length ? job : undefined, sourceRecord: source?.record,
-        builderWorkflow: selectedAgent?.role === "organizer-builder" ? values.builderWorkflow : undefined,
+        buildPreset: showPresets ? values.buildPreset : undefined,
+        buildTheme: showPresets ? values.buildTheme : undefined,
+        publishSupportingEvents: publishSupportingEvents || undefined,
       }, useQaVenue, accounts?.data);
       onSaved();
       toast.success("Assignment saved. Open it in Runs to prepare the plan.");
@@ -112,15 +129,24 @@ function AssignmentForm({ agents, runs, agentId, source, transferPilot, defaultB
           <SelectField
             testId="assignment-review-path" control={control} name="reviewMode" label="Review path"
             options={transferPilot ? reviewOptions.filter(({ value }) => value !== "draft") : reviewOptions}
-            hint={fullReview ? "This job requires full review before live work." : reviewMode === "short" ? "High-risk plans switch to full review." : undefined}
+            hint={fullReview ? "This assignment will use full review." : reviewMode === "short" ? "High-risk plans switch to full review." : undefined}
           />
         </div>
         <div className="grid items-start gap-4 empty:hidden sm:grid-cols-2">
           {availableJobs.length > 1 && <SelectField testId="assignment-job" control={control} name="job" label="Job" required
             options={availableJobs.map((value) => ({ value, label: jobLabels[value] }))} />}
           {reviewMode !== "draft" && <SelectField testId="assignment-mode" control={control} name="mode" label="Who drives?" options={modeOptions} />}
-          {selectedAgent?.role === "organizer-builder" && !transferPilot && <SelectField testId="assignment-build-area" control={control} name="builderWorkflow" label="Build area" options={builderOptions} />}
+          {showPresets && <SelectField testId="assignment-build-preset" control={control} name="buildPreset" label="Build preset" options={presetOptions}
+            hint={(selectedPreset || title.trim()) && preset ? buildPresets[preset].summary : "Set a title or choose the setup you need."} />}
+          {showPresets && <SelectField testId="assignment-build-theme" control={control} name="buildTheme" label="Scenario theme" options={themeOptions}
+            hint={!selectedTheme && theme ? `From the request · ${buildThemes[theme].label}` : undefined} />}
         </div>
+        {showPresets && reviewMode !== "draft" && (
+          <Checkbox data-testid="assignment-publish-supporting-events" checked={allowSupportingPublication}
+            onChange={(event) => setAllowSupportingPublication(event.target.checked)}>
+            Allow publication of supporting Events named in the approved beta plan
+          </Checkbox>
+        )}
         <FormField testId="assignment-target" label="Test target (optional)" error={errors.target?.message}>
           {(field) => (
             <Input
