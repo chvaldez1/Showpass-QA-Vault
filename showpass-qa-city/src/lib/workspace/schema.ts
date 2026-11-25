@@ -5,6 +5,7 @@ import { browserResultSchema, builderWorkflows, planReviewModes, qaWorkflows, re
 import { releaseSchema } from "./release";
 import { jobSchema } from "./job";
 import { pilotInputSchema, transferPilotSchema } from "./transfer-pilot";
+import { caseReviewSchema, caseReviewWorkerSchema } from "./case-review";
 
 export const agentKinds = ["browser", "coverage", "triage", "custom"] as const;
 export const qaAccountRoles = ["public-tester", "customer-tester", "organizer-tester", "organizer-builder", "box-office-tester"] as const;
@@ -76,6 +77,9 @@ const savedRunSchema = runFormSchema.extend({
   recoveredCodexRevision: z.number().int().positive().optional(),
   revision: revisionSchema.optional(),
   revisionHistory: z.array(revisionSchema).optional(),
+  caseReview: caseReviewSchema.optional(),
+  caseReviewHistory: z.array(caseReviewSchema).optional(),
+  caseReviewWorker: caseReviewWorkerSchema.optional(),
   changeRequest: z.string().max(1000).optional(),
   browserResult: browserResultSchema.optional(),
 });

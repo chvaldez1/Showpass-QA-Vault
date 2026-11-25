@@ -1,7 +1,7 @@
 ---
 title: SPW-21423 Membership Webhook Name Snapshots
 date: 2026-11-20
-updated: 2026-11-23
+updated: 2026-11-24
 tags:
   - qa/test-cases
   - memberships
@@ -10,7 +10,7 @@ tags:
 
 # SPW-21423 Membership Webhook Name Snapshots
 
-**Status** · Five cases published and verified in [SPT → Integrations → Webhooks (suite 193)](https://app.qase.io/project/SPT?suite=193). The other four cases are local drafts. All 19 planned case runs and supporting checks are **Not run**.
+**Status** · Five published Qase definitions were verified. The user reported testing SPT-6026 through SPT-6030. The reported capture proves the benefit-ticket portion of SPT-6028. See the execution evidence and remaining checks below.
 
 **Review** · Draft-only under the [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|shared review policy]]. A live assignment or release handoff starts its own review against the selected revision, test scope, and evidence.
 
@@ -25,7 +25,7 @@ We are testing whether an Organization's integration can read the correct Member
 | Risks | Correct order and ticket attribution, asynchronous delivery, Organization isolation, and compatibility with older payloads. |
 | Entry paths | Local membership purchase and renewal, ticket generation from a membership benefit, membership or ticket transfer, delivery worker replay, and manual resend. The stored payload is also available in Dashboard → Organization → Integrations → Webhooks → Events to employees with **Developer** permission. |
 | Starting states and outcomes | Single or grouped charge, ordinary or benefit ticket, acquired or renewed membership, resolved or unresolved link, same- or different-Organization records, old or new notification, and eligible or ineligible endpoint. The global `enable_membership_webhook_lineage` switch matters for new events. |
-| Environment and confidence | Medium. Local backend and frontend source establish the expected behavior. Use generated data in the isolated local test database and capture delivery locally. Dashboard presentation, deployed behavior, public docs, and partner ingestion have no execution evidence here. |
+| Environment and confidence | Local backend and frontend source establish the expected behavior. Use synthetic data and a local receiver for the backend matrix. Beta capture and public documentation findings are listed below. |
 | Outside this change | Payment processors, price and fee settings, capacity, checkout cancellation, signing, and downstream partner processing. Purchase checks compare the original charge and look for duplicates when work replays. |
 
 | Case | What it proves | Jira criteria |
@@ -36,12 +36,12 @@ We are testing whether an Organization's integration can read the correct Member
 | [[#TC-4: Webhooks - Memberships - Use the source member on transfers\|TC-4 Transfer]] | Both transfer paths use the recorded source member's names. | 1–3, 8 |
 | [[#TC-5: Webhooks - Memberships - Report missing names and uncertain purchase links\|TC-5 Missing data]] | Known names and missing names are represented correctly, independently of whether the charge is known. | 1, 3, 8 |
 | [[#TC-6: Webhooks - Memberships - Keep membership names within the Organization\|TC-6 Organization isolation]] | A foreign member, group, level, or source purchase cannot leak into the notification. | 3, 6, 8 |
-| [[#TC-7: Webhooks - Memberships - Keep saved names on retry and capture updates in new events\|TC-7 Snapshot and retry]] | Old notifications keep their captured names after edits. New notifications read the updated names. | 3, 4, 8 |
+| [[#TC-7: Webhooks - Memberships - Keep saved names on retry and capture updates in new events\|TC-7 Beta rename and resend]] | In Beta, Resend sends the original names after a rename. A new Membership purchase sends the updated names. The same-order snapshot is a separate backend check. | 3, 4, 8 |
 | [[#TC-8: Webhooks - Memberships - Resend older notifications with their original fields\|TC-8 Older body]] | A retry preserves the original body, including absent fields. | 5, 8 |
 | [[#TC-9: Webhooks - Memberships - Respect existing delivery and linkage settings\|TC-9 Eligibility]] | The existing switch and endpoint subscriptions still control new payloads. | 1, 6, 8 |
 | [[#Supporting checks\|Schema, documentation and query counts]] | The consumer contract is accurate and lookups are batched as the number of items or members grows. | 6–8 |
 
-All proof targets above are **Not run**. The November 20 suite review identified SPT-1709 for endpoint setup, SPT-1711 for subscriptions, SPT-1714 for resend, and SPT-5963 for replay after destination or signing key changes. These are reference case definitions. This revision uses the previously verified suite placement.
+The November 20 suite review identified SPT-1709 for endpoint setup, SPT-1711 for subscriptions, SPT-1714 for resend, and SPT-5963 for replay after destination or signing key changes. These are reference case definitions.
 
 ## Qase publication
 
@@ -49,13 +49,27 @@ The approved batch was created and read back on November 23, 2026. Readback matc
 
 | Local case | Saved Qase case | Planned runs | Execution |
 | --- | --- | ---: | --- |
-| TC-1 | [SPT-6026](https://app.qase.io/project/SPT?case=6026&suite=193) | 2 | Not run |
-| TC-2 | [SPT-6027](https://app.qase.io/project/SPT?case=6027&suite=193) | 1 | Not run |
-| TC-3 | [SPT-6028](https://app.qase.io/project/SPT?case=6028&suite=193) | 1 | Not run |
-| TC-4 | [SPT-6029](https://app.qase.io/project/SPT?case=6029&suite=193) | 2 | Not run |
-| TC-7, Dashboard **Resend** | [SPT-6030](https://app.qase.io/project/SPT?case=6030&suite=193) | 1 | Not run |
+| TC-1 | [SPT-6026](https://app.qase.io/project/SPT?case=6026&suite=193) | 2 | Observed two separate invoice lines. For **Single**, the case needs the saved link, matching names, and purchase references. **Grouped** needs a single invoice line containing two links with distinct Member and purchase IDs. |
+| TC-2 | [SPT-6027](https://app.qase.io/project/SPT?case=6027&suite=193) | 1 | Reported tested. Original, renewal, and ticket-link comparisons need execution evidence. |
+| TC-3 | [SPT-6028](https://app.qase.io/project/SPT?case=6028&suite=193) | 1 | **Benefit-ticket portion passed.** The $0.00 auto-generated order issued four tickets. Each link was `resolved` and pointed to Membership Purchase `12059` and original Membership invoice item `1416174`. Group and Level name snapshots were reported verified. The ordinary-ticket and invoice-line `[]` control needs execution evidence. |
+| TC-4 | [SPT-6029](https://app.qase.io/project/SPT?case=6029&suite=193) | 2 | Reported tested. The **Membership** and **BenefitTicket** variants each need an attributable transfer capture. |
+| TC-7, Beta **Resend** and a new purchase | [SPT-6030](https://app.qase.io/case/SPT-6030) | 1 | Revised definition verified in Qase. The revised Resend and new-purchase checks need execution evidence. |
 
-On November 23, 2026, the Qase Grammar Police rewrites and source-checked Showpass terms were saved to SPT-6026 through SPT-6030. Readback matched the revised titles, descriptions, preconditions, postconditions, and steps. Suite, tags, and Single parameter values match the original publication. The step counts in ID order are 4, 4, 3, 3, and 5. All five cases are **Not run**.
+On November 23, 2026, the Qase Grammar Police rewrites and source-checked Showpass terms were saved to SPT-6026 through SPT-6030. Readback matched the revised titles, descriptions, preconditions, postconditions, and steps. Suite, tags, and Single parameter values match the original publication. The step counts in ID order are 4, 4, 3, 3, and 5.
+
+The follow-up Qase Police revision was published and verified on November 24, 2026. All five cases now say how to select records and what to record before comparing the webhook. The saved descriptions, preconditions, postconditions, and steps match the approved drafts. Readback confirmed suite 193, the existing titles and tags, both Single parameters and their values, and step counts of 4, 4, 3, 3, and 5. This update did not run the cases.
+
+The Beta clarification was saved and read back on SPT-6030. At that update Qase showed suite 1257. **Resend** checks the old names on the original event. A new Beta purchase checks the new names. The same-order test remains in the backend checks below. This wording update did not run the revised case.
+
+## Smallest Beta check · SPT-6030
+
+Use an existing completed Beta purchase, its captured body, and a published test Group and Level approved for renaming. In the same Organization, use an employee with **Manage Memberships** and **Developer** and an enabled **Purchase** endpoint that sends to a receiver you control. The exact original event UUID and public Membership slug come from the chosen fixture.
+
+1. Open **Dashboard → Build → Memberships**, rename the Group and Level, and reopen both saved forms. Expect both new names. [Beta Memberships](https://beta.showpass.com/manage/memberships)
+2. Open **Dashboard → Organization → Integrations → Webhooks → Events**, select the original event by UUID, and use **Webhook Attempts → ⋯ → Resend**. Expect **Event will be retried**, then a receiver delivery with the same `webhook_event_uuid` and the same JSON body, including both old names. Dashboard event detail uses `/manage/organization/integrations/webhooks/events/{uuid}`. [Beta Webhook Events](https://beta.showpass.com/manage/organization/integrations/webhooks/events)
+3. Open the selected Group's public Beta page at `/m/{membershipSlug}/` and buy one Membership at the renamed Level with an approved Beta test payment method. Expect a new transaction and a delivered `invoice.purchase` event for that transaction with a different event UUID and both new names on the Membership invoice line. Restore and verify the original names after both deliveries are captured.
+
+Record the transaction references, event UUIDs, compared names, and the outcome of the body comparison. Keep credentials and barcodes out of evidence. Use the backend suite to check a fresh event created for the original order.
 
 ## Qase-ready cases
 
@@ -71,20 +85,20 @@ On November 23, 2026, the Qase Grammar Police rewrites and source-checked Showpa
 
 | ChargeSize | What to buy | What to look for |
 | --- | --- | --- |
-| Single | Buy one `Gold` Membership from the `Community` group. | One invoice item with one Member link. |
-| Grouped | In the local checkout test, set the quantity to 2 on a single `Gold` Membership line. | Two Member links on that invoice item. Each has its own Member ID and Membership Purchase ID. |
+| Single | Buy one Membership at the selected level. | One invoice item with one Member link. |
+| Grouped | In the local checkout test, buy two Memberships at the same level on one invoice item. | Two Member links on that invoice item. Each has its own Member ID and Membership Purchase ID. |
 
 Place one order for each option.
 
 **Preconditions:**
 
-* Use a local test Organization with a `Community` Membership Group and a `Gold` Membership Level on sale. Use a Membership without a renewal season and pay with simulated payment.
-* Set the local global switch `enable_membership_webhook_lineage` to ON. Use one enabled webhook endpoint subscribed to **Purchase** and pointed at the local receiver.
-* Work out the expected total from the membership price, quantity, fees, and taxes before checkout.
+* In **Dashboard → Build → Memberships**, choose a Membership Level that is on sale without a renewal season. Record its Membership Group, Level, and price from the saved setup.
+* Global switch `enable_membership_webhook_lineage` is ON. In **Webhooks → Endpoints**, use one enabled endpoint subscribed to **Purchase** that sends to a receiver you control.
+* Use a test payment method. Calculate the expected charge from the recorded price, quantity, and applicable fees and taxes. Use the local checkout test for `Grouped` so the order can be processed a second time in isolation.
 
 **Postconditions:**
 
-* Save the order reference and webhook body with the result. Reset the local test data.
+* Save the order reference and webhook body with the result. Reset the local data created for `Grouped`. Label any other test orders you keep.
 
 **Tags:** memberships, api-testing, transaction-payload
 
@@ -96,7 +110,7 @@ ChargeSize: Single, Grouped
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Buy one or two Memberships as shown in the table. After Showpass creates the Members, check the order and open its Purchase webhook event. | | There is one order, one charge for the expected total, and one saved Purchase event for the endpoint. The order has the expected number of Members. |
-| Find the membership line under `data.invoice_items` in the webhook body. Look at `membership_links`. | Check the link count for the selected option. | Each link shows `Community` and `Gold`, has status `resolved`, and has `null` for the renewal season. |
+| Find the Membership line under `data.invoice_items` and read its `membership_links`. | Check the link count for the selected option. | There are as many links as Memberships on that line. Every link shows the recorded Group and Level, has status `resolved`, and has `null` for the renewal season. |
 | Match each link to its Membership Purchase record and the order. | Compare `member_id`, `current_member_id`, `membership_purchase_id`, `source_invoice_item_id`, and `source_transaction_id`. | Both Member fields identify the Member who received that Membership. The Membership Purchase belongs to that Member and invoice item. The transaction ID matches the order. |
 | For `Grouped`, run the local job that creates the Members one more time for the same order. Check the order and webhook events again. | Use the completed order from this run. | There is still one charge for the same total, two Members, two Membership Purchase records, and one Purchase webhook event. |
 
@@ -112,13 +126,13 @@ ChargeSize: Single, Grouped
 
 **Preconditions:**
 
-* In the local test, turn the global `enable_membership_webhook_lineage` switch ON. Use an enabled webhook endpoint subscribed to **Purchase** and pointed at the local receiver.
-* Start with one paid order for a `Gold` membership in the `Community` group. Use a membership that renews without a renewal season. Save the member ID, membership purchase ID, transaction ID, and invoice item ID from this order.
-* Set up two Events with one ticket each available through the same membership benefit. Issue the first Event ticket before renewal and save its webhook body.
+* Global switch `enable_membership_webhook_lineage` is ON. Use an enabled **Purchase** endpoint in **Webhooks → Endpoints** and a receiver you control.
+* In **Dashboard → Build → Memberships**, choose a Member with a paid Membership that can renew without a renewal season. Record the saved Group and Level. From the original order and Membership Purchase, record the Member ID, Membership Purchase ID, transaction ID, and invoice item ID.
+* Choose two distinct Events with a ticket available through the same Membership benefit. Issue the ticket for the first Event before renewal and save its webhook body. Use an isolated local test for rebuilding that ticket's webhook after renewal.
 
 **Postconditions:**
 
-* Save both order references and the webhook bodies you checked. Reset the local test data.
+* Save both Membership order references and the webhook bodies you checked. Reset the local test data created for the run.
 
 **Tags:** memberships, renewals, api-testing
 
@@ -126,8 +140,8 @@ ChargeSize: Single, Grouped
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Renew the `Gold` Membership for the same Member. Read the renewal order and its Membership Purchase record. | Record the Membership Purchase ID, transaction ID, and invoice item ID. | The renewal has its own charge and keeps the same Member ID. |
-| Open the renewal's Purchase webhook. Find the renewal line under `data.invoice_items` and read its `membership_links`. | | The link shows `Community` and `Gold`, the same member, and the renewal's purchase ID, transaction ID, and invoice item ID. Its status is `resolved` and its renewal season is `null`. |
+| Renew the selected Membership for the same Member at the same Level. Read the renewal order and its Membership Purchase record. | Record the renewal's Membership Purchase ID, transaction ID, and invoice item ID. | The renewal has its own charge and keeps the same Member ID. |
+| Open the renewal's Purchase webhook. Find the renewal line under `data.invoice_items` and read its `membership_links`. | Compare with the saved Membership setup and the renewal order. | The link shows the recorded Group and Level, the same Member, and the renewal's Membership Purchase ID, transaction ID, and invoice item ID. Its status is `resolved` and its renewal season is `null`. |
 | In the local test, create a fresh webhook for the first ticket's invoice. Compare the ticket's link with the copy you saved before renewal. | `data.ticket_items[].membership_links` | Both links show the original membership purchase ID, transaction ID, and invoice item ID. |
 | Issue the ticket for the second Event and open its Purchase webhook. | `data.ticket_items[].membership_links` | The second ticket links to the renewal purchase ID, transaction ID, and invoice item ID. |
 
@@ -143,13 +157,13 @@ ChargeSize: Single, Grouped
 
 **Preconditions:**
 
-* In the local test, turn the global `enable_membership_webhook_lineage` switch ON. Use an enabled webhook endpoint subscribed to **Purchase** and pointed at the local receiver.
-* Start with one completed order for a `Gold` membership in the `Community` group. Save the member ID, membership purchase ID, transaction ID, and invoice item ID.
-* Use one Event that offers a ticket through the membership benefit and also sells a regular admission ticket.
+* Global switch `enable_membership_webhook_lineage` is ON. Use an enabled **Purchase** endpoint in **Webhooks → Endpoints** and a receiver you control.
+* In **Dashboard → Build → Memberships**, choose a Member with a paid Membership and a benefit that issues an Event ticket. Record the saved Group and Level and the Member ID, Membership Purchase ID, transaction ID, and invoice item ID from the original purchase records.
+* Choose a ticket available through that benefit for this Member. Choose a regular admission ticket on sale that a Customer can buy separately, with no Membership benefit applied.
 
 **Postconditions:**
 
-* Save the membership order reference and both ticket webhook bodies with the result. Reset the local test data.
+* Save the Membership order reference and both ticket webhook bodies with the result. Label any test orders created for the run.
 
 **Tags:** memberships, tickets, api-testing
 
@@ -158,7 +172,7 @@ ChargeSize: Single, Grouped
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Issue one ticket through the membership benefit. Open the Purchase webhook for that ticket order. | Find the ticket by its ID. | The webhook includes the issued ticket and the ticket order's own transaction ID. |
-| Read the ticket's `membership_links` and compare it with the Membership Purchase record and original order. | `data.ticket_items[].membership_links` | There is one `resolved` link. It shows `Community`, `Gold`, and the original Member ID, Membership Purchase ID, transaction ID, and invoice item ID. The Membership charge stays on the original order. |
+| Read the ticket's `membership_links` and compare it with the saved Membership details and original purchase records. | `data.ticket_items[].membership_links` | There is one `resolved` link. Its names and Member ID, Membership Purchase ID, transaction ID, and invoice item ID match the recorded values. The Membership charge stays on the original order. |
 | Buy one regular admission ticket on a separate order. Open its Purchase webhook. | Check the ticket under `data.ticket_items` and its order line under `data.invoice_items`. | Both items show `membership_links: []`. |
 
 ### TC-4: Webhooks - Memberships - Use the source member on transfers
@@ -173,20 +187,20 @@ ChargeSize: Single, Grouped
 
 | TransferKind | What to transfer | Who should appear in `current_member_id` |
 | --- | --- | --- |
-| Membership | Transfer one paid `Community` / `Gold` membership. In the local test database, give the recipient's membership the group `Recipient Club` and level `Silver` before preparing the webhook. | The recipient member, on the membership line and on the ticket issued for that recipient. |
-| BenefitTicket | Issue one Event ticket through a paid `Community` / `Gold` membership. Transfer the ticket to another Customer. Use a transferred ticket that keeps a reference to the original ticket. | The original member who received the benefit ticket before it was transferred. |
+| Membership | Transfer one paid, transferable Membership that can issue a ticket. Before creating the webhook in the local test, assign the recipient Member to another Group and a Level in that Group. Choose both names to differ from the original Member's names. Record the two pairs. | The recipient Member, on the Membership line and on the ticket issued for that Member. |
+| BenefitTicket | Issue one transferable Event ticket through a paid Membership. Transfer it to the second Customer. Use the transferred ticket that links back to the issued ticket. | The original Member who received the benefit ticket. |
 
 Use a separate original purchase for each option.
 
 **Preconditions:**
 
-* Use two test Customers in the local test. Turn the global `enable_membership_webhook_lineage` switch ON.
-* Use an enabled webhook endpoint subscribed to **Transfer** and **Transferred**, or capture the body in the local backend test.
-* Save both Customers' identities, the original member ID, and the purchase ID, transaction ID, and invoice item ID from the original membership order.
+* Choose two test Customers. Global switch `enable_membership_webhook_lineage` is ON. Use the isolated local test to prepare the recipient's different Membership for the `Membership` run.
+* Use an enabled endpoint subscribed to **Transfer**, **Transferred**, and **Purchase**, or capture the generated bodies in the backend test. The **Purchase** event is for the benefit ticket issued after a Membership transfer.
+* From the original Member and Membership Purchase, record the original Member ID, saved Group and Level, Membership Purchase ID, transaction ID, and invoice item ID. Record the recipient's Member ID if a Membership is transferred.
 
 **Postconditions:**
 
-* Save the original order reference and the webhook links you checked. Reset the local test data.
+* Save the original order reference and the webhook links you checked. Restore any altered local test records before reusing them.
 
 **Tags:** memberships, transfers, api-testing
 
@@ -198,7 +212,7 @@ TransferKind: Membership, BenefitTicket
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
 | Complete the transfer to the second Customer and open the **Transfer** webhook for the recipient's invoice. For `Membership`, also issue and capture a ticket through the recipient's transferred Membership. | Look in `data.invoice_items` for the Membership line and `data.ticket_items` for the issued or transferred ticket. | The recipient has the Membership or ticket. The captured webhook includes the matching line or ticket. |
-| Read the names and member IDs on each link. | `membership_group_name`, `membership_level_name`, `member_id`, `current_member_id` | The names are `Community` and `Gold`. `member_id` is the original member. `current_member_id` matches the person shown in the table for this option. |
+| Read the names and Member IDs on each link. | `membership_group_name`, `membership_level_name`, `member_id`, `current_member_id` | The names match the saved Group and Level of the original Member. `member_id` is that Member's ID. `current_member_id` matches the Member listed for this option. |
 | Compare each link with the original membership order. | `membership_purchase_id`, `source_transaction_id`, `source_invoice_item_id`, `lineage_status` | The link is `resolved` and gives the purchase ID, transaction ID, and invoice item ID from the original order. |
 
 ### TC-5: Webhooks - Memberships - Report missing names and uncertain purchase links
@@ -284,21 +298,22 @@ Relationship: ForeignMember, ForeignGroup, ForeignLevel, WrongLocalGroup, Foreig
 
 **Title:** Webhooks - Memberships - Check saved names after a rename and resend
 
-**Description:** Rename a Membership Group and Level, then resend an earlier Purchase webhook event. The resend should keep the names Showpass saved for that event. The next new event should use the updated names.
+**Description:** In Beta, rename a Membership Group and Level after a purchase. **Resend** the original Purchase webhook to check that it still shows the old names. Then make a new Membership purchase and check that its webhook shows the new names.
 
 | Platform | View |
 | --- | --- |
 | Dashboard | Desktop |
+| WebPublic | Desktop |
 
 **Preconditions:**
 
-* Sign in to the local Dashboard with **Developer** permission. Have the employee's password ready for **Resend**.
-* Use one test order for a `Gold` Membership in the `Community` group. Turn the local global `enable_membership_webhook_lineage` switch ON. Use one enabled webhook endpoint subscribed to **Purchase** and a receiver that saves the full request body.
-* Set up the local test so you can hold the first delivery and create new webhook events for the same order after the names change.
+* In Beta, sign in to a test Organization as an employee with **Manage Memberships** and **Developer** permissions. Have the employee's password ready for **Resend**. The global `enable_membership_webhook_lineage` switch is ON.
+* In **Dashboard → Build → Memberships**, choose a published test Membership Group with a Level on sale. Use a Group and Level you can safely rename. Record both original names and have the public Membership purchase page ready.
+* In **Webhooks → Endpoints**, use an enabled endpoint subscribed to **Purchase** that sends to a receiver you control. Have a completed test purchase of the selected Level with a captured Purchase webhook and a visible attempt in **Webhooks → Events**. Use an eligible Customer and an approved Beta test payment method for the new purchase.
 
 **Postconditions:**
 
-* Save the event IDs and the saved and received bodies you compared. Reset the local test data.
+* Save both order references, both event UUIDs, and the bodies you compared. Restore the original Group and Level names after the check. Label the new test order for future lookup.
 
 **Tags:** memberships, api-testing, notifications
 
@@ -306,11 +321,11 @@ Relationship: ForeignMember, ForeignGroup, ForeignLevel, WrongLocalGroup, Foreig
 
 | Step Action | Data | Expected Result |
 | --- | --- | --- |
-| Create a Purchase webhook event and hold its first delivery. Copy the saved body and event ID. | Use the `Community` / `Gold` order. | The saved body shows `Community` and `Gold` and links to the member and order line. |
-| Rename the group to `Renamed Community` and the level to `Platinum`. Let the first delivery go through and open it in the receiver. | Compare the full body with the saved copy. | The receiver gets the same body, including `Community` and `Gold`. |
-| Go to Dashboard → Organization → Integrations → Webhooks → Events. Open the original event. Under **Webhook Attempts**, open the attempt's three-dot menu, choose **Resend**, and enter the employee's password. | Use `webhook_event_uuid` from the first send to identify the event. | **Event will be retried** appears. The same event gets a new delivery attempt. The receiver gets the original body with the original event UUID. |
-| Create a new Purchase webhook event for the same order in the local test. Read the new body and reopen the original event. | Compare the event IDs, names, and charge references. | The new event has a new ID and shows `Renamed Community` and `Platinum`, with the same membership purchase and order line. The original event still has the saved body. |
-| Move the member to `New Club` and `New Tier` in the local test. Create a third webhook event for the order, then use **Resend** on the first event again. | Compare the third event with the latest send of the first event. | The third event shows `New Club` and `New Tier`. The resend still matches the saved body of the first event. |
+| Open the original Purchase request in the receiver and save its body. | Record `webhook_event_uuid` and the original transaction ID. Find the Membership line under `data.invoice_items`. | The captured link shows the original Group and Level names recorded from the Membership setup. |
+| In **Dashboard → Build → Memberships**, open the Group. Under **Edit Membership**, change **Membership Name** and select **Save**. Under **Membership Levels**, edit the selected Level's **Name** and select **Save Level**. Reopen both to record the saved names. | Choose a new name for each, different from its original name. | The Group and Level show both new names after reopening. |
+| Go to **Dashboard → Organization → Integrations → Webhooks → Events** and open the original event. Under **Webhook Attempts**, open the attempt's three-dot menu, choose **Resend**, and confirm with the employee's password. Open the new attempt in the receiver. | Use the original event UUID. Compare the full body with the first delivery. | **Event will be retried** appears. The receiver gets the same UUID and the same body, including the **old Group and Level names**. |
+| In Beta, open the public Membership page and buy one Membership at the renamed Level. Record the new order's transaction ID. | Use the same Group and Level you just renamed. | The Customer has a new completed Membership order with its own transaction ID. |
+| Open the Purchase webhook for the new order in the receiver. Read the names on its Membership link. | Match the transaction ID to the new order and compare both names with the saved setup. | The webhook has a new event UUID and shows the **new Group and Level names**. |
 
 ### TC-8: Webhooks - Memberships - Resend older notifications with their original fields
 
@@ -378,13 +393,13 @@ LegacyShape: NamesAbsent, LinksAbsent
 
 ## Supporting checks
 
-All supporting checks are **Not run**.
+**Backend execution unverified.** The test definitions and expected results below were checked in source. The isolated Django suite did not run. Local startup required `drf_spectacular`, local database services were unavailable, and matching CI test results were inaccessible. The checked-in JSON Schema passed validation of required name keys, string and null values, and compatibility for legacy links without the keys.
 
 ### Contract and documentation
 
 1. Validate the sample invoice body against `docs/contracts/invoice-membership-links.schema.json`. Validate each new link against `CapturedMembershipLink` in both `data.invoice_items[]` and `data.ticket_items[]`. The examples should include exact source-member strings, explicit `null`s for an unknown member, and `[]` for an ordinary item.
 2. In local copies, remove one name key at a time and replace each name with a number or boolean. The new-link schema must reject each variant. The compatible `MembershipLink` definition must accept an otherwise valid legacy link with both keys omitted. Check that a copied older notification with no `membership_links` also passes the compatible envelope schema.
-3. Review the published payload reference for both arrays, source and current member semantics, creation-time snapshots, null handling, retries, and older messages with missing keys. The member lookup API returns current names when queried. Confirm the examples show the same distinctions. The repository contract and guide are present. Publication and deployed behavior still need evidence. [Developer payload reference](https://dev.showpass.com/webhooks/webhooks-payload-invoice-object#membership-purchase-linkage)
+3. The public reference was checked on November 24. Both arrays and stored-body retry behavior are documented. The field table and examples still omit `membership_group_name` and `membership_level_name`. Verify the names, nullable values, event-creation timing, retry behavior, and older payload compatibility after the docs update. [Developer payload reference](https://dev.showpass.com/webhooks/webhooks-payload-invoice-object/#membership-purchase-linkage)
 
 ### Batched lookups
 
@@ -392,7 +407,7 @@ Run the query-count checks for one versus four distinct members and ticket batch
 
 ## Minimum execution set and local setup
 
-Start with 11 case runs for the main purchase, delivery, and isolation risks. Use TC-1 both values, TC-2, TC-3, TC-4 `Membership`, TC-5 `UnknownMember`, TC-6 `ForeignLevel` and `ForeignTicketSource`, TC-7, TC-8 `NamesAbsent`, and TC-9. Then run the other eight variants and the supporting checks for the full draft. Capture the actual link and event ID for each failure. For each replay, retain the saved and sent JSON for the same event.
+Use the existing backend tests below for the permissions and edge-case matrix. Keep the manual Beta check to the existing event's Resend and the new purchase. Where a test definition covers only part of a Qase case, retain the remaining proof separately. Capture the actual link and event ID for each failure. For each replay, retain a redacted comparison of the saved and sent JSON for the same event.
 
 Independent purchase check for TC-1 through TC-4. In the isolated local test database, use the webhook's `membership_purchase_id` to find the `MemberPurchase` record and compare its `member_id`, `invoice_item_id`, and `renewal_season_id` with the expected seeded or newly created purchase. The invoice item is the charged line. Read its parent invoice for the transaction reference.
 
@@ -403,7 +418,9 @@ FROM memberships_memberpurchase
 WHERE id = 101;
 ```
 
-**Remaining proof** · Worker replay is a backend check. Replay the same saved event through the normal worker after the rename and reassignment and compare the complete body with the original. Proving automatic scheduling after an exception needs a separate worker retry test. The published developer reference needs a documentation review. Deployed delivery and FanThreeSixty ingestion are outside the local execution set. Endpoint configuration and generic event subscriptions use the previously reviewed Qase references.
+**Same-order snapshot and worker replay** · This is a backend check, separate from SPT-6030. Save an event for an existing invoice before delivery. After renaming the Group and Level, compare the full body on first delivery and worker replay with the saved original. Create a second event for the same invoice and confirm a new UUID, the renamed values, and the same purchase and invoice item IDs. Reassign the Member to a different Group and Level in the isolated test. Create another event for the same invoice and check its current names. Replaying the original still sends the originally saved body. Automatic scheduling after an exception needs a separate worker retry test.
+
+**Remaining proof** · The published reference needs the new name fields and examples. FanThreeSixty ingestion is outside this execution set. Endpoint configuration and generic event subscriptions use the previously reviewed Qase references.
 
 The safest repeatable setup is the backend's isolated Django test database and synthetic records. From the `web-app` root, use the project's local Python environment and a focused test label, for example `python manage.py test memberships.tests.members.test_member_purchase_provenance`. The provenance module mocks outbound transport where needed. Reuse its setup to capture specific payloads or to exercise composite steps. The table lists existing assertions and the extra proof the draft calls for.
 
@@ -415,7 +432,7 @@ The safest repeatable setup is the backend's isolated Django test database and s
 | TC-4 | `test_names_follow_source_member_instead_of_transfer_recipient`, `test_generated_and_transferred_tickets_join_source_without_changing_money` | These inspect the prepared membership transfer line and ticket paths. A capture from the actual transfer producer provides additional delivery evidence. |
 | TC-5 | `test_unknown_member_and_ordinary_items_keep_distinct_contracts`, `test_legacy_membership_line_is_explicitly_unavailable`, `test_missing_or_conflicting_entitlement_sources_are_never_guessed`, `test_unsafe_name_relationships_are_nullable` | The latter includes `no_group`. Match by `member_id` where it is known. |
 | TC-6 | `test_unsafe_name_relationships_are_nullable`, `test_generated_ticket_rejects_a_foreign_source_member`, `test_wrong_venue_purchase_is_rejected_without_provenance` | Use two Organization records and distinguish discarded identities from a safe local fallback. |
-| TC-7 | `test_stored_names_survive_rename_reassignment_and_delivery_retry` | Exercises worker and manual flags and compares the full stored body. For timing proof, capture while first delivery is paused and compare first delivery after the rename. The worker case checks replay, independently of task scheduler backoff behavior. |
+| Same-order snapshot and worker replay | `test_stored_names_survive_rename_reassignment_and_delivery_retry` | Covers fresh events for the same purchase after a rename and reassignment, and compares deliveries with the original saved body. SPT-6030 uses a separate new Beta purchase. |
 | TC-8 | `test_older_stored_payload_is_delivered_without_adding_name_fields` | Reuse the saved-body comparison for both shapes. The existing test covers `NamesAbsent`. For `LinksAbsent`, remove `membership_links` from the stored synthetic copy before replay. |
 | TC-9 | `test_produce__disabled_or_nonmatching_webhooks__creates_no_event_or_task`, `test_produce__stale_enabled_webhook__rechecks_current_configuration`, `test_produce__object_instance_venue_mismatch__does_not_persist_event`, `test_publication_obligation_survives_switch_change_and_redelivery` | Use the producer tests for the eligibility baseline. Check both switch states through the invoice producer. A purchase already queued with membership linkage ON keeps its recorded obligation even if the switch is turned OFF before membership creation finishes. |
 | Batched lookups | `test_grouped_charge_and_distinct_batches_capture_names_with_bounded_queries`, `test_enrichment_query_count_does_not_grow_per_ticket`, `test_invoice_enrichment_is_reused_across_endpoints` | These are backend assertions. The browser can show the saved payload, while query counts require the local runner. |

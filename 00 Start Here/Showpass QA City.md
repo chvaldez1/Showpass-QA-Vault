@@ -14,15 +14,43 @@ QA City gives Showpass's AI manual testers and assistants a shared way to take a
 
 Select a building on the **City map** to see its open assignments, blockers, and next actions. Review queues show tester plans waiting for each review role. Open a queue item to work on its current revision. **Runs** holds the full assignment history, and **Releases** holds candidate reviews. [[showpass-qa-city/README|City app setup and capabilities]]
 
+## Playwright handoffs
+
+Open **Playwright** in City to prepare a prompt, plan, or branch for the [Playwright repo’s Automation Lead](../../showpass-playwright/docs/agent-workflows/playwright-team.md). Choose **Open repo in Codex** for a direct start. From **Runs** or **Builds**, choose **Prepare Playwright handoff** to bring the selected evidence with you. Review the scope and evidence, save the handoff, then select **Open in Codex**. City and the repo team use the same file. **Reload handoff** shows the latest owner, blocker, review, and run result recorded by the team.
+
+The Playwright checkout owns its [agent definitions](../../showpass-playwright/.codex/agents/), skills and handbook. It routes journey questions to the actual user’s QA Tester, code and fixes to the same SDET, and independent diff review to Playwright Police. The [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|shared review policy]] determines when QA Lead signs off. [[showpass-qa-city/README#Playwright automation|Checkout setup and handoffs]]
+
 ## Agents, roles, and skills
 
 An **agent** is a named assignee in City. A **role** defines the perspective and work it owns. A **skill** gives that role reusable Showpass knowledge and guidance. An **assignment** gives it a specific job.
 
 Each assignment owns one job, one starting session, and one stopping point. A role can take different jobs in separate assignments. When work crosses into another job or account, hand off the verified record and have the receiving assignment go through the shared review policy. [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|Shared review policy]]
 
+### Route short QA prompts
+
+Choose the role based on the outcome the user wants and use its skill from the [[#Codex skill directory]]. Honor skills the user names. Bring in another role only if its evidence could change the answer.
+
+| What the user wants | Role and scope |
+| --- | --- |
+| “What could go wrong if we make Kiosk mode editable in Admin?” | **Backend Master** traces the setting, permissions, saved behavior, and downstream effects. Use **Frontend Master** where the answer depends on what staff or customers see on a device, including when it picks up the change. Give the concrete failure scenarios and their impact in chat, with any unverified behavior identified. |
+| “Why does this work for one Organization but fail for another?” | **Regression Investigator** compares the records, settings, and code. |
+| “Can you try it?” | Start with **Customer Tester** for signed-in public or Account work, **Guest Tester** for signed-out public work, **Organizer Tester** for the Organizer Dashboard, or **Box Office Tester** for staff operations. The owner uses the shared **Browser QA** workflow for live checks. |
+| “Generate test cases for customer emails in their selected language. Test the customer and venue sides.” | **Customer Tester** owns customer-triggered email cases. **Organizer Tester** traces the saved Venue language, fallback and Organizer-triggered sends. Add **Box Office Tester** or **Guest Tester** when their supported entry points affect the requested outcome. Both Masters verify what controls the language for each in-scope send. The QA Lead sends back cases that omit a required saved value or could pass using the wrong language rule. |
+| “Are we ready to release this?” | **Release Engineer** scopes the review and applies the shared review policy. **QA Lead** independently reviews the exact handoff. |
+
+A question about what might go wrong is a source review. Admin access and live testing require the applicable user authorization.
+
+### Tester ownership and progress
+
+The tester is the first point of contact. Name them before writing the plan. Use the requested actor and available session context to choose the role. A public **Join guestlist** modal belongs to the Customer Tester in a signed-in session and the Guest Tester in a signed-out session. If preflight reveals a different actor, pause the affected checks and return the plan to the appropriate tester for review under the shared policy.
+
+**Tester owns the plan → Release Engineer reviews → QA Lead decides → Tester runs the checks → Tester reports the evidence.** The tester handles revisions and stays responsible for the result. See [[#Draft test cases with review]] for the written-case review path.
+
+In **Runs → Current work**, the assignment shows each stage and its owner. During Codex work, share brief progress updates for the owner and scope, plan, review decision, meaningful checks, blockers, and final evidence. Use one update for related actions and keep pending steps visibly pending.
+
 ### Codex skill directory
 
-Open the QA Vault as the Codex project and use the skill name in a request. The skills and their supporting files live in this repository under `.agents/skills/`.
+For the vault-owned roles below, open the QA Vault as the Codex project and use the skill name in a request. The skills and their supporting files live in this repository under `.agents/skills/`.
 
 | Agent or workflow | Codex skill | Use it for |
 | --- | --- | --- |
@@ -49,9 +77,9 @@ Open the QA Vault as the Codex project and use the skill name in a request. The 
 | --- | --- | --- |
 | [Find Skills](../.agents/skills/find-skills/SKILL.md) | Find skills and add approved ones to the vault. | [Vercel Skills](https://github.com/vercel-labs/skills/tree/main/skills/find-skills) |
 | [Obsidian Markdown](../.agents/skills/obsidian-markdown/SKILL.md) | Edit vault notes, including wikilinks, properties, and callouts. | [Obsidian Skills](https://github.com/obsidianmd/obsidian-skills/tree/main/skills/obsidian-markdown) |
-| [Playwright CLI](../.agents/skills/playwright-cli/SKILL.md) | Work with Playwright tests or automate an authorized local browser check. | [Microsoft Playwright CLI](https://github.com/microsoft/playwright-cli) |
+| [Playwright CLI](../.agents/skills/playwright-cli/SKILL.md) | Operate Playwright CLI for an authorized browser check. Start automation assignments with the repo team. | [Microsoft Playwright CLI](https://github.com/microsoft/playwright-cli) |
 
-Find reusable vault procedures in [[00 Start Here/QA Operating Workflow|QA Operating Workflow]]. For repository-specific work, use the [Playwright workflow index](../../showpass-playwright/docs/agent-workflows/README.md), the [frontend skills](../../showpass-frontend/.agents/skills/), the [backend skills](../../web-app/.agents/skills/), or the [Showpass Skill Marketplace](../../skill-marketplace/skills/README.md).
+Find reusable vault procedures in [[00 Start Here/QA Operating Workflow|QA Operating Workflow]]. For repository-specific work, start with the [Playwright team workflow](../../showpass-playwright/docs/agent-workflows/playwright-team.md), the [frontend skills](../../showpass-frontend/.agents/skills/), the [backend skills](../../web-app/.agents/skills/), or the [Showpass Skill Marketplace](../../skill-marketplace/skills/README.md).
 
 City lists **Organizer Tester** and **Organizer Builder** separately. Both can work on the same Dashboard page. “Test Organization contact settings” goes to the Tester. “Configure Organization contact settings for this scenario” goes to the Builder. The Builder can also use the specialized Event or Offering workflows when they fit the assignment. The user's permission and the selected Organization determine which controls either agent can use.
 
@@ -63,6 +91,18 @@ The **QA Lead**, **Release Engineer**, **Backend Master**, and **Frontend Master
 
 This is a draft review role. In City, open **Qase Police** from **Agents** or select **Qase Review** on the City map. Choose **Review in Codex** and provide the draft or its vault path. You can also invoke `$qase-police` directly in Codex. The [[03 Test Cases/Group Sales and Transfers/spw-21449-required-ticket-transfer-question-test-cases#Manual case|ticket transfer case]] shows the result. Its order-level and per-ticket variants share one case and both are marked **Not run**.
 
+## Draft test cases with review
+
+Choose the tester who owns the requested flow. In City, select **Draft test cases with review** as the assignment's **Review path**, then open it in **Runs → Current work**. Paste existing cases to review them as written or leave the field empty for the tester to draft. Give the Masters the relevant repository-relative source paths, with line ranges for long files. Use `@commit` on the first line for an earlier local revision. Select **Start draft review** once. City sends the draft and selected excerpts to your configured Codex account and saves the evidence against each revision.
+
+1. The owning tester drafts the cases. Supporting testers contribute when their actor or setup affects the result.
+2. The QA Lead checks scope and asks what setup, language, permission, or other state needs proof.
+3. The Backend Master verifies saved values and behavior. The Frontend Master verifies how the tester reaches the controls and what the tester can see. Each cites the evidence behind its findings.
+4. The Release Engineer reconciles the findings and proposes corrections. The QA Lead checks the exact submitted draft and records **Ready to use** or **Changes requested**. Check whether the wrong configuration could produce the same result.
+5. On **Changes requested**, City automatically returns fixable findings to the tester, saves the prior decision in **History**, and starts review of the next revision. It stops at **Ready to use**, a specific question only the user can answer, or a stage that cannot make progress. Leave City running if you close the tab. Use **Pause review** to stop at the last saved stage. Add any requested information and select **Continue review** when you are ready. Execution stays **Not run** and live work or Qase publication follows its own workflow.
+
+In Codex, use the [[06 Prompts/Showpass QA Test Case Generator|test case generator]] for the owner’s draft and hand the exact revision and supporting evidence to the same roles in separate contexts. The owner revises the same vault note. Record scope, source findings, and the final QA Lead decision for that revision. Use the [[05 Tooling/Qase Test Case Writing Rules#Copy-to-Qase Review Gate|Copy-to-Qase review]] for case fields and format.
+
 ## Review and scope
 
 Review depth follows the work. A bounded live check or routine beta build gets short Release Engineer review and QA Lead sign-off. High-risk and release work brings in both Masters and requires QA Lead sign-off on the Release Engineer’s handoff. Draft-only work stays at the written-draft scope. A Showpass Event saved as Draft is live test-data setup.
@@ -73,7 +113,11 @@ Builders and Testers state what they will verify and when they will stop. Review
 
 ## Execution and evidence
 
-City uses the local Codex App Server and the QA Vault’s repository skills for planning and review. **Run in Codex** sends an approved Organizer assignment to its agent's paired chat for execution in the authorized in-app browser. The existing **Organizer builder** chat belongs to the Builder. The Tester can use **Open in Codex** or its own paired chat. City retains the dedicated Playwright runner in code and shows its earlier results. [[showpass-qa-city/README|Execution options and local prerequisites]]
+Each City role follows the [QA Vault final output rules](../AGENTS.md#final-outputs). A teammate should be able to open a case or handoff on its own and see where to start, what to do, what they should see, and which results were actually verified.
+
+For exploratory assignments, Testers use whatever the request provides as a starting point and exercise realistic inputs and conditions that could change the user outcome. The Release Engineer and QA Lead check that the plan can expose a failure of that outcome. A test that misses its stated expectation is **Failed**, even when the source explains the result. [[00 Start Here/World-Class Software Quality Standard#11. Finding Classification|How to classify findings]]
+
+For manual tester and builder plans, City uses the local Codex App Server and the QA Vault’s repository skills. **Run in Codex** sends an approved Organizer assignment to its agent's paired chat for execution in the authorized in-app browser. The existing **Organizer builder** chat belongs to the Builder. The Tester can use **Open in Codex** or its own paired chat. City retains the dedicated Playwright runner in code and shows its earlier results. [[showpass-qa-city/README|Execution options and local prerequisites]]
 
 For an open-ended build anywhere under `/manage/`, the Builder plans realistic values and settings that give the next tester specific behavior to exercise. A club Membership could have two Levels with different access and a relevant Member question. A Product could have variants with different inventory and pickup choices. A request to configure Organization contact settings stays on the contact section and proves the exact saved values. The Builder reopens the agreed settings and relationships, records any missing proof, and carries verified fields and IDs forward using backend names.
 

@@ -7,7 +7,19 @@ pnpm install
 pnpm dev
 ```
 
-Open [QA City Runs](http://127.0.0.1:3000/runs). Planning uses the local Codex App Server and the installed Showpass skills. The City starts a turn only after Codex confirms included usage and reports that workspace credits are unavailable. The City uses loopback. Workspace storage uses Convex when configured and the local workspace file otherwise.
+Open [QA City Runs](http://127.0.0.1:3000/runs). City’s manual assignment plans and release reviews use the local Codex App Server and the vault’s repository skills. The City starts a turn only after Codex confirms included usage and reports that workspace credits are unavailable. The City uses loopback. Workspace storage uses Convex when configured and the local workspace file otherwise.
+
+## Playwright automation
+
+Open **Playwright** to start a prompt, a plan, or work already on a branch. City looks for a sibling `showpass-playwright` checkout with its [team workflow](../../showpass-playwright/docs/agent-workflows/playwright-team.md). For another checkout or worktree, set `QA_CITY_PLAYWRIGHT_PATH` to its absolute path in City’s local environment and restart City.
+
+Choose **Open repo in Codex** to start directly in the repository. For a saved City handoff:
+
+1. Enter a work item name, requested outcome, branch, and allowed actions. **Prepare Playwright handoff** on a saved run or build prefills evidence for you to review.
+2. **Save handoff** creates `.artifacts/agent-work/<item>/handoff.md` in the selected Playwright checkout. An existing item opens from **Repository handoffs**. These files are local to that checkout and ignored by Git.
+3. **Open in Codex** opens the repo with instructions for the Automation Lead to resume that item. The repo team updates its evidence, owner, blockers, findings and focused run result there. Select **Reload handoff** to read the updated note. Across machines, follow the repo’s [one-work-item handoff](../../showpass-playwright/docs/agent-workflows/playwright-team.md#one-work-item).
+
+The [repo agent instructions](../../showpass-playwright/AGENTS.md) and [handbook](../../showpass-playwright/docs/playwright-handbook/README.md) own the automation procedure. City’s manual testers, Qase review, and shared release policy stay in the vault.
 
 ## Connect Convex
 
@@ -34,6 +46,7 @@ Choose the assignment's **Review path**. An Event saved in Showpass with the sta
 
 | Review path | What to do in Runs |
 | --- | --- |
+| Draft test cases with review | Choose a tester owner, supply the case or instructions and relevant source, then select **Start draft review**. City runs each review and sends fixable findings back to the tester until the QA Lead accepts a revision or the work needs input. See the [draft review workflow](../00%20Start%20Here/Showpass%20QA%20City.md#draft-test-cases-with-review). |
 | Draft plan only | Select **Prepare draft plan**. City saves the plan with execution Not run. |
 | Short review | Prepare the plan, select **Run short review** for the Release Engineer's check, then **Send to QA Lead**. City switches to full review when the plan or short review identifies high risk. |
 | Full review | Prepare the plan and select **Scope with Release Engineer**. For Builder runs, select **Review backend and frontend** to start both source reviews together. Complete any remaining review, select **Prepare engineering handoff**, then **Send to QA Lead**. |

@@ -1,9 +1,6 @@
 # QA Automation - showpass-playwright
 
-Repo path:
-`/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`
-
-Use this repo for durable Playwright patterns before creating new automation.
+Start in the sibling `showpass-playwright` checkout. Read [AGENTS.md](../../showpass-playwright/AGENTS.md) and the [Playwright agent team workflow](../../showpass-playwright/docs/agent-workflows/playwright-team.md). They own automation routing, implementation, exact-patch review, and focused verification. From City, use [[00 Start Here/Showpass QA City#Playwright handoffs|Playwright handoffs]] to open that checkout with the same work item.
 
 Use [[00 Start Here/World-Class Software Quality Standard]] as the canonical quality policy. Repository workflow documents are implementation references and upstream evidence; they are not separate local standards.
 

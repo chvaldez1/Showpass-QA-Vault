@@ -1,6 +1,10 @@
 import { spawn } from "node:child_process";
+import { constants } from "node:fs";
+import { access, realpath } from "node:fs/promises";
+import { delimiter, resolve } from "node:path";
 import { createInterface } from "node:readline";
 import { z } from "zod";
+import { cityOutputGuidance } from "../workspace/output-guidance";
 import type { CodexActivityItem } from "./handoff-schema";
 
 const messageSchema = z.object({
@@ -48,20 +52,40 @@ export function outputSchema(schema: z.ZodType) {
 type RpcMessage = z.infer<typeof messageSchema>;
 type RpcRequest = (method: string, params?: object, onNotification?: (message: RpcMessage) => void) => Promise<unknown>;
 
+async function isolatedCodexCommand(sourceDirectory: string) {
+  for (const directory of (process.env.PATH ?? "").split(delimiter)) {
+    const candidate = resolve(directory, "codex");
+    const executable = await access(candidate, constants.X_OK).then(() => realpath(candidate)).catch(() => undefined);
+    if (executable) {
+      const profile = `(version 1)
+        (allow default)
+        (deny process-exec (require-not (literal (param "CODEX_BIN"))))
+        (deny file-read-data (subpath (param "SOURCE_DIRECTORY")))`;
+      return ["/usr/bin/sandbox-exec", "-p", profile, "-D", `CODEX_BIN=${executable}`, "-D",
+        `SOURCE_DIRECTORY=${await realpath(sourceDirectory)}`, executable];
+    }
+  }
+  throw new CodexError("Couldn’t find the local Codex executable for isolated source review.");
+}
+
 async function withAppServer<T>(
-  { cwd, signal, timeoutMs }: { cwd?: string; signal: AbortSignal; timeoutMs: number },
+  { cwd, signal, timeoutMs, restrictedSourceDirectory }: { cwd?: string; signal: AbortSignal; timeoutMs: number; restrictedSourceDirectory?: string },
   run: (connection: { request: RpcRequest; nextMessage: () => Promise<RpcMessage> }) => Promise<T>,
 ) {
   const env = { ...process.env };
   delete env.OPENAI_API_KEY;
   delete env.CODEX_API_KEY;
-  const child = spawn("codex", [
+  const [command, ...sandboxArgs] = restrictedSourceDirectory && process.platform === "darwin"
+    ? await isolatedCodexCommand(restrictedSourceDirectory) : ["codex"];
+  const child = spawn(command, [
+    ...sandboxArgs,
     "-c", 'model_provider="openai"',
     "-c", 'web_search="disabled"',
     "-c", "mcp_servers={}",
     "--disable", "apps",
     "--disable", "plugins",
     "--disable", "shell_tool",
+    ...(restrictedSourceDirectory ? ["--disable", "unified_exec"] : []),
     "--disable", "multi_agent_v2",
     "app-server", "--listen", "stdio://",
   ], { cwd, env, stdio: ["pipe", "pipe", "ignore"] });
@@ -145,19 +169,20 @@ export async function checkCodexDispatchUsage(signal: AbortSignal) {
 }
 
 export async function askCodex({
-  cwd, prompt, context, outputSchema, signal,
+  cwd, prompt, context, outputSchema, signal, restrictedSourceDirectory,
 }: {
   cwd: string;
   prompt: string;
   context: string;
   outputSchema: object;
   signal: AbortSignal;
+  restrictedSourceDirectory?: string;
 }) {
-  return withAppServer({ cwd, signal, timeoutMs: 180_000 }, async ({ request, nextMessage }) => {
+  return withAppServer({ cwd, signal, timeoutMs: 180_000, restrictedSourceDirectory }, async ({ request, nextMessage }) => {
     await verifyIncludedUsage(request);
     const { thread } = z.object({ thread: sessionSchema }).parse(await request("thread/start", {
       cwd, approvalPolicy: "never", sandbox: "read-only", ephemeral: true, environments: [],
-      serviceTier: "default", developerInstructions: context,
+      serviceTier: "default", developerInstructions: `${context}\n\n${cityOutputGuidance}`,
     }));
 
     const agentMessages = new Map<string, string>();

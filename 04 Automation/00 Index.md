@@ -24,7 +24,7 @@ Apply [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|t
 | Native mobile/device work | [[09 Appium/Test Project]] and [[09 Appium/CI]] | Local, simulator, physical-device and CI results are different evidence; some targets remain blocked/unrun |
 | Choose backend/component/browser/device layer | [[00 Start Here/Showpass QA Handbook/06 Automation Strategy]] | Browser coverage cannot replace all lower-layer or physical-device proof |
 | Prepare a candidate | [[04 Automation/Automation Candidate Template]] | Add sections to the candidate's existing canonical note; avoid a duplicate queue |
-| Implement/update Playwright coverage | [[06 Prompts/Convert Test Cases to Playwright]] | Follow the requested mode through implementation and focused verification when authorized |
+| Plan, implement, review, or resume Playwright coverage | [Playwright agent team](../../showpass-playwright/docs/agent-workflows/playwright-team.md) · [[06 Prompts/Convert Test Cases to Playwright|Vault handoff prompt]] | Carry the same item through independent review and focused verification within the requested scope |
 | Repeat Qase preparation safely | [[05 Tooling/qasectl]] and [[05 Tooling/Qase Test Run Workflow]] | Existing dry-run/apply verification and exact write approval remain required |
 | Collect change coverage and actual run evidence | [[06 Prompts/Release Coverage Review]] | Maintained collector reads candidate source/cases/results; agents review the exact assertions before classifying coverage |
 | Prevent a confirmed escaped bug from recurring | [[06 Prompts/Escaped Bug To Regression]] | Link the original failure, missing check, implemented protection and actual execution; no automatic completion from ticket closure |

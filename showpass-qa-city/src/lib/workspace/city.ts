@@ -1,3 +1,4 @@
+import { cityOutputGuidance } from "./output-guidance";
 import { agentRoles, type Agent, type AgentRole } from "./schema";
 
 type Location = {
@@ -17,9 +18,9 @@ export const locations: Record<AgentRole, Location> = {
   "public-tester": {
     name: "Welcome Centre",
     agentName: "Guest Tester",
-    description: "Test signed-out discovery or guest checkout. Verify assigned Event Previews as read-only handoffs.",
+    description: "Own signed-out public page, widget, or guest checkout tests. Verify assigned Event Previews as read-only handoffs.",
     responsibilities: [
-      "Test the assigned discovery page while signed out.",
+      "Plan and test the assigned public page or widget while signed out.",
       "Verify guest checkout on the public website or widget named in the plan.",
       "Check an assigned Event Preview with its approved access.",
     ],
@@ -31,9 +32,9 @@ export const locations: Record<AgentRole, Location> = {
   "customer-tester": {
     name: "Ticket Shop",
     agentName: "Customer Tester",
-    description: "Test one signed-in checkout, Account, discovery, or transfer job.",
+    description: "Own signed-in public page, widget, checkout, Account, and transfer tests.",
     responsibilities: [
-      "Test discovery in the assigned signed-in session when requested.",
+      "Plan and test the assigned public page or widget in the signed-in session.",
       "Verify checkout on the assigned public website or widget through the saved order and issued items.",
       "Verify one Account action, sender action, or recipient action as its own assignment.",
     ],
@@ -95,7 +96,10 @@ export const locations: Record<AgentRole, Location> = {
     ],
     example: "Review a Product Categories case so another QA can use any suitable Organizer and verify the Products in each category.",
     kind: "coverage",
-    codexPrompt: "Use $qase-police from .agents/skills/qase-police/SKILL.md to review a Showpass Qase case draft. Ask me for the draft or its vault path and any source notes.",
+    codexPrompt: [
+      "Use $qase-police from .agents/skills/qase-police/SKILL.md to review the Showpass Qase case draft. Ask for the draft or its vault path if it was not supplied.",
+      cityOutputGuidance,
+    ].join("\n\n"),
     color: "#8bdfb9",
     position: [0, -4.3],
     size: [4.1, 2.4, 3.2],

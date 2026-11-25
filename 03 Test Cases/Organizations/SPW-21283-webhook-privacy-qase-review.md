@@ -8,7 +8,7 @@ tags:
 
 # SPW-21283 Webhook Privacy Qase Review
 
-**Status** · Wording drafts for [Qase SPT → Integrations → Webhooks, suite 193](https://app.qase.io/project/SPT?suite=193). This review did not run the scenarios.
+**Status** · Updated and verified in [Qase SPT → Integrations → Webhooks, suite 193](https://app.qase.io/project/SPT?suite=193) on November 24, 2026. The wording update did not run the scenarios.
 
 A webhook endpoint is the saved destination. A webhook event holds the request body. Each send or resend creates a delivery attempt in **Logs**. The cases check that an employee with **Developer** permission can see useful event and delivery details while credentials stay hidden from those views and application logs. The employee can still copy and rotate the endpoint's **Secret Key** in **Endpoints**.
 
@@ -18,7 +18,7 @@ A webhook endpoint is the saved destination. A webhook event holds the request b
 | [SPT-5962](https://app.qase.io/case/SPT-5962) | Use a harmless request to prove the application logger is working before treating the absence of a webhook response body as a pass. Check that copying and rotating the key still work. |
 | [SPT-5963](https://app.qase.io/case/SPT-5963) | Compare the first delivery and resend of the same event. The new endpoint and key apply to delivery. The saved body stays the same. Follow the same steps for **Send Test** and an ordinary **Purchase**. |
 
-## Proposed Qase wording
+## Verified Qase wording
 
 ### SPT-5961: Dashboard - Webhooks - Check that Events and Logs hide credentials
 
@@ -121,4 +121,4 @@ A webhook endpoint is the saved destination. A webhook event holds the request b
 * [[01 Repositories/Backend - web-app]] at `62067009a8`. `apps/venues/services/webhook/payload_visibility.py` and `apps/venues/api/venue_based/serializers/webhooks.py` define what the event and log reads show. `apps/venues/api/venue_based/viewsets/webhooks.py` defines **Developer** access and response privacy. `apps/core/logging/custom_log_handler.py` controls response logging. `apps/venues/services/webhook/client.py` signs the body's root `id` with the current key and sends the saved body to the current URL. The event UUID identifies the event in Dashboard.
 * The seeded event, log and response cases can use `WebhookPayloadVisibilityTestCase` in `apps/venues/tests/webhooks/test_webhook_payload_visibility.py`. Retry expectations are checked in `apps/venues/services/webhook/tests/test_client.py`. Capturing the live receiver and reviewing backend logs require a separately run test.
 * Frontend `showpass-frontend` at `12a457dd28`. `EndpointForm.web.tsx`, `EventDetailPage.web.tsx`, `LogsContent.web.tsx`, and `WebhookEventDetailLogTable.web.tsx` confirm the button names and where to find the evidence.
-* Scope for a Qase update is title, description, preconditions, steps, and postconditions on the three named cases. Each has empty tags and parameters in Qase. The two run types in SPT-5963 are explained in its Description. Step counts remain 6, 5, and 5.
+* Qase readback matched the revised titles, descriptions, preconditions, postconditions, and steps for SPT-5961, SPT-5962, and SPT-5963. All three are in suite 193 with empty tags and parameters. The two run types in SPT-5963 are in its Description. The verified step counts are 6, 5, and 5.

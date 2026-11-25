@@ -9,6 +9,8 @@ import { Disclosure } from "@/components/ui/disclosure";
 import { FormField } from "@/components/ui/form-field";
 import { Textarea } from "@/components/ui/textarea";
 import { askLocalCodex } from "@/lib/codex/client";
+import type { CodexHandoffStatus } from "@/lib/codex/handoff-schema";
+import { AssignmentProgress } from "./assignment-progress";
 import { BrowserResultForm } from "./browser-result-form";
 import { ReportedFindings } from "./browser-findings";
 import { CodexHandoff } from "./codex-handoff";
@@ -147,7 +149,13 @@ export function Plan({ revision }: { revision: Revision }) {
   );
 }
 
-export function QaAssignment({ run, role, previousRun }: { run: Run; role: AgentRole; previousRun?: Run }) {
+export function QaAssignment({ run, role, owner, previousRun, liveStatus }: {
+  run: Run;
+  role: AgentRole;
+  owner: string;
+  previousRun?: Run;
+  liveStatus?: CodexHandoffStatus["status"];
+}) {
   const [busy, setBusy] = useState<Action>();
   const [error, setError] = useState("");
   const [revising, setRevising] = useState(false);
@@ -318,7 +326,7 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
   const workspacePath = process.env.NEXT_PUBLIC_QA_CITY_VAULT_PATH;
   const codexPrompt = handoff && new URLSearchParams({ prompt: handoff, ...(workspacePath ? { path: workspacePath } : {}) });
   const actionLabel = {
-    propose: "Preparing the tester plan…",
+    propose: `${owner} is preparing the plan…`,
     "short-review": "Release Engineer is checking the routine plan…",
     intake: "Release Engineer is scoping the plan…",
     backend: "Backend Master is reviewing the plan…",
@@ -332,6 +340,7 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
 
   return (
     <div ref={workPanel} tabIndex={-1} data-testid="run-work" className="grid min-w-0 gap-4 text-sm">
+      <AssignmentProgress run={run} owner={owner} liveStatus={liveStatus} />
       {run.job && <div data-testid="run-assigned-job">
         <p className="font-medium">{jobLabels[run.job]}</p>
         <p className="text-muted-foreground">{jobStops[run.job]}</p>
@@ -356,11 +365,6 @@ export function QaAssignment({ run, role, previousRun }: { run: Run; role: Agent
         <p className="text-muted-foreground">This decision used the earlier review flow. Revise the plan for the full engineering review before browser work.</p>
       )}
       {changeRequest && <p className="text-muted-foreground">{draftOnly ? "Draft revision requested." : "Revision requested. The prior decision cannot be used for browser work."}</p>}
-      {current && !revision && (
-        <p className="text-muted-foreground">
-          The {builderWorkflow ? "Organizer Builder" : "tester"} prepares the plan. {draftOnly ? "The assignment ends with the written draft." : "The Release Engineer reviews it at the required depth before QA Lead sign-off."}
-        </p>
-      )}
       {busy && <p role="status" data-testid="run-work-status">{actionLabel[busy]}</p>}
       {error && <p role="alert" data-testid="run-work-error" className="text-destructive">{error}</p>}
       {current && (

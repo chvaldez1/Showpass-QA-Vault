@@ -3,6 +3,7 @@ import { demoWorkspace } from "./demo";
 import { normalizeWorkspace } from "./normalize";
 import { savedBuildRecords } from "./build-catalog";
 import { buildPresets, inferBuildPreset, inferBuildTheme } from "./build-presets";
+import { caseTesterRole } from "./case-review";
 import { jobNeedsFullReview, jobsFor } from "./job";
 import { nextPollRetryDelay } from "./poll-retry";
 import { pilotAccountsSchema, pilotPurchaseQuantity, pilotStages, pilotTransferQuantity, type PilotAccounts } from "./transfer-pilot";
@@ -94,7 +95,7 @@ async function fetchWorkspaceSnapshot() {
   return workspaceVersionSchema.parse(await response.json());
 }
 
-async function loadWorkspace() {
+export async function refreshWorkspace() {
   const snapshot = await fetchWorkspaceSnapshot();
   publish(snapshot);
   return activeSnapshot ?? snapshot;
@@ -112,7 +113,7 @@ async function sendWorkspace(payload: object) {
 }
 
 function initializeWorkspace() {
-  if (initialized) return loadWorkspace();
+  if (initialized) return refreshWorkspace();
   initialLoad ??= (async () => {
     const stored = readBrowserWorkspace();
     const snapshot = await fetchWorkspaceSnapshot();
@@ -199,9 +200,13 @@ export function queueRun(input: RunFormValues, useQaVenue = true, pilotAccounts?
       throw new Error("Choose an agent from the current workspace.");
     }
     const accountRole = qaAccountRoles.find((role) => role === agent.role);
+    const reviewCases = run.reviewMode === "case-review";
+    if (reviewCases && (!caseTesterRole.safeParse(agent.role).success || pilot)) {
+      throw new Error("Choose a tester to own the test case draft.");
+    }
     const allowedJobs = jobsFor(agent.role);
-    const job = run.job ?? (allowedJobs.length === 1 ? allowedJobs[0] : undefined);
-    if ((job && !allowedJobs.includes(job)) || (!job && allowedJobs.length > 1)) {
+    const job = reviewCases ? undefined : run.job ?? (allowedJobs.length === 1 ? allowedJobs[0] : undefined);
+    if (!reviewCases && ((job && !allowedJobs.includes(job)) || (!job && allowedJobs.length > 1))) {
       throw new Error("Choose one job that belongs to this agent.");
     }
     if (pilot && (agent.role !== "organizer-builder" || run.builderWorkflow !== "event-builder" ||
@@ -235,11 +240,11 @@ export function queueRun(input: RunFormValues, useQaVenue = true, pilotAccounts?
           ...run,
           job,
           pilot,
-          reviewMode: run.reviewMode !== "draft" && (publishSupportingEvents || jobNeedsFullReview(job)) ? "full" : run.reviewMode,
+          reviewMode: !reviewCases && run.reviewMode !== "draft" && (publishSupportingEvents || jobNeedsFullReview(job)) ? "full" : run.reviewMode,
           builderWorkflow, buildPreset, buildTheme, publishSupportingEvents: publishSupportingEvents || undefined, workflow,
           target: run.target || previousRun?.target || "",
           qaVenue: useQaVenue ? (previousRun ? previousRun.qaVenue : workspace.qaVenue) : undefined,
-          qaAccountEmail: accountRole && job !== "accept-transfer" && (accountRole !== "public-tester" || job === "inspect-public")
+          qaAccountEmail: !reviewCases && accountRole && job !== "accept-transfer" && (accountRole !== "public-tester" || job === "inspect-public")
             ? workspace.qaAccounts?.[accountRole] : undefined,
           savedSourceRecord,
           id: crypto.randomUUID(),

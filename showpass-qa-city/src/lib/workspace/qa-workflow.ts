@@ -6,12 +6,13 @@ import { builderRecordsSchema } from "./builder-result";
 import { draftExecutionResultSchema, eventDraftSchema } from "./event-draft";
 import { engineeringSourceSchema, hasEngineeringHandoff, stageSchemas } from "./release";
 
-export const planReviewModes = ["short", "full", "draft"] as const;
+export const planReviewModes = ["short", "full", "draft", "case-review"] as const;
 export type PlanReviewMode = (typeof planReviewModes)[number];
 export const planReviewLabels = {
   short: "Short review · routine live work",
   full: "Full review · high-risk live work",
   draft: "Draft plan only",
+  "case-review": "Draft test cases with review",
 } satisfies Record<PlanReviewMode, string>;
 
 export const builderWorkflows = ["event-builder", "offering-builder", "organizer-builder"] as const;
@@ -124,7 +125,7 @@ export type Revision = z.infer<typeof revisionSchema>;
 export type LeadDecision = z.infer<typeof leadDecisionSchema>;
 
 export function getPlanReviewMode(requested?: PlanReviewMode, revision?: Revision): PlanReviewMode {
-  if (requested === "draft") return "draft";
+  if (requested === "draft" || requested === "case-review") return requested;
   if (requested === "short" && revision?.risk?.level === "routine" && revision.shortReview?.requiredReview !== "full") {
     return "short";
   }

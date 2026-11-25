@@ -25,6 +25,13 @@ export function AgentDirectory() {
         description="Choose a Showpass agent or create an additional profile."
         actions={<AddAgentDialog />}
       />
+      <Card data-testid="playwright-team" className="flex flex-row flex-wrap items-center justify-between gap-3 p-4">
+        <div>
+          <h2 className="font-semibold">Playwright team</h2>
+          <p className="text-sm text-muted-foreground">Automation Lead coordinates the SDET, Playwright Police, the QA Tester and QA Lead.</p>
+        </div>
+        <ButtonLink data-testid="agents-open-playwright" href="/playwright" variant="outline">Open Playwright</ButtonLink>
+      </Card>
       <Card data-testid="release-team" className="flex flex-row flex-wrap items-center justify-between gap-3 p-4">
         <div>
           <h2 className="font-semibold">Release team</h2>

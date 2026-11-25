@@ -21,7 +21,7 @@ Use [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|the
 | Draft or compare manual cases | [[06 Prompts/Showpass QA Test Case Generator]] or [[06 Prompts/Showpass Qase Gap Analysis]] | Standalone cases; distinguish drafted, published and executed coverage |
 | Execute a named Qase case | [[06 Prompts/Interactive Browser Release Testing#Run a named Qase case|Exact saved case, parameter combinations, and setup]] | One execution result per selected combination with evidence for the case's final assertion |
 | Run a browser check | [[06 Prompts/Interactive Browser Release Testing]] | Agreed checks, actual evidence, cleanup and honest results |
-| Automate a repeated check | [[04 Automation/00 Index]] | Working assertions, focused run, cleanup, actual CI status and the remaining manual check |
+| Automate a repeated check | [Playwright team](../../showpass-playwright/docs/agent-workflows/playwright-team.md) for browser automation, [[04 Automation/00 Index]] for layer and candidate selection | Working assertions, focused run, cleanup, actual CI status and the remaining manual check |
 | Decide whether to release | [[06 Prompts/Release Coverage Review]] and [[03 Test Cases/Release Decision Template]] | Qase, Playwright and browser coverage; Full/Partial/None/Unknown; actual results, gaps and recommendation |
 | Improve the process after a problem | [[06 Prompts/Escaped Bug To Regression]] and [[00 Start Here/QA Improvement Log]] | Missing protection tied to the incident; implemented/executed status and a keep/change/stop decision |
 

@@ -723,6 +723,35 @@ PricingDisplay: BasePrices, FeesIncluded, Hidden
 
 ## Products
 
+### SPT-6024: Web Public - Organizer Profile - Browse product categories
+
+> Published to [SPT-6024](https://app.qase.io/case/SPT-6024) on 2026-11-24. Qase readback confirmed all four steps in suite 47 (Products).
+
+**Title:** Web Public - Organizer Profile - Browse product categories
+
+**Description:** A Guest can browse Products by category on a public Organizer profile. Switching categories shows the Products assigned to the selected category and removes Products from the previous category.
+
+| Platform | View |
+| --- | --- |
+| WebPublic | Desktop |
+| WebPublic | Mobile |
+
+**Preconditions:**
+
+* Have the public profile link for an Organizer with at least two Product categories available to guests.
+* Ask the Organizer to check **Dashboard → Build → Products → All products** and give you two category names and one publicly listed Product name from each. Choose Products with different names so you can tell the lists apart.
+
+**Tags:** public, products
+
+**Steps:**
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Open the Organizer’s public profile while signed out and select **Products**. | Organizer’s public profile link | The Products tab opens and both recorded category names are available to select. |
+| Select the first recorded category and look through its Products. Scroll if more Products load. | First category name | The Product recorded for the first category appears. The Product recorded for the second category is absent. |
+| Select the second category and look through its Products. | Second category name | The Product recorded for the second category appears. The first category’s Product is absent. |
+| Switch back to the first category. | First category name | The first category’s Product appears again and the second category’s Product is absent. |
+
 ### SPT-470: Web Public - Products - Read the complete formatted description
 
 **Title:** Web Public - Products - Read the complete formatted description

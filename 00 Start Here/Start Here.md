@@ -10,7 +10,7 @@ Our goals are to help the team release with more confidence, automate useful rep
 - [[00 Start Here/Showpass QA City|See how the City UI, agents, and review layers fit together]]. [[00 Start Here/Showpass QA City#Codex skill directory|Find a Showpass Codex skill by name]].
 - [[06 Prompts/Release Coverage Review|Gather and compare actual Qase, Playwright and browser coverage for a change]].
 - [[03 Test Cases/Release Decision Template|See Qase, Playwright and browser coverage, actual results and remaining release checks in one note]].
-- [[04 Automation/00 Index|Turn automation candidates into verified, running protection]].
+- [Start Playwright work in the automation repo](../../showpass-playwright/docs/agent-workflows/playwright-team.md) or [[00 Start Here/Showpass QA City#Playwright handoffs|prepare the repo handoff from City]]. Use [[04 Automation/00 Index]] to select candidates and track protection.
 - [[00 Start Here/QA Improvement Log|Measure results and trial better ways of working]].
 - [[06 Prompts/Escaped Bug To Regression|Turn a confirmed escaped bug into a verified regression check]].
 

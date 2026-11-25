@@ -113,6 +113,8 @@ Before creating or executing coverage, answer:
 
 `We are testing whether <actor and surface> can <workflow> while <business invariant> stays true; this matters because <bad outcome>, and we will prove it with <observable evidence>.`
 
+Define the expected result from the requested outcome or an authoritative product rule before execution. Use any supplied material, such as a chat request, ticket, PR, spec, screenshot, bug report, or existing case, as a starting point for exploratory testing. Within the approved scope, vary the data people enter and the conditions they encounter where those differences could expose a failure of the same outcome. Preserve the saved expectation when executing a named case.
+
 Record:
 
 | Field | Required Answer |
@@ -456,6 +458,8 @@ Use these confidence labels:
 - **Inconclusive**: fixture or evidence cannot distinguish expected behavior from a defect.
 - **Client-side risk not submitted**: the UI permits a risky action, but submission was intentionally not attempted.
 - **Product-expectation question**: implementation and test expectation disagree without an authoritative decision.
+
+Mark an executed check **Failed** when its actual result misses the stated expectation, even when the implementation explains the behavior. If the expectation is a QA hypothesis awaiting a product decision, record the failed check against that hypothesis and label the unresolved product question. Use the approved requirement and the business impact to decide whether the gap is a confirmed defect or a release blocker.
 
 Do not:
 

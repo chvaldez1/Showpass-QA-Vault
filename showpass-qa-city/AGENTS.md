@@ -30,6 +30,10 @@ Run these from `showpass-qa-city` using the pnpm version pinned in `package.json
 - `src/lib/workspace` owns schemas, workflow state, and persistence. Keep older saved workspaces readable when changing schemas or normalization. Use the demo workspace or a separate `QA_CITY_DATA_DIRECTORY` for local checks that write data.
 - `src/lib/codex` handles local Codex App Server calls and handoffs. `src/lib/execution` handles approval and the beta browser runner. Keep server-side integrations behind the local API routes and preserve loopback checks and approval for the current plan revision.
 
+## Playwright automation
+
+Use the sibling [Playwright agent team](../../showpass-playwright/docs/agent-workflows/playwright-team.md) for automation assignments. City prepares the work item and opens its checkout. Maintain the roles, skills, and automation procedure in that repository. See [Playwright automation](README.md#playwright-automation) for local configuration.
+
 ## Frontend work
 
 Read these guides when implementing or reviewing a frontend change.

@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useId, useRef, useState, type ComponentProps, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter,
@@ -19,6 +19,7 @@ import { nextRunAction } from "@/lib/workspace/run-queue";
 import { runModeLabels, type Agent, type Run, type RunStatus } from "@/lib/workspace/schema";
 import { codexStatusLabels, type CodexHandoffStatus, type LiveCodexRuns } from "@/lib/codex/handoff-schema";
 import { CodexActivity, liveStatus, runFilterStatus } from "./codex-activity";
+import { CaseReview, DraftReviewRecord } from "./case-review";
 import { cancelRun } from "@/lib/workspace/store";
 
 const QaAssignment = dynamic(() => import("./qa-assignment").then((module) => module.QaAssignment), {
@@ -83,7 +84,8 @@ function RunRow({ run, agent, previousRun, activity, showNextAction }: {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const date = new Date(run.createdAt);
   const agentName = agent?.name ?? "Unknown agent";
-  const draftOnly = run.reviewMode === "draft";
+  const caseReview = run.reviewMode === "case-review";
+  const draftOnly = run.reviewMode === "draft" || caseReview;
   const result = liveStatus(run, activity);
   const next = showNextAction ? nextRunAction(run, result) : undefined;
   const status = runFilterStatus(run, activity);
@@ -91,7 +93,7 @@ function RunRow({ run, agent, previousRun, activity, showNextAction }: {
   const role = !run.recoveredCodexRevision && !run.sample ? agent?.role : undefined;
   const recoveredActivity = run.recoveredCodexRevision ? result : undefined;
   const history = role ? run.revisionHistory : undefined;
-  const hasHistory = Boolean(history?.length);
+  const hasHistory = Boolean(history?.length || run.caseReviewHistory?.length);
   const currentPlan = role ? run.revision : undefined;
   const showPlanFirst = currentPlan && status !== "queued" && status !== "running" && status !== "needs-input";
   const sourceRecords = sourceRecordsFor(run, previousRun) ?? [];
@@ -107,7 +109,7 @@ function RunRow({ run, agent, previousRun, activity, showNextAction }: {
         <dt className="text-muted-foreground">Agent</dt>
         <dd className="wrap-anywhere">{agentName}</dd>
         <dt className="text-muted-foreground">Mode</dt>
-        <dd>{draftOnly ? "Draft plan only" : runModeLabels[run.mode]}</dd>
+        <dd>{caseReview ? "Draft test cases with review" : draftOnly ? "Draft plan only" : runModeLabels[run.mode]}</dd>
         {run.job && <>
           <dt className="text-muted-foreground">Job</dt>
           <dd className="wrap-anywhere">{jobLabels[run.job]}</dd>
@@ -229,7 +231,7 @@ function RunRow({ run, agent, previousRun, activity, showNextAction }: {
               </TabsList>
               {role && (
                 <TabsContent value="work" keepMounted render={<DialogBody />} data-testid="run-panel-work">
-                  <QaAssignment run={run} role={role} previousRun={previousRun} />
+                  {caseReview ? <CaseReview run={run} /> : <QaAssignment run={run} role={role} owner={agentName} previousRun={previousRun} liveStatus={result?.status} />}
                 </TabsContent>
               )}
               {currentPlan && (
@@ -246,6 +248,13 @@ function RunRow({ run, agent, previousRun, activity, showNextAction }: {
               {hasHistory && (
                 <TabsContent value="history" render={<DialogBody />} data-testid="run-panel-history">
                   <ul className="space-y-3">
+                    {run.caseReviewHistory?.map((previous) => (
+                      <li key={`case-${previous.number}`}>
+                        <Disclosure testId={`case-review-history-${previous.number}`} label={`Draft revision ${previous.number} · Changes requested`}>
+                          <DraftReviewRecord review={previous} />
+                        </Disclosure>
+                      </li>
+                    ))}
                     {history?.map((previous) => (
                       <li key={previous.number}>
                         <Disclosure testId={`run-history-plan-${previous.number}`} label={`Plan ${previous.number} · ${previous.review?.decision ?? "not reviewed"} · superseded`}>
@@ -261,6 +270,9 @@ function RunRow({ run, agent, previousRun, activity, showNextAction }: {
             <DialogBody tabIndex={0} role="region" aria-label="Run details" data-testid="run-panel-details">{details}</DialogBody>
           )}
           <DialogFooter data-testid="run-dialog-footer">
+            {!run.sample && <ButtonLink data-testid="run-to-playwright" variant="outline" href={`/playwright?run=${encodeURIComponent(run.id)}`}>
+              Prepare Playwright handoff
+            </ButtonLink>}
             <DialogClose data-testid="run-dismiss" render={<Button variant="outline" />}>Close</DialogClose>
             {run.status === "queued" && (
               <Button data-testid="run-cancel" variant="destructive" onClick={handleCancelRun} disabled={cancelling}>

@@ -20,6 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "@/hooks/use-workspace";
 import type { BuildReference } from "@/lib/workspace/builder-result";
 import { buildPresetSchema, buildPresets, buildThemeSchema, buildThemes, inferBuildPreset, inferBuildTheme } from "@/lib/workspace/build-presets";
+import { caseTesterRole } from "@/lib/workspace/case-review";
 import { jobLabels, jobNeedsFullReview, jobsFor } from "@/lib/workspace/job";
 import { pilotAccountsSchema } from "@/lib/workspace/transfer-pilot";
 import { locations } from "@/lib/workspace/city";
@@ -71,6 +72,9 @@ function AssignmentForm({ agents, runs, agentId, source, transferPilot, defaultB
   const reviewMode = useWatch({ control, name: "reviewMode" });
   const selectedAgentId = useWatch({ control, name: "agentId" });
   const selectedAgent = agents.find(({ id }) => id === selectedAgentId);
+  const caseReview = reviewMode === "case-review";
+  const supportsCaseReview = !transferPilot && caseTesterRole.safeParse(selectedAgent?.role).success;
+  const draftOnly = reviewMode === "draft" || caseReview;
   const showPresets = selectedAgent?.role === "organizer-builder" && !transferPilot;
   const title = useWatch({ control, name: "title" });
   const selectedPreset = useWatch({ control, name: "buildPreset" });
@@ -83,13 +87,17 @@ function AssignmentForm({ agents, runs, agentId, source, transferPilot, defaultB
   const availableJobs = jobsFor(selectedAgent?.role);
   const selectedJob = useWatch({ control, name: "job" });
   const job = availableJobs.length === 1 ? availableJobs[0] : selectedJob;
-  const publishSupportingEvents = showPresets && reviewMode !== "draft" && allowSupportingPublication;
-  const fullReview = reviewMode !== "draft" && (publishSupportingEvents || jobNeedsFullReview(job));
+  const publishSupportingEvents = showPresets && !draftOnly && allowSupportingPublication;
+  const fullReview = !draftOnly && (publishSupportingEvents || jobNeedsFullReview(job));
   const sourceRunId = useWatch({ control, name: "sourceRunId" });
   const venue = sourceRunId ? runs.find(({ id }) => id === sourceRunId)?.qaVenue : qaVenue;
 
   async function submit(values: RunFormValues) {
-    if (availableJobs.length > 1 && (!job || !availableJobs.includes(job))) {
+    if (caseReview && !supportsCaseReview) {
+      setError("reviewMode", { message: "Choose a tester to own the test case draft." });
+      return;
+    }
+    if (!caseReview && availableJobs.length > 1 && (!job || !availableJobs.includes(job))) {
       setError("job", { message: "Choose one job for this assignment." });
       return;
     }
@@ -101,13 +109,13 @@ function AssignmentForm({ agents, runs, agentId, source, transferPilot, defaultB
     }
     try {
       await queueRun({
-        ...values, job: availableJobs.length ? job : undefined, sourceRecord: source?.record,
+        ...values, job: !caseReview && availableJobs.length ? job : undefined, sourceRecord: source?.record,
         buildPreset: showPresets ? values.buildPreset : undefined,
         buildTheme: showPresets ? values.buildTheme : undefined,
         publishSupportingEvents: publishSupportingEvents || undefined,
       }, useQaVenue, accounts?.data);
       onSaved();
-      toast.success("Assignment saved. Open it in Runs to prepare the plan.");
+      toast.success(caseReview ? "Assignment saved. Open it in Runs to prepare the test cases." : "Assignment saved. Open it in Runs to prepare the plan.");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Couldn’t save the assignment.");
     }
@@ -123,25 +131,25 @@ function AssignmentForm({ agents, runs, agentId, source, transferPilot, defaultB
           {agentId ? (
             <p data-testid="assignment-locked-agent" className="self-center text-sm font-medium">{selectedAgent?.name}</p>
           ) : <SelectField
-            testId="assignment-agent" control={control} name="agentId" label="Agent" placeholder="Choose an agent" required
+            testId="assignment-agent" control={control} name="agentId" label="Plan owner" placeholder="Choose an agent" required
             options={agents.map(({ id, name }) => ({ value: id, label: name }))}
           />}
           <SelectField
             testId="assignment-review-path" control={control} name="reviewMode" label="Review path"
-            options={transferPilot ? reviewOptions.filter(({ value }) => value !== "draft") : reviewOptions}
-            hint={fullReview ? "This assignment will use full review." : reviewMode === "short" ? "High-risk plans switch to full review." : undefined}
+            options={reviewOptions.filter(({ value }) => (value !== "case-review" || supportsCaseReview) && (value !== "draft" || !transferPilot))}
+            hint={caseReview ? "A tester owns the draft. QA Lead and Engineering review it in Runs." : fullReview ? "This assignment will use full review." : reviewMode === "short" ? "High-risk plans switch to full review." : undefined}
           />
         </div>
         <div className="grid items-start gap-4 empty:hidden sm:grid-cols-2">
-          {availableJobs.length > 1 && <SelectField testId="assignment-job" control={control} name="job" label="Job" required
+          {!caseReview && availableJobs.length > 1 && <SelectField testId="assignment-job" control={control} name="job" label="Job" required
             options={availableJobs.map((value) => ({ value, label: jobLabels[value] }))} />}
-          {reviewMode !== "draft" && <SelectField testId="assignment-mode" control={control} name="mode" label="Who drives?" options={modeOptions} />}
+          {!draftOnly && <SelectField testId="assignment-mode" control={control} name="mode" label="Who drives?" options={modeOptions} />}
           {showPresets && <SelectField testId="assignment-build-preset" control={control} name="buildPreset" label="Build preset" options={presetOptions}
             hint={(selectedPreset || title.trim()) && preset ? buildPresets[preset].summary : "Set a title or choose the setup you need."} />}
           {showPresets && <SelectField testId="assignment-build-theme" control={control} name="buildTheme" label="Scenario theme" options={themeOptions}
             hint={!selectedTheme && theme ? `From the request · ${buildThemes[theme].label}` : undefined} />}
         </div>
-        {showPresets && reviewMode !== "draft" && (
+        {showPresets && !draftOnly && (
           <Checkbox data-testid="assignment-publish-supporting-events" checked={allowSupportingPublication}
             onChange={(event) => setAllowSupportingPublication(event.target.checked)}>
             Allow publication of supporting Events named in the approved beta plan

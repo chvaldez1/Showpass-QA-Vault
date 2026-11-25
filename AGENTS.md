@@ -6,6 +6,16 @@ Use this vault for Showpass QA work and follow the requested deliverable for eve
 
 Decide what the user wants before choosing a skill, workflow, or tool.
 
+For short or open-ended Showpass QA prompts, use the [[00 Start Here/Showpass QA City#Route short QA prompts|QA City role guide]] to match the requested outcome to the role and its skill. Honor any skill the user names and add another role only when its evidence could change the answer.
+
+For a test request, start with the tester who matches the actor, surface, and intended session. That tester is the first point of contact and owns the plan, revisions, execution, and evidence. The Release Engineer and QA Lead review the tester's plan at the appropriate stage.
+
+For requests to draft or flesh out manual test cases, follow [[00 Start Here/Showpass QA City#Draft test cases with review|QA City's draft review workflow]]. Name the owning tester before drafting. Assign supporting testers only for an affected actor or setup dependency. Delegate the QA Lead and Master reviews to separate agent contexts, then give the findings to the Release Engineer and return the exact revision to the QA Lead. Route fixable findings back to the tester and repeat the reviews without a user handoff at each stage. In City, start the draft review once and follow its progress. Ask the user only when a material fact or decision is missing, an authorization is required, or the review cannot make further progress. If independent review is unavailable, report it as pending. Keep execution **Not run** for draft work.
+
+Treat short test-case requests as intake. Use the owning tester’s skill and have the relevant roles discover the entry points, saved settings, actor choices, and observable results. When the request spans Customer and Venue sides, cover the Customer action and the Venue configuration or staff action that affects it. Use the Organizer Tester for Dashboard settings and the Box Office Tester for relevant staff operations. Put the required saved values and how to verify them in each case that depends on them. Ask for an actual Venue or record only when the draft needs a fact that the roles cannot establish or express as a reusable prerequisite.
+
+For QA City work, show the user the owner, key steps, decisions, blockers, and verified results as the work progresses. Group related actions in one brief update.
+
 | Request | What to deliver |
 | --- | --- |
 | “Give me the run lines,” “what should I use?” | Give commands or advice in chat. Project scaffolding, installs, project file edits, and server startup require an explicit request to do that work. |
@@ -58,6 +68,16 @@ Start with the answer. Use actual Showpass role, screen, and control names. Desc
 
 Distinguish tested and passed, confirmed bug, inconclusive, blocked, and not run. Keep proposed, published, and executed cases distinct. “We have a case but haven't run it” is clearer than “execution gaps remain.”
 
+### Final Outputs
+
+Apply this to every Showpass QA reply and artifact, including City case drafts, tester and builder results, source reviews, release decisions, and handoffs. Write so a teammate who did not read the chat can understand the outcome and act on it.
+
+- Lead with what was done, what the evidence shows, and what it means for the affected person. Name the exact check before saying it passed. If the Qase parser accepted the draft and Beta only showed the dialog, say which parts were verified and that the full case is still unrun.
+- When the reader needs to do something, name the tool, environment, starting screen, role and record as applicable. Use the real menu, button and field names. Say what to enter, where to get the value, what to expect, and what to record. Write each case so its own fields are enough to run it.
+- Name the tool when it changes. For example, create a replacement key in the Beta Dashboard and use Postman to see whether the key works. For an API step, give the method, URL, required headers with safe placeholders, and the status or response fields to check.
+- Read the whole deliverable once from the teammate's starting point. Rewrite steps that leave them guessing which tool to use, what value to enter, or where to see the result. If the user calls out confusing wording, fix the other affected steps and prerequisites as well.
+- Explain technical terms only where they help the reader act or verify a result. Put code detail near the evidence. If the output also needs a machine-readable record, give the human result in words and include the required record separately. Keep the role's required fields and result labels.
+
 ## Canonical QA Standard
 
 For QA work, read [[00 Start Here/World-Class Software Quality Standard]]. It owns scope, proof targets, coverage, evidence, safety, finding classification, readiness, and release decisions. Apply the portions relevant to the request. Use [[00 Start Here/QA Operating Workflow]] to choose a QA workflow and the [[00 Start Here/Showpass QA Handbook/00 Index|Showpass QA Master Handbook]] for hands-on testing, terminology, setup, and connected Organizer, Customer, Attendee/Member, and Venue Employee flows.
@@ -66,7 +86,7 @@ For QA work, read [[00 Start Here/World-Class Software Quality Standard]]. It ow
 
 - Backend behavior, schemas, permissions, and validation: `/Users/christianvaldez/Documents/Showpass/repos/web-app`
 - Visible entry points, controls, and client behavior: `/Users/christianvaldez/Documents/Showpass/repos/showpass-frontend`
-- Durable automation patterns: `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright`
+- Playwright planning, implementation and review start in the sibling checkout. Read [its agent instructions](../showpass-playwright/AGENTS.md) and [team workflow](../showpass-playwright/docs/agent-workflows/playwright-team.md) first, including when the request starts in this vault. Carry the current work item to the repo and follow the requested scope.
 
 Trace the backend first for behavior. Use frontend evidence for how people reach it. Separate source findings, live observations, saved results, and test outcomes.
 

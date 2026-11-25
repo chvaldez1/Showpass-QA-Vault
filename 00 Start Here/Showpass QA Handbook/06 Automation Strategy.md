@@ -25,7 +25,7 @@ Use [[04 Automation/00 Index]] to carry this strategy through selection, impleme
 | Manual exploratory tests | Complex workflows, misunderstood policies, real-life combinations, usability | Repeatable automated protection unless promoted |
 | Physical device/native testing | OS/app/SDK/reader/printer/scanner behavior and payment handoff | All devices from one passing combination |
 
-Use `/Users/christianvaldez/Documents/Showpass/repos/showpass-playwright` only as the source of existing browser automation patterns. Do not substitute Playwright for backend truth or infer a missing test from a filename search alone. No tests were run for this handbook.
+Start Playwright planning, writing, verification and review with the [repo’s agent team](../../../showpass-playwright/docs/agent-workflows/playwright-team.md). Do not substitute Playwright for backend truth or infer a missing test from a filename search alone. No tests were run for this handbook.
 
 ### Attach automation to the actual walkthrough
 
@@ -43,7 +43,7 @@ These are extension checkpoints, not a declaration that every listed assertion i
 
 ### Extend existing FAN EXPO journeys through their missing outcomes
 
-The existing [Cleveland configuration](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/client-setup/fan-expo-cleveland/fan-expo-cleveland-vip-config.ts>) includes guest/new/existing Customer paths, Will Call and shipping, billing matching/different from shipping, and questions at confirmation/My Orders. Its [steps](</Users/christianvaldez/Documents/Showpass/repos/showpass-playwright/tests/client-setup/fan-expo-cleveland/fan-expo-cleveland.steps.ts>) delegate purchase assertions to the shared journey; the shipping-restriction helper checks invalid-address recovery **without purchasing**. Inspect those downstream assertions before calling coverage missing. None was executed for this handbook.
+The existing [Cleveland configuration](../../../showpass-playwright/tests/client-setup/fan-expo-cleveland/fan-expo-cleveland-vip-config.ts) includes guest/new/existing Customer paths, Will Call and shipping, billing matching/different from shipping, and questions at confirmation/My Orders. Its [steps](../../../showpass-playwright/tests/client-setup/fan-expo-cleveland/fan-expo-cleveland.steps.ts) delegate purchase assertions to the shared journey; the shipping-restriction helper checks invalid-address recovery **without purchasing**. Inspect those downstream assertions before calling coverage missing. None was executed for this handbook.
 
 Use those patterns, not Cleveland prices/IDs/policies, for another Organizer/city. Verify its own saved configuration first. Build a short outcome-to-assertion map from [[00 Start Here/Showpass QA Handbook/14 Checkout and Post-Purchase Coverage|the completion checklist]] and prioritize:
 

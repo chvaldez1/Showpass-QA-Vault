@@ -7,6 +7,7 @@ import { join } from "node:path";
 import { promisify } from "node:util";
 import { z } from "zod";
 import { readLocalState, runtimeDirectory, writeLocalState } from "../execution/authorization";
+import { cityOutputGuidance } from "../workspace/output-guidance";
 import type { Run } from "../workspace/schema";
 import { asBuilderWorkflow, inferBuilderWorkflow, qaWorkflows, type Revision } from "../workspace/qa-workflow";
 import { checkCodexDispatchUsage, readCodexDispatch } from "./app-server";
@@ -147,7 +148,9 @@ export async function codexHandoff(
     throw new HandoffError("The plan changed before dispatch. Reopen the current revision.", 409);
   }
 
-  const prompt = `${receipt.marker}\n${approval.prompt}`;
+  // Older approvals may have been saved before the reporting guidance was added.
+  const reporting = approval.prompt.includes(cityOutputGuidance) ? "" : `\n\n${cityOutputGuidance}`;
+  const prompt = `${receipt.marker}\n${approval.prompt}${reporting}`;
   try {
     const { stdout } = await runCommand("codex", ["queue", "--thread", threadId, "--message", prompt], {
       timeout: 12_000, maxBuffer: 32_000,

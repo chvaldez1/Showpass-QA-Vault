@@ -1,9 +1,14 @@
 import { codexStatusLabels, isCodexPending, type CodexHandoffStatus } from "../codex/handoff-schema";
 import { getPlanReviewMode, isPlanReviewReady } from "./qa-workflow";
+import { caseReviewActivity, nextCaseReviewStage, type CaseReviewStage } from "./case-review";
 import { canRunEngineeringStage, engineeringActionLabels, engineeringStages, releaseRoles } from "./release";
 import type { Run } from "./schema";
 
 export const queueReviewers = ["Release Engineer", "Backend Master", "Frontend Master", "QA Lead"] as const;
+
+const caseReviewers: Record<CaseReviewStage, (typeof queueReviewers)[number]> = {
+  scope: "QA Lead", backend: "Backend Master", frontend: "Frontend Master", engineer: "Release Engineer", lead: "QA Lead",
+};
 
 export type RunNextAction = {
   label: string;
@@ -13,6 +18,15 @@ export type RunNextAction = {
 
 export function nextRunAction(run: Run, live?: CodexHandoffStatus): RunNextAction | undefined {
   if (run.sample || ["completed", "failed", "cancelled"].includes(run.status)) return;
+  if (run.reviewMode === "case-review") {
+    const stage = nextCaseReviewStage(run.caseReview);
+    if (!stage) return;
+    if (run.status === "running") return { label: caseReviewActivity[stage], reviewer: stage === "draft" ? undefined : caseReviewers[stage] };
+    return {
+      label: run.caseReview || run.caseReviewWorker ? "Continue draft review" : "Start draft review",
+      blocker: run.caseReviewWorker?.problem,
+    };
+  }
   const { revision, browserResult, changeRequest } = run;
   if (changeRequest) return { label: "Prepare revised plan", blocker: changeRequest };
   if (!revision) return { label: run.reviewMode === "draft" ? "Prepare draft plan" : "Prepare plan" };

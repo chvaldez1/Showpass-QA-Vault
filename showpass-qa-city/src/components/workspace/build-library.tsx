@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Disclosure } from "@/components/ui/disclosure";
 import { FormField } from "@/components/ui/form-field";
@@ -48,9 +49,15 @@ export function BuildLibrary() {
                       </p>
                       <p className="text-sm text-muted-foreground">Saved by {run.title}</p>
                     </div>
-                    <NewRunDialog agents={agents} runs={runs} variant="outline" source={{
-                      runId: run.id, label: build.record.name, record: { kind: build.kind, recordId: build.record.id },
-                    }} />
+                    <div className="flex flex-wrap gap-2">
+                      <NewRunDialog agents={agents} runs={runs} variant="outline" source={{
+                        runId: run.id, label: build.record.name, record: { kind: build.kind, recordId: build.record.id },
+                      }} />
+                      <ButtonLink data-testid={`build-to-playwright-${id}`} variant="outline"
+                        href={`/playwright?${new URLSearchParams({ run: run.id, build: `${build.kind}-${build.record.id}` })}`}>
+                        Prepare Playwright handoff
+                      </ButtonLink>
+                    </div>
                   </div>
                   <Disclosure testId={`saved-build-record-${id}`} label="Saved Showpass record">
                     <pre tabIndex={0} aria-label="Saved Showpass record JSON" className="max-h-64 overflow-auto rounded bg-muted p-2 text-xs">{JSON.stringify(build, null, 2)}</pre>

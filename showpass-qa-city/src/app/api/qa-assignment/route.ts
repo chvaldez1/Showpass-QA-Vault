@@ -6,6 +6,7 @@ import { getOrganizerCodexThread, HandoffError, revokeApprovedCodexHandoff, save
 import { reviewRelease, runEngineeringRole } from "@/lib/codex/release";
 import { revokeApprovedDraft, saveApprovedDraft } from "@/lib/execution/authorization";
 import { builderRecordsSchema } from "@/lib/workspace/builder-result";
+import { locations } from "@/lib/workspace/city";
 import { buildPresets, buildThemes, inferBuildPreset, inferBuildTheme } from "@/lib/workspace/build-presets";
 import { approvedDraftSchema } from "@/lib/workspace/event-draft";
 import { handoffText, pilotScope } from "@/lib/workspace/handoff";
@@ -135,6 +136,9 @@ export async function POST(request: Request) {
     if (input.assignment.runId) {
       const { workspace } = await readSharedWorkspace();
       const run = workspace.runs.find(({ id }) => id === input.assignment.runId);
+      if (run?.reviewMode === "case-review") {
+        return Response.json({ error: "Use the test case review workflow for this assignment." }, { status: 409 });
+      }
       if (run?.job || input.assignment.job) {
         if (!run?.job || run.job !== input.assignment.job || run.agentId !== input.assignment.role ||
           !jobsFor(input.assignment.role).includes(run.job) ||
@@ -162,6 +166,9 @@ export async function POST(request: Request) {
       }
     } else if (input.assignment.job) {
       return Response.json({ error: "Save the assignment before planning its job." }, { status: 400 });
+    }
+    if (input.assignment.reviewMode === "case-review") {
+      return Response.json({ error: "Save a test case review assignment first." }, { status: 409 });
     }
     const authorizedBuilder = input.assignment.role === "organizer-builder" && !input.assignment.pilot;
     const preset = authorizedBuilder ? input.assignment.buildPreset : undefined;
@@ -250,8 +257,12 @@ export async function POST(request: Request) {
     const uxChecks = browserGuide.match(/^## UX and UI checks\n([\s\S]*?)(?=^## )/m)?.[1];
     if (!uxChecks) throw new CodexError("The shared UX and UI workflow section is missing from the QA Vault.");
     const job = input.assignment.job;
+    const owner = locations[input.assignment.role].agentName;
     const context = `${policy}
 
+${review
+  ? `You are the independent QA Lead reviewing a plan owned by ${owner}. Check that the owner matches the requested actor, surface, and session. Return any needed changes to the tester who owns that job. They revise the plan and run the approved assignment.`
+  : `You are the ${owner}, the first point of contact and owner of this assignment. Prepare the plan for engineering review and QA Lead sign-off. Keep responsibility for revisions, execution, and evidence.`}
 ${job ? `The assigned job is ${jobLabels[job]}. ${jobStops[job]} Propose only that job. Identify any next role as a handoff. Disapprove a plan that gives this role another job or crosses the stop point.` : ""}
 ${jobSession(input.assignment.role, job) ?? ""}
 ${pilotScope(input.assignment) ?? ""}

@@ -1,6 +1,8 @@
 import { asBuilderWorkflow, workflowSkills, type Revision } from "./qa-workflow";
 import { buildPresets, buildThemes } from "./build-presets";
+import { locations } from "./city";
 import { jobLabels, jobSession, jobStops } from "./job";
+import { cityOutputGuidance } from "./output-guidance";
 import type { Run } from "./schema";
 
 export function pilotScope(run: Pick<Run, "job" | "pilot" | "pilotInput">) {
@@ -29,6 +31,7 @@ export function handoffText(
   return [
     `$${skill} — ${run.title}`,
     `Use the QA Vault skill at .agents/skills/${skill}/SKILL.md.`,
+    run.agentId in locations && `You are the ${locations[run.agentId as keyof typeof locations].agentName}, the plan owner. Carry the approved revision through execution and evidence. Start with a brief progress update naming the plan and the first check.`,
     `QA City handoff for assignment ${run.id}, Plan ${number}. The City's independent QA Lead approved this version: ${review?.rationale}`,
     engineeringHandoff && `Release Engineer handoff informed by both source reviews: ${engineeringHandoff.impact}\n${[...engineeringHandoff.checks, ...engineeringHandoff.concerns].map((item) => "- " + item).join("\n")}`,
     !engineeringHandoff && shortReview && `Release Engineer short review: ${shortReview.impact}\n${[...shortReview.checks, ...shortReview.concerns].map((item) => "- " + item).join("\n")}\nReview stop point: ${shortReview.stop}`,
@@ -61,5 +64,6 @@ export function handoffText(
     builder && 'Product uses id, name, description, venue, is_active, product_attributes. Membership Group uses id, name, venue, description, slug, status, renewal_frequency, renewals_enabled, custom_expiry_date, membership_levels. Variants and Levels use id, name, price, inventory, purchase_limit, plus sku for variants and description for Levels. Membership Benefit uses id, name, membership_group, membership_level, benefit_type, ticket_type, scans_allowed, discount_uses_allowed, venue. Include other verified settings, such as Product eligibility or Member question scope, in the result summary.',
     workflow === "organizer-builder" && "Report the owning Dashboard page, saved record IDs or URLs where available, the exact verified settings, and enough setup context for the next tester.",
     "Return the verified outcome and evidence so it can be recorded in QA City.",
+    cityOutputGuidance,
   ].filter(Boolean).join("\n");
 }
