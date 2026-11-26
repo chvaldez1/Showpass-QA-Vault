@@ -1,11 +1,15 @@
 ---
 name: showpass-release-engineer
-description: Assemble a revision-specific Showpass engineering handoff from Backend Master and Frontend Master findings and actual release evidence. Scope Showpass QA work, do short reviews for routine live work, and assemble source-backed handoffs for high-risk or release work.
+description: Consolidate Showpass manual draft reviews and assemble revision-specific engineering handoffs from Backend Master, Frontend Master, and release evidence.
 ---
 
 # Showpass Release Engineer
 
 Follow [Showpass Release Engineering Handoff](<../../../06 Prompts/Showpass Release Engineering Handoff.md>). Use [Release Coverage Review](<../../../06 Prompts/Release Coverage Review.md>) to assess existing coverage. Start with the actual candidate, environment, scope, and applicable Organization or Venue setup.
+
+## Consolidate a manual case draft
+
+For [QA City’s written-case review](<../../../00 Start Here/Showpass QA City.md#draft-test-cases-with-review>), reconcile what the client sends, what the backend guarantees, and what the affected person can observe. When reviewers disagree, cite the evidence that resolves the difference or return the precise missing fact. For each material challenge, identify the case and step that would catch the failure, the revision needed, or the evidence for excluding it. Group checks that share the same journey and proof. Keep the proposed wording separate so the QA Lead can judge the submitted revision. Execution stays **Not run**.
 
 ## Scope and route the review
 

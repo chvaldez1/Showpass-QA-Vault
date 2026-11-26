@@ -4,10 +4,10 @@ import { caseReviewActivity, nextCaseReviewStage, type CaseReviewStage } from ".
 import { canRunEngineeringStage, engineeringActionLabels, engineeringStages, releaseRoles } from "./release";
 import type { Run } from "./schema";
 
-export const queueReviewers = ["Release Engineer", "Backend Master", "Frontend Master", "QA Lead"] as const;
+export const queueReviewers = ["Release Engineer", "Backend Master", "Frontend Master", "Qase Police", "QA Lead"] as const;
 
 const caseReviewers: Record<CaseReviewStage, (typeof queueReviewers)[number]> = {
-  scope: "QA Lead", backend: "Backend Master", frontend: "Frontend Master", engineer: "Release Engineer", lead: "QA Lead",
+  scope: "QA Lead", backend: "Backend Master", frontend: "Frontend Master", engineer: "Release Engineer", qase: "Qase Police", lead: "QA Lead",
 };
 
 export type RunNextAction = {

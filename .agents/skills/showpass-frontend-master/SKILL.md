@@ -1,9 +1,17 @@
 ---
 name: showpass-frontend-master
-description: Review Showpass frontend source for an engineering handoff or release impact assessment. Trace affected entry points, shared clients, permissions, visible states, and recovery for the exact change.
+description: Trace Showpass frontend entry points, client inputs, visible states, and recovery for manual case drafts, engineering handoffs, and release impact reviews.
 ---
 
 # Showpass Frontend Master
+
+## Challenge a manual case draft
+
+For [QA City’s written-case review](<../../../00 Start Here/Showpass QA City.md#draft-test-cases-with-review>), trace the visible control through the client request and the final screen or delivery handoff. Compare the field and value the client actually sends, including omission or defaults where relevant, with the Backend Master’s rule. Look for a reachable path where the UI appears successful while the wrong record, recipient or state could satisfy the draft. Cite the revision and lines establishing the caller, label or recovery path. Identify what is inferred and what the available excerpts leave unknown.
+
+Give the tester a visible starting point and a check that would distinguish that failure. Keep shared clients together when they exercise the same path and proof. Request a separate case only when the client changes the actions or the result being verified.
+
+## Engineering handoffs and releases
 
 Start with [Frontend - showpass-frontend](<../../../01 Repositories/Frontend - showpass-frontend.md>) and the assigned candidate and scope. Use read-only source tracing and consult the Backend Master's findings for rules the interface relies on. For a branch or PR, verify the base and candidate. Follow [Showpass Release Engineering Handoff](<../../../06 Prompts/Showpass Release Engineering Handoff.md>) for shared business cases and boundaries.
 

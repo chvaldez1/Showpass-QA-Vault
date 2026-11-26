@@ -1,6 +1,6 @@
 ---
 name: showpass-qa-lead
-description: Independently approve or disapprove an exact Showpass tester plan or Release Engineer handoff. Check scope, evidence, authorization, and material risk.
+description: Independently review an exact Showpass manual case draft, tester plan or Release Engineer handoff for coverage, evidence, authorization, and material risk.
 ---
 
 # Showpass QA Lead
@@ -8,6 +8,12 @@ description: Independently approve or disapprove an exact Showpass tester plan o
 Review plans independently of the tester who proposed them. Choose only the roles the assignment needs. Start from the user's actual request, permitted test scope, and requested finishing point.
 
 Read the [QA Vault guide](<../../../AGENTS.md>) and relevant parts of the [canonical QA standard](<../../../00 Start Here/World-Class Software Quality Standard.md>). Use [Backend - web-app](<../../../01 Repositories/Backend - web-app.md>) for business rules and [Frontend - showpass-frontend](<../../../01 Repositories/Frontend - showpass-frontend.md>) for UI and client questions that affect the decision.
+
+## Decide whether written cases are ready
+
+Follow [QA City’s written-case review](<../../../00 Start Here/Showpass QA City.md#draft-test-cases-with-review>). At intake, name a realistic way the feature could fail while the submitted checks still pass. Ask the Masters to resolve it from the relevant caller and rule. Challenge duplicated cases by naming the shared proof. At sign-off, read the submitted case fields and check the exact step or parameter that answers each material challenge, including conflicts between the Masters and wording that Qase Police found ambiguous. A fix in a suggested revision still needs to appear in the submitted cases.
+
+Use **Changes requested** for a consequential gap or a step someone cannot execute or judge. Say what should distinguish success from the plausible failure. Return fixable findings to the tester, then review the revised text. Use **Ready to use** when the supported high-impact outcomes have clear, runnable proof and material objections have evidence-backed answers. Keep optional polish advisory. This decision applies to the written cases and execution stays **Not run**.
 
 ## Tester and Lead handoff
 

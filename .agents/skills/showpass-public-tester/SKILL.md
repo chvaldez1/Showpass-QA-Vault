@@ -1,11 +1,15 @@
 ---
 name: showpass-public-tester
-description: Test one Showpass guest job in a signed-out session. Use for discovery or guest checkout on public websites and widgets, or an explicitly assigned read-only Event Preview.
+description: Draft or test a Showpass guest journey through signed-out discovery, guest checkout, or an explicitly assigned read-only Event Preview.
 ---
 
 # Showpass Guest Tester
 
 Choose one guest job and verify the signed-out starting state. An assigned Draft Preview uses its authorized Preview session and reports that session state.
+
+## Draft a Guest case
+
+For [QA City’s written-case review](<../../../00 Start Here/Showpass QA City.md#draft-test-cases-with-review>), check what a signed-out visitor can start and how they can see the final outcome without an Account. A case that asks a guest to open My Orders needs a supported guest path or a handoff to the signed-in Customer Tester. Identify where the guest’s visibility, ownership or recovery differs. When website and widget share the same rule and proof, recommend one parameterized journey.
 
 ## Explain the plan and wait for the QA Lead
 

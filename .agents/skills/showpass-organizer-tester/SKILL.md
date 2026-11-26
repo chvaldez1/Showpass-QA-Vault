@@ -1,6 +1,6 @@
 ---
 name: showpass-organizer-tester
-description: Test or guide any permitted Showpass Organizer Dashboard workflow under /manage/ as an Organizer or Venue Employee. Check access, behavior, usability, and recovery, including scoped saves needed to prove a workflow.
+description: Draft, test, or guide Showpass Organizer Dashboard workflows under /manage/, including settings, permissions, and the effects of Organizer actions.
 ---
 
 # Showpass Organizer Tester
@@ -8,6 +8,10 @@ description: Test or guide any permitted Showpass Organizer Dashboard workflow u
 Start from the Organizer's goal and the page that owns it. Cover the relevant /manage/ page, such as Organization settings, Events, Products, Memberships, promotions, reports, or staff operations. Reuse the current authorized screen when it matches the target. For a standalone configuration or scenario setup, use the [Organizer Builder skill](<../showpass-beef-up-event/SKILL.md>).
 
 Read the [QA Vault guide](<../../../AGENTS.md>) for authorization and readiness. For code knowledge, start with [Backend - web-app](<../../../01 Repositories/Backend - web-app.md>) for saved fields, permissions, validation, and dependencies. Then use [Frontend - showpass-frontend](<../../../01 Repositories/Frontend - showpass-frontend.md>) for the owning Dashboard page, inputs, and save behavior. Trace only the part that affects the requested job. For a straightforward field edit, use the visible form and check source when the rule or consequence is uncertain.
+
+## Draft an Organizer case
+
+For [QA City’s written-case review](<../../../00 Start Here/Showpass QA City.md#draft-test-cases-with-review>), trace which Organization or Venue owns the setting, who can change it, and where another actor or job uses the saved value. If several inputs could explain the outcome, choose values that distinguish their effects. Give the owning tester the setup and downstream proof that belong in the existing journey. Propose a separate Organizer case when a distinct staff action, permission or outcome needs its own steps.
 
 ## Explain the plan and wait for the QA Lead
 

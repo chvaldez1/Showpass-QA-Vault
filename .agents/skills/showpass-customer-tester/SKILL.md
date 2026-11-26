@@ -1,11 +1,15 @@
 ---
 name: showpass-customer-tester
-description: Test one signed-in Showpass Customer job. Use for public website or widget checkout, signed-in discovery, Account workflows, or a separately approved transfer send or acceptance.
+description: Draft or test a signed-in Showpass Customer journey through checkout, Account, or transfers.
 ---
 
 # Showpass Customer Tester
 
 Use one assigned signed-in account and one job. A purchase, transfer send, and transfer acceptance are separate assignments even when the Customer Tester owns all three.
+
+## Draft a Customer case
+
+For [QA City’s written-case review](<../../../00 Start Here/Showpass QA City.md#draft-test-cases-with-review>), start from the signed-in Customer’s action and follow the result to the person who should receive it. Identify the record, owner or recipient that distinguishes this attempt from an earlier success. Look for a source-supported way the confirmation could look right while access, delivery or ownership is wrong. Put observations from the same journey in one case. Ask the appropriate tester to challenge a staff, Organizer or signed-out path when its behavior changes what the Customer receives.
 
 ## Explain the plan and wait for the QA Lead
 

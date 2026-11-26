@@ -16,8 +16,49 @@ const stageNames = {
   backend: "Backend Master findings",
   frontend: "Frontend Master findings",
   engineer: "Release Engineer handoff",
+  qase: "Qase Police wording review",
   lead: "QA Lead decision",
 } as const;
+
+const coverageChangeLabels = {
+  added: "Added",
+  lost: "Coverage lost",
+  restored: "Proof restored",
+  "proof-changed": "Proof changed",
+  deferred: "Deferred",
+} as const;
+
+function CoverageReview({ coverage, number }: { coverage: NonNullable<Review["coverage"]>; number: number }) {
+  const covered = coverage.rows.filter((row) => row.status === "covered").length;
+  return (
+    <Disclosure testId={`case-review-coverage-${number}`} label={`Coverage map · ${covered} of ${coverage.rows.length} covered`}>
+      {coverage.previousRevision !== null && (
+        <p>Compared with revision {coverage.previousRevision}. {coverage.changes.length
+          ? `${coverage.changes.length} coverage changes.`
+          : "Coverage proof is unchanged."}</p>
+      )}
+      <ul className="grid gap-3">
+        {coverage.rows.map((row) => {
+          const change = coverage.previousRevision === null ? undefined : coverage.changes.find(({ id }) => id === row.id);
+          return (
+            <li key={row.id} className="space-y-1 border-l-2 pl-3">
+              <p className="font-medium">{row.outcome}</p>
+              <p className="text-muted-foreground">{row.actor} · {row.status[0].toUpperCase() + row.status.slice(1)}
+                {change && ` · ${coverageChangeLabels[change.kind]}`}</p>
+              <p>{row.setup}</p>
+              <p><strong>False pass to catch</strong> · {row.falsePass}</p>
+              <p>{row.reason}</p>
+              <EvidenceList label="Proof in this revision" entries={row.locations.map(({ caseLabel, quote }) => `${caseLabel} · ${quote}`)} />
+              {change && <EvidenceList label="Proof in the previous revision" entries={change.previousLocations.map(
+                ({ caseLabel, quote }) => `${caseLabel} · ${quote}`,
+              )} />}
+            </li>
+          );
+        })}
+      </ul>
+    </Disclosure>
+  );
+}
 
 function DraftSnapshot({ review }: { review: Review }) {
   const [copyStatus, setCopyStatus] = useState("");
@@ -50,9 +91,13 @@ export function DraftReviewRecord({ review }: { review: Review }) {
           <h4 className="font-semibold">QA Lead · {lead.decision === "ready" ? "Ready to use" : "Changes requested"}</h4>
           <p>{lead.rationale}</p>
           <EvidenceList label="Required changes" entries={lead.requiredChanges} />
+          <EvidenceList label="How this revision addressed earlier changes" entries={(lead.resolutions ?? []).map(
+            (item) => `Change ${item.changeNumber} · “${item.draftQuote}” — ${item.reason}`,
+          )} />
           <EvidenceList label="Information needed" entries={lead.requiredInput ?? []} />
         </section>
       )}
+      {review.coverage && <CoverageReview coverage={review.coverage} number={number} />}
       <Disclosure testId={`case-review-cases-${number}`} label="Test cases for this revision">
         <DraftSnapshot review={review} />
       </Disclosure>
@@ -71,14 +116,33 @@ export function DraftReviewRecord({ review }: { review: Review }) {
             <p>{result.summary}</p>
             {source && <EvidenceList label={`Source at ${source.revision.slice(0, 12)}`} entries={source.paths} />}
             {"findings" in result && <EvidenceList label="Findings" entries={result.findings} />}
-            {"blockingIssues" in result && <>
-              <EvidenceList label="Issues to resolve" entries={result.blockingIssues} />
-              {result.proposedDraft !== review.draft && (
-                <Disclosure testId={`case-review-proposal-${number}`} label="Suggested revision">
-                  <pre className="whitespace-pre-wrap wrap-anywhere font-sans text-sm">{result.proposedDraft}</pre>
-                </Disclosure>
-              )}
+            {"traces" in result && <>
+              <p>Technical assessment · {result.assessment.replaceAll("-", " ")}</p>
+              {result.traces.map((trace, index) => (
+                <div key={index} className="space-y-1">
+                  <p>{trace.behavior}</p>
+                  <p>{trace.proof}</p>
+                  <p className="text-xs text-muted-foreground">{trace.references.map((ref) => `${ref.path}:${ref.line}`).join(", ")}</p>
+                </div>
+              ))}
             </>}
+            {"blockingIssues" in result && <EvidenceList label="Issues to resolve" entries={result.blockingIssues} />}
+            {"reads" in result && result.reads && <EvidenceList label="What the tester can follow" entries={
+              result.reads.map(({ label, summary }) => `${label} · ${summary}`)
+            } />}
+            {"edits" in result && result.edits.map((edit, index) => (
+              <div key={index} className="space-y-1">
+                <p className="font-medium">{edit.field} · {edit.severity === "required" ? "Required change" : "Optional edit"}</p>
+                <blockquote className="border-l-2 pl-2">{edit.wording}</blockquote>
+                <p>{edit.problem}</p>
+                <p>{edit.replacement}</p>
+              </div>
+            ))}
+            {"proposedDraft" in result && result.proposedDraft !== review.draft && (
+              <Disclosure testId={`case-review-proposal-${number}`} label="Suggested revision">
+                <pre className="whitespace-pre-wrap wrap-anywhere font-sans text-sm">{result.proposedDraft}</pre>
+              </Disclosure>
+            )}
           </Disclosure>
         );
       })}

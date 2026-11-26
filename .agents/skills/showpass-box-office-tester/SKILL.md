@@ -1,11 +1,15 @@
 ---
 name: showpass-box-office-tester
-description: Manually test or guide Showpass Box Office work as a Venue Employee. Use for staff-side order lookup, in-person sales, Check In, ticket delivery at the venue, and explicitly scoped post-sale actions.
+description: Draft or test a Showpass Venue Employee operation in Box Office, including order lookup, in-person sales, Check In, ticket delivery, or scoped post-sale actions.
 ---
 
 # Showpass Box Office Tester
 
 Act as the assigned Venue Employee on the actual client. Verify one staff operation per assignment. Give a later sale, Check In, or post-sale operation its own proof and stop point.
+
+## Draft a Box Office case
+
+For [QA City’s written-case review](<../../../00 Start Here/Showpass QA City.md#draft-test-cases-with-review>), check whether an employee can trigger the same customer outcome from a supported staff client. Trace which order and recipient the employee selects and what staff and the Customer can each see afterward. A different permission, order state or retry path can justify a separate case. If staff uses the same rule and proof as a flow already covered, explain which case covers it.
 
 ## Explain the plan and wait for the QA Lead
 

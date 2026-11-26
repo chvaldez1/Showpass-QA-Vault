@@ -46,7 +46,7 @@ Choose the assignment's **Review path**. An Event saved in Showpass with the sta
 
 | Review path | What to do in Runs |
 | --- | --- |
-| Draft test cases with review | Choose a tester owner, supply the case or instructions and relevant source, then select **Start draft review**. City runs each review and sends fixable findings back to the tester until the QA Lead accepts a revision or the work needs input. See the [draft review workflow](../00%20Start%20Here/Showpass%20QA%20City.md#draft-test-cases-with-review). |
+| Draft test cases with review | Choose a tester, supply the case or instructions and relevant source excerpts, and select **Start draft review** once. The QA Lead and Masters identify what needs proof. The Release Engineer maps it to exact case wording, and Qase Police reads each case on its own. Open **Coverage map** to compare revisions. Missing proof and material wording issues return to the tester before sign-off. [Draft review workflow](../00%20Start%20Here/Showpass%20QA%20City.md#draft-test-cases-with-review) |
 | Draft plan only | Select **Prepare draft plan**. City saves the plan with execution Not run. |
 | Short review | Prepare the plan, select **Run short review** for the Release Engineer's check, then **Send to QA Lead**. City switches to full review when the plan or short review identifies high risk. |
 | Full review | Prepare the plan and select **Scope with Release Engineer**. For Builder runs, select **Review backend and frontend** to start both source reviews together. Complete any remaining review, select **Prepare engineering handoff**, then **Send to QA Lead**. |

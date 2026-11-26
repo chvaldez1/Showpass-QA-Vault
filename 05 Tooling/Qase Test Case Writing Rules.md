@@ -240,6 +240,14 @@ For settings with multiple choices, also apply [[#Readable Parameters And Combin
 
 ### Qase Police
 
+Read each case once with only the fields the tester will receive. Follow each parameter choice and switch of actor or tool. In your review, say which record you would start with, what you would do and what would show a failure. Quote the first place you had to supply that answer yourself. Return the draft when an instruction makes sense only after you interpret a diagnostic, piece together competing directions or consult someone else's analysis. The owner and technical reviewers can use their source notes to resolve the issue.
+
+When a manual case needs a saved setting, tell the tester which record to use and the value it must have. Name the screen and field where someone with the right access can confirm it. If the tester cannot see the field, have the setup owner supply the record name and confirmed value. Return cases that make the tester inspect browser traffic just to choose test data. Keep any necessary technical lookup in the setup owner's notes. API tests still give the request and expected response.
+
+Keep each check proportional to what would fail. For a checkout email language test, finding the new message for the recorded order and reading its wording proves the language. A cancel-and-resend case also needs to establish that Cancel sent nothing, so it needs an inbox check before Send. Add the extra work where the distinction matters.
+
+For a material problem, name the case and field, quote the unclear words, and say exactly where the reader would have to guess or could falsely pass the case. Supply copy-ready wording where the evidence supports it. If a label or result is unknown, identify the evidence needed. Keep the action, observable result and necessary test data when removing jargon or filler. A shorter synonym for an already clear instruction is optional. On the next revision, read the affected fields together to check that the fix preserved the original proof.
+
 - **Make the setup reusable.** Describe what suitable records must have, where to find or prepare them, and what to record before running the case. Put named Organizations, accounts, record IDs, and other values from a particular run in its evidence. Keep a fixed value in the case when the behavior or safe execution depends on it.
 - **Establish expected results independently.** Tell QA what to record from requirements, saved configuration, or other independent evidence before the action. For example, when checking Product categories, record a Product assigned to each of two categories before testing the public page. Check that selecting a category shows its recorded Product and excludes the other category’s recorded Product.
 
