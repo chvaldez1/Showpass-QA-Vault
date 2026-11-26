@@ -28,7 +28,9 @@ Each assignment owns one job, one starting session, and one stopping point. A ro
 
 ### Route short QA prompts
 
-Choose the role based on the outcome the user wants and use its skill from the [[#Codex skill directory]]. Honor skills the user names. Bring in another role only if its evidence could change the answer.
+Every Showpass QA prompt, including a follow-up or a document edit, has an owning role and an independent reviewer. Choose the owner based on the requested outcome and use its skill from the [[#Codex skill directory]]. Honor skills the user names.
+
+Delegate the review to a separate agent before delivering the result. For an answer or small edit, give one reviewer the exact draft or diff. Ask them to check that it answers the request, stays within scope, and preserves content the user wanted to keep. Use the existing review path for manual drafts, live tests, and release work.
 
 | What the user wants | Role and scope |
 | --- | --- |

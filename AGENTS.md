@@ -6,9 +6,11 @@ Use this vault for Showpass QA work and follow the requested deliverable for eve
 
 Decide what the user wants before choosing a skill, workflow, or tool.
 
-Answer quick follow-ups about known behavior or setup directly in chat. If two records are involved, name which one must already exist and which one the action creates.
+For every Showpass QA prompt, including follow-ups and document edits, use the [[00 Start Here/Showpass QA City#Route short QA prompts|QA City role guide]]. Name the owning role and delegate independent review to at least one separate agent before delivering the result. Honor any skill the user names. Apply the existing review workflow when it calls for specific reviewers or sign-off.
 
-For short or open-ended Showpass QA prompts, use the [[00 Start Here/Showpass QA City#Route short QA prompts|QA City role guide]] to match the requested outcome to the role and its skill. Honor any skill the user names and add another role only when its evidence could change the answer.
+For research, comparisons, and proposals, treat the supplied material as a starting point. Have the assigned roles test its assumptions, fill gaps with relevant source or firsthand evidence, and look for conflicting evidence, hidden dependencies, and ways the plan could fail in practice. Bring back what the user could not learn from the supplied material alone. Explain what each finding changes and what still needs to be checked.
+
+If two records are involved, name which one must already exist and which one the action creates.
 
 For a test request, start with the tester who matches the actor, surface, and intended session. That tester is the first point of contact and owns the plan, revisions, execution, and evidence. The Release Engineer and QA Lead review the tester's plan at the appropriate stage.
 
@@ -136,6 +138,8 @@ Keep original and replacement records distinct. Verify and label the lookup type
 | `99 Archive/` | Inactive notes and local QA evidence |
 
 Keep one active output note per QA request, ticket, feature, or Qase work item. Reuse the existing canonical note and preserve the user's edits, links, IDs, headings, and surrounding content. Treat `*Template.md` files as reusable scaffolds and write generated outputs to a feature-specific note unless the user requests a template edit. Reference source paths instead of copying repositories or large snippets into the vault.
+
+Before editing an existing file, read its latest saved version and use that version as the starting point. If the file changes while you work, reread it before applying your edits. Treat the user's removals as intentional. Restore deleted sections, wording, or other content only when the user explicitly asks to bring them back.
 
 ### Skills and Workflows
 
