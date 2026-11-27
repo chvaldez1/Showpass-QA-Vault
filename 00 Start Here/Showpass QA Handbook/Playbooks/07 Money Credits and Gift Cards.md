@@ -29,6 +29,8 @@ Use a controlled purchaser and a different controlled recipient when testing gif
 | Finish checkout and reopen balance/history and order. | Same recipient | Debit once; correct remaining value; usable purchased items. |
 | Inspect Organizer accounting for purchase and redemption. | Both order references | Original collected money not counted again as external cash; advance/redemption allocation follows actual policy. |
 
+For scheduled gifts, record the purchase order, selected delivery date and Venue time zone. Delivery scheduling uses the Venue’s local time. Reuse that card when checking the recipient inbox and redemption. Record the separate redemption order and its applied credit, then match the card’s used and remaining values to its row in the [[03 Test Cases/Reports/reports-qase-test-cases#SPT-3832: Gift Card Recipient Report|Gift Card Recipient report case]]. [[03 Test Cases/Test Cases by Feature#Saved Qase cases to start with|Saved gift-card cases]]
+
 ## Customer spends money or Exchange credit
 | Step Action | Data | Expected Result |
 | --- | --- | --- |

@@ -42,6 +42,8 @@ Prepare an enabled Waitlist with known limits, queue/selection rules, two contro
 
 Use backend/sandbox tests for competing fulfillment workers, duplicate updates, simultaneous release, and expiry during processing. A job “completed” message is not proof every subscriber received the correct result.
 
+For a Ticket Type set to **Show as sold out publicly**, match the buyer’s pending request to the Organizer’s inventory allocation. The resulting reserved offer lets that buyer create an order while direct public ticket purchase stays closed. Verify the request becomes Fulfilled and the allocated hold is consumed. The [[03 Test Cases/Reports/reports-qase-test-cases#SPT-917: Waitlist Subscribers Report|subscriber export case]] checks reporting for known requests. [[03 Test Cases/Test Cases by Feature#Saved Qase cases to start with|Saved allocation and expiry cases]] · [[03 Test Cases/Events/04 Operations/04 Waitlists|Event Waitlists navigation coverage]]
+
 ## Guestlist request → approval → arrival
 
 Prepare the Venue's supported Guestlist/Widget configuration, booking reason, date/timezone, party size/capacity, approved test email, Employee authority, and Check In category. Customer-facing bookings and staff bookings can have different capacity rules.

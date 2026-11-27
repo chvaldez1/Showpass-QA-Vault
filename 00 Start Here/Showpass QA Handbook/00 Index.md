@@ -20,6 +20,8 @@ Do not stop because the screen your developer changed works. An Event that saves
 
 For the daily path from a change to execution, automation, release decision and learning, use [[00 Start Here/QA Operating Workflow]]. Track actual process trials and measurements in [[00 Start Here/QA Improvement Log]].
 
+For a QA City assignment, use this handbook to design the test and [[03 Test Cases/Test Cases by Feature|03 Test Cases]] to find case definitions, Qase references and recorded runs. The [[03 Test Cases/Test Cases by Feature#Connected feature journeys|connected feature journeys]] show where to hand off a verified record. [[00 Start Here/Showpass QA City#Find cases and plan a handoff|QA City assignment guidance]]
+
 Apply [[06 Prompts/Showpass Release Engineering Handoff#Apply the review layer|the shared review layer]] to the scoped work. Use one reviewed handoff across any playbooks supporting that revision.
 
 ## Start with a real workflow

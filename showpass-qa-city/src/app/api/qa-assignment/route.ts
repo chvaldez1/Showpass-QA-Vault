@@ -16,6 +16,7 @@ import { readSharedWorkspace } from "@/lib/workspace/shared-server";
 import { reusableBuilds, sourceRecordsFor } from "@/lib/workspace/build-catalog";
 import { canRunEngineeringStage, canRunReleaseStage, engineeringStages, releaseRequestSchema } from "@/lib/workspace/release";
 import { agentRoles, qaVenueSchema, runFormSchema } from "@/lib/workspace/schema";
+import { readScenarioKnowledge } from "@/lib/workspace/scenario-knowledge";
 import {
   asBuilderWorkflow, builderSourceReviewsSchema, canReviewBuilderSources, eventDraftProposalSchema, getPlanReviewMode, getQaWorkflow, isPlanReviewReady, leadDecisionSchema, liveProposalSchema,
   planStageSchemas, proposalSchema, revisionSchema, shortReviewSchema, workflowSkills, type BuilderWorkflow,
@@ -229,6 +230,7 @@ export async function POST(request: Request) {
       inferBuildTheme(input.assignment.instructions) : undefined;
     const publishSupporting = authorizedBuilder && input.assignment.publishSupportingEvents && input.assignment.reviewMode !== "draft";
     const scenarioContext = [
+      authorizedBuilder && "For an open-ended or complex setup, start with what the offering promises and what the next tester needs to exercise. Identify which records must already exist, which ones this plan creates or updates, and how their saved settings interact. Choose details that affect a real result, such as scoped discounts, admission windows, package contents, or attendee questions. Verify the exact saved relationships and hand off the next actor, existing record, expected outcome, and any blocked combinations. Keep customer purchases, admission, and post-purchase actions in their own assignments.",
       scenario && `Build preset · ${buildPresets[scenario].label}. Apply these defaults only to open fields in the actual request. ${buildPresets[scenario].defaults}`,
       theme && `Scenario theme · ${buildThemes[theme].label}. Apply only the details that fit this build. ${buildThemes[theme].defaults}`,
       scenario && (publishSupporting
@@ -252,8 +254,11 @@ export async function POST(request: Request) {
       ...guides.map((file) => resolve(skillsDirectory, roleSkill, "references", file)),
     ];
     // Read the role and workflow guides from the Vault checkout at runtime.
-    const [skillText, backend, frontend, competitorGuide, browserGuide, engineeringGuide, ...builderGuides] =
-      await Promise.all(referencePaths.map((path) => readFile(/* turbopackIgnore: true */ path, "utf8")));
+    const [[skillText, backend, frontend, competitorGuide, browserGuide, engineeringGuide, ...builderGuides], scenarioKnowledge] =
+      await Promise.all([
+        Promise.all(referencePaths.map((path) => readFile(/* turbopackIgnore: true */ path, "utf8"))),
+        builder ? readScenarioKnowledge(cwd, [input.assignment.title, input.assignment.instructions].filter(Boolean).join(" ")) : "",
+      ]);
     const uxChecks = browserGuide.match(/^## UX and UI checks\n([\s\S]*?)(?=^## )/m)?.[1];
     if (!uxChecks) throw new CodexError("The shared UX and UI workflow section is missing from the QA Vault.");
     const job = input.assignment.job;
@@ -269,6 +274,7 @@ ${pilotScope(input.assignment) ?? ""}
 
 ${builder ? `${builderScope}\n${builder.scope}` : !review && workflow === "organizer-tester" ? organizerTesterScope : ""}
 ${scenarioContext}
+${scenarioKnowledge}
 
 QA Vault role skill: ${skill}
 ${skillText}

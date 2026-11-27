@@ -34,6 +34,15 @@ Example: an Organizer creates a Membership Level promising one ticket to each of
 
 If a promise or policy is unknown, name it precisely and resolve it before claiming a pass. Do not silently invent Refund restocking, transfer validity, or installment admission policy.
 
+### Start with the setup and follow the records
+
+1. **Plan from either end.** For an Organizer build, start with what the Event promises and what staff will need to exercise. For a test of an existing action, work back from the required result to the records, saved settings and people needed to reach it. Reuse findings from [[03 Test Cases/Test Cases by Feature#Connected feature journeys|connected feature journeys]].
+2. **Make the interactions observable.** Pick compatible details that could change a real result. A Package can link separate Event occurrences with different guest answers, limited stock, a scoped discount and a Customer buying for other Attendees. Give each choice a purpose. Choose an untouched item, different account or independent order when a similar record could make the wrong result look right.
+3. **Carry the same records across roles.** Record the Venue, existing IDs, saved values, intended user and client at each handoff. Name what the next action creates. The Builder reopens the configured records and hands them off before the Guest, Customer or Box Office Tester acts.
+4. **Exercise a meaningful branch.** Use a clean supported result alongside the affected denial, alternate state or recovery. Follow the resulting records through any relevant order, entitlement, admission, financial and reporting consumers. New cases need a distinct outcome. Source questions and missing fixtures stay visible in the scenario until someone can resolve them.
+
+[[03 Test Cases/Exchanges/Discounted Package Exchange Scenario|Work through the discounted Package from Organizer build to exchange]].
+
 ### Discover how Customers actually buy
 
 Before inventing a launch matrix, study the Organizer's real offering and approved evidence from a comparable sale: aggregate item combinations and quantities, delivery choices and geography, guest/account mix, entry clients, incomplete checkout stages, support incidents, post-purchase information completion, and adjustment requests. Ask the Organizer/support team what Customers try to do that the basic journey misses. Do not access production analytics or Customer records without authorization; use anonymized aggregates or a supplied sample. Record evidence period, sample limits, and what is still a hypothesis.

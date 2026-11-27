@@ -8,3 +8,5 @@ status: Navigation pointer
 The handbook is now a folder of hands-on Showpass walkthroughs: Organizer setup, Customer purchase, Attendee/Member fulfillment, Venue Employee post-purchase actions, and senior-QA integration passes.
 
 Start at [[00 Start Here/Showpass QA Handbook/00 Index|Showpass QA Master Handbook index]]. This note remains only to preserve existing links; the linked folder is the canonical handbook.
+
+Find cases and related journeys in [[03 Test Cases/Test Cases by Feature|the QA City knowledge base]].

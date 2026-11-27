@@ -13,6 +13,8 @@ status: Local review draft; not executed or pushed
 
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
+Follow the subscriber request into the Organizer’s allocation and the buyer’s purchase from the [[00 Start Here/Showpass QA Handbook/Playbooks/17 Holds Waitlists and Guestlists#Waitlist join → Inventory available → final Customer result|Waitlist walkthrough]]. [[03 Test Cases/Test Cases by Feature#Saved Qase cases to start with|Saved allocation, expiry and report cases]]
+
 ## Existing coverage and migration gap
 
 Ticket setup remains in [[03 Test Cases/Events/02 Manage/02 Tickets|Tickets]], SPT-4384. List/actions/filtering remain in [Waitlists — suite 796](https://app.qase.io/project/SPT?suite=796), SPT-4224/4225; public join/offer/expiry behavior remains in suites 621/598.

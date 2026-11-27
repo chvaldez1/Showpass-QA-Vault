@@ -58,6 +58,8 @@ The actual shipping-status service accepts only supported per-item states and re
 4. Check both parties' access, ticket ownership, old/new barcode validity, admission, seat ownership, and Inventory according to the transfer rule.
 5. Confirm transfer does not create a second sale or accidental duplicate admission. The purchaser's financial history and recipient's entitlement need not be identical records.
 
+An order with required checkout questions carries the question wording saved at purchase. To test an Organizer edit, buy before the edit, verify the renamed question saved, then send the original ticket. On the recipient account, check that the original question starts blank, is still required, and shows the recipient’s answer when they open the received order. Pass the original order and pending transfer references between the sender and recipient jobs. [[03 Test Cases/Group Sales and Transfers/spw-21449-required-ticket-transfer-question-test-cases#TC-2: Keep the purchase-time question after an Organizer renames it|Historical question case]] · [[03 Test Cases/Events/02 Manage/05 Order form|Order form cases]]
+
 ## Resale as a separate lifecycle
 
 With resale-enabled configuration, submit a separate eligible owned ticket through the supported Customer flow. Verify eligibility, submitted price/fees, pending state, and whether the original ticket remains usable while listed according to policy.

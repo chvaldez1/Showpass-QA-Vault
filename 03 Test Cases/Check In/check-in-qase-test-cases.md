@@ -10,6 +10,8 @@ status: Published and verified three additions plus three enhancements on 2026-1
 
 # Legacy Check In — Qase-ready coverage
 
+Start with an issued ticket, Product or eligible Member record from the relevant [[03 Test Cases/Test Cases by Feature#Connected feature journeys|feature journey]]. To check readable checkout answers in ticket details, use [[03 Test Cases/Events/02 Manage/05 Order form#Additional existing Qase cases|SPT-3270 on the Event Order form note]].
+
 **Strengthening published — 2026-10-22:** Created **SPT-5759/5760/5761** and enhanced **SPT-1670/1671/1672** after approval of the exact six-case batch. Full-field readback verified **6 writes / 26 step rows** at **11:06:12 MDT**. Existing clients, scenarios and useful assertions are retained. These are published definitions, not executed admission results.
 
 **New-page smoke — 2026-10-22:** [[03 Test Cases/Check In/check-in-beta-new-page-smoke-2026-10-22|Initial beta execution and preserved review data]] records successful named single-day/recurring ticket and product flows on the **new embedded page**, including duplicate rejection, wrong-event rejection, saved History and product Return/re-scan. It is a separate adapted browser run; legacy Qase prerequisites and execution statuses were not changed. Remaining coverage is listed in that run note.

@@ -13,11 +13,45 @@ status: Local review draft; not executed or pushed
 
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
+## Draft case for a saved email preview
+
+### TC-1: Preview uses the saved Event subject until the Organizer saves a new one
+
+**Title:** Dashboard - Email customization - Preview the saved purchase confirmation subject
+
+**Description:** An edited subject in the form is still a draft until the Organizer saves it. The preview reaches the controlled inbox with the subject stored on the Event's saved purchase confirmation template.
+
+| Platform | View |
+| --- | --- |
+| Dashboard | Desktop |
+
+**Preconditions:**
+
+* Use an isolated single Event, an employee allowed to manage that Event's email customization, and a controlled mailbox. Confirm test email delivery works. Use an Event reserved for the change so a customer cannot receive the test subject.
+* In **Build → Events → All events**, open the Event and choose **Settings → Email customization**. Under **Email type**, select **Purchase confirmation email**. Use an existing Event-specific template and record its original **Email subject line**. Save an **Email subject line** containing `QA saved preview A` followed by a unique suffix. Leave and reopen the same template to verify the subject.
+
+**Tags:** dashboard, notifications, events
+
+| Step Action | Data | Expected Result |
+| --- | --- | --- |
+| Replace the visible **Email subject line** and leave the form unsaved. | `QA unsaved preview B` with the same suffix | The form shows the changed subject. |
+| Choose **Send preview email**, enter the controlled **Email address**, and choose **Confirm**. | Controlled inbox address | **Preview email is being sent!** appears. |
+| Open the newly received preview in the controlled mailbox. Check for up to five minutes. | Match the send time and unique suffix | Its subject contains `QA saved preview A`. The unsaved B marker is absent. If no matching preview arrives by the deadline, record delivery as inconclusive and continue with restoration. |
+| Leave the editor without saving the changed subject and reopen the same email type. | Same Event | **Email subject line** still contains the saved A marker and suffix. |
+
+**Postconditions:** Restore the recorded original subject in the existing template, select **Save**, and verify the restored subject after reopening. Record the test preview's safe subject and send time.
+
+## Proof and sources
+
+**Status:** Local Organizer Tester draft. **Not run.** SPT-4150 verifies a preview after the single Event customization is saved. This draft compares a saved Event subject with a conflicting unsaved edit. The actual delivered subject is the proof.
+
+Backend `apps/emails/api/venue_based/viewsets/customization.py:50` queues the saved customization ID. `apps/emails/tasks/configuration.py:9` reloads it before sending. The frontend template form sends the recipient address against the saved customization in `EmailCustomizationForm.web.tsx:259`. The Next route `packages/next-app/pages/manage/events/[slug]/email-customization.tsx` exports the actual page.
+
 ## Shared suite reference
 
 Event-specific cases below remain in Email Customization (1051). Refer to [shared Email Customization — suite 749](https://app.qase.io/project/SPT?suite=749) for venue-level choices, fallback, deletion and shared email variants (SPT-3617/3619–3621/3626/4087/4148/4836/4837).
 
-**Blocked for native destination parity:** the current event page registration is RoutePlaceholderPage. Preserve event-versus-venue inheritance, single-versus-child preview, clear override and actual delivered-email proof as separate assertions. A preview alone is not delivery coverage.
+**Route evidence:** The navigation metadata still lists a placeholder, while the Next route exports the actual Email customization page. Preserve event-versus-venue inheritance, single-versus-child preview, clear override and actual delivered-email proof as separate assertions. Customer email delivery follows its own case.
 
 Source: [page registration](</Users/christianvaldez/Documents/Showpass/repos/showpass-frontend/packages/core/src/app-contexts/dashboard/features/events/constants/events-detail-config.ts>).
 

@@ -13,6 +13,8 @@ status: New cases published to Qase; existing-case enhancements local; not execu
 
 [[03 Test Cases/Events/event-management-qase-test-cases|Events case index]]
 
+After checkout, follow the same order to [[03 Test Cases/Check In/check-in-qase-test-cases|Check In]], [[03 Test Cases/Reports/reports-qase-test-cases|Reports]], or [[03 Test Cases/Group Sales and Transfers/spw-21449-required-ticket-transfer-question-test-cases|transfer acceptance]], depending on who needs the captured information. The original paid order supplies the question wording for the recipient’s transfer. [[03 Test Cases/Test Cases by Feature#Connected feature journeys|Related journeys]]
+
 ## Qase publication — 2026-10-14
 
 All cases below were created and read back, including every field and step. Test execution is still pending.

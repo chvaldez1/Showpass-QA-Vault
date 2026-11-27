@@ -446,6 +446,10 @@ PayoutGrouping: Combined, Individual
 
 ## Coverage, reuse and limits
 
+### Account payout payment preference
+
+The account-level payout preference uses a user's own record. Start in the signed-in payout preference form with controlled test data and verify the saved preference after reopening. Compare the actual preference with the supported payout method only when the payout job is in scope. Source `apps/financials/services/payout_service/user_payout_payment_preference.py` and the frontend `payout-payment-preference` feature distinguish this path from the organizer payout list. An exact saved Qase case for this account entry still needs to be identified.
+
 | Proof target | Owner / status |
 | --- | --- |
 | Correct list, paid/unpaid status, browser-local dates, shortened ID, signed total/currency and timing notice | Refined4396; TC-1 verifies the full ID and paid-date display. Paid means the saved payout has a settled date, not independently verified bank arrival. |

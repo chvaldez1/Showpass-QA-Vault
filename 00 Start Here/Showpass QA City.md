@@ -10,6 +10,19 @@ tags:
 
 QA City gives Showpass's AI manual testers and assistants a shared way to take assignments, review proposed work, and record evidence. This note describes what we added and what each part owns as the City grows.
 
+## Find cases and plan a handoff
+
+1. Start at [[03 Test Cases/Test Cases by Feature|03 Test Cases, QA City's knowledge base]]. Find the owning screen or feature, then use [[03 Test Cases/Test Cases by Feature#Connected feature journeys|Connected feature journeys]] to see what the next actor needs to verify.
+2. Use the matching walkthrough in the [[00 Start Here/Showpass QA Handbook/00 Index|Showpass QA Master Handbook]] to choose setup, test data and proof. Assign the work using [[#Route short QA prompts]]. When a second actor takes over, name the record that must already exist, its safe reference and verified state, the action that creates or changes the next record, and the exact outcome to verify.
+3. Attach the relevant vault note and heading, saved Qase ID and selected parameters when applicable, and the verified setup or run evidence. City brings the handbook’s scenario guidance, journey index and matching feature notes into planning. For draft review, paste the needed case fields and supply the pinned source excerpts for that revision so reviewers can verify the specific behavior.
+4. When a link or case is missing, use [[03 Test Cases/Test Cases by Feature#Fill a gap|the gap workflow]]. Put the result in the owning feature note and link it from any affected feature so the next assignment can find it.
+
+### Build a connected scenario
+
+Start in **Organizer Builder** when the request is to design or prepare an Event setup. Choose the linked records and saved settings that make the next test interesting. For each one, state the intended result, what already exists, what to create or update, and what to reopen in Dashboard. Assign purchasing, admission and post-purchase jobs to their own testers using the verified record references. [[00 Start Here/Showpass QA Handbook/13 Senior QA Integration Passes#Start with the setup and follow the records|Scenario design guide]]
+
+For **Draft test cases with review**, include those relationships and state variations in the assignment. Have the test and review roles follow the affected records across the relevant features. Include a clean result and any material negative or recovery branch. [[03 Test Cases/Exchanges/Discounted Package Exchange Scenario|Worked Event build and Package exchange]] · [[06 Prompts/Showpass QA Test Case Generator#Discover and prioritize cases|Case generator guidance]]
+
 ## UI
 
 Select a building on the **City map** to see its open assignments, blockers, and next actions. Review queues show tester plans waiting for each review role. Open a queue item to work on its current revision. **Runs** holds the full assignment history, and **Releases** holds candidate reviews. [[showpass-qa-city/README|City app setup and capabilities]]
@@ -29,6 +42,8 @@ Each assignment owns one job, one starting session, and one stopping point. A ro
 ### Route short QA prompts
 
 Every Showpass QA prompt, including a follow-up or a document edit, has an owning role and an independent reviewer. Choose the owner based on the requested outcome and use its skill from the [[#Codex skill directory]]. Honor skills the user names.
+
+For an existing feature, use [[#Find cases and plan a handoff]] to give the owner the relevant case, walkthrough and related checks.
 
 Delegate the review to a separate agent before delivering the result. For an answer or small edit, give one reviewer the exact draft or diff. Ask them to check that it answers the request, stays within scope, and preserves content the user wanted to keep. Use the existing review path for manual drafts, live tests, and release work.
 
