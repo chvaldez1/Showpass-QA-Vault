@@ -19,7 +19,7 @@ Use these local repositories without copying them into the vault:
 - Frontend navigation, controls, states and affected clients: the sibling `showpass-frontend` checkout.
 - Existing automation assertions and reusable testing patterns, when relevant: the sibling `showpass-playwright` checkout.
 
-Trace the relevant backend behavior first, then its frontend consumers. For a supplied PR or branch, inspect the exact diff and affected shared behavior. Record when the running build or a necessary rule cannot be established. Source review explains expectations; it is not a browser pass. Reuse useful existing vault cases, incidents and previous findings without assuming they prove today's behavior.
+Trace the relevant backend behavior first, then its frontend consumers. For a supplied PR or branch, ground the check in the exact diff and affected shared behavior. Carry forward verified source findings when the revision and scope match. Link the earlier evidence in the handoff and trace only gaps or changes. Record when the running build or a necessary rule cannot be established. Use source findings to set expectations and record fresh browser observations for the current run.
 
 ## Use Relevant Integrations
 
@@ -39,7 +39,7 @@ Keep expectations, source facts, live UI, API results and log evidence distingui
 
 Use the user's matching **Codex in-app browser sidebar** session. Follow the currently exposed CUA/browser tool documentation and use only supported APIs. Confirm the target environment, page version, authenticated state, selected Organizer and role as applicable. Do not inspect unrelated tabs.
 
-Do not launch an external browser, headless runner, development server or build merely to perform sidebar testing. Reuse verified setup, combine interaction and evidence gathering, and avoid redundant screenshots and repeated equivalent checks. If a different session or device is required, say why; use it only within the user's scope and the available tool capabilities.
+Do not launch an external browser, headless runner, development server or build merely to perform sidebar testing. Reuse verified setup. Batch related browser actions when you can observe and record each meaningful result and honor the plan's stopping conditions between actions. Capture screenshots and other proof as those states appear on the first pass. Reuse a capture when it proves more than one check. If a different session or device is required, explain why and use it only within the user's scope and the available tool capabilities.
 
 A new tab may share login state. For signed-out testing, verify the session actually is signed out. Preserve the user's working session; use an available authorized signed-out or isolated session where possible. A quest alone does not authorize clearing unrelated browser data.
 
@@ -52,7 +52,9 @@ A short quest is enough to start; a prepared case note is optional. Choose focus
 | Check | Starting page / record / state | Action | Expected result and proof |
 | --- | --- | --- | --- |
 
-Explain why the selected checks matter. Say what evidence you will capture, when you will finish or stop early, and which session or saved-data changes are in scope. Use the [plan and proof guidance](<../../../06 Prompts/Showpass Release Engineering Handoff.md#plan-the-proof-and-stopping-point>) for checks that gather their evidence on beta. Apply the [shared engineering review layer](<../../../06 Prompts/Showpass Release Engineering Handoff.md#apply-the-review-layer>) to choose short review for routine live checks or full review for high-risk work. Wait for QA Lead sign-off on the exact live plan. Draft-only work ends with the draft. Apply the user’s existing authorization and any requested stop separately. Ask only for the missing fact or permission; continue independent authorized work.
+Explain why the selected checks matter. Say what evidence you will capture, when you will finish or stop early, and which session or saved-data changes are in scope. Use the available tool documentation and known session constraints to flag any proof the tools cannot collect. Name the affected check in the plan and continue with independent checks when authorized.
+
+Use the [plan and proof guidance](<../../../06 Prompts/Showpass Release Engineering Handoff.md#plan-the-proof-and-stopping-point>) for checks that gather their evidence on beta. Apply the [shared engineering review layer](<../../../06 Prompts/Showpass Release Engineering Handoff.md#apply-the-review-layer>) to choose short review for routine live checks or full review for high-risk work. For short review, send the Release Engineer the exact plan and links to prior findings that still apply. Give the independent QA Lead that plan and the engineering review. Wait for QA Lead sign-off on the exact live plan. Draft-only work ends with the draft. Apply the user’s existing authorization and any requested stop separately. Ask only for the missing fact or permission.
 
 ### Test
 
